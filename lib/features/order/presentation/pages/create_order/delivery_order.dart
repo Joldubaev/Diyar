@@ -24,7 +24,8 @@ class DeliveryFormPage extends StatefulWidget {
 
 class _DeliveryFormPageState extends State<DeliveryFormPage> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _phoneController = TextEditingController(text: '+996');
+  final TextEditingController _phoneController =
+      TextEditingController(text: '+996');
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _houseController = TextEditingController();
   final TextEditingController _apartmentController = TextEditingController();
@@ -69,31 +70,41 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
           );
           showToast(context.l10n.orderIsSuccess);
         } else if (state is CreateOrderError) {
-          showToast(context.l10n.orderIsFailed, isError: true);
+          showToast(context.l10n.someThingIsWrong, isError: true);
         }
       },
       builder: (context, state) {
         _addressController.text = context.read<OrderCubit>().address;
-
+        if (state is CreateOrderLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is CreateOrderError) {
+          return Center(
+            child: Text(
+              context.l10n.someThingIsWrong,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .copyWith(color: AppColors.red),
+            ),
+          );
+        }
         return Form(
           key: _formKey,
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             children: [
               CustomInputWidget(
-                hintText: context.l10n.name,
-                title: context.l10n.yourName,
-                controller: _userName,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return context.l10n.pleaseEnterName;
-                  } else if (value.length < 3) {
-                    return context.l10n.pleaseEnterCorrectName;
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 10),
+                  controller: _userName,
+                  hintText: context.l10n.nameExample,
+                  title: context.l10n.yourName,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return context.l10n.pleaseEnterName;
+                    } else if (value.length < 3) {
+                      return context.l10n.pleaseEnterCorrectName;
+                    }
+                    return null;
+                  }),
               PhoneNumberMask(
                 title: context.l10n.phone,
                 hintText: '+996 (___) __-__-__',
@@ -111,9 +122,11 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                 },
               ),
               CustomInputWidget(
+                isReadOnly: true,
                 trailing: TextButton(
                   onPressed: () => context.router.push(const OrderMapRoute()),
-                  child: Text(context.l10n.chooseOnMap, style: theme.textTheme.bodyMedium!),
+                  child: Text(context.l10n.chooseOnMap,
+                      style: theme.textTheme.bodyMedium!),
                 ),
                 hintText: '',
                 title: context.l10n.adress,
@@ -128,166 +141,168 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                 },
               ),
               CustomInputWidget(
+                  controller: _houseController,
+                  hintText: context.l10n.houseNumber,
+                  title: context.l10n.houseNumber,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return context.l10n.pleaseEnterHouseNumber;
+                    }
+                    return null;
+                  }),
+              CustomInputWidget(
+                  controller: _apartmentController,
+                  hintText: context.l10n.floor,
+                  title: context.l10n.floor),
+              CustomInputWidget(
+                controller: _intercomController,
                 hintText: '',
-                title: context.l10n.houseNumber,
-                controller: _houseController,
-                inputType: TextInputType.number,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return context.l10n.pleaseEnterHouseNumber;
-                  } else if (value.isEmpty) {
-                    return context.l10n.pleaseEnterCorrectHouseNumber;
-                  }
-                  return null;
-                },
+                title: context.l10n.entranceNumber,
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Expanded(
                     child: CustomInputWidget(
-                      hintText: '',
-                      title: context.l10n.ofice,
-                      controller: _apartmentController,
-                      inputType: TextInputType.number,
-                    ),
-                  ),
-                  const SizedBox(width: 20.0),
-                  Expanded(
-                    child: CustomInputWidget(
-                      hintText: '',
-                      title: context.l10n.codeIntercom,
-                      controller: _intercomController,
-                      inputType: TextInputType.number,
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Expanded(
-                    child: CustomInputWidget(
-                      hintText: '',
-                      title: context.l10n.floor,
                       controller: _floorController,
-                      inputType: TextInputType.number,
+                      hintText: context.l10n.floor,
+                      title: context.l10n.floor,
                     ),
                   ),
-                  const SizedBox(width: 20.0),
+                  const SizedBox(width: 10),
                   Expanded(
                     child: CustomInputWidget(
-                      hintText: '',
-                      title: context.l10n.entranceNumber,
                       controller: _entranceController,
-                      inputType: TextInputType.number,
+                      hintText: '',
+                      title: context.l10n.entrance,
                     ),
                   ),
                 ],
               ),
               CustomInputWidget(
-                hintText: '',
-                title: context.l10n.comment,
                 controller: _commentController,
+                hintText: 'Ваша еда очень вкусная ...',
+                title: context.l10n.comment,
               ),
-              const SizedBox(height: 10),
-              Text(context.l10n.paymentMethod, style: theme.textTheme.bodyMedium!),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Radio(
-                    autofocus: true,
-                    value: PaymentTypeDelivery.cash,
-                    groupValue: _paymentType,
-                    onChanged: (value) {
-                      setState(() => _paymentType = value!);
-                    },
-                  ),
-                  Text(context.l10n.cash),
-                ],
+              Text(
+                context.l10n.paymentMethod,
+                style: theme.textTheme.bodyMedium!.copyWith(fontSize: 16),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Radio(
-                    value: PaymentTypeDelivery.card,
-                    groupValue: _paymentType,
-                    onChanged: (value) {
-                      setState(() => _paymentType = value!);
-                    },
-                  ),
-                  Text(context.l10n.postTerminal)
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Radio(
-                    value: PaymentTypeDelivery.online,
-                    groupValue: _paymentType,
-                    onChanged: (value) {
-                      setState(() => _paymentType = value!);
-                    },
-                  ),
-                  Text(context.l10n.onlinePayment)
-                ],
-              ),
-              const SizedBox(height: 10),
-              CustomInputWidget(
-                controller: _sdachaController,
-                hintText: '',
-                title: context.l10n.change,
-                inputType: TextInputType.number,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return context.l10n.pleaseEnterChange;
-                  } else if (value.isEmpty) {
-                    return context.l10n.pleaseEnterCorrectChange;
-                  }
-                  return null;
+              RadioListTile<PaymentTypeDelivery>(
+                activeColor: theme.primaryColor,
+                title: Text(context.l10n.cash),
+                value: PaymentTypeDelivery.cash,
+                groupValue: _paymentType,
+                onChanged: (PaymentTypeDelivery? value) {
+                  setState(() {
+                    _paymentType = value!;
+                  });
                 },
               ),
+              RadioListTile<PaymentTypeDelivery>(
+                activeColor: theme.primaryColor,
+                title: Text(context.l10n.cart),
+                value: PaymentTypeDelivery.card,
+                groupValue: _paymentType,
+                onChanged: (PaymentTypeDelivery? value) {
+                  setState(() {
+                    _paymentType = value!;
+                  });
+                },
+              ),
+              RadioListTile<PaymentTypeDelivery>(
+                activeColor: theme.primaryColor,
+                title: Text(context.l10n.onlinePayment),
+                value: PaymentTypeDelivery.online,
+                groupValue: _paymentType,
+                onChanged: (PaymentTypeDelivery? value) {
+                  setState(() {
+                    _paymentType = value!;
+                  });
+                },
+              ),
+              const SizedBox(height: 10),
+              if (_paymentType == PaymentTypeDelivery.cash)
+                CustomInputWidget(
+                  controller: _sdachaController,
+                  hintText: context.l10n.change,
+                  title: context.l10n.change,
+                  inputType: TextInputType.number,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return context.l10n.confirmOrder;
+                    } else if (value.length < 2) {
+                      return context.l10n.confirmOrder;
+                    }
+                    return null;
+                  },
+                ),
               const SizedBox(height: 10),
               SubmitButtonWidget(
-                title: context.l10n.confirmOrder,
-                bgColor: theme.primaryColor,
-                isLoading: state is CreateOrderLoading,
-                textStyle: theme.textTheme.bodyMedium!.copyWith(color: AppColors.white),
-                onTap: () {
-                  if (_formKey.currentState!.validate()) {
-                    context
-                        .read<OrderCubit>()
-                        .createOrder(
-                          CreateOrderModel(
-                            address: _addressController.text,
-                            kvOffice: _apartmentController.text,
-                            comment: _commentController.text,
-                            entrance: _entranceController.text,
-                            floor: _floorController.text,
-                            houseNumber: _houseController.text,
-                            intercom: _intercomController.text,
-                            paymentMethod: _paymentType.toString().split('.').last,
-                            userPhone: _phoneController.text,
-                            userName: _userName.text,
-                            deliveryPrice: context.read<OrderCubit>().deliveryPrice.toInt(),
-                            price: context.read<CartCubit>().totalPrice,
-                            dishesCount: context.read<CartCubit>().dishCount,
-                            sdacha: int.parse(_sdachaController.text),
-                            foods: widget.cart
-                                .map((e) => OrderFoodItem(
-                                      name: e.food?.name ?? '',
-                                      price: e.food?.price ?? 0,
-                                      quantity: e.quantity ?? 1,
-                                    ))
-                                .toList(),
-                          ),
-                        )
-                        .then((value) => context.read<CartCubit>().clearCart());
-                  }
-                },
-              ),
-              const SizedBox(height: 20),
+                  title: context.l10n.confirmOrder,
+                  bgColor: theme.primaryColor,
+                  textStyle:
+                      theme.textTheme.bodyMedium!.copyWith(color: Colors.white),
+                  onTap: () {
+                    if (_formKey.currentState!.validate()) {
+                      final totalPrice = context.read<CartCubit>().totalPrice;
+                      final deliveryPrice =
+                          context.read<OrderCubit>().deliveryPrice;
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text(context.l10n.totalToPay),
+                            content: Text('${deliveryPrice + totalPrice} сом'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  context
+                                      .read<OrderCubit>()
+                                      .createOrder(
+                                        CreateOrderModel(
+                                          userPhone: _phoneController.text,
+                                          userName: _userName.text,
+                                          address: _addressController.text,
+                                          comment: _commentController.text,
+                                          price: totalPrice,
+                                          deliveryPrice: 0,
+                                          houseNumber: _houseController.text,
+                                          kvOffice: _apartmentController.text,
+                                          intercom: _intercomController.text,
+                                          floor: _floorController.text,
+                                          entrance: _entranceController.text,
+                                          paymentMethod: _paymentType.name,
+                                          sdacha: int.tryParse(
+                                                  _sdachaController.text) ??
+                                              0,
+                                          foods: widget.cart
+                                              .map((e) => OrderFoodItem(
+                                                    name: e.food?.name ?? '',
+                                                    price: e.food?.price ?? 0,
+                                                    quantity: e.quantity ?? 1,
+                                                  ))
+                                              .toList(),
+                                        ),
+                                      )
+                                      .then((value) {
+                                    context.read<CartCubit>().clearCart();
+                                    Navigator.of(context).pop();
+                                  });
+                                },
+                                child: const Text('Подтвердить'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('Отменить'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
+                  }),
             ],
           ),
         );

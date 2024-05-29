@@ -7,10 +7,8 @@ import 'package:diyar/features/order/data/models/create_order_model.dart';
 import 'package:diyar/features/order/data/models/pickup_order_model.dart';
 import 'package:diyar/features/order/presentation/cubit/order_cubit.dart';
 import 'package:diyar/l10n/l10n.dart';
-import 'package:diyar/shared/components/components.dart';
 import 'package:diyar/features/auth/presentation/widgets/phone_number.dart';
-import 'package:diyar/shared/theme/theme.dart';
-import 'package:diyar/shared/utils/show/bottom_sheet.dart';
+import 'package:diyar/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -26,7 +24,8 @@ class PickupForm extends StatefulWidget {
 
 class _PickupFormState extends State<PickupForm> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _phoneController = TextEditingController(text: '+996');
+  final TextEditingController _phoneController =
+      TextEditingController(text: '+996');
   final TextEditingController _userName = TextEditingController();
   final TextEditingController _commentController = TextEditingController();
   final TextEditingController _timeController = TextEditingController();
@@ -45,6 +44,65 @@ class _PickupFormState extends State<PickupForm> {
     _commentController.dispose();
     _timeController.dispose();
     super.dispose();
+  }
+
+  double _calculateTotalPrice() {
+    return widget.cart.fold(
+        0,
+        (total, item) =>
+            total + (item.food?.price ?? 0) * (item.quantity ?? 1));
+  }
+
+  void _showTotalPriceDialog(double totalPrice) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Вы можете забрать ваш заказ по адресу: ул. Жибек Жолу 333 ',
+              style: theme.textTheme.bodyMedium!.copyWith(fontSize: 16)),
+          content: Text('Сумма: $totalPrice' ' сом',
+              style: theme.textTheme.bodyMedium!.copyWith(fontSize: 16)),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _submitOrder();
+              },
+              child: const Text('Подтвердить'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Отменить'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _submitOrder() {
+    context
+        .read<OrderCubit>()
+        .getPickupOrder(
+          PickupOrderModel(
+            userPhone: _phoneController.text,
+            userName: _userName.text,
+            prepareFor: _timeController.text,
+            comment: _commentController.text,
+            price: context.read<CartCubit>().totalPrice,
+            dishesCount: context.read<CartCubit>().dishCount,
+            foods: widget.cart
+                .map((e) => OrderFoodItem(
+                      name: e.food?.name ?? '',
+                      price: e.food?.price ?? 0,
+                      quantity: e.quantity ?? 1,
+                    ))
+                .toList(),
+          ),
+        )
+        .then((value) => context.read<CartCubit>().clearCart());
   }
 
   @override
@@ -68,7 +126,10 @@ class _PickupFormState extends State<PickupForm> {
           return Center(
             child: Text(
               context.l10n.someThingIsWrong,
-              style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: AppColors.red),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .copyWith(color: AppColors.red),
             ),
           );
         }
@@ -108,7 +169,9 @@ class _PickupFormState extends State<PickupForm> {
               ),
               const SizedBox(height: 10),
               CustomInputWidget(
-                  controller: _commentController, hintText: 'Ваша еда очень вкусная ...', title: context.l10n.comment),
+                  controller: _commentController,
+                  hintText: 'Ваша еда очень вкусная ...',
+                  title: context.l10n.comment),
               const SizedBox(height: 10),
               CustomInputWidget(
                 controller: _timeController,
@@ -117,7 +180,8 @@ class _PickupFormState extends State<PickupForm> {
                 inputType: TextInputType.number,
               ),
               const SizedBox(height: 10),
-              Text(context.l10n.orderPickupAd, style: theme.textTheme.bodyMedium!.copyWith(fontSize: 16)),
+              Text(context.l10n.orderPickupAd,
+                  style: theme.textTheme.bodyMedium!.copyWith(fontSize: 16)),
               Text(
                 context.l10n.address,
                 style: theme.textTheme.bodyMedium!.copyWith(fontSize: 16),
@@ -126,31 +190,12 @@ class _PickupFormState extends State<PickupForm> {
               SubmitButtonWidget(
                   title: context.l10n.confirmOrder,
                   bgColor: theme.primaryColor,
-                  textStyle: theme.textTheme.bodyMedium!.copyWith(color: Colors.white),
+                  textStyle:
+                      theme.textTheme.bodyMedium!.copyWith(color: Colors.white),
                   onTap: () {
                     if (_formKey.currentState!.validate()) {
-                      context
-                          .read<OrderCubit>()
-                          .getPickupOrder(
-                            PickupOrderModel(
-                              userPhone: _phoneController.text,
-                              userName: _userName.text,
-                              prepareFor: _timeController.text,
-                              comment: _commentController.text,
-                              price: context.read<CartCubit>().totalPrice,
-                              dishesCount: context.read<CartCubit>().dishCount,
-                              foods: widget.cart
-                                  .map((e) => OrderFoodItem(
-                                        name: e.food?.name ?? '',
-                                        price: e.food?.price ?? 0,
-                                        quantity: e.quantity ?? 1,
-                                      ))
-                                  .toList(),
-                            ),
-                          )
-                          .then(
-                            (value) => context.read<CartCubit>().clearCart(),
-                          );
+                      double totalPrice = _calculateTotalPrice();
+                      _showTotalPriceDialog(totalPrice);
                     }
                   }),
             ],
