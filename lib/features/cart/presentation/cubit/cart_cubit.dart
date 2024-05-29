@@ -14,7 +14,7 @@ class CartCubit extends Cubit<CartState> {
   int dishCount = 0;
   int totalPrice = 0;
 
-  getCartItems() async {
+  Future getCartItems() async {
     emit(GetAllCartLoading());
     try {
       cart = _cartReposiory.getAllCartItems();

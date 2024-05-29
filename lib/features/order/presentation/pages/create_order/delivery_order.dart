@@ -286,7 +286,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                                       )
                                       .then((value) {
                                     context.read<CartCubit>().clearCart();
-                                    Navigator.of(context).pop();
+                                    context.maybePop();
                                   });
                                 },
                                 child: const Text('Подтвердить'),

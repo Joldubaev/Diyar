@@ -26,9 +26,11 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    context.read<PopularCubit>().getPopularProducts();
-    context.read<CartCubit>().getCartItems();
-    context.read<ProfileCubit>().getUser();
+    context.read<PopularCubit>().getPopularProducts().then((value) {
+      context.read<CartCubit>().getCartItems().then((value) {
+        context.read<ProfileCubit>().getUser();
+      });
+    });
   }
 
   @override

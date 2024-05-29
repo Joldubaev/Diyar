@@ -12,7 +12,7 @@ class PopularCubit extends Cubit<PopularState> {
 
   List<FoodModel> popularFoods = [];
 
-  void getPopularProducts() async {
+  Future getPopularProducts() async {
     emit(PopularLoading());
     try {
       final product = await _menuRepository.getPopularFoods();
