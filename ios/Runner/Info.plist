@@ -47,5 +47,12 @@
 		<true/>
 		<key>UIStatusBarHidden</key>
 		<false/>
+		<key>LSApplicationQueriesSchemes</key>
+		<array>
+ 	 	<string>sms</string>
+ 		<string>tel</string>
+		</array>
+		<key>NSLocationWhenInUseUsageDescription</key>
+		<string>Доступ к геолокации пользователя необходим для отображения текущей геопозиции</string>
 	</dict>
 </plist>
