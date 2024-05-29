@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "280176558850",
+    "project_id": "diyar-d2556",
+    "storage_bucket": "diyar-d2556.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:280176558850:android:d99eba92085a4a6d12f81b",
+        "android_client_info": {
+          "package_name": "com.example.diyar_express"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDayTEpImvH2Y2Fu3tmiwCVjwz0q-tD-q0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
