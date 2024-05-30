@@ -128,7 +128,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                   child: Text(context.l10n.chooseOnMap,
                       style: theme.textTheme.bodyMedium!),
                 ),
-                hintText: '',
+                hintText: 'Пожалуйста, выберите адрес на карте',
                 title: context.l10n.adress,
                 controller: _addressController,
                 validator: (value) {
@@ -183,6 +183,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                 hintText: 'Ваша еда очень вкусная ...',
                 title: context.l10n.comment,
               ),
+              const SizedBox(height: 10),
               Text(
                 context.l10n.paymentMethod,
                 style: theme.textTheme.bodyMedium!.copyWith(fontSize: 16),
@@ -198,29 +199,28 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                   });
                 },
               ),
-              RadioListTile<PaymentTypeDelivery>(
-                activeColor: theme.primaryColor,
-                title: Text(context.l10n.cart),
-                value: PaymentTypeDelivery.card,
-                groupValue: _paymentType,
-                onChanged: (PaymentTypeDelivery? value) {
-                  setState(() {
-                    _paymentType = value!;
-                  });
-                },
-              ),
-              RadioListTile<PaymentTypeDelivery>(
-                activeColor: theme.primaryColor,
-                title: Text(context.l10n.onlinePayment),
-                value: PaymentTypeDelivery.online,
-                groupValue: _paymentType,
-                onChanged: (PaymentTypeDelivery? value) {
-                  setState(() {
-                    _paymentType = value!;
-                  });
-                },
-              ),
-              const SizedBox(height: 10),
+              // RadioListTile<PaymentTypeDelivery>(
+              //   activeColor: theme.primaryColor,
+              //   title: Text(context.l10n.),
+              //   value: PaymentTypeDelivery.card,
+              //   groupValue: _paymentType,
+              //   onChanged: (PaymentTypeDelivery? value) {
+              //     setState(() {
+              //       _paymentType = value!;
+              //     });
+              //   },
+              // ),
+              // RadioListTile<PaymentTypeDelivery>(
+              //   activeColor: theme.primaryColor,
+              //   title: Text(context.l10n.onlinePayment),
+              //   value: PaymentTypeDelivery.online,
+              //   groupValue: _paymentType,
+              //   onChanged: (PaymentTypeDelivery? value) {
+              //     setState(() {
+              //       _paymentType = value!;
+              //     });
+              //   },
+              // ),
               if (_paymentType == PaymentTypeDelivery.cash)
                 CustomInputWidget(
                   controller: _sdachaController,
