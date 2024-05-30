@@ -27,10 +27,9 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     context.read<PopularCubit>().getPopularProducts().then((value) {
-      context.read<CartCubit>().getCartItems().then((value) {
-        context.read<ProfileCubit>().getUser();
-      });
+      context.read<CartCubit>().getCartItems().then((value) {});
     });
+    context.read<ProfileCubit>().getUser();
   }
 
   @override
@@ -46,7 +45,7 @@ class _HomePageState extends State<HomePage> {
           alignment: Alignment.centerLeft,
           child: FittedBox(
             child: Text(
-              '${l10n.welcome}, ${context.read<ProfileCubit>().user?.name ?? ''}!',
+              '${l10n.welcome}  ${context.read<ProfileCubit>().user?.name ?? ''}!',
               style: theme.textTheme.titleSmall?.copyWith(
                 color: AppColors.white,
               ),

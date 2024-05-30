@@ -58,8 +58,8 @@ class _PickupFormState extends State<PickupForm> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Вы можете забрать ваш заказ по адресу: ул. Жибек Жолу 333 ',
-              style: theme.textTheme.bodyMedium!.copyWith(fontSize: 16)),
+          title: Text('${context.l10n.orderPickupAd} ${context.l10n.address}',
+              style: theme.textTheme.bodyLarge!.copyWith(fontSize: 16)),
           content: Text('Сумма: $totalPrice' ' сом',
               style: theme.textTheme.bodyMedium!.copyWith(fontSize: 16)),
           actions: [

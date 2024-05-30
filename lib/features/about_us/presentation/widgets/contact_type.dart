@@ -20,11 +20,11 @@ enum ContactType {
 
   String getNumber() {
     return switch (this) {
-      delivery => '+996 559 69-47-77',
-      diyarExpress => '+996 509 69-47-77',
-      diyarRestaurant => '+996 550 55-59-99',
-      diyarBanketHall => '+996 555 51-11-15',
-      versal => '+996 555 55-55-08',
+      delivery => '0559 69-47-77',
+      diyarExpress => '0509 69-47-77',
+      diyarRestaurant => '0550 55-59-99',
+      diyarBanketHall => '0555 51-11-15',
+      versal => '0555 55-55-08',
     };
   }
 
