@@ -498,7 +498,7 @@
 				DEVELOPMENT_TEAM = CXJBVKAX59;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Дияр";
+				INFOPLIST_KEY_CFBundleDisplayName = "Дияр Доставка";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.food-and-drink";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -690,7 +690,7 @@
 				DEVELOPMENT_TEAM = CXJBVKAX59;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Дияр";
+				INFOPLIST_KEY_CFBundleDisplayName = "Дияр Доставка";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.food-and-drink";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -722,7 +722,7 @@
 				DEVELOPMENT_TEAM = CXJBVKAX59;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Дияр";
+				INFOPLIST_KEY_CFBundleDisplayName = "Дияр Доставка";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.food-and-drink";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
