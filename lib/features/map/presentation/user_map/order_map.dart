@@ -50,7 +50,9 @@ class _OrderMapPageState extends State<OrderMapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(context.l10n.chooseAddress, style: theme.textTheme.titleSmall)),
+      appBar: AppBar(
+          title: Text(context.l10n.chooseAddress,
+              style: theme.textTheme.titleSmall)),
       body: Stack(
         children: [
           SizedBox(
@@ -98,9 +100,10 @@ class _OrderMapPageState extends State<OrderMapPage> {
         onClosing: () {},
         builder: (context) {
           for (int i = 0; i < Polygons.getPolygons().length; i++) {
-            bool containsCoordinate = Polygons.getPolygons()[i].coordinates.contains(
-                  Coordinate(latitude: lat, longitude: long),
-                );
+            bool containsCoordinate =
+                Polygons.getPolygons()[i].coordinates.contains(
+                      Coordinate(latitude: lat, longitude: long),
+                    );
             // ignore: avoid_print
             print(containsCoordinate);
           }
@@ -113,7 +116,8 @@ class _OrderMapPageState extends State<OrderMapPage> {
               Card(
                 child: ListTile(
                   title: Container(
-                    constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width - 72),
+                    constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width - 72),
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Text(address ?? context.l10n.addressIsNotFounded),
@@ -133,9 +137,12 @@ class _OrderMapPageState extends State<OrderMapPage> {
                       confirmPressed: () {
                         Navigator.pop(context);
                         context.router.maybePop().then((value) {
-                          context.read<OrderCubit>().changeAddress(address ?? '');
+                          context
+                              .read<OrderCubit>()
+                              .changeAddress(address ?? '');
                           context.read<OrderCubit>().selectDeliveryPrice(
-                              isCoordinateInsidePolygons(lat, long, polygons: Polygons.getPolygons()));
+                              isCoordinateInsidePolygons(lat, long,
+                                  polygons: Polygons.getPolygons()));
                         });
                       },
                     );
@@ -152,8 +159,8 @@ class _OrderMapPageState extends State<OrderMapPage> {
         onPressed: () async {
           _fetchCurrentLocation();
           if (userLocation != null) {
-            double distance = calculateDistance(
-                userLocation!.latitude, userLocation!.longitude, 42.887931419030515, 74.66039095429396);
+            double distance = calculateDistance(userLocation!.latitude,
+                userLocation!.longitude, 42.887931419030515, 74.66039095429396);
             setState(() {
               deliveryPrice = distance * pricePerKm;
             });
@@ -174,13 +181,18 @@ class _OrderMapPageState extends State<OrderMapPage> {
         mapId: MapObjectId('polygon map object ${polygon.id}'),
         polygon: Polygon(
           outerRing: LinearRing(
-              points: polygon.coordinates.map((e) => Point(latitude: e.latitude, longitude: e.longitude)).toList()),
+              points: polygon.coordinates
+                  .map((e) =>
+                      Point(latitude: e.latitude, longitude: e.longitude))
+                  .toList()),
           innerRings: polygons.isEmpty
               ? []
               : polygons
                   .map((e) => LinearRing(
-                      points:
-                          polygon.coordinates.map((e) => Point(latitude: e.latitude, longitude: e.longitude)).toList()))
+                      points: polygon.coordinates
+                          .map((e) => Point(
+                              latitude: e.latitude, longitude: e.longitude))
+                          .toList()))
                   .toList(),
         ),
         strokeColor: Colors.transparent,
@@ -225,14 +237,12 @@ class _OrderMapPageState extends State<OrderMapPage> {
 
   Future<void> _moveToCurrentLocation(AppLatLong appLatLong) async {
     (await mapControllerCompleter.future).moveCamera(
-      animation: const MapAnimation(type: MapAnimationType.smooth, duration: 4),
       CameraUpdate.newCameraPosition(
         CameraPosition(
           target: Point(
             latitude: appLatLong.latitude,
             longitude: appLatLong.longitude,
           ),
-          zoom: 12,
         ),
       ),
     );
@@ -241,16 +251,17 @@ class _OrderMapPageState extends State<OrderMapPage> {
   Future<void> updateAddressDetails(AppLatLong latLong) async {
     address = const Text('Пойск Вашего Адресса').data;
     setState(() {});
-    LocationModel? data = await locationRepo.getLocationByAdress(latLong: latLong);
+    LocationModel? data =
+        await locationRepo.getLocationByAdress(latLong: latLong);
     address = data.response!.geoObjectCollection!.featureMember!.isEmpty
         ? 'unknown place'
-        : data.response!.geoObjectCollection!.featureMember!.first.geoObject!.metaDataProperty!.geocoderMetaData!
-            .address!.formatted
+        : data.response!.geoObjectCollection!.featureMember!.first.geoObject!
+            .metaDataProperty!.geocoderMetaData!.address!.formatted
             .toString();
 
     if (userLocation != null) {
-      double distance =
-          calculateDistance(userLocation!.latitude, userLocation!.longitude, latLong.latitude, latLong.longitude);
+      double distance = calculateDistance(userLocation!.latitude,
+          userLocation!.longitude, latLong.latitude, latLong.longitude);
       setState(() {
         deliveryPrice = distance * pricePerKm;
       });
@@ -262,17 +273,21 @@ class _OrderMapPageState extends State<OrderMapPage> {
     log(' address: $address');
   }
 
-  double calculateDistance(
-      double startLatitude, double startLongitude, double destinationLatitude, double destinationLongitude) {
+  double calculateDistance(double startLatitude, double startLongitude,
+      double destinationLatitude, double destinationLongitude) {
     var p = 0.017453292519943295;
     var c = cos;
     var a = 0.5 -
         c((destinationLatitude - startLatitude) * p) / 2 +
-        c(startLatitude * p) * c(destinationLatitude * p) * (1 - c((destinationLongitude - startLongitude) * p)) / 2;
+        c(startLatitude * p) *
+            c(destinationLatitude * p) *
+            (1 - c((destinationLongitude - startLongitude) * p)) /
+            2;
     return 12742 * asin(sqrt(a));
   }
 
-  double isCoordinateInsidePolygons(double latitude, double longitude, {required List<DeliveryPolygon> polygons}) {
+  double isCoordinateInsidePolygons(double latitude, double longitude,
+      {required List<DeliveryPolygon> polygons}) {
     for (var polygon in polygons) {
       if (isPointInPolygon(latitude, longitude, polygon.coordinates)) {
         return polygon.deliveryPrice;
@@ -281,8 +296,8 @@ class _OrderMapPageState extends State<OrderMapPage> {
     return maxDeliveryPrice;
   }
 
-  // Define a function to check if a point is inside a polygon
-  bool isPointInPolygon(double latitude, double longitude, List<Coordinate> coordinates) {
+  bool isPointInPolygon(
+      double latitude, double longitude, List<Coordinate> coordinates) {
     int intersectCount = 0;
     for (int i = 0; i < coordinates.length - 1; i++) {
       double vertex1Lat = coordinates[i].latitude;
@@ -292,8 +307,10 @@ class _OrderMapPageState extends State<OrderMapPage> {
       // Check if the point is within the y-range of the edge
       if ((vertex1Long > longitude) != (vertex2Long > longitude)) {
         // Calculate the x-coordinate where the edge intersects with the vertical line of longitude
-        double xIntersect =
-            (vertex2Lat - vertex1Lat) * (longitude - vertex1Long) / (vertex2Long - vertex1Long) + vertex1Lat;
+        double xIntersect = (vertex2Lat - vertex1Lat) *
+                (longitude - vertex1Long) /
+                (vertex2Long - vertex1Long) +
+            vertex1Lat;
         // Check if the intersection point is above the given latitude
         if (latitude < xIntersect) {
           intersectCount++;
