@@ -49,6 +49,15 @@ class DefaultFirebaseOptions {
     }
   }
 
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyBWTAM3Tct37Rf-p-4g0F02dusag-2u85I',
+    appId: '1:280176558850:ios:592508549f103aa612f81b',
+    messagingSenderId: '280176558850',
+    projectId: 'diyar-d2556',
+    storageBucket: 'diyar-d2556.appspot.com',
+    iosBundleId: 'kg.easysoft.diyarex',
+  );
+
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDayTEpImvH2Y2Fu3tmiwCVjwz0q-tD-q0',
     appId: '1:280176558850:android:5697842d0058f97a12f81b',
@@ -57,12 +66,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'diyar-d2556.appspot.com',
   );
 
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBWTAM3Tct37Rf-p-4g0F02dusag-2u85I',
-    appId: '1:280176558850:ios:f1e724e6a3de98d912f81b',
-    messagingSenderId: '280176558850',
-    projectId: 'diyar-d2556',
-    storageBucket: 'diyar-d2556.appspot.com',
-    iosBundleId: 'kg.easysoft.diyar',
-  );
 }

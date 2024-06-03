@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:280176558850:android:d99eba92085a4a6d12f81b",
+        "mobilesdk_app_id": "1:280176558850:android:5697842d0058f97a12f81b",
         "android_client_info": {
-          "package_name": "com.example.diyar_express"
+          "package_name": "kg.easysoft.diyar"
         }
       },
       "oauth_client": [],
