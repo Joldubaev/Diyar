@@ -40,6 +40,7 @@ class ProductItemWidgetState extends State<ProductItemWidget> {
           StatefulBuilder(
             builder: (BuildContext context, setState) {
               return ProductItemContentWidget(
+                isShadowVisible: false,
                 food: widget.food,
                 quantity: _currentQuantity,
                 isCounter: true,
