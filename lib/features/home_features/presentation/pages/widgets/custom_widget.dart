@@ -1,3 +1,4 @@
+import 'package:diyar/shared/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class CardWidget extends StatelessWidget {
@@ -12,7 +13,7 @@ class CardWidget extends StatelessWidget {
     required this.title,
     required this.description,
     required this.image,
-    this.placeholderImage = 'https://via.placeholder.com/150',
+    this.placeholderImage = 'assets/images/app_logo.png',
     this.discount,
   });
 
@@ -27,16 +28,17 @@ class CardWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Image.network(
-            image,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
-              return Image.network(
-                placeholderImage,
-                fit: BoxFit.cover,
-                height: 100,
-              );
-            },
+          ClipRRect(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
+            child: Image.asset(
+              image,
+              fit: BoxFit.cover,
+              height: 150,
+              errorBuilder: (context, error, stackTrace) {
+                return Image.asset(placeholderImage,
+                    fit: BoxFit.contain, height: 150, color: AppColors.primary);
+              },
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -44,7 +46,7 @@ class CardWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "$title ${discount != null ? ' - $discount%' : ''}",
+                  "$title${discount != null ? ' - $discount%' : ''}",
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
