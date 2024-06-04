@@ -8,6 +8,7 @@ import 'package:diyar/features/menu/menu.dart';
 import 'package:diyar/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 @RoutePage()
 class MenuPage extends StatefulWidget {
@@ -17,9 +18,12 @@ class MenuPage extends StatefulWidget {
   State<MenuPage> createState() => _MenuPageState();
 }
 
-class _MenuPageState extends State<MenuPage> {
+class _MenuPageState extends State<MenuPage>
+    with SingleTickerProviderStateMixin {
   int _activeIndex = 0;
-  final ScrollController _scrollController = ScrollController();
+  final ItemScrollController _itemScrollController = ItemScrollController();
+  final ItemPositionsListener _itemPositionsListener =
+      ItemPositionsListener.create();
   List<CategoryModel> menu = [];
 
   @override
@@ -27,12 +31,36 @@ class _MenuPageState extends State<MenuPage> {
     super.initState();
     context.read<MenuCubit>().getProductsWithMenu();
     context.read<CartCubit>().getCartItems();
+    _itemPositionsListener.itemPositions.addListener(_onScroll);
   }
 
   @override
   void dispose() {
-    _scrollController.dispose();
+    _itemPositionsListener.itemPositions.removeListener(_onScroll);
     super.dispose();
+  }
+
+  void _onScroll() {
+    final indices = _itemPositionsListener.itemPositions.value
+        .where((itemPosition) => itemPosition.itemLeadingEdge < 0.5)
+        .map((itemPosition) => itemPosition.index)
+        .toList();
+    if (indices.isNotEmpty && _activeIndex != indices.first) {
+      setState(() {
+        _activeIndex = indices.first;
+      });
+    }
+  }
+
+  Future<void> _scrollToCategory(int index) async {
+    await _itemScrollController.scrollTo(
+      index: index,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+    );
+    setState(() {
+      _activeIndex = index;
+    });
   }
 
   @override
@@ -41,7 +69,9 @@ class _MenuPageState extends State<MenuPage> {
       body: BlocConsumer<MenuCubit, MenuState>(
         listener: (context, state) {
           if (state is GetMenuLoaded) {
-            menu = state.categories;
+            setState(() {
+              menu = state.categories;
+            });
           }
         },
         builder: (context, state) {
@@ -64,7 +94,8 @@ class _MenuPageState extends State<MenuPage> {
                   height: 35,
                   child: ListView.separated(
                     padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
-                    separatorBuilder: (context, index) => const SizedBox(width: 10),
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(width: 10),
                     itemCount: menu.length,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) => GestureDetector(
@@ -72,7 +103,9 @@ class _MenuPageState extends State<MenuPage> {
                       child: Container(
                         padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
                         decoration: BoxDecoration(
-                          color: index == _activeIndex ? AppColors.primary : Colors.transparent,
+                          color: index == _activeIndex
+                              ? AppColors.primary
+                              : Colors.transparent,
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(color: AppColors.primary),
                         ),
@@ -80,7 +113,9 @@ class _MenuPageState extends State<MenuPage> {
                           child: Text(
                             "${menu[index].category?.name}",
                             style: TextStyle(
-                              color: index == _activeIndex ? AppColors.white : AppColors.primary,
+                              color: index == _activeIndex
+                                  ? AppColors.white
+                                  : AppColors.primary,
                             ),
                           ),
                         ),
@@ -90,76 +125,67 @@ class _MenuPageState extends State<MenuPage> {
                 ),
                 const SizedBox(height: 10),
                 Expanded(
-                  child: NotificationListener<ScrollNotification>(
-                    onNotification: (scrollNotification) {
-                      if (scrollNotification is ScrollUpdateNotification) {
-                        double position = scrollNotification.metrics.pixels;
-                        double totalHeight = 0.0;
-                        for (int i = 0; i < menu.length; i++) {
-                          totalHeight += _calculateCategoryHeight(i);
-                          if (position < totalHeight) {
-                            setState(() => _activeIndex = i);
-                            break;
-                          }
-                        }
-                      }
-                      return false;
-                    },
-                    child: ListView.builder(
-                      controller: _scrollController,
-                      itemCount: menu.length,
-                      itemBuilder: (context, index) {
-                        final category = menu[index];
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                              child: Text(
-                                category.category?.name ?? '',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: index == _activeIndex ? AppColors.primary : AppColors.black1,
-                                ),
+                  child: ScrollablePositionedList.builder(
+                    itemScrollController: _itemScrollController,
+                    itemPositionsListener: _itemPositionsListener,
+                    itemCount: menu.length,
+                    itemBuilder: (context, index) {
+                      final category = menu[index];
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                            child: Text(
+                              category.category?.name ?? '',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: index == _activeIndex
+                                    ? AppColors.primary
+                                    : AppColors.black1,
                               ),
                             ),
-                            StreamBuilder<List<CartItemModel>>(
-                                stream: context.read<CartCubit>().cart,
-                                builder: (context, snapshot) {
-                                  List cart = [];
-                                  if (snapshot.hasData) {
-                                    cart = snapshot.data ?? [];
-                                  }
-                                  return GridView.count(
-                                    crossAxisCount: 2,
-                                    mainAxisSpacing: 10,
-                                    crossAxisSpacing: 10,
-                                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                                    childAspectRatio: 0.72,
-                                    shrinkWrap: true,
-                                    physics: const NeverScrollableScrollPhysics(),
-                                    children: List.generate(
-                                      category.foods?.length ?? 0,
-                                      (index) {
-                                        final food = category.foods![index];
-                                        final cartItem = cart.firstWhere(
-                                          (element) => element.food?.id == food.id,
-                                          orElse: () => CartItemModel(food: food, quantity: 0),
-                                        );
-                                        return ProductItemWidget(
-                                          food: food,
-                                          quantity: cartItem.quantity ?? 0,
-                                        );
-                                      },
-                                    ),
-                                  );
-                                }),
-                            const SizedBox(height: 15),
-                          ],
-                        );
-                      },
-                    ),
+                          ),
+                          StreamBuilder<List<CartItemModel>>(
+                            stream: context.read<CartCubit>().cart,
+                            builder: (context, snapshot) {
+                              List cart = [];
+                              if (snapshot.hasData) {
+                                cart = snapshot.data ?? [];
+                              }
+                              return GridView.count(
+                                crossAxisCount: 2,
+                                mainAxisSpacing: 10,
+                                crossAxisSpacing: 10,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
+                                childAspectRatio: 0.72,
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                children: List.generate(
+                                  category.foods?.length ?? 0,
+                                  (index) {
+                                    final food = category.foods![index];
+                                    final cartItem = cart.firstWhere(
+                                      (element) => element.food?.id == food.id,
+                                      orElse: () => CartItemModel(
+                                          food: food, quantity: 0),
+                                    );
+                                    return ProductItemWidget(
+                                      food: food,
+                                      quantity: cartItem.quantity ?? 0,
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                          const SizedBox(height: 15),
+                        ],
+                      );
+                    },
                   ),
                 ),
               ],
@@ -168,23 +194,5 @@ class _MenuPageState extends State<MenuPage> {
         },
       ),
     );
-  }
-
-  void _scrollToCategory(int index) {
-    double position = 0.0;
-    for (int i = 0; i < index; i++) {
-      position += _calculateCategoryHeight(i);
-    }
-    _scrollController.animateTo(
-      position,
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
-    );
-  }
-
-  double _calculateCategoryHeight(int index) {
-    double categoryHeight = 40.0;
-    double productsHeight = (menu[index].foods?.length ?? 0) * 120.0;
-    return categoryHeight + productsHeight;
   }
 }

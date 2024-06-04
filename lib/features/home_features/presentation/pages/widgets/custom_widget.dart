@@ -1,4 +1,4 @@
-import 'package:diyar/shared/theme/app_colors.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class CardWidget extends StatelessWidget {
@@ -28,16 +28,23 @@ class CardWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
-            child: Image.asset(
-              image,
-              fit: BoxFit.cover,
-              height: 150,
-              errorBuilder: (context, error, stackTrace) {
-                return Image.asset(placeholderImage,
-                    fit: BoxFit.contain, height: 150, color: AppColors.primary);
-              },
+          Center(
+            child: ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(8)),
+              child: CachedNetworkImage(
+                imageUrl: image,
+                placeholder: (context, url) => const Center(
+                  child: CircularProgressIndicator(),
+                ),
+                errorWidget: (context, url, error) => Image.asset(
+                  placeholderImage,
+                  fit: BoxFit.cover,
+                  color: Colors.orange,
+                ),
+                fit: BoxFit.cover,
+                height: 150,
+                memCacheHeight: 150,
+              ),
             ),
           ),
           Padding(
@@ -53,10 +60,7 @@ class CardWidget extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8),
-                Text(
-                  description,
-                  style: const TextStyle(fontSize: 16),
-                ),
+                Text(description, style: const TextStyle(fontSize: 16)),
               ],
             ),
           ),

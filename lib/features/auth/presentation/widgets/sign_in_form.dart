@@ -74,15 +74,24 @@ class _LoginFormState extends State<LoginForm> {
               const SizedBox(height: 20),
               BlocConsumer<SignInCubit, SignInState>(
                 listener: (context, state) {
-                  if (state is SignInSuccessWithUser) {
+                  if (state is SignInFailure) {
+                    SnackBarMessage().showErrorSnackBar(
+                      message: "Неверный логин или пароль",
+                      context: context,
+                    );
+                  } else if (state is SignInSuccessWithUser) {
                     var role =
                         sl<SharedPreferences>().getString(AppConst.userRole);
                     if (role?.toLowerCase() == "user".toLowerCase()) {
-                      context.router.pushAndPopUntil(const MainRoute(),
-                          predicate: (_) => false);
+                      context.router.pushAndPopUntil(
+                        const MainRoute(),
+                        predicate: (_) => false,
+                      );
                     } else {
-                      context.router.pushAndPopUntil(const CurierRoute(),
-                          predicate: (_) => false);
+                      context.router.pushAndPopUntil(
+                        const CurierRoute(),
+                        predicate: (_) => false,
+                      );
                     }
                   }
                 },
@@ -95,9 +104,12 @@ class _LoginFormState extends State<LoginForm> {
                     title: 'Авторизоваться',
                     onTap: () {
                       if (_formKey.currentState!.validate()) {
-                        context.read<SignInCubit>().signInUser(UserModel(
-                            email: _usernameController.text,
-                            password: _passwordController.text));
+                        context.read<SignInCubit>().signInUser(
+                              UserModel(
+                                email: _usernameController.text,
+                                password: _passwordController.text,
+                              ),
+                            );
                       }
                     },
                   );

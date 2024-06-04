@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class NewsWidget extends StatelessWidget {
@@ -18,11 +19,24 @@ class NewsWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Column(
         children: [
-          Image.asset(
-            image,
-            fit: BoxFit.cover,
-            width: double.infinity,
-            height: 200,
+          Center(
+            child: ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(8)),
+              child: CachedNetworkImage(
+                imageUrl: image,
+                placeholder: (context, url) => const Center(
+                  child: CircularProgressIndicator(),
+                ),
+                errorWidget: (context, url, error) => Image.asset(
+                  "assets/images/app_logo.png",
+                  fit: BoxFit.cover,
+                  color: Colors.orange,
+                ),
+                fit: BoxFit.cover,
+                height: 150,
+                memCacheHeight: 150,
+              ),
+            ),
           ),
           const SizedBox(height: 8),
           Text(

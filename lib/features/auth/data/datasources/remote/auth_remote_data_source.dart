@@ -76,7 +76,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
     } catch (e) {
       log("$e");
-      showToast('Неверный логин или пароль', isError: true);
       throw ServerException();
     }
   }
