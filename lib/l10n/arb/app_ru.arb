@@ -104,7 +104,7 @@
     "houseNumber":"Номер дома",
     "pleaseEnterHouseNumber":"Пожалуйста, введите номер дома",
     "pleaseEnterCorrectHouseNumber":"Пожалуйста, введите корректный номер дома",
-    "ofice":"КВ/Офис",
+    "ofice":"Кв/Офис",
     "entranceNumber":"Номер подъезда",
     "codeIntercom":"Код домофона",
     "floor":"Этаж",

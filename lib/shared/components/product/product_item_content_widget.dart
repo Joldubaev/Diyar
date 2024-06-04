@@ -1,10 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
 import 'package:diyar/features/cart/data/models/cart_item_model.dart';
 import 'package:diyar/features/cart/presentation/cubit/cart_cubit.dart';
-import 'package:diyar/shared/theme/theme.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:diyar/features/features.dart';
+import 'package:diyar/shared/theme/theme.dart';
+import 'package:flutter/material.dart';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProductItemContentWidget extends StatelessWidget {
   final VoidCallback? onTap;
@@ -12,7 +13,6 @@ class ProductItemContentWidget extends StatelessWidget {
   final bool? isShadowVisible;
   final int quantity;
   final FoodModel food;
-  final ValueChanged<int>? onQuantityChanged;
 
   const ProductItemContentWidget({
     super.key,
@@ -21,7 +21,6 @@ class ProductItemContentWidget extends StatelessWidget {
     required this.food,
     required this.quantity,
     this.isCounter = true,
-    this.onQuantityChanged,
   });
 
   @override
@@ -54,8 +53,7 @@ class ProductItemContentWidget extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(left: 6, right: 6, top: 0),
                 child: CachedNetworkImage(
-                  imageUrl: food.urlPhoto ??
-                      'https://i.ibb.co/GkL25DB/ALE-1357-7.png',
+                  imageUrl: food.urlPhoto ?? 'https://i.ibb.co/GkL25DB/ALE-1357-7.png',
                   errorWidget: (context, url, error) => Image.asset(
                     'assets/images/app_logo.png',
                     color: Colors.grey,
@@ -122,8 +120,7 @@ class ProductItemContentWidget extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                mainAxisSize:
-                    isShadowVisible! ? MainAxisSize.max : MainAxisSize.min,
+                mainAxisSize: isShadowVisible! ? MainAxisSize.max : MainAxisSize.min,
                 children: [
                   IconButton(
                     splashRadius: 20,
@@ -131,10 +128,8 @@ class ProductItemContentWidget extends StatelessWidget {
                     onPressed: () {
                       if (quantity > 1) {
                         context.read<CartCubit>().decrementCart(food.id!);
-                        onQuantityChanged?.call(quantity - 1);
                       } else {
                         context.read<CartCubit>().removeFromCart(food.id!);
-                        onQuantityChanged?.call(0);
                       }
                     },
                     icon: const Padding(
@@ -154,10 +149,8 @@ class ProductItemContentWidget extends StatelessWidget {
                         context.read<CartCubit>().addToCart(
                               CartItemModel(food: food, quantity: 1),
                             );
-                        onQuantityChanged?.call(1);
                       } else {
                         context.read<CartCubit>().incrementCart(food.id!);
-                        onQuantityChanged?.call(quantity + 1);
                       }
                     },
                     icon: const Padding(

@@ -16,9 +16,14 @@ class AuthBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+    return SingleChildScrollView(
+      padding: EdgeInsets.only(
+        left: 20,
+        right: 20,
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(context.l10n.enterEmail),
           const SizedBox(height: 10),
@@ -45,12 +50,15 @@ class AuthBottomSheet extends StatelessWidget {
             bgColor: AppColors.primary,
             title: context.l10n.send,
             onTap: () {
-              context.read<SignInCubit>().sendCodeToEmail(resedPasswordCode.text);
-              if (resedPasswordCode.text.isNotEmpty) {
+              if (resedPasswordCode.text.isNotEmpty &&
+                  EmailValidator.validate(resedPasswordCode.text)) {
+                context
+                    .read<SignInCubit>()
+                    .sendCodeToEmail(resedPasswordCode.text);
                 context.router.replace(const RessetPasswordRoute());
               } else {
                 SnackBarMessage().showErrorSnackBar(
-                  message: context.l10n.pleaseEnterEmail,
+                  message: context.l10n.pleaseEnterCorrectEmail,
                   context: context,
                 );
               }

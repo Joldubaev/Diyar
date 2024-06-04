@@ -177,7 +177,6 @@ class _PickupFormState extends State<PickupForm> {
                 controller: _timeController,
                 hintText: '18:00 | 12.12.2021',
                 title: context.l10n.preparingForThe,
-                inputType: TextInputType.number,
               ),
               const SizedBox(height: 10),
               Text(context.l10n.orderPickupAd,
