@@ -141,7 +141,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                 },
               ),
               CustomInputWidget(
-                  inputType: TextInputType.number,
+                  inputType: TextInputType.text,
                   controller: _houseController,
                   hintText: context.l10n.houseNumber,
                   title: context.l10n.houseNumber,
@@ -152,10 +152,10 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                     return null;
                   }),
               CustomInputWidget(
-                  inputType: TextInputType.number,
+                  inputType: TextInputType.text,
                   controller: _apartmentController,
-                  hintText: context.l10n.floor,
-                  title: context.l10n.floor),
+                  hintText: '',
+                  title: context.l10n.ofice),
               CustomInputWidget(
                 inputType: TextInputType.number,
                 controller: _intercomController,

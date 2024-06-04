@@ -11,6 +11,7 @@ class PhoneNumberMask extends StatefulWidget {
     required this.textController,
     required this.hintText,
     required this.formatter,
+    this.isReadOnly,
     this.validator,
     this.title,
   }) : super(key: key);
@@ -21,6 +22,7 @@ class PhoneNumberMask extends StatefulWidget {
   final String? title;
   final String hintText;
   final TextInputType textInputType;
+  final bool? isReadOnly;
   @override
   PhoneNumberMaskState createState() => PhoneNumberMaskState();
 }
@@ -38,6 +40,7 @@ class PhoneNumberMaskState extends State<PhoneNumberMask> {
           ),
         if (widget.title != null) const SizedBox(height: 6),
         TextFormField(
+          readOnly: widget.isReadOnly ?? false,
           controller: widget.textController,
           inputFormatters: [const UpperCaseTextFormatter(), widget.formatter],
           autocorrect: false,
@@ -78,8 +81,10 @@ class UpperCaseTextFormatter implements TextInputFormatter {
   const UpperCaseTextFormatter();
 
   @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    return TextEditingValue(text: newValue.text.toUpperCase(), selection: newValue.selection);
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+        text: newValue.text.toUpperCase(), selection: newValue.selection);
   }
 }
 
@@ -88,10 +93,14 @@ class SpecialMaskTextInputFormatter extends MaskTextInputFormatter {
   static String maskB = "S.######";
 
   SpecialMaskTextInputFormatter({String? initialText})
-      : super(mask: maskA, filter: {"#": RegExp('[0-9]'), "S": RegExp('[AB]')}, initialText: initialText);
+      : super(
+            mask: maskA,
+            filter: {"#": RegExp('[0-9]'), "S": RegExp('[AB]')},
+            initialText: initialText);
 
   @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
     if (newValue.text.startsWith("A")) {
       if (getMask() != maskA) {
         updateMask(mask: maskA);

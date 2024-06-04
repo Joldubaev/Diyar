@@ -20,18 +20,22 @@ class _RessetPasswordPageState extends State<RessetPasswordPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   final resedPasswordCode = TextEditingController();
+  bool _isNavigated = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primary,
         leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back_ios,
-              color: AppColors.white,
-            ),
-            onPressed: () => context.router.push(const SignInRoute())),
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            color: AppColors.white,
+          ),
+          onPressed: () => context.router.push(const SignInRoute()),
+        ),
         title: Text(
           context.l10n.passwordRecovery,
           style: theme.textTheme.titleSmall!.copyWith(color: AppColors.white),
@@ -50,10 +54,12 @@ class _RessetPasswordPageState extends State<RessetPasswordPage> {
                 image: AssetImage("assets/images/auth_images.png"),
               ),
               const SizedBox(height: 10),
-              Text(context.l10n.passwordRecoveryText,
-                  style: theme.textTheme.bodyLarge!.copyWith(color: AppColors.primary, fontWeight: FontWeight.w600),
-                  textAlign: TextAlign.center),
-              const SizedBox(height: 20),
+              Text(
+                context.l10n.passwordRecoveryText,
+                style: theme.textTheme.bodyLarge!.copyWith(
+                    color: AppColors.primary, fontWeight: FontWeight.w600),
+                textAlign: TextAlign.center,
+              ),
               CustomInputWidget(
                 title: context.l10n.email,
                 hintText: context.l10n.email,
@@ -69,7 +75,6 @@ class _RessetPasswordPageState extends State<RessetPasswordPage> {
                   return null;
                 },
               ),
-              const SizedBox(height: 20),
               CustomInputWidget(
                 title: context.l10n.newPassword,
                 hintText: "******",
@@ -78,14 +83,28 @@ class _RessetPasswordPageState extends State<RessetPasswordPage> {
                 inputType: TextInputType.text,
                 validator: (value) {
                   if (value!.isEmpty) {
-                    return context.l10n.pleaseEnterCode;
-                  } else if (value.length < 5) {
-                    return context.l10n.pleaseEnterCorrectCode;
+                    return context.l10n.pleaseEnterPassword;
+                  } else if (value.length < 6) {
+                    return context.l10n.pleaseEnterCorrectPassword;
                   }
                   return null;
                 },
               ),
-              const SizedBox(height: 20),
+              CustomInputWidget(
+                title: context.l10n.confirmPassword,
+                hintText: "******",
+                controller: _confirmPasswordController,
+                isPasswordField: true,
+                inputType: TextInputType.text,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Пожалуйста, введите пароль';
+                  } else if (value != _passwordController.text) {
+                    return context.l10n.passwordsDoNotMatch;
+                  }
+                  return null;
+                },
+              ),
               CustomInputWidget(
                 title: context.l10n.codeUpdate,
                 hintText: "******",
@@ -104,10 +123,17 @@ class _RessetPasswordPageState extends State<RessetPasswordPage> {
               BlocConsumer<SignInCubit, SignInState>(
                 listener: (context, state) {
                   if (state is SignInFailure) {
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(SnackBar(content: Text(state.message), backgroundColor: AppColors.red));
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(state.message),
+                        backgroundColor: AppColors.red));
                   } else if (state is ResetPasswordSuccess) {
-                    context.router.pushAndPopUntil(const MainRoute(), predicate: (_) => false);
+                    if (!_isNavigated) {
+                      _isNavigated = true;
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        context.router.pushAndPopUntil(const MainRoute(),
+                            predicate: (_) => false);
+                      });
+                    }
                   }
                 },
                 builder: (context, state) {
@@ -121,23 +147,26 @@ class _RessetPasswordPageState extends State<RessetPasswordPage> {
                         Center(
                           child: Text(
                             context.l10n.resgisterIsFailed,
-                            style: theme.textTheme.bodyMedium!
-                                .copyWith(color: const Color.fromARGB(255, 233, 71, 35), fontWeight: FontWeight.bold),
+                            style: theme.textTheme.bodyMedium!.copyWith(
+                                color: const Color.fromARGB(255, 233, 71, 35),
+                                fontWeight: FontWeight.bold),
                           ),
                         ),
                         const SizedBox(height: 10),
                         SubmitButtonWidget(
-                          textStyle: theme.textTheme.bodyLarge!.copyWith(color: AppColors.white),
+                          textStyle: theme.textTheme.bodyLarge!
+                              .copyWith(color: AppColors.white),
                           bgColor: AppColors.primary,
                           title: context.l10n.entrance,
                           onTap: () {
                             if (_formKey.currentState!.validate()) {
                               context.read<SignInCubit>().resetPassword(
-                                      model: ResetModel(
-                                    email: _emailController.text,
-                                    newPassword: _passwordController.text,
-                                    code: int.parse(resedPasswordCode.text),
-                                  ));
+                                    model: ResetModel(
+                                      email: _emailController.text,
+                                      newPassword: _passwordController.text,
+                                      code: int.parse(resedPasswordCode.text),
+                                    ),
+                                  );
                             }
                           },
                         ),
@@ -146,7 +175,8 @@ class _RessetPasswordPageState extends State<RessetPasswordPage> {
                   }
 
                   return SubmitButtonWidget(
-                    textStyle: theme.textTheme.bodyLarge!.copyWith(color: AppColors.white),
+                    textStyle: theme.textTheme.bodyLarge!
+                        .copyWith(color: AppColors.white),
                     bgColor: AppColors.primary,
                     title: context.l10n.entrance,
                     onTap: () {

@@ -67,14 +67,17 @@ class _ProfileInfoPageState extends State<ProfileInfoPage> {
                     child: SvgPicture.asset(
                       'assets/icons/profile_icon.svg',
                       height: 100,
-                      colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                      colorFilter:
+                          const ColorFilter.mode(Colors.white, BlendMode.srcIn),
                     ),
                   ),
                 ),
                 const SizedBox(height: 10),
-                Text('${widget.user.name} ', style: theme.textTheme.titleMedium),
+                Text('${widget.user.name} ',
+                    style: theme.textTheme.titleMedium),
                 const SizedBox(height: 40),
                 CustomInputWidget(
+                  isReadOnly: true,
                   title: context.l10n.name,
                   hintText: context.l10n.yourName,
                   controller: fullNameController,
@@ -87,11 +90,13 @@ class _ProfileInfoPageState extends State<ProfileInfoPage> {
                 ),
                 const SizedBox(height: 20),
                 PhoneNumberMask(
+                  isReadOnly: true,
                   title: context.l10n.phone,
                   hintText: '+996 (___) __-__-__',
                   textController: phoneController,
                   hint: context.l10n.phone,
-                  formatter: MaskTextInputFormatter(mask: "+996 (###) ##-##-##"),
+                  formatter:
+                      MaskTextInputFormatter(mask: "+996 (###) ##-##-##"),
                   textInputType: TextInputType.phone,
                   validator: (value) {
                     if (value!.isEmpty) {
