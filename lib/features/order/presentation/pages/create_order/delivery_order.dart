@@ -121,14 +121,11 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                   return null;
                 },
               ),
+
               CustomInputWidget(
+                onTap: () => context.router.push(const OrderMapRoute()),
                 isReadOnly: true,
-                trailing: TextButton(
-                  onPressed: () => context.router.push(const OrderMapRoute()),
-                  child: Text(context.l10n.chooseOnMap,
-                      style: theme.textTheme.bodyMedium!),
-                ),
-                hintText: 'Пожалуйста, выберите адрес на карте',
+                hintText: context.l10n.chooseOnMap,
                 title: context.l10n.adress,
                 controller: _addressController,
                 validator: (value) {

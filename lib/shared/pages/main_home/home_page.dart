@@ -41,16 +41,20 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: AppColors.primary,
-        title: Align(
-          alignment: Alignment.centerLeft,
-          child: FittedBox(
-            child: Text(
-              '${l10n.welcome}  ${context.read<ProfileCubit>().user?.name ?? ''}!',
-              style: theme.textTheme.titleSmall?.copyWith(
-                color: AppColors.white,
+        title: BlocBuilder<ProfileCubit, ProfileState>(
+          builder: (context, state) {
+            return Align(
+              alignment: Alignment.centerLeft,
+              child: FittedBox(
+                child: Text(
+                  '${l10n.welcome}  ${context.read<ProfileCubit>().user?.name ?? ''}!',
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    color: AppColors.white,
+                  ),
+                ),
               ),
-            ),
-          ),
+            );
+          },
         ),
       ),
       body: SafeArea(
