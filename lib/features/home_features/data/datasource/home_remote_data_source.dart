@@ -12,15 +12,26 @@ abstract class HomeRemoteDataSource {
 class HomeFeaturesRepositoryImpl implements HomeRemoteDataSource {
   final Dio client;
 
+  // In-memory cache
+  List<NewsModel>? _newsCache;
+  List<SaleModel>? _salesCache;
+
   HomeFeaturesRepositoryImpl(this.client);
 
   @override
   Future<List<NewsModel>> getNews() async {
+    // Check if data is in the cache
+    if (_newsCache != null) {
+      return _newsCache!;
+    }
+
+    // Fetch data from the network
     final response = await client.get(ApiConst.getNews);
 
     if (response.statusCode == 200) {
       final List<dynamic> news = response.data;
-      return news.map((e) => NewsModel.fromJson(e)).toList();
+      _newsCache = news.map((e) => NewsModel.fromJson(e)).toList();
+      return _newsCache!;
     } else {
       throw ServerException();
     }
@@ -28,13 +39,20 @@ class HomeFeaturesRepositoryImpl implements HomeRemoteDataSource {
 
   @override
   Future<List<SaleModel>> getSales() async {
+    // Check if data is in the cache
+    if (_salesCache != null) {
+      return _salesCache!;
+    }
+
+    // Fetch data from the network
     final response = await client.get(ApiConst.getSales);
     if (response.statusCode == 200) {
       final List<SaleModel> sales = [];
       for (var item in response.data) {
         sales.add(SaleModel.fromJson(item));
       }
-      return sales;
+      _salesCache = sales;
+      return _salesCache!;
     } else {
       throw ServerException();
     }

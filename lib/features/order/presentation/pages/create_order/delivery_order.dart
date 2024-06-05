@@ -254,8 +254,9 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: Text(context.l10n.totalToPay),
-                            content: Text('${deliveryPrice + totalPrice} сом'),
+                            title: const Text('Сумма оплаты c доставкой.'),
+                            content: Text('${deliveryPrice + totalPrice} сом',
+                                style: theme.textTheme.titleSmall!),
                             actions: [
                               TextButton(
                                 onPressed: () {

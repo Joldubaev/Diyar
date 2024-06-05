@@ -1,21 +1,20 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class CardWidget extends StatelessWidget {
   final String title;
   final String description;
-  final String image;
+  final String? image;
   final String placeholderImage;
   final int? discount;
 
   const CardWidget({
-    super.key,
+    Key? key,
     required this.title,
     required this.description,
-    required this.image,
-    this.placeholderImage = 'assets/images/app_logo.png',
+    this.image,
+    this.placeholderImage = 'assets/images/app_icon.png',
     this.discount,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,41 +27,72 @@ class CardWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Center(
-            child: ClipRRect(
-              borderRadius: const BorderRadius.all(Radius.circular(8)),
-              child: CachedNetworkImage(
-                imageUrl: image,
-                placeholder: (context, url) => const Center(
-                  child: CircularProgressIndicator(),
-                ),
-                errorWidget: (context, url, error) => Image.asset(
-                  placeholderImage,
-                  fit: BoxFit.cover,
-                  color: Colors.orange,
-                ),
+          _buildImageWidget(context),
+          _buildTextContent(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildImageWidget(BuildContext context) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        ClipRRect(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(8),
+            topRight: Radius.circular(8),
+          ),
+          child: Image.asset(
+            placeholderImage,
+            fit: BoxFit.cover,
+            height: 150,
+            width: double.infinity,
+          ),
+        ),
+        if (image != null && image!.isNotEmpty)
+          Image.network(
+            image!,
+            fit: BoxFit.cover,
+            height: 150,
+            width: double.infinity,
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) {
+                return child;
+              } else {
+                return const CircularProgressIndicator();
+              }
+            },
+            errorBuilder: (context, error, stackTrace) {
+              return Image.asset(
+                placeholderImage,
                 fit: BoxFit.cover,
                 height: 150,
-                memCacheHeight: 150,
-              ),
+                width: double.infinity,
+              );
+            },
+          ),
+      ],
+    );
+  }
+
+  Widget _buildTextContent() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "$title${discount != null ? ' - $discount%' : ''}",
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "$title${discount != null ? ' - $discount%' : ''}",
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(description, style: const TextStyle(fontSize: 16)),
-              ],
-            ),
+          const SizedBox(height: 8),
+          Text(
+            description,
+            style: const TextStyle(fontSize: 16),
           ),
         ],
       ),
