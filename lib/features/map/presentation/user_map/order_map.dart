@@ -249,7 +249,7 @@ class _OrderMapPageState extends State<OrderMapPage> {
   }
 
   Future<void> updateAddressDetails(AppLatLong latLong) async {
-    address = const Text('Пойск Вашего Адресса').data;
+    address = const Text('Поиск местоположения').data;
     setState(() {});
     LocationModel? data =
         await locationRepo.getLocationByAdress(latLong: latLong);
