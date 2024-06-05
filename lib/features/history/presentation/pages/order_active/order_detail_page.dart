@@ -95,7 +95,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
       OrderDetailItem(title: context.l10n.floor, value: order.floor ?? ""),
       OrderDetailItem(title: context.l10n.entrance, value: order.entrance ?? ""),
       OrderDetailItem(title: 'Еда', value: order.foods!.map((e) => e.name).join(', ')),
-      OrderDetailItem(title: 'Количество ', value: order.foods!.length.toString()),
+      OrderDetailItem(title: 'Количество ', value: order.foods!.map((e) => e.quantity).join(', '),),
       OrderDetailItem(title: context.l10n.dishes, value: "${order.dishesCount}"),
       OrderDetailItem(title: context.l10n.paymentMethod, value: order.paymentMethod ?? ""),
       OrderDetailItem(title: context.l10n.som, value: "${order.price}"),

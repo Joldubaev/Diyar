@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/features/auth/data/models/user_mpdel.dart';
@@ -75,6 +77,28 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
       },
       builder: (context, state) {
         _addressController.text = context.read<OrderCubit>().address;
+
+        log(_addressController.text);
+
+        // Разделение строки по запятой
+        List<String> parts = _addressController.text.split(',');
+
+        // Получение последней части и удаление начальных и конечных пробелов
+        String lastPart = parts.last.trim();
+
+        // Извлечение последнего числа из строки
+        RegExp regExp = RegExp(r'(\d+[^\s]*)$');
+        Match? match = regExp.firstMatch(lastPart);
+
+        if (match != null) {
+          String lastNumber = match.group(0)!;
+          _houseController.text = lastNumber;
+          log('Последнее число: $lastNumber');
+        } else {
+          log('Число не найдено');
+          _houseController.text = '';
+        }
+
         if (state is CreateOrderLoading) {
           return const Center(child: CircularProgressIndicator());
         } else if (state is CreateOrderError) {
@@ -121,7 +145,6 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                   return null;
                 },
               ),
-
               CustomInputWidget(
                 onTap: () => context.router.push(const OrderMapRoute()),
                 isReadOnly: true,
@@ -199,28 +222,6 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                   });
                 },
               ),
-              // RadioListTile<PaymentTypeDelivery>(
-              //   activeColor: theme.primaryColor,
-              //   title: Text(context.l10n.),
-              //   value: PaymentTypeDelivery.card,
-              //   groupValue: _paymentType,
-              //   onChanged: (PaymentTypeDelivery? value) {
-              //     setState(() {
-              //       _paymentType = value!;
-              //     });
-              //   },
-              // ),
-              // RadioListTile<PaymentTypeDelivery>(
-              //   activeColor: theme.primaryColor,
-              //   title: Text(context.l10n.onlinePayment),
-              //   value: PaymentTypeDelivery.online,
-              //   groupValue: _paymentType,
-              //   onChanged: (PaymentTypeDelivery? value) {
-              //     setState(() {
-              //       _paymentType = value!;
-              //     });
-              //   },
-              // ),
               if (_paymentType == PaymentTypeDelivery.cash)
                 CustomInputWidget(
                   controller: _sdachaController,
@@ -313,3 +314,26 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
 }
 
 enum PaymentTypeDelivery { cash, card, online }
+
+  // RadioListTile<PaymentTypeDelivery>(
+  //   activeColor: theme.primaryColor,
+  //   title: Text(context.l10n.),
+  //   value: PaymentTypeDelivery.card,
+  //   groupValue: _paymentType,
+  //   onChanged: (PaymentTypeDelivery? value) {
+  //     setState(() {
+  //       _paymentType = value!;
+  //     });
+  //   },
+  // ),
+  // RadioListTile<PaymentTypeDelivery>(
+  //   activeColor: theme.primaryColor,
+  //   title: Text(context.l10n.onlinePayment),
+  //   value: PaymentTypeDelivery.online,
+  //   groupValue: _paymentType,
+  //   onChanged: (PaymentTypeDelivery? value) {
+  //     setState(() {
+  //       _paymentType = value!;
+  //     });
+  //   },
+  // ),

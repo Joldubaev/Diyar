@@ -42,7 +42,9 @@ class _CurierPageState extends State<CurierPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primary,
-        title: Text(context.l10n.activeOrders, style: theme.textTheme.titleMedium!.copyWith(color: AppColors.white)),
+        title: Text(context.l10n.activeOrders,
+            style:
+                theme.textTheme.titleMedium!.copyWith(color: AppColors.white)),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout, color: AppColors.white),
@@ -69,8 +71,11 @@ class _CurierPageState extends State<CurierPage> {
       ),
       drawerScrimColor: AppColors.black1.withOpacity(0.5),
       drawer: Theme(
-          data: Theme.of(context).copyWith(iconTheme: const IconThemeData(color: AppColors.white)),
-          child: const CustomDrawer()),
+        data: Theme.of(context).copyWith(
+          iconTheme: const IconThemeData(color: AppColors.white),
+        ),
+        child: const CustomDrawer(),
+      ),
       body: BlocBuilder<CurierCubit, CurierState>(
         builder: (context, state) {
           if (state is GetCourierActualOrdersError) {
@@ -79,9 +84,11 @@ class _CurierPageState extends State<CurierPage> {
             return const Center(child: CircularProgressIndicator());
           } else if (state is GetCourierActualOrdersLoaded) {
             orders = state.curiers;
-          } else if (orders.isEmpty) {
-            return const EmptyCurierOrder();
+            if (orders.isEmpty) {
+              return const EmptyCurierOrder();
+            }
           }
+
           return RefreshIndicator(
             onRefresh: _refresh,
             child: ListView.separated(
@@ -92,7 +99,9 @@ class _CurierPageState extends State<CurierPage> {
                 return Card(
                   margin: const EdgeInsets.all(0),
                   child: ExpansionTile(
-                    shape: const Border(bottom: BorderSide(color: Colors.transparent, width: 0)),
+                    shape: const Border(
+                        bottom:
+                            BorderSide(color: Colors.transparent, width: 0)),
                     childrenPadding: const EdgeInsets.fromLTRB(10, 10, 10, 8),
                     title: Text(
                       '${context.l10n.orderNumber} ${orders[index].orderNumber}',
@@ -106,16 +115,19 @@ class _CurierPageState extends State<CurierPage> {
                         child: IconButton(
                           icon: const Icon(Icons.copy_rounded),
                           onPressed: () {
-                            Clipboard.setData(ClipboardData(text: '${orders[index].address}'));
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(SnackBar(content: Text(context.l10n.addressIsCopied)));
+                            Clipboard.setData(ClipboardData(
+                                text: '${orders[index].address}'));
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text(context.l10n.addressIsCopied)));
                           },
                         ),
                       ),
                       FittedBox(
                         fit: BoxFit.none,
                         child: Text('${orders[index].address}',
-                            maxLines: 3, style: const TextStyle(color: AppColors.black1, fontSize: 13)),
+                            maxLines: 3,
+                            style: const TextStyle(
+                                color: AppColors.black1, fontSize: 13)),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -132,7 +144,8 @@ class _CurierPageState extends State<CurierPage> {
                           ),
                           CustomTextButton(
                             onPressed: () {
-                              _finishOrder(orders[index].orderNumber ?? 0).then((value) {
+                              _finishOrder(orders[index].orderNumber ?? 0)
+                                  .then((value) {
                                 context.read<CurierCubit>().getCuriers();
                               });
                             },
@@ -160,7 +173,8 @@ class _CurierPageState extends State<CurierPage> {
           onTap: () => _refresh(),
           title: 'Обновить',
           bgColor: AppColors.primary,
-          textStyle: theme.textTheme.bodyLarge!.copyWith(color: AppColors.white),
+          textStyle:
+              theme.textTheme.bodyLarge!.copyWith(color: AppColors.white),
         ),
       ),
     );

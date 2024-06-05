@@ -5,6 +5,7 @@ import 'package:diyar/features/features.dart';
 import 'package:diyar/features/menu/data/repositories/menu_repository.dart';
 import 'package:diyar/features/profile/data/data.dart';
 import 'package:diyar/features/profile/presentation/cubit/profile_cubit.dart';
+import 'package:diyar/shared/cubit/bloc/internet_bloc.dart';
 import 'package:diyar/shared/cubit/popular_cubit.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -34,44 +35,58 @@ Future<void> init() async {
   sl.registerFactory(() => HomeFeaturesCubit(sl()));
   sl.registerFactory(() => HistoryCubit(sl()));
   sl.registerFactory(() => CurierCubit(sl()));
+  sl.registerFactory(() => InternetBloc());
 
   // AUTH
-  sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl(), sl()));
-  sl.registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSourceImpl(sl(), sl(), sl()));
-  sl.registerLazySingleton<AuthLocalDataSource>(() => AuthLocalDataSourceImpl(sl()));
+  sl.registerLazySingleton<AuthRepository>(
+      () => AuthRepositoryImpl(sl(), sl()));
+  sl.registerLazySingleton<AuthRemoteDataSource>(
+      () => AuthRemoteDataSourceImpl(sl(), sl(), sl()));
+  sl.registerLazySingleton<AuthLocalDataSource>(
+      () => AuthLocalDataSourceImpl(sl()));
 
   // about us
-  sl.registerLazySingleton<AboutUsRepository>(() => AboutUsRepositoryImpl(sl()));
-  sl.registerLazySingleton<AboutUsRemoteDataSource>(() => AboutUsRemoteDataSourceImpl(sl(), sl()));
+  sl.registerLazySingleton<AboutUsRepository>(
+      () => AboutUsRepositoryImpl(sl()));
+  sl.registerLazySingleton<AboutUsRemoteDataSource>(
+      () => AboutUsRemoteDataSourceImpl(sl(), sl()));
 
   // Profile
   sl.registerLazySingleton<UserRepository>(() => UserRepositoryImpl(sl()));
-  sl.registerLazySingleton<UserRemoteDataSource>(() => UserRemoteDataSourceImpl(sl(), sl()));
+  sl.registerLazySingleton<UserRemoteDataSource>(
+      () => UserRemoteDataSourceImpl(sl(), sl()));
   // sl.registerLazySingleton<UserRepositoryImpl>(() => UserRepositoryImpl(sl()));
   // sl.registerLazySingleton<UserRemoteDataSource>(() => UserRemoteDataSourceImpl(sl(), sl()));
 
   // Menu
   sl.registerLazySingleton<MenuRepository>(() => MenuRepositoryImpl(sl()));
-  sl.registerLazySingleton<MenuRemoteDataSource>(() => MenuRemoteDataSourceImpl(sl(), sl()));
+  sl.registerLazySingleton<MenuRemoteDataSource>(
+      () => MenuRemoteDataSourceImpl(sl(), sl()));
 
   // HomeFeatures
-  sl.registerLazySingleton<HomeRemoteDataSource>(() => HomeFeaturesRepositoryImpl(sl()));
+  sl.registerLazySingleton<HomeRemoteDataSource>(
+      () => HomeFeaturesRepositoryImpl(sl()));
   sl.registerLazySingleton<HomeRepository>(() => HomeFeaturesRepoImpl(sl()));
 
   // Cart
   sl.registerLazySingleton<CartRepository>(() => CartRepositoryImpl(sl()));
-  sl.registerLazySingleton<CartRemoteDataSource>(() => CartRemoteDataSourceImpl(sl()));
+  sl.registerLazySingleton<CartRemoteDataSource>(
+      () => CartRemoteDataSourceImpl(sl()));
 
 // Curier
   sl.registerLazySingleton<CurierRepository>(() => CurierRepositoryImpl(sl()));
-  sl.registerLazySingleton<CurierDataSource>(() => CurierDataSourceImpl(sl(), sl()));
+  sl.registerLazySingleton<CurierDataSource>(
+      () => CurierDataSourceImpl(sl(), sl()));
   // Order
   sl.registerLazySingleton<OrderRepository>(() => OrderRepositoryImpl(sl()));
-  sl.registerLazySingleton<OrderRemoteDataSource>(() => OrderRemoteDataSourceImpl(sl(), sl()));
+  sl.registerLazySingleton<OrderRemoteDataSource>(
+      () => OrderRemoteDataSourceImpl(sl(), sl()));
 
   // history
-  sl.registerLazySingleton<HistoryRepository>(() => HistoryRepositoryImpl(sl()));
-  sl.registerLazySingleton<HistoryReDatasource>(() => HistoryReDatasourceImpl(sl(), sl()));
+  sl.registerLazySingleton<HistoryRepository>(
+      () => HistoryRepositoryImpl(sl()));
+  sl.registerLazySingleton<HistoryReDatasource>(
+      () => HistoryReDatasourceImpl(sl(), sl()));
 
   //! Core
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));

@@ -60,7 +60,7 @@ class ProductItemContentWidget extends StatelessWidget {
                   ),
                   width: double.infinity,
                   height: 120,
-                  memCacheHeight: 100,
+                  // memCacheHeight: 100,
                   placeholder: (context, url) => const Center(
                     child: SizedBox(
                       width: 50,

@@ -15,6 +15,7 @@ class FoodModel {
   int? iDctMax;
   String? containerName;
   int? containerCount;
+  int? quantity;
 
   FoodModel({
     this.id,
@@ -27,6 +28,7 @@ class FoodModel {
     this.iDctMax,
     this.containerName,
     this.containerCount,
+    this.quantity,
   });
 
   FoodModel copyWith({
@@ -40,6 +42,7 @@ class FoodModel {
     int? iDctMax,
     String? containerName,
     int? containerCount,
+    int? quantity,
   }) =>
       FoodModel(
         id: id ?? this.id,
@@ -52,6 +55,7 @@ class FoodModel {
         iDctMax: iDctMax ?? this.iDctMax,
         containerName: containerName ?? this.containerName,
         containerCount: containerCount ?? this.containerCount,
+        quantity: quantity ?? this.quantity,
       );
 
   factory FoodModel.fromJson(Map<String, dynamic> json) => FoodModel(
@@ -65,6 +69,7 @@ class FoodModel {
         iDctMax: json["iDCTMax"],
         containerName: json["containerName"],
         containerCount: json["containerCount"],
+        quantity: json["quantity"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -78,5 +83,6 @@ class FoodModel {
         "iDCTMax": iDctMax,
         "containerName": containerName,
         "containerCount": containerCount,
+        if (quantity != null) "quantity": quantity,
       };
 }
