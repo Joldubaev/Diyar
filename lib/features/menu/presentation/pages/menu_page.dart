@@ -24,6 +24,7 @@ class _MenuPageState extends State<MenuPage>
   final ItemScrollController _itemScrollController = ItemScrollController();
   final ItemPositionsListener _itemPositionsListener =
       ItemPositionsListener.create();
+  final ScrollController _scrollController = ScrollController();
   List<CategoryModel> menu = [];
 
   @override
@@ -37,6 +38,7 @@ class _MenuPageState extends State<MenuPage>
   @override
   void dispose() {
     _itemPositionsListener.itemPositions.removeListener(_onScroll);
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -61,6 +63,13 @@ class _MenuPageState extends State<MenuPage>
     setState(() {
       _activeIndex = index;
     });
+
+    final scrollPosition = index * 100.0;
+    _scrollController.animateTo(
+      scrollPosition,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+    );
   }
 
   @override
@@ -93,6 +102,7 @@ class _MenuPageState extends State<MenuPage>
                 SizedBox(
                   height: 35,
                   child: ListView.separated(
+                    controller: _scrollController,
                     padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
                     separatorBuilder: (context, index) =>
                         const SizedBox(width: 10),
