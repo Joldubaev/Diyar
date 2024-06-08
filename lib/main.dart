@@ -13,6 +13,7 @@ import 'package:diyar/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/theme/theme.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 
 import 'features/home_features/presentation/cubit/home_features_cubit.dart';
 import 'shared/pages/app_wrapper_connection_page.dart';
@@ -33,7 +34,8 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => sl<InternetBloc>()..add(NetworkObserve())),
+        BlocProvider(
+            create: (context) => sl<InternetBloc>()..add(NetworkObserve())),
         BlocProvider(create: (context) => di.sl<SignUpCubit>()),
         BlocProvider(create: (context) => di.sl<SignInCubit>()),
         BlocProvider(create: (context) => di.sl<ProfileCubit>()),
@@ -55,7 +57,16 @@ class App extends StatelessWidget {
         supportedLocales: AppLocalizations.supportedLocales,
         locale: const Locale('ru'),
         builder: (context, router) {
-          return AppWrapperConnectionPage(child: router ?? const SizedBox());
+          return KeyboardDismisser(
+            gestures: const [
+              GestureType.onTap,
+              GestureType.onTapDown,
+              GestureType.onTapUp,
+            ],
+            child: AppWrapperConnectionPage(
+              child: router ?? const SizedBox(),
+            ),
+          );
         },
       ),
     );

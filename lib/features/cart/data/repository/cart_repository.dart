@@ -8,6 +8,7 @@ abstract class CartRepository {
   Future<void> removeFromCart(String id);
   Future<void> incrementCart(String id);
   Future<void> decrementCart(String id);
+  Future<void> setCartItemCount(CartItemModel cart);
   Future<void> clearCart();
   Stream<List<CartItemModel>> getAllCartItems();
 }
@@ -45,5 +46,10 @@ class CartRepositoryImpl implements CartRepository {
   @override
   Future<void> clearCart() {
     return _cartRemoteDataSource.clearCart();
+  }
+  
+  @override
+  Future<void> setCartItemCount(CartItemModel cart) {
+    return _cartRemoteDataSource.setCartItemCount(cart);
   }
 }

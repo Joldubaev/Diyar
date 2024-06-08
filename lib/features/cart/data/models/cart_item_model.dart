@@ -22,4 +22,16 @@ class CartItemModel {
         "quantity": quantity,
         "price": totalPrice,
       };
+
+  CartItemModel copyWith({
+    FoodModel? food,
+    int? quantity,
+    double? totalPrice,
+  }) {
+    return CartItemModel(
+      food: food ?? this.food,
+      quantity: quantity ?? this.quantity,
+      totalPrice: totalPrice ?? this.totalPrice,
+    );
+  }
 }

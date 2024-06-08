@@ -78,9 +78,7 @@ class _MenuPageState extends State<MenuPage>
       body: BlocConsumer<MenuCubit, MenuState>(
         listener: (context, state) {
           if (state is GetMenuLoaded) {
-            setState(() {
-              menu = state.categories;
-            });
+            setState(() => menu = state.categories);
           }
         },
         builder: (context, state) {

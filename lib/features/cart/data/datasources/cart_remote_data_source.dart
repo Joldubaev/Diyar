@@ -11,6 +11,7 @@ abstract class CartRemoteDataSource {
   Future<void> decrementCart(String id);
   Stream<List<CartItemModel>> getAllCartItems();
   Future<void> clearCart();
+  Future<void> setCartItemCount(CartItemModel cartt);
 }
 
 class CartRemoteDataSourceImpl implements CartRemoteDataSource {
@@ -48,19 +49,30 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
         .doc("$userId")
         .collection('cart')
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => CartItemModel.fromJson(doc.data())).toList());
+        .map((snapshot) => snapshot.docs
+            .map((doc) => CartItemModel.fromJson(doc.data()))
+            .toList());
   }
 
   @override
   Future<void> removeFromCart(String id) async {
     var userId = _prefs.getString(AppConst.userId);
-    _firestore.collection('users').doc('$userId').collection('cart').doc(id).delete();
+    _firestore
+        .collection('users')
+        .doc('$userId')
+        .collection('cart')
+        .doc(id)
+        .delete();
   }
 
   @override
   Future<void> decrementCart(String id) async {
     var userId = _prefs.getString(AppConst.userId);
-    var docRef = _firestore.collection('users').doc('$userId').collection('cart').doc(id);
+    var docRef = _firestore
+        .collection('users')
+        .doc('$userId')
+        .collection('cart')
+        .doc(id);
     await _firestore.runTransaction((transaction) async {
       final docSnapshot = await transaction.get(docRef);
 
@@ -74,7 +86,11 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
   @override
   Future<void> incrementCart(String id) async {
     var userId = _prefs.getString(AppConst.userId);
-    var docRef = _firestore.collection('users').doc('$userId').collection('cart').doc(id);
+    var docRef = _firestore
+        .collection('users')
+        .doc('$userId')
+        .collection('cart')
+        .doc(id);
     await _firestore.runTransaction((transaction) async {
       final docSnapshot = await transaction.get(docRef);
 
@@ -88,9 +104,25 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
   @override
   Future<void> clearCart() async {
     var userId = _prefs.getString(AppConst.userId);
-    var cart = await _firestore.collection('users').doc('$userId').collection('cart').get();
+    var cart = await _firestore
+        .collection('users')
+        .doc('$userId')
+        .collection('cart')
+        .get();
     for (var doc in cart.docs) {
       await doc.reference.delete();
     }
+  }
+
+  @override
+  Future<void> setCartItemCount(CartItemModel cart) async {
+    var userId = _prefs.getString(AppConst.userId);
+    await createUser("$userId");
+    await _firestore
+        .collection('users')
+        .doc('$userId')
+        .collection('cart')
+        .doc(cart.food?.id)
+        .set(cart.toJson(), SetOptions(merge: true));
   }
 }

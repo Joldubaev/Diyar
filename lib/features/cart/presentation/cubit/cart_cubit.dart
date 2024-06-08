@@ -77,4 +77,14 @@ class CartCubit extends Cubit<CartState> {
       emit(ClearCartError());
     }
   }
+
+  setCartItemCount(CartItemModel cart) async {
+    emit(SetCartItemLoading());
+    try {
+      await _cartReposiory.setCartItemCount(cart);
+      emit(SetCartItemLoaded());
+    } catch (e) {
+      emit(SetCartItemError());
+    }
+  }
 }

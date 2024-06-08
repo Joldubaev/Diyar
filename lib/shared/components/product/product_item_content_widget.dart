@@ -6,7 +6,7 @@ import 'package:diyar/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ProductItemContentWidget extends StatelessWidget {
+class ProductItemContentWidget extends StatefulWidget {
   final VoidCallback? onTap;
   final bool? isCounter;
   final bool? isShadowVisible;
@@ -23,12 +23,50 @@ class ProductItemContentWidget extends StatelessWidget {
   });
 
   @override
+  State<ProductItemContentWidget> createState() =>
+      _ProductItemContentWidgetState();
+}
+
+class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
+  final _controller = TextEditingController();
+  bool isChangedCounter = false;
+
+  @override
+  void initState() {
+    _controller.text = widget.quantity.toString();
+    if (widget.quantity == 0) {
+      context.read<CartCubit>().removeFromCart(widget.food.id!);
+    }
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(ProductItemContentWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.quantity != widget.quantity) {
+      _controller.text = widget.quantity.toString();
+      isChangedCounter = true;
+      Future.delayed(const Duration(milliseconds: 900), () {
+        setState(() {
+          isChangedCounter = false;
+        });
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
-        boxShadow: isShadowVisible!
+        boxShadow: widget.isShadowVisible!
             ? [
                 BoxShadow(
                   color: Colors.grey.withOpacity(0.2),
@@ -43,7 +81,7 @@ class ProductItemContentWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           GestureDetector(
-            onTap: onTap,
+            onTap: widget.onTap,
             child: Padding(
               padding: const EdgeInsets.all(4.0),
               child: DecoratedBox(
@@ -59,26 +97,67 @@ class ProductItemContentWidget extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: CachedNetworkImage(
-                  fadeInCurve: Curves.easeIn,
-                  fadeOutCurve: Curves.easeOut,
-                  imageUrl: food.urlPhoto ?? '',
-                  errorWidget: (context, url, error) => Image.asset(
-                    'assets/images/app_logo.png',
-                    color: Colors.grey,
-                  ),
-                  width: double.infinity,
-                  height: 110,
-                  memCacheWidth: 1080,
-                  memCacheHeight: 810,
-                  placeholder: (context, url) => const Center(
-                    child: SizedBox(
-                      width: 50,
-                      height: 50,
-                      child: CircularProgressIndicator(),
+                child: Stack(
+                  children: [
+                    CachedNetworkImage(
+                      fadeInCurve: Curves.easeIn,
+                      fadeOutCurve: Curves.easeOut,
+                      imageUrl: widget.food.urlPhoto ?? '',
+                      errorWidget: (context, url, error) => Image.asset(
+                        'assets/images/app_logo.png',
+                        color: Colors.grey,
+                      ),
+                      width: double.infinity,
+                      height: 110,
+                      memCacheWidth: 1080,
+                      memCacheHeight: 810,
+                      placeholder: (context, url) => const Center(
+                        child: SizedBox(
+                          width: 50,
+                          height: 50,
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                      fit: BoxFit.contain,
                     ),
-                  ),
-                  fit: BoxFit.contain,
+                    if (isChangedCounter)
+                      Positioned(
+                        right: 0,
+                        top: 0,
+                        left: 0,
+                        bottom: 0,
+                        child: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 900),
+                          transitionBuilder:
+                              (Widget child, Animation<double> animation) {
+                            return ScaleTransition(
+                              scale: animation,
+                              child: child,
+                            );
+                          },
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              color: AppColors.black1.withOpacity(.3),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Center(
+                              child: Text(
+                                '${widget.quantity}',
+                                key: ValueKey<int>(widget.quantity),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                      color: AppColors.white,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 30,
+                                    ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
               ),
             ),
@@ -86,7 +165,7 @@ class ProductItemContentWidget extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(6, 0, 6, 0),
             child: Text(
-              '${food.name}',
+              '${widget.food.name}',
               style: theme.textTheme.bodyLarge,
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
@@ -98,13 +177,13 @@ class ProductItemContentWidget extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               text: TextSpan(
-                text: '${food.weight}',
+                text: '${widget.food.weight}',
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: Colors.grey,
                 ),
                 children: [
                   TextSpan(
-                    text: ' - ${food.price} сом',
+                    text: ' - ${widget.food.price} сом',
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: Colors.green,
                       fontWeight: FontWeight.w400,
@@ -115,7 +194,7 @@ class ProductItemContentWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          if (isCounter == true)
+          if (widget.isCounter == true)
             Container(
               width: double.infinity,
               height: 35,
@@ -129,17 +208,22 @@ class ProductItemContentWidget extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                mainAxisSize:
-                    isShadowVisible! ? MainAxisSize.max : MainAxisSize.min,
+                mainAxisSize: widget.isShadowVisible!
+                    ? MainAxisSize.max
+                    : MainAxisSize.min,
                 children: [
                   IconButton(
                     splashRadius: 20,
                     iconSize: 20,
                     onPressed: () {
-                      if (quantity > 1) {
-                        context.read<CartCubit>().decrementCart(food.id!);
+                      if (widget.quantity > 1) {
+                        context
+                            .read<CartCubit>()
+                            .decrementCart(widget.food.id!);
                       } else {
-                        context.read<CartCubit>().removeFromCart(food.id!);
+                        context
+                            .read<CartCubit>()
+                            .removeFromCart(widget.food.id!);
                       }
                     },
                     icon: const Padding(
@@ -147,20 +231,50 @@ class ProductItemContentWidget extends StatelessWidget {
                       child: Icon(Icons.remove),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
-                    child: Text('$quantity', style: theme.textTheme.bodyMedium),
+                  Expanded(
+                    child: TextFormField(
+                      controller: _controller,
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: Colors.black,
+                        height: 3,
+                      ),
+                      cursorHeight: 0,
+                      cursorColor: Colors.transparent,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                      ),
+                      keyboardType: TextInputType.number,
+                      onChanged: (val) {
+                        int valInt = int.parse(val.isEmpty ? '0' : val);
+                        _controller.text = valInt.toString();
+                        if (valInt > 0) {
+                          context.read<CartCubit>().setCartItemCount(
+                                CartItemModel(
+                                  food: widget.food,
+                                  quantity: int.parse(val),
+                                ),
+                              );
+                        } else {
+                          context
+                              .read<CartCubit>()
+                              .removeFromCart(widget.food.id!);
+                        }
+                      },
+                    ),
                   ),
                   IconButton(
                     splashRadius: 20,
                     iconSize: 20,
                     onPressed: () {
-                      if (quantity == 0) {
+                      if (widget.quantity == 0) {
                         context.read<CartCubit>().addToCart(
-                              CartItemModel(food: food, quantity: 1),
+                              CartItemModel(food: widget.food, quantity: 1),
                             );
                       } else {
-                        context.read<CartCubit>().incrementCart(food.id!);
+                        context
+                            .read<CartCubit>()
+                            .incrementCart(widget.food.id!);
                       }
                     },
                     icon: const Padding(
@@ -171,7 +285,6 @@ class ProductItemContentWidget extends StatelessWidget {
                 ],
               ),
             ),
-          // const SizedBox(height: 7),
         ],
       ),
     );
