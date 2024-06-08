@@ -1,4 +1,5 @@
 import 'package:diyar/features/menu/data/models/food_model.dart';
+import 'package:diyar/shared/components/product/product_bottom_widget.dart';
 import 'package:diyar/shared/components/product/product_item_content_widget.dart';
 import 'package:diyar/shared/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -16,8 +17,8 @@ class ProductItemWidget extends StatelessWidget {
       quantity: quantity,
       onTap: () => AppBottomSheet.showBottomSheet(
         context,
-        initialChildSize: 0.4,
-        ProductItemContentWidget(
+        initialChildSize: 0.6,
+        ProductBottomWidget(
           isShadowVisible: false,
           food: food,
           quantity: quantity,
