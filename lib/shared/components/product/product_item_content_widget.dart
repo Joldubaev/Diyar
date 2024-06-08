@@ -4,7 +4,6 @@ import 'package:diyar/features/cart/presentation/cubit/cart_cubit.dart';
 import 'package:diyar/features/features.dart';
 import 'package:diyar/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProductItemContentWidget extends StatelessWidget {
@@ -45,22 +44,33 @@ class ProductItemContentWidget extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: onTap,
-            child: ClipRRect(
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(10),
-                topRight: Radius.circular(10),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 6, right: 6, top: 0),
+            child: Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),
+                      spreadRadius: 1,
+                      blurRadius: 5,
+                      offset: const Offset(0, 0),
+                    ),
+                  ],
+                ),
                 child: CachedNetworkImage(
-                  imageUrl: food.urlPhoto ?? 'https://i.ibb.co/GkL25DB/ALE-1357-7.png',
+                  fadeInCurve: Curves.easeIn,
+                  fadeOutCurve: Curves.easeOut,
+                  imageUrl: food.urlPhoto ?? '',
                   errorWidget: (context, url, error) => Image.asset(
                     'assets/images/app_logo.png',
                     color: Colors.grey,
                   ),
                   width: double.infinity,
-                  height: 120,
-                  // memCacheHeight: 100,
+                  height: 110,
+                  memCacheWidth: 1080,
+                  memCacheHeight: 810,
                   placeholder: (context, url) => const Center(
                     child: SizedBox(
                       width: 50,
@@ -73,7 +83,6 @@ class ProductItemContentWidget extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 6),
           Padding(
             padding: const EdgeInsets.fromLTRB(6, 0, 6, 0),
             child: Text(
@@ -120,7 +129,8 @@ class ProductItemContentWidget extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                mainAxisSize: isShadowVisible! ? MainAxisSize.max : MainAxisSize.min,
+                mainAxisSize:
+                    isShadowVisible! ? MainAxisSize.max : MainAxisSize.min,
                 children: [
                   IconButton(
                     splashRadius: 20,
@@ -161,7 +171,7 @@ class ProductItemContentWidget extends StatelessWidget {
                 ],
               ),
             ),
-          const SizedBox(height: 7),
+          // const SizedBox(height: 7),
         ],
       ),
     );

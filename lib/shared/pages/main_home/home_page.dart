@@ -47,7 +47,7 @@ class _HomePageState extends State<HomePage> {
               alignment: Alignment.centerLeft,
               child: FittedBox(
                 child: Text(
-                  '${l10n.welcome}  ${context.read<ProfileCubit>().user?.name ?? ''}!',
+                  '${l10n.welcome},${context.read<ProfileCubit>().user?.name ?? 'В Дияр'}!',
                   style: theme.textTheme.titleSmall?.copyWith(
                     color: AppColors.white,
                   ),
