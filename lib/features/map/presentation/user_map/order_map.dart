@@ -51,8 +51,11 @@ class _OrderMapPageState extends State<OrderMapPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text(context.l10n.chooseAddress,
-              style: theme.textTheme.titleSmall)),
+        title: Text(
+          context.l10n.chooseAddress,
+          style: theme.textTheme.titleSmall,
+        ),
+      ),
       body: Stack(
         children: [
           SizedBox(
@@ -111,7 +114,8 @@ class _OrderMapPageState extends State<OrderMapPage> {
             children: [
               ListTile(
                 title: Text(
-                    '${context.l10n.deliveryPrice}: ${isCoordinateInsidePolygons(lat, long, polygons: Polygons.getPolygons())} сом'),
+                  '${context.l10n.deliveryPrice}: ${isCoordinateInsidePolygons(lat, long, polygons: Polygons.getPolygons())} сом',
+                ),
               ),
               Card(
                 child: ListTile(
@@ -210,6 +214,7 @@ class _OrderMapPageState extends State<OrderMapPage> {
   Future<void> _fetchCurrentLocation() async {
     AppLatLong location;
     final defLocation = BiskekLocation();
+
     try {
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
@@ -219,20 +224,23 @@ class _OrderMapPageState extends State<OrderMapPage> {
       });
 
       if (userLocation != null) {
-        _moveToCurrentLocation(AppLatLong(
+        location = AppLatLong(
           latitude: userLocation!.latitude,
           longitude: userLocation!.longitude,
-        ));
+        );
         lat = userLocation!.latitude;
         long = userLocation!.longitude;
+        _moveToCurrentLocation(location);
+        await updateAddressDetails(location);
+        return;
       }
     } catch (e) {
-      location = defLocation;
       log("Error getting location: $e");
     }
+
     location = defLocation;
-    await updateAddressDetails(location);
     _moveToCurrentLocation(location);
+    await updateAddressDetails(location);
   }
 
   Future<void> _moveToCurrentLocation(AppLatLong appLatLong) async {
@@ -297,7 +305,10 @@ class _OrderMapPageState extends State<OrderMapPage> {
   }
 
   bool isPointInPolygon(
-      double latitude, double longitude, List<Coordinate> coordinates) {
+    double latitude,
+    double longitude,
+    List<Coordinate> coordinates,
+  ) {
     int intersectCount = 0;
     for (int i = 0; i < coordinates.length - 1; i++) {
       double vertex1Lat = coordinates[i].latitude;
