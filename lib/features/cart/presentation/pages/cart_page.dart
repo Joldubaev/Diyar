@@ -44,6 +44,18 @@ class CartPage extends StatelessWidget {
               return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasData) {
               carts = snapshot.data!;
+              var containerPrice = carts.fold(
+                0,
+                (prevValue, element) =>
+                    prevValue +
+                    element.food!.containerPrice! * element.quantity!,
+              );
+              int totalPrice = containerPrice +
+                  carts.fold(
+                    0,
+                    (prevValue, element) =>
+                        prevValue + element.food!.price! * element.quantity!,
+                  );
 
               return carts.isEmpty
                   ? const CartEmptyWidget()
@@ -65,7 +77,7 @@ class CartPage extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
                             child: TotalPriceWidget(
-                              dishCount: context.read<CartCubit>().dishCount,
+                              containerPrice: containerPrice,
                               price: carts.fold(
                                 0,
                                 (previousValue, element) =>
@@ -73,12 +85,7 @@ class CartPage extends StatelessWidget {
                                     element.food!.price! * element.quantity!,
                               ),
                               sale: 0,
-                              totalPrice: carts.fold(
-                                0,
-                                (previousValue, element) =>
-                                    previousValue +
-                                    element.food!.price! * element.quantity!,
-                              ),
+                              totalPrice: totalPrice,
                             ),
                           ),
                           const SizedBox(height: 10),

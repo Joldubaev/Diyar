@@ -11,13 +11,13 @@ class TotalPriceWidget extends StatefulWidget {
     required this.price,
     required this.sale,
     required this.totalPrice,
-    required this.dishCount,
+    required this.containerPrice,
   });
 
   final int price;
   final int sale;
   final int totalPrice;
-  final int dishCount;
+  final int containerPrice;
 
   @override
   State<TotalPriceWidget> createState() => _TotalPriceWidgetState();
@@ -50,7 +50,7 @@ class _TotalPriceWidgetState extends State<TotalPriceWidget> {
                   trailing: '${widget.price} ${context.l10n.som}'),
               CustomTile(
                   title: context.l10n.dishes,
-                  trailing: '${widget.dishCount} ${context.l10n.som}'),
+                  trailing: '${widget.containerPrice} ${context.l10n.som}'),
               CustomTile(
                   title: context.l10n.sale,
                   trailing: '${widget.sale} ${context.l10n.som}'),

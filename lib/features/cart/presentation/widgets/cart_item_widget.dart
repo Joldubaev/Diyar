@@ -119,7 +119,7 @@ class CartItemWidgets extends StatelessWidget {
                         ),
                         const SizedBox(width: 10),
                         Text(
-                          '${(food.price ?? 0) * counter} сом',
+                          '${food.price} сом',
                           style: theme.textTheme.bodySmall!
                               .copyWith(color: AppColors.green),
                         ),

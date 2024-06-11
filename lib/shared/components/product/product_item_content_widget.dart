@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:diyar/features/cart/data/models/cart_item_model.dart';
 import 'package:diyar/features/cart/presentation/cubit/cart_cubit.dart';
@@ -232,35 +234,37 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                     ),
                   ),
                   Expanded(
-                    child: TextFormField(
-                      controller: _controller,
-                      textAlign: TextAlign.center,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: Colors.black,
-                        height: 3,
+                    child: Center(
+                      child: TextFormField(
+                        textAlignVertical: TextAlignVertical.center,
+                        controller: _controller,
+                        textAlign: TextAlign.center,
+                        showCursor: false,
+                        cursorColor: Colors.transparent,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.zero,
+                          isCollapsed: true,
+                        ),
+                        keyboardType: TextInputType.number,
+                        selectionHeightStyle: BoxHeightStyle.max,
+                        onChanged: (val) {
+                          int valInt = int.parse(val.isEmpty ? '0' : val);
+                          _controller.text = valInt.toString();
+                          if (valInt > 0) {
+                            context.read<CartCubit>().setCartItemCount(
+                                  CartItemModel(
+                                    food: widget.food,
+                                    quantity: int.parse(val),
+                                  ),
+                                );
+                          } else {
+                            context
+                                .read<CartCubit>()
+                                .removeFromCart(widget.food.id!);
+                          }
+                        },
                       ),
-                      cursorHeight: 0,
-                      cursorColor: Colors.transparent,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                      ),
-                      keyboardType: TextInputType.number,
-                      onChanged: (val) {
-                        int valInt = int.parse(val.isEmpty ? '0' : val);
-                        _controller.text = valInt.toString();
-                        if (valInt > 0) {
-                          context.read<CartCubit>().setCartItemCount(
-                                CartItemModel(
-                                  food: widget.food,
-                                  quantity: int.parse(val),
-                                ),
-                              );
-                        } else {
-                          context
-                              .read<CartCubit>()
-                              .removeFromCart(widget.food.id!);
-                        }
-                      },
                     ),
                   ),
                   IconButton(
