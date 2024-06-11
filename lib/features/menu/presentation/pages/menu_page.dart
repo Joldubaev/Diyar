@@ -115,7 +115,7 @@ class _MenuPageState extends State<MenuPage>
                               ? AppColors.primary
                               : Colors.transparent,
                           borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: AppColors.primary),
+                          border: Border.all(color: AppColors.grey),
                         ),
                         child: Center(
                           child: Text(
@@ -123,7 +123,7 @@ class _MenuPageState extends State<MenuPage>
                             style: TextStyle(
                               color: index == _activeIndex
                                   ? AppColors.white
-                                  : AppColors.primary,
+                                  : AppColors.grey,
                             ),
                           ),
                         ),

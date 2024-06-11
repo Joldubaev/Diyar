@@ -10,9 +10,11 @@ import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/components/components.dart';
 import 'package:diyar/shared/theme/theme.dart';
 import 'package:diyar/shared/utils/utils.dart';
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 @RoutePage()
 class DeliveryFormPage extends StatefulWidget {
@@ -39,6 +41,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
   final TextEditingController _sdachaController = TextEditingController();
 
   PaymentTypeDelivery _paymentType = PaymentTypeDelivery.cash;
+  List<String> _foundAddresses = [];
 
   @override
   void initState() {
@@ -61,6 +64,59 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
     super.dispose();
   }
 
+  void _search(String query) async {
+    final query = _addressController.text;
+    log('Search query: $query');
+
+    final resultWithSession = await YandexSearch.searchByText(
+      searchText: query,
+      geometry: Geometry.fromBoundingBox(const BoundingBox(
+        southWest: Point(latitude: 42.8027, longitude: 74.4826),
+        northEast: Point(latitude: 42.9009, longitude: 74.6587),
+      )),
+      searchOptions: const SearchOptions(
+        searchType: SearchType.geo,
+        geometry: false,
+      ),
+    );
+
+    final searchSession = resultWithSession.$1;
+    final searchResult = await resultWithSession.$2;
+
+    if (searchResult.items != null && searchResult.items!.isNotEmpty) {
+      setState(() {
+        _foundAddresses = searchResult.items!
+            .map((item) => item.toponymMetadata?.address.formattedAddress ?? '')
+            .toList();
+      });
+    } else {
+      setState(() {
+        _foundAddresses = [];
+      });
+    }
+
+    log('Search session: $searchSession');
+    log('Search result: $searchResult');
+  }
+
+  Widget _buildSuggestionsList() {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: _foundAddresses.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          title: Text(_foundAddresses[index]),
+          onTap: () {
+            setState(() {
+              _addressController.text = _foundAddresses[index];
+              _foundAddresses = [];
+            });
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<OrderCubit, OrderState>(
@@ -77,19 +133,11 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
       },
       builder: (context, state) {
         _addressController.text = context.read<OrderCubit>().address;
-
         log(_addressController.text);
-
-        // Разделение строки по запятой
         List<String> parts = _addressController.text.split(',');
-
-        // Получение последней части и удаление начальных и конечных пробелов
         String lastPart = parts.last.trim();
-
-        // Извлечение последнего числа из строки
         RegExp regExp = RegExp(r'(\d+[^\s]*)$');
         Match? match = regExp.firstMatch(lastPart);
-
         if (match != null) {
           String lastNumber = match.group(0)!;
           _houseController.text = lastNumber;
@@ -98,7 +146,6 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
           log('Число не найдено');
           _houseController.text = '';
         }
-
         if (state is CreateOrderLoading) {
           return const Center(child: CircularProgressIndicator());
         } else if (state is CreateOrderError) {
@@ -146,8 +193,14 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                 },
               ),
               CustomInputWidget(
-                onTap: () => context.router.push(const OrderMapRoute()),
-                isReadOnly: true,
+                onChanged: (value) {
+                  EasyDebounce.debounce(
+                    'search-address',
+                    const Duration(milliseconds: 1000),
+                    () => _search(value),
+                  );
+                },
+                inputType: TextInputType.text,
                 hintText: context.l10n.chooseOnMap,
                 title: context.l10n.adress,
                 controller: _addressController,
@@ -160,6 +213,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                   return null;
                 },
               ),
+              if (_foundAddresses.isNotEmpty) _buildSuggestionsList(),
               CustomInputWidget(
                   inputType: TextInputType.text,
                   controller: _houseController,

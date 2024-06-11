@@ -1,5 +1,6 @@
 import 'package:diyar/features/about_us/data/models/restaurant_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomAboutWidget extends StatelessWidget {
   final AboutUsModel model;
@@ -47,6 +48,10 @@ class CustomAboutWidget extends StatelessWidget {
                       child: Image.network(
                         '${model.photoLinks?[index]}',
                         fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return SvgPicture.asset('assets/icons/boxes.svg',
+                              height: 50);
+                        },
                       ),
                     ),
                   );

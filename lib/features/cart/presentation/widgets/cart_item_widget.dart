@@ -112,7 +112,7 @@ class CartItemWidgets extends StatelessWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           text: TextSpan(
-                            text: "${food.weight} гр.",
+                            text: "${food.weight}",
                             style: theme.textTheme.bodySmall!
                                 .copyWith(color: AppColors.grey),
                           ),

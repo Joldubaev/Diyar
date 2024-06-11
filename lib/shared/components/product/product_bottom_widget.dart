@@ -71,7 +71,10 @@ class ProductBottomWidget extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(6, 0, 6, 0),
                 child: Text(
                   '${food.name}',
-                  style: theme.textTheme.bodyLarge,
+                  style: theme.textTheme.bodyLarge!.copyWith(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
                 ),
