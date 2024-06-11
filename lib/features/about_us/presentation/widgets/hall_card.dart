@@ -42,7 +42,8 @@ class HallCardWidget extends StatelessWidget {
                 children: [
                   Text(
                     hallName,
-                    style: theme.textTheme.displayLarge!.copyWith(color: Colors.white, fontSize: 18),
+                    style: theme.textTheme.displayLarge!
+                        .copyWith(color: Colors.white, fontSize: 18),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -52,7 +53,8 @@ class HallCardWidget extends StatelessWidget {
                         child: Text(
                           title,
                           maxLines: 3,
-                          style: theme.textTheme.displayMedium!.copyWith(color: Colors.white, fontSize: 14),
+                          style: theme.textTheme.displayMedium!
+                              .copyWith(color: Colors.white, fontSize: 14),
                         ),
                       ),
                       Expanded(

@@ -23,7 +23,7 @@ class CustomTile extends StatelessWidget {
           Text(
             trailing,
             style: theme.textTheme.bodyMedium!.copyWith(
-              color: AppColors.primary,
+              color: AppColors.black1,
             ),
           ),
         ],

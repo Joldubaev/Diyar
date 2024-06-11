@@ -41,6 +41,7 @@ class PhoneNumberMaskState extends State<PhoneNumberMask> {
         if (widget.title != null) const SizedBox(height: 6),
         TextFormField(
           readOnly: widget.isReadOnly ?? false,
+          style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 16),
           controller: widget.textController,
           inputFormatters: [const UpperCaseTextFormatter(), widget.formatter],
           autocorrect: false,

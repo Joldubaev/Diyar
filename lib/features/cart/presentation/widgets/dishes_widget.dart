@@ -33,7 +33,7 @@ class DishesWidget extends StatelessWidget {
                 Text(
                   'Столовые приборы',
                   style: theme.textTheme.bodyMedium!.copyWith(
-                    color: AppColors.primary,
+                    color: AppColors.black1,
                   ),
                 ),
                 Row(

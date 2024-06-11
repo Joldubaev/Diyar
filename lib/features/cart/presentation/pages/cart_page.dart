@@ -65,14 +65,19 @@ class CartPage extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
                             child: TotalPriceWidget(
+                              dishCount: context.read<CartCubit>().dishCount,
                               price: carts.fold(
                                 0,
-                                (previousValue, element) => previousValue + element.food!.price! * element.quantity!,
+                                (previousValue, element) =>
+                                    previousValue +
+                                    element.food!.price! * element.quantity!,
                               ),
                               sale: 0,
                               totalPrice: carts.fold(
                                 0,
-                                (previousValue, element) => previousValue + element.food!.price! * element.quantity!,
+                                (previousValue, element) =>
+                                    previousValue +
+                                    element.food!.price! * element.quantity!,
                               ),
                             ),
                           ),

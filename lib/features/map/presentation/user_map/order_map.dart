@@ -260,7 +260,7 @@ class _OrderMapPageState extends State<OrderMapPage> {
     address = const Text('Поиск местоположения').data;
     setState(() {});
     LocationModel? data =
-        await locationRepo.getLocationByAdress(latLong: latLong);
+        await locationRepo.getLocationByCoordinates(latLong: latLong);
     address = data.response!.geoObjectCollection!.featureMember!.isEmpty
         ? 'unknown place'
         : data.response!.geoObjectCollection!.featureMember!.first.geoObject!
