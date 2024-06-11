@@ -13,11 +13,18 @@ class OrderCubit extends Cubit<OrderState> {
 
   String address = '';
   double deliveryPrice = 0;
+  bool isAddressSearch = false;
 
   changeAddress(String str) {
     emit(OrderAddressLoading());
     address = str;
     emit(OrderAddressChanged(address: str));
+  }
+
+  changeAddressSearch(bool isSearch) {
+    emit(OrderAddressLoading());
+    isAddressSearch = isSearch;
+    emit(OrderAddressLoading());
   }
 
   selectDeliveryPrice(double price) {

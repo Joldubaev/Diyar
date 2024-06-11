@@ -144,6 +144,8 @@ class _OrderMapPageState extends State<OrderMapPage> {
                           context
                               .read<OrderCubit>()
                               .changeAddress(address ?? '');
+                          context.read<OrderCubit>().changeAddressSearch(false);
+
                           context.read<OrderCubit>().selectDeliveryPrice(
                               isCoordinateInsidePolygons(lat, long,
                                   polygons: Polygons.getPolygons()));

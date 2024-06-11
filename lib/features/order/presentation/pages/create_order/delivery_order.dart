@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:math' show asin, cos, sqrt;
 
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/router/routes.gr.dart';
@@ -6,6 +7,7 @@ import 'package:diyar/features/auth/data/models/user_mpdel.dart';
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/cart/data/models/models.dart';
 import 'package:diyar/features/features.dart';
+import 'package:diyar/features/map/presentation/widgets/coordinats.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/components/components.dart';
 import 'package:diyar/shared/theme/theme.dart';
@@ -41,7 +43,12 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
   final TextEditingController _sdachaController = TextEditingController();
 
   PaymentTypeDelivery _paymentType = PaymentTypeDelivery.cash;
-  List<String> _foundAddresses = [];
+  List<SearchItem> _foundAddressesObj = [];
+  late final List<MapObject> mapObjects = _getPolygonMapObject(context);
+  final MapObjectId mapObjectId = const MapObjectId('polygon');
+  List<PolygonMapObject> polygons = [];
+
+  bool isNotSearch = true;
 
   @override
   void initState() {
@@ -65,14 +72,17 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
   }
 
   void _search(String query) async {
-    final query = _addressController.text;
     log('Search query: $query');
+
+    context.read<OrderCubit>().changeAddressSearch(true);
 
     final resultWithSession = await YandexSearch.searchByText(
       searchText: query,
       geometry: Geometry.fromBoundingBox(const BoundingBox(
-        southWest: Point(latitude: 42.8027, longitude: 74.4826),
-        northEast: Point(latitude: 42.9009, longitude: 74.6587),
+        // Нижняя левая точка Чуйской области
+        southWest: Point(latitude: 42.429, longitude: 73.900),
+        // Верхняя правая точка Чуйской области
+        northEast: Point(latitude: 43.335, longitude: 75.137),
       )),
       searchOptions: const SearchOptions(
         searchType: SearchType.geo,
@@ -85,13 +95,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
 
     if (searchResult.items != null && searchResult.items!.isNotEmpty) {
       setState(() {
-        _foundAddresses = searchResult.items!
-            .map((item) => item.toponymMetadata?.address.formattedAddress ?? '')
-            .toList();
-      });
-    } else {
-      setState(() {
-        _foundAddresses = [];
+        _foundAddressesObj = searchResult.items!;
       });
     }
 
@@ -100,20 +104,49 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
   }
 
   Widget _buildSuggestionsList() {
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: _foundAddresses.length,
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: Text(_foundAddresses[index]),
-          onTap: () {
-            setState(() {
-              _addressController.text = _foundAddresses[index];
-              _foundAddresses = [];
-            });
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text("Найдено ${_foundAddressesObj.length} адресов"),
+            const Spacer(),
+            IconButton(
+              onPressed: () => setState(() => _foundAddressesObj = []),
+              icon: const Icon(Icons.close),
+            ),
+          ],
+        ),
+        ListView.builder(
+          shrinkWrap: true,
+          itemCount: _foundAddressesObj.length,
+          itemBuilder: (context, index) {
+            var foundAdd = _foundAddressesObj[index].geometry.first.point;
+            var address = _foundAddressesObj[index]
+                .toponymMetadata
+                ?.address
+                .formattedAddress;
+            return ListTile(
+              title: Text(address ?? ''),
+              onTap: () {
+                setState(() {
+                  _addressController.text = address ?? '';
+                  context
+                      .read<OrderCubit>()
+                      .selectDeliveryPrice(isCoordinateInsidePolygons(
+                        foundAdd!.latitude,
+                        foundAdd.longitude,
+                        polygons: Polygons.getPolygons(),
+                      ));
+                  _foundAddressesObj = [];
+                  log('Selected address: $address');
+                  log('Delivery price: ${context.read<OrderCubit>().deliveryPrice}');
+                });
+              },
+            );
           },
-        );
-      },
+        ),
+      ],
     );
   }
 
@@ -132,7 +165,10 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
         }
       },
       builder: (context, state) {
-        _addressController.text = context.read<OrderCubit>().address;
+        if (!context.read<OrderCubit>().isAddressSearch) {
+          _addressController.text = context.read<OrderCubit>().address;
+        }
+
         log(_addressController.text);
         List<String> parts = _addressController.text.split(',');
         String lastPart = parts.last.trim();
@@ -196,7 +232,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                 onChanged: (value) {
                   EasyDebounce.debounce(
                     'search-address',
-                    const Duration(milliseconds: 1000),
+                    const Duration(seconds: 1),
                     () => _search(value),
                   );
                 },
@@ -213,7 +249,17 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                   return null;
                 },
               ),
-              if (_foundAddresses.isNotEmpty) _buildSuggestionsList(),
+              const SizedBox(height: 4),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  GestureDetector(
+                    onTap: () => context.router.push(const OrderMapRoute()),
+                    child: const Text("Выбрать из карту"),
+                  ),
+                ],
+              ),
+              if (_foundAddressesObj.isNotEmpty) _buildSuggestionsList(),
               CustomInputWidget(
                   inputType: TextInputType.text,
                   controller: _houseController,
@@ -365,6 +411,82 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
         );
       },
     );
+  }
+
+  double calculateDistance(double startLatitude, double startLongitude,
+      double destinationLatitude, double destinationLongitude) {
+    var p = 0.017453292519943295;
+    var c = cos;
+    var a = 0.5 -
+        c((destinationLatitude - startLatitude) * p) / 2 +
+        c(startLatitude * p) *
+            c(destinationLatitude * p) *
+            (1 - c((destinationLongitude - startLongitude) * p)) /
+            2;
+    return 12742 * asin(sqrt(a));
+  }
+
+  double isCoordinateInsidePolygons(double latitude, double longitude,
+      {required List<DeliveryPolygon> polygons}) {
+    for (var polygon in polygons) {
+      if (isPointInPolygon(latitude, longitude, polygon.coordinates)) {
+        return polygon.deliveryPrice;
+      }
+    }
+    return 500;
+  }
+
+  bool isPointInPolygon(
+    double latitude,
+    double longitude,
+    List<Coordinate> coordinates,
+  ) {
+    int intersectCount = 0;
+    for (int i = 0; i < coordinates.length - 1; i++) {
+      double vertex1Lat = coordinates[i].latitude;
+      double vertex1Long = coordinates[i].longitude;
+      double vertex2Lat = coordinates[i + 1].latitude;
+      double vertex2Long = coordinates[i + 1].longitude;
+      // Check if the point is within the y-range of the edge
+      if ((vertex1Long > longitude) != (vertex2Long > longitude)) {
+        // Calculate the x-coordinate where the edge intersects with the vertical line of longitude
+        double xIntersect = (vertex2Lat - vertex1Lat) *
+                (longitude - vertex1Long) /
+                (vertex2Long - vertex1Long) +
+            vertex1Lat;
+        // Check if the intersection point is above the given latitude
+        if (latitude < xIntersect) {
+          intersectCount++;
+        }
+      }
+    }
+    // If the number of intersections is odd, the point is inside the polygon
+    return intersectCount % 2 == 1;
+  }
+
+  List<PolygonMapObject> _getPolygonMapObject(BuildContext context) {
+    return Polygons.getPolygons().map((polygon) {
+      return PolygonMapObject(
+        mapId: MapObjectId('polygon map object ${polygon.id}'),
+        polygon: Polygon(
+          outerRing: LinearRing(
+              points: polygon.coordinates
+                  .map((e) =>
+                      Point(latitude: e.latitude, longitude: e.longitude))
+                  .toList()),
+          innerRings: polygons.isEmpty
+              ? []
+              : polygons
+                  .map((e) => LinearRing(
+                      points: polygon.coordinates
+                          .map((e) => Point(
+                              latitude: e.latitude, longitude: e.longitude))
+                          .toList()))
+                  .toList(),
+        ),
+        strokeColor: Colors.transparent,
+      );
+    }).toList();
   }
 }
 
