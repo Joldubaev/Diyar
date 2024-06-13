@@ -12,7 +12,7 @@ class OrderCubit extends Cubit<OrderState> {
   OrderCubit(this._orderRepository) : super(OrderInitial());
 
   String address = '';
-  double deliveryPrice = 0;
+  int deliveryPrice = 0;
   bool isAddressSearch = false;
 
   changeAddress(String str) {
@@ -29,7 +29,7 @@ class OrderCubit extends Cubit<OrderState> {
 
   selectDeliveryPrice(double price) {
     emit(SelectDeliveryPriceLoading());
-    deliveryPrice = price;
+    deliveryPrice = price.toInt();
     emit(SelectDeliveryPriceLoaded(deliveryPrice: price));
   }
 

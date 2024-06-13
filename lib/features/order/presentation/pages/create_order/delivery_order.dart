@@ -367,7 +367,9 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                                           address: _addressController.text,
                                           comment: _commentController.text,
                                           price: totalPrice,
-                                          deliveryPrice: 0,
+                                          deliveryPrice: context
+                                              .read<OrderCubit>()
+                                              .deliveryPrice,
                                           houseNumber: _houseController.text,
                                           kvOffice: _apartmentController.text,
                                           intercom: _intercomController.text,
