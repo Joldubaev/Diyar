@@ -51,11 +51,14 @@ class CartPage extends StatelessWidget {
                     element.food!.containerPrice! * element.quantity!,
               );
               int totalPrice = containerPrice +
-                  carts.fold(
-                    0,
-                    (prevValue, element) =>
-                        prevValue + element.food!.price! * element.quantity!,
-                  );
+                  (carts.fold(
+                            0,
+                            (prevValue, element) =>
+                                prevValue +
+                                element.food!.price! * element.quantity!,
+                          ) *
+                          0.9)
+                      .toInt();
 
               return carts.isEmpty
                   ? const CartEmptyWidget()
@@ -78,13 +81,16 @@ class CartPage extends StatelessWidget {
                             padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
                             child: TotalPriceWidget(
                               containerPrice: containerPrice,
-                              price: carts.fold(
-                                0,
-                                (previousValue, element) =>
-                                    previousValue +
-                                    element.food!.price! * element.quantity!,
-                              ),
-                              sale: 0,
+                              price: (carts.fold(
+                                        0,
+                                        (previousValue, element) =>
+                                            previousValue +
+                                            element.food!.price! *
+                                                element.quantity!,
+                                      ) *
+                                      0.9)
+                                  .toInt(),
+                              sale: 10,
                               totalPrice: totalPrice,
                             ),
                           ),
