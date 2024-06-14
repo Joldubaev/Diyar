@@ -11,6 +11,8 @@ import 'package:diyar/features/auth/presentation/widgets/phone_number.dart';
 import 'package:diyar/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
+
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class PickupForm extends StatefulWidget {
@@ -78,6 +80,20 @@ class _PickupFormState extends State<PickupForm> {
             ),
           ],
         );
+      },
+    );
+  }
+
+  void _selectTime() {
+    DatePicker.showTimePicker(
+      context,
+      showSecondsColumn: false,
+      currentTime: DateTime.now(),
+      onConfirm: (time) {
+        setState(() {
+          _timeController.text =
+              '${time.hour}:${time.minute}:${time.second} | ${time.day}.${time.month}.${time.year}';
+        });
       },
     );
   }
@@ -174,6 +190,7 @@ class _PickupFormState extends State<PickupForm> {
                   title: context.l10n.comment),
               const SizedBox(height: 10),
               CustomInputWidget(
+                onTap: _selectTime,
                 controller: _timeController,
                 hintText: '18:00 | 12.12.2021',
                 title: context.l10n.preparingForThe,

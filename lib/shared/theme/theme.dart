@@ -13,13 +13,11 @@ ThemeData theme = ThemeData(
   colorScheme: const ColorScheme(
     primary: AppColors.primary,
     secondary: AppColors.primary,
-    surface: Colors.white,
-    background: Colors.white,
+    surface: Colors.white,  // Replaced background with surface
     error: Colors.red,
     onPrimary: Colors.white,
     onSecondary: Colors.white,
     onSurface: Colors.black,
-    onBackground: Colors.black,
     onError: Colors.white,
     brightness: Brightness.light,
   ),
