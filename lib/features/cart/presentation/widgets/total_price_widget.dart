@@ -52,8 +52,7 @@ class _TotalPriceWidgetState extends State<TotalPriceWidget> {
                   title: context.l10n.dishes,
                   trailing: '${widget.containerPrice} ${context.l10n.som}'),
               CustomTile(
-                  title: context.l10n.sale,
-                  trailing: '${widget.sale} ${context.l10n.som}'),
+                  title: context.l10n.sale, trailing: '${widget.sale} %'),
               const Divider(color: Colors.grey),
               CustomTile(
                 title: context.l10n.total,

@@ -25,7 +25,8 @@ class ActiveOrderPage extends StatefulWidget {
 class _ActiveOrderPageState extends State<ActiveOrderPage> {
   List<ActiveOrderModel> orders = [];
   late final IOWebSocketChannel _channel;
-  final StreamController<List<OrderStatusModel>> _controller = StreamController.broadcast();
+  final StreamController<List<OrderStatusModel>> _controller =
+      StreamController.broadcast();
   bool _isControllerClosed = false;
 
   @override
@@ -39,13 +40,15 @@ class _ActiveOrderPageState extends State<ActiveOrderPage> {
     var token = sl<SharedPreferences>().getString(AppConst.accessToken);
     if (token == null) return;
 
-    _channel = IOWebSocketChannel.connect('ws://20.55.72.226:8080/ws/get-status-with-websocket?token=$token');
+    _channel = IOWebSocketChannel.connect(
+        'ws://176.126.164.230:8088/ws/get-status-with-websocket?token=$token');
 
     _channel.stream.listen((data) {
       if (!_isControllerClosed) {
         final List<dynamic> jsonData = jsonDecode(data as String);
-        final List<OrderStatusModel> orderStatuses =
-            jsonData.map((dynamic json) => OrderStatusModel.fromJson(json)).toList();
+        final List<OrderStatusModel> orderStatuses = jsonData
+            .map((dynamic json) => OrderStatusModel.fromJson(json))
+            .toList();
         _controller.add(orderStatuses);
       }
     }, onError: (error) {
@@ -106,7 +109,8 @@ class _ActiveOrderPageState extends State<ActiveOrderPage> {
                 final orderNumber = order.order?.orderNumber;
                 final orderStatus = orderStatuses.firstWhere(
                   (element) => element.orderNumber == orderNumber,
-                  orElse: () => OrderStatusModel(orderNumber: orderNumber!, status: 'Unknown'),
+                  orElse: () => OrderStatusModel(
+                      orderNumber: orderNumber!, status: 'Unknown'),
                 );
 
                 return Card(

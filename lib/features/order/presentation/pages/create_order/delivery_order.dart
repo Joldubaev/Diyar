@@ -76,12 +76,8 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
     final resultWithSession = await YandexSearch.searchByText(
       searchText: query,
       geometry: Geometry.fromBoundingBox(const BoundingBox(
-        southWest: Point(
-            latitude: 42.7942,
-            longitude: 74.4769), // Юго-западная точка Бишкека
-        northEast: Point(
-            latitude: 42.8772,
-            longitude: 74.6570), // Северо-восточная точка Бишкека
+        southWest: Point(latitude: 42.7942, longitude: 74.4769),
+        northEast: Point(latitude: 42.8772, longitude: 74.6570),
       )),
       searchOptions: const SearchOptions(
         searchType: SearchType.geo,
@@ -91,8 +87,6 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
 
     final searchSession = resultWithSession.$1;
     final searchResult = await resultWithSession.$2;
-
-    // Ограничиваем результаты только теми, которые находятся в пределах указанных координат
     final List<SearchItem> filteredItems = searchResult.items!.where((item) {
       final point = item.geometry.first.point;
       return point!.latitude >= 42.7942 &&
@@ -142,9 +136,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                 .toponymMetadata
                 ?.address
                 .formattedAddress;
-            // Предполагаем, что адрес имеет формат "Страна, Город, Улица, Номер дома"
             var addressParts = address?.split(',') ?? [];
-            // Предполагаем, что индекс 1 - это район, 2 - улица, 3 - номер дома
             String district =
                 addressParts.length > 1 ? addressParts[1].trim() : '';
             String street =
@@ -197,7 +189,6 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
         if (!context.read<OrderCubit>().isAddressSearch) {
           _addressController.text = context.read<OrderCubit>().address;
         }
-
         log(_addressController.text);
         List<String> parts = _addressController.text.split(',');
         String lastPart = parts.last.trim();
@@ -266,7 +257,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                   );
                 },
                 inputType: TextInputType.text,
-                hintText: context.l10n.chooseOnMap,
+                hintText: 'Укажите ваш адрес',
                 title: context.l10n.adress,
                 controller: _addressController,
                 validator: (value) {
@@ -284,7 +275,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                 children: [
                   GestureDetector(
                     onTap: () => context.router.push(const OrderMapRoute()),
-                    child: const Text("Выбрать из карту"),
+                    child: Text(context.l10n.chooseOnMap),
                   ),
                 ],
               ),
@@ -315,6 +306,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                 children: [
                   Expanded(
                     child: CustomInputWidget(
+                      inputType: TextInputType.number,
                       controller: _floorController,
                       hintText: context.l10n.floor,
                       title: context.l10n.floor,
@@ -323,6 +315,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                   const SizedBox(width: 10),
                   Expanded(
                     child: CustomInputWidget(
+                      inputType: TextInputType.number,
                       controller: _entranceController,
                       hintText: '',
                       title: context.l10n.entrance,
@@ -354,8 +347,6 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                   itemBuilder: (BuildContext context) {
                     return [
                       'Оплатить наличными',
-                      'Оплатить картой',
-                      'Оплатить онлайн',
                     ].map((String choice) {
                       return PopupMenuItem<String>(
                         value: choice,
@@ -370,13 +361,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                         borderRadius: BorderRadius.circular(100),
                         child: const Icon(Icons.payment),
                       ),
-                      const SizedBox(width: 8),
-                      if (_paymentType == PaymentTypeDelivery.cash)
-                        const Text('Оплатить наличными'),
-                      if (_paymentType == PaymentTypeDelivery.card)
-                        const Text('Оплатить картой'),
-                      if (_paymentType == PaymentTypeDelivery.online)
-                        const Text('Оплатить онлайн'),
+                      const Text('Оплатить наличными'),
                     ],
                   ),
                 ),
