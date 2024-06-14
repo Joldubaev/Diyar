@@ -6,31 +6,30 @@ import 'package:diyar/features/map/data/models/location_model.dart';
 import 'package:diyar/features/map/data/repositories/yandex_service.dart';
 
 class AddressRepository {
-   Future<LocationModel> getLocationByAddress({required String address}) async {
-  try {
-    Map<String, dynamic> data = {
-      'apikey': AppConst.getLocations,
-      'geocode': address,
-      'format': 'json',
-      'lang': 'ru_RU',
-      'results': '1',
-    };
-    Dio dio = Dio();
-    final response = await dio.get(
-      'https://geocode-maps.yandex.ru/1.x/',
-      queryParameters: data,
-    );
-    log('response: ${response.data}');
+  Future<LocationModel> getLocationByAddress({required String address}) async {
+    try {
+      Map<String, dynamic> data = {
+        'apikey': AppConst.getLocations,
+        'geocode': address,
+        'format': 'json',
+        'lang': 'ru_RU',
+        'results': '1',
+      };
+      Dio dio = Dio();
+      final response = await dio.get(
+        'https://geocode-maps.yandex.ru/1.x/',
+        queryParameters: data,
+      );
+      log('response: ${response.data}');
 
-    return LocationModel.fromJson(response.data);
-  } catch (e) {
-    log('error: $e');
-    rethrow;
+      return LocationModel.fromJson(response.data);
+    } catch (e) {
+      log('error: $e');
+      rethrow;
+    }
   }
-}
 
-
-  Future<LocationModel> getLocationByCoordinates(
+  Future<LocationModel?> getLocationByCoordinates(
       {required AppLatLong latLong}) async {
     Dio dio = Dio();
 
@@ -46,7 +45,17 @@ class AddressRepository {
         },
       );
       log('response: ${response.data}');
-      return LocationModel.fromJson(response.data);
+      LocationModel locationModel = LocationModel.fromJson(response.data);
+      locationModel.response?.geoObjectCollection?.featureMember = locationModel
+          .response?.geoObjectCollection?.featureMember
+          ?.where((element) {
+        final address = element.geoObject?.metaDataProperty?.geocoderMetaData
+                ?.address?.formatted ??
+            '';
+        return address.contains('Кыргызстан');
+      }).toList();
+
+      return locationModel;
     } catch (e) {
       rethrow;
     }

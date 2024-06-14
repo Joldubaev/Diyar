@@ -246,28 +246,59 @@ class _OrderMapPageState extends State<OrderMapPage> {
   }
 
   Future<void> _moveToCurrentLocation(AppLatLong appLatLong) async {
-    (await mapControllerCompleter.future).moveCamera(
-      CameraUpdate.newCameraPosition(
-        CameraPosition(
-          target: Point(
-            latitude: appLatLong.latitude,
-            longitude: appLatLong.longitude,
+    if (isInBishkekBounds(appLatLong.latitude, appLatLong.longitude)) {
+      (await mapControllerCompleter.future).moveCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: Point(
+              latitude: appLatLong.latitude,
+              longitude: appLatLong.longitude,
+            ),
+            zoom: 16,
           ),
         ),
-      ),
-    );
+      );
+    }
+  }
+
+  bool isInBishkekBounds(double latitude, double longitude) {
+    double minLatitude = 39.1917;
+    double maxLatitude = 43.2389;
+    double minLongitude = 69.2499;
+    double maxLongitude = 80.2590;
+    return latitude >= minLatitude &&
+        latitude <= maxLatitude &&
+        longitude >= minLongitude &&
+        longitude <= maxLongitude;
   }
 
   Future<void> updateAddressDetails(AppLatLong latLong) async {
-    address = const Text('Поиск местоположения').data;
+    address = 'Поиск местоположения';
     setState(() {});
     LocationModel? data =
         await locationRepo.getLocationByCoordinates(latLong: latLong);
-    address = data.response!.geoObjectCollection!.featureMember!.isEmpty
-        ? 'unknown place'
-        : data.response!.geoObjectCollection!.featureMember!.first.geoObject!
-            .metaDataProperty!.geocoderMetaData!.address!.formatted
-            .toString();
+
+    if (data != null && data.response != null) {
+      final featureMembers = data.response!.geoObjectCollection!.featureMember!;
+      if (featureMembers.isNotEmpty) {
+        final geoObject = featureMembers.first.geoObject!;
+        final formattedAddress =
+            geoObject.metaDataProperty?.geocoderMetaData?.address?.formatted;
+
+        // Ensure the address belongs to Kyrgyzstan and Bishkek
+        if (formattedAddress != null &&
+            formattedAddress.contains('Кыргызстан') &&
+            formattedAddress.contains('Бишкек')) {
+          address = formattedAddress;
+        } else {
+          address = 'Адрес не найден';
+        }
+      } else {
+        address = 'Адрес не найден';
+      }
+    } else {
+      address = 'Адрес не найден';
+    }
 
     if (userLocation != null) {
       double distance = calculateDistance(userLocation!.latitude,
