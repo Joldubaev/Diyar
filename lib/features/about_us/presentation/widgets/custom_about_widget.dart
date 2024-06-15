@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:diyar/features/about_us/data/models/restaurant_model.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +12,8 @@ class CustomAboutWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(model.photoLinks);
-    print(model.photoLinks!.length);
+    log('photoLinks: ${model.photoLinks!.length}');
+    log('photoLinks: ${model.photoLinks!.first}');
 
     return Scaffold(
       body: Padding(
