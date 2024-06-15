@@ -387,6 +387,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                   textStyle:
                       theme.textTheme.bodyMedium!.copyWith(color: Colors.white),
                   onTap: () {
+                    log(context.read<CartCubit>().totalPrice.toString());
                     if (_formKey.currentState!.validate()) {
                       final totalPrice = context.read<CartCubit>().totalPrice;
                       final deliveryPrice =
