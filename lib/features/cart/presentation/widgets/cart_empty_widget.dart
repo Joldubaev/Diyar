@@ -16,7 +16,9 @@ class CartEmptyWidget extends StatelessWidget {
         children: [
           SvgPicture.asset('assets/icons/cart.svg', width: 200, height: 200),
           const SizedBox(height: 16),
-          Text(context.l10n.cartIsEmpty, style: theme.textTheme.titleMedium!.copyWith(color: AppColors.grey)),
+          Text(context.l10n.cartIsEmpty,
+              style:
+                  theme.textTheme.titleSmall!.copyWith(color: AppColors.grey)),
         ],
       ),
     );

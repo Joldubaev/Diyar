@@ -1,4 +1,3 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:diyar/features/cart/presentation/presentation.dart';
 import 'package:diyar/features/menu/data/data.dart';
@@ -6,13 +5,18 @@ import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/theme/theme.dart';
 import 'package:diyar/shared/utils/fmt/show_alert.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 class CartItemWidgets extends StatelessWidget {
   final FoodModel food;
   final int counter;
-  const CartItemWidgets({super.key, required this.food, required this.counter});
+  final void Function() onRemove;
+  const CartItemWidgets({
+    super.key,
+    required this.food,
+    required this.counter,
+    required this.onRemove,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -91,16 +95,10 @@ class CartItemWidgets extends StatelessWidget {
                         IconButton(
                           onPressed: () {
                             AppAlert.showConfirmDialog(
-                              context: context,
-                              title: context.l10n.deleteOrder,
-                              content: Text(context.l10n.deleteOrderText),
-                              confirmPressed: () {
-                                context
-                                    .read<CartCubit>()
-                                    .removeFromCart(food.id ?? '');
-                                context.maybePop();
-                              },
-                            );
+                                context: context,
+                                title: context.l10n.deleteOrder,
+                                content: Text(context.l10n.deleteOrderText),
+                                confirmPressed: onRemove);
                           },
                           icon: SvgPicture.asset('assets/icons/delete.svg'),
                         )

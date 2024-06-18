@@ -296,12 +296,6 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                   controller: _apartmentController,
                   hintText: '',
                   title: context.l10n.ofice),
-              CustomInputWidget(
-                inputType: TextInputType.number,
-                controller: _intercomController,
-                hintText: '',
-                title: context.l10n.entranceNumber,
-              ),
               Row(
                 children: [
                   Expanded(
@@ -310,15 +304,31 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                       controller: _floorController,
                       hintText: context.l10n.floor,
                       title: context.l10n.floor,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Введите номер ';
+                        } else if (value.isEmpty || value.length > 4) {
+                          return 'Введите корректный номер этажа';
+                        }
+                        return null;
+                      },
                     ),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: CustomInputWidget(
                       inputType: TextInputType.number,
-                      controller: _entranceController,
+                      controller: _intercomController,
                       hintText: '',
-                      title: context.l10n.entrance,
+                      title: context.l10n.entranceNumber,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Введите номер подъезда';
+                        } else if (value.isEmpty || value.length > 4) {
+                          return 'Введите корректный номер подъезда';
+                        }
+                        return null;
+                      },
                     ),
                   ),
                 ],
@@ -396,9 +406,29 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: const Text('Сумма оплаты c доставкой.'),
-                            content: Text('${deliveryPrice + totalPrice} сом',
-                                style: theme.textTheme.titleSmall!),
+                            title: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Сумма доставки: $deliveryPrice сом',
+                                  style: theme.textTheme.bodyLarge!.copyWith(
+                                    color: AppColors.black1.withOpacity(0.6),
+                                  ),
+                                ),
+                                Text(
+                                  'Сумма заказа: $totalPrice сом',
+                                  style: theme.textTheme.bodyLarge!.copyWith(
+                                    color: AppColors.black1.withOpacity(0.6),
+                                  ),
+                                ),
+                                Text(
+                                  'Общая сумма: ${deliveryPrice + totalPrice} сом',
+                                  style: theme.textTheme.bodyLarge!.copyWith(
+                                    color: AppColors.black1.withOpacity(0.6),
+                                  ),
+                                )
+                              ],
+                            ),
                             actions: [
                               TextButton(
                                 onPressed: () {
@@ -437,13 +467,15 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                                     context.maybePop();
                                   });
                                 },
-                                child: const Text('Подтвердить'),
+                                child: const Text('Подтвердить',
+                                    style: TextStyle(color: AppColors.green)),
                               ),
                               TextButton(
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
-                                child: const Text('Отменить'),
+                                child: const Text('Отменить',
+                                    style: TextStyle(color: AppColors.red)),
                               ),
                             ],
                           );

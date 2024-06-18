@@ -12,7 +12,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class CreateOrderPage extends StatefulWidget {
   final List<CartItemModel> cart;
   final int dishCount;
-  const CreateOrderPage({super.key, required this.cart, required this.dishCount});
+  const CreateOrderPage(
+      {super.key, required this.cart, required this.dishCount});
 
   @override
   State<CreateOrderPage> createState() => _CreateOrderPageState();
@@ -44,8 +45,9 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
           child: Scaffold(
             appBar: AppBar(
               backgroundColor: AppColors.white,
-              title:
-                  Text(context.l10n.orderDetails, style: theme.textTheme.titleLarge!.copyWith(color: AppColors.black1)),
+              title: Text(context.l10n.orderDetails,
+                  style: theme.textTheme.titleSmall!
+                      .copyWith(color: AppColors.black1)),
               centerTitle: true,
               bottom: PreferredSize(
                 preferredSize: const Size.fromHeight(40),

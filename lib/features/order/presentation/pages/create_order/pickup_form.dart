@@ -62,7 +62,7 @@ class _PickupFormState extends State<PickupForm> {
         return AlertDialog(
           title: Text('${context.l10n.orderPickupAd} ${context.l10n.address}',
               style: theme.textTheme.bodyLarge!.copyWith(fontSize: 16)),
-          content: Text('Сумма: $totalPrice' ' сом',
+          content: Text('Общая сумма: $totalPrice' ' сом',
               style: theme.textTheme.bodyMedium!.copyWith(fontSize: 16)),
           actions: [
             TextButton(
@@ -70,13 +70,15 @@ class _PickupFormState extends State<PickupForm> {
                 Navigator.of(context).pop();
                 _submitOrder();
               },
-              child: const Text('Подтвердить'),
+              child: const Text('Подтвердить',
+                  style: TextStyle(color: AppColors.green)),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Отменить'),
+              child: const Text('Отменить',
+                  style: TextStyle(color: AppColors.red)),
             ),
           ],
         );

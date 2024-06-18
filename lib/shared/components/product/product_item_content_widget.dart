@@ -55,9 +55,11 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
       _controller.text = widget.quantity.toString();
       isChangedCounter = true;
       Future.delayed(const Duration(milliseconds: 400), () {
-        setState(() {
-          isChangedCounter = false;
-        });
+        if (mounted) {
+          setState(() {
+            isChangedCounter = false;
+          });
+        }
       });
     }
   }

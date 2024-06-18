@@ -31,7 +31,7 @@ class _RestorantPageState extends State<RestorantPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primary,
-        title: Text(context.l10n.restaurant, style: theme.textTheme.titleLarge!.copyWith(color: AppColors.white)),
+        title: Text(context.l10n.restaurant, style: theme.textTheme.titleMedium!.copyWith(color: AppColors.white)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: AppColors.white),
           onPressed: () {

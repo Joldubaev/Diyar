@@ -46,7 +46,7 @@ class _SignUpFormState extends State<SignUpForm> {
         children: <Widget>[
           CustomInputWidget(
             title: context.l10n.yourName,
-            hintText: context.l10n.nameExample,
+            hintText: '',
             controller: _usernameController,
             validator: (value) {
               if (value!.isEmpty) {
@@ -60,7 +60,7 @@ class _SignUpFormState extends State<SignUpForm> {
           const SizedBox(height: 10),
           CustomInputWidget(
             title: context.l10n.email,
-            hintText: context.l10n.emailExample,
+            hintText: '',
             controller: _emailController,
             inputType: TextInputType.emailAddress,
             validator: (value) {
@@ -92,7 +92,7 @@ class _SignUpFormState extends State<SignUpForm> {
           const SizedBox(height: 10),
           CustomInputWidget(
             title: context.l10n.password,
-            hintText: "********",
+            hintText: "",
             controller: _passwordController,
             isPasswordField: true,
             validator: (value) {
@@ -107,7 +107,7 @@ class _SignUpFormState extends State<SignUpForm> {
           const SizedBox(height: 10),
           CustomInputWidget(
             title: context.l10n.confirmPassword,
-            hintText: "********",
+            hintText: "",
             controller: _confirmPasswordController,
             isPasswordField: true,
             validator: (value) {
@@ -132,7 +132,8 @@ class _SignUpFormState extends State<SignUpForm> {
             builder: (context, state) {
               return SubmitButtonWidget(
                 isLoading: state is SignUpLoading,
-                textStyle: theme.textTheme.bodyLarge!.copyWith(color: AppColors.white),
+                textStyle:
+                    theme.textTheme.bodyLarge!.copyWith(color: AppColors.white),
                 bgColor: AppColors.primary,
                 title: context.l10n.register,
                 onTap: () {

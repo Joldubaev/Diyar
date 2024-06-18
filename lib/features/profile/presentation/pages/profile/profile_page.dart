@@ -4,10 +4,12 @@ import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/features/auth/auth.dart';
 import 'package:diyar/features/auth/data/models/user_mpdel.dart';
 import 'package:diyar/features/profile/presentation/presentation.dart';
+import 'package:diyar/features/profile/presentation/widgets/version_widget.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 @RoutePage()
 class ProfilePage extends StatefulWidget {
@@ -19,11 +21,20 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   late UserModel user;
+  String version = '';
 
   @override
   void initState() {
     super.initState();
     context.read<ProfileCubit>().getUser();
+    _initPackageInfo();
+  }
+
+  Future<void> _initPackageInfo() async {
+    final info = await PackageInfo.fromPlatform();
+    setState(() {
+      version = '${info.version} (${info.buildNumber})';
+    });
   }
 
   @override
@@ -59,7 +70,7 @@ class _ProfilePageState extends State<ProfilePage> {
             user = state.userModel;
           }
           return SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -96,11 +107,13 @@ class _ProfilePageState extends State<ProfilePage> {
                     children: [
                       SettingsTile(
                         text: context.l10n.aboutUs,
-                        onPressed: () => context.pushRoute(const AboutUsRoute()),
+                        onPressed: () =>
+                            context.pushRoute(const AboutUsRoute()),
                       ),
                       SettingsTile(
                         text: context.l10n.contact,
-                        onPressed: () => context.pushRoute(const ContactRoute()),
+                        onPressed: () =>
+                            context.pushRoute(const ContactRoute()),
                       ),
                       SettingsTile(
                         text: context.l10n.policy,
@@ -138,6 +151,19 @@ class _ProfilePageState extends State<ProfilePage> {
                     },
                     icon: Icons.exit_to_app,
                     color: theme.colorScheme.error,
+                  ),
+                ),
+                const SizedBox(height: 15),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: VersionWidgets(
+                    leading: const Icon(Icons.local_fire_department),
+                    title: 'Версия приложения',
+                    trailing: Text(version, style: theme.textTheme.bodyMedium),
                   ),
                 ),
               ],

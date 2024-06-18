@@ -1,3 +1,4 @@
+import 'package:diyar/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 class TextCheckButton extends StatelessWidget {
@@ -15,10 +16,18 @@ class TextCheckButton extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(text),
+        Text(text,
+            style:
+                theme.textTheme.bodyMedium!.copyWith(color: AppColors.black1)),
         TextButton(
           onPressed: onPressed,
-          child: FittedBox(child: Text(route)),
+          child: FittedBox(
+            child: Text(
+              route,
+              style:
+                  theme.textTheme.bodyMedium!.copyWith(color: AppColors.blue),
+            ),
+          ),
         )
       ],
     );

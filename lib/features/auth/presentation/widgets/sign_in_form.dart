@@ -42,7 +42,7 @@ class _LoginFormState extends State<LoginForm> {
             children: <Widget>[
               CustomInputWidget(
                 title: context.l10n.email,
-                hintText: context.l10n.email,
+                hintText: '',
                 controller: _usernameController,
                 isPasswordField: false,
                 inputType: TextInputType.emailAddress,
@@ -58,7 +58,7 @@ class _LoginFormState extends State<LoginForm> {
               const SizedBox(height: 20),
               CustomInputWidget(
                 title: context.l10n.password,
-                hintText: "******",
+                hintText: "",
                 controller: _passwordController,
                 isPasswordField: true,
                 inputType: TextInputType.text,
@@ -117,7 +117,7 @@ class _LoginFormState extends State<LoginForm> {
               ),
               const LineOrWidget(),
               GoogleButton(
-                  color: AppColors.primary,
+                  color: AppColors.black1,
                   onPressed: () {
                     SnackBarMessage().showErrorSnackBar(
                         message: context.l10n.notAvailable, context: context);
@@ -137,7 +137,10 @@ class _LoginFormState extends State<LoginForm> {
                     AuthBottomSheet(resedPasswordCode: resedPasswordCode),
                   );
                 },
-                child: Text(context.l10n.forgotPassword),
+                child: Text(context.l10n.forgotPassword,
+                    style: theme.textTheme.bodyMedium!.copyWith(
+                      color: AppColors.blue,
+                    )),
               ),
             ],
           ),
