@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:diyar/features/home_features/data/model/news_model.dart';
 import 'package:diyar/features/home_features/presentation/pages/widgets/custom_widget.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/shared.dart';
@@ -17,10 +18,12 @@ class NewsPage extends StatefulWidget {
 }
 
 class _NewsPageState extends State<NewsPage> {
+  List<NewsModel> news = [];
+
   @override
   void initState() {
-    context.read<HomeFeaturesCubit>().getNews();
     super.initState();
+    context.read<HomeFeaturesCubit>().getNews();
   }
 
   @override
@@ -43,44 +46,46 @@ class _NewsPageState extends State<NewsPage> {
       ),
       body: BlocConsumer<HomeFeaturesCubit, HomeFeaturesState>(
         listener: (context, state) {
-          if (state is HomeFeaturesError) {
-            SnackBarMessage().showErrorSnackBar(message: state.message, context: context);
+          if (state is GetNewsError) {
+            SnackBarMessage().showErrorSnackBar(
+              message: state.message,
+              context: context,
+            );
           }
         },
         builder: (context, state) {
-          if (state is HomeFeaturesLoading) {
+          if (state is GetNewsLoading) {
             return const Center(child: CircularProgressIndicator());
-          } else if (state is HomeFeaturesLoaded) {
-            if (state.news!.isEmpty || state.news == null) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset('assets/icons/cuate.svg', width: 200, height: 200),
-                    const SizedBox(height: 20),
-                    Text(
-                      context.l10n.emptyText,
-                      style: theme.textTheme.bodyLarge!.copyWith(color: AppColors.black1),
-                    ),
-                  ],
-                ),
-              );
-            } else {
-              return ListView.builder(
-                itemCount: state.news!.length,
-                itemBuilder: (context, index) {
-                  final news = state.news![index];
-                  return CardWidget(
-                    title: news.name!,
-                    description: news.description!,
-                    image: news.photoLink!,
-                  );
-                },
-              );
-            }
-          } else {
-            return const SizedBox();
+          } else if (state is GetNewsLoaded) {
+            news = state.news;
           }
+
+          return news.isEmpty
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset('assets/icons/cuate.svg',
+                          width: 200, height: 200),
+                      const SizedBox(height: 20),
+                      Text(
+                        context.l10n.emptyText,
+                        style: theme.textTheme.bodyLarge!
+                            .copyWith(color: AppColors.black1),
+                      ),
+                    ],
+                  ),
+                )
+              : ListView.builder(
+                  itemCount: news.length,
+                  itemBuilder: (context, index) {
+                    return CardWidget(
+                      title: news[index].name!,
+                      description: news[index].description!,
+                      image: news[index].photoLink!,
+                    );
+                  },
+                );
         },
       ),
     );

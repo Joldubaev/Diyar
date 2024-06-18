@@ -4,22 +4,34 @@ abstract class HomeFeaturesState {}
 
 final class HomeFeaturesInitial extends HomeFeaturesState {}
 
-final class HomeFeaturesLoading extends HomeFeaturesState {}
+final class GetNewsLoading extends HomeFeaturesState {}
 
-final class HomeFeaturesLoaded extends HomeFeaturesState {
-  final List<NewsModel>? news;
-  final List<SaleModel>? sales;
+final class GetNewsLoaded extends HomeFeaturesState {
+  final List<NewsModel> news;
 
-  HomeFeaturesLoaded({
-    this.news,
-    this.sales,
+  GetNewsLoaded({required this.news});
+}
+
+final class GetNewsError extends HomeFeaturesState {
+  final String message;
+
+  GetNewsError({
+    required this.message,
   });
 }
 
-final class HomeFeaturesError extends HomeFeaturesState {
+final class GetSalesLoading extends HomeFeaturesState {}
+
+final class GetSalesLoaded extends HomeFeaturesState {
+  final List<SaleModel> sales;
+
+  GetSalesLoaded({required this.sales});
+}
+
+final class GetSalesError extends HomeFeaturesState {
   final String message;
 
-  HomeFeaturesError({
+  GetSalesError({
     required this.message,
   });
 }

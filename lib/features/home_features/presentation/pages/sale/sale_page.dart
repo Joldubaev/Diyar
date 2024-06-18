@@ -1,25 +1,28 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:diyar/features/home_features/presentation/pages/widgets/custom_widget.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:diyar/features/home_features/data/model/sale_model.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/theme/theme.dart';
-import 'package:diyar/shared/utils/snackbar/snackbar_message.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import '../../cubit/home_features_cubit.dart';
 
 @RoutePage()
 class SalePage extends StatefulWidget {
-  const SalePage({super.key});
+  final SaleModel? sale;
+  const SalePage({super.key, this.sale});
 
   @override
   State<SalePage> createState() => _SalePageState();
 }
 
 class _SalePageState extends State<SalePage> {
+  SaleModel? sale;
+
   @override
   void initState() {
-    context.read<HomeFeaturesCubit>().getSales();
+    setState(() {
+      sale = widget.sale;
+    });
     super.initState();
   }
 
@@ -41,48 +44,60 @@ class _SalePageState extends State<SalePage> {
           ),
         ),
       ),
-      body: BlocConsumer<HomeFeaturesCubit, HomeFeaturesState>(
-        listener: (context, state) {
-          if (state is HomeFeaturesError) {
-            SnackBarMessage().showErrorSnackBar(message: state.message, context: context);
-          }
-        },
-        builder: (context, state) {
-          if (state is HomeFeaturesLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (state is HomeFeaturesLoaded) {
-            if (state.sales == null || state.sales!.isEmpty) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset('assets/icons/amico.svg', width: 200, height: 200),
-                    const SizedBox(height: 20),
-                    Text(
-                      context.l10n.emptyText,
-                      style: theme.textTheme.bodyLarge!.copyWith(color: AppColors.black1),
+      body: sale == null
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset('assets/icons/amico.svg',
+                      width: 200, height: 200),
+                  const SizedBox(height: 20),
+                  Text(
+                    context.l10n.emptyText,
+                    style: theme.textTheme.bodyLarge!
+                        .copyWith(color: AppColors.black1),
+                  ),
+                ],
+              ),
+            )
+          : SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: CachedNetworkImage(
+                      imageUrl: sale?.photoLink ?? '',
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      height: 200,
+                      errorWidget: (context, url, error) {
+                        return Image.asset(
+                          "assets/images/app_icon.png",
+                          fit: BoxFit.cover,
+                        );
+                      },
+                      placeholder: (context, url) => const Center(
+                        child: SizedBox(
+                          width: 50,
+                          height: 50,
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
                     ),
-                  ],
-                ),
-              );
-            }
-            return ListView.builder(
-              itemCount: state.sales!.length,
-              itemBuilder: (context, index) {
-                final sale = state.sales![index];
-                return CardWidget(
-                  discount: sale.discount,
-                  title: sale.name!,
-                  description: sale.description!,
-                  image: sale.photoLink!,
-                );
-              },
-            );
-          }
-          return const SizedBox();
-        },
-      ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    sale?.name ?? "",
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                  const SizedBox(height: 5),
+                  Text(sale?.description ?? ""),
+                  const SizedBox(height: 10),
+                ],
+              ),
+            ),
     );
   }
 }

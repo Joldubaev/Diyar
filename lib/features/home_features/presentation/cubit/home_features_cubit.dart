@@ -11,22 +11,22 @@ class HomeFeaturesCubit extends Cubit<HomeFeaturesState> {
   final HomeRepository homeFeaturesRepo;
 
   void getNews() async {
-    emit(HomeFeaturesLoading());
+    emit(GetNewsLoading());
     try {
       final news = await homeFeaturesRepo.getNews();
-      emit(HomeFeaturesLoaded(news: news));
+      emit(GetNewsLoaded(news: news));
     } catch (e) {
-      emit(HomeFeaturesError(message: e.toString()));
+      emit(GetNewsError(message: e.toString()));
     }
   }
 
   void getSales() async {
-    emit(HomeFeaturesLoading());
+    emit(GetSalesLoading());
     try {
       final sales = await homeFeaturesRepo.getSales();
-      emit(HomeFeaturesLoaded(sales: sales));
+      emit(GetSalesLoaded(sales: sales));
     } catch (e) {
-      emit(HomeFeaturesError(message: e.toString()));
+      emit(GetSalesError(message: e.toString()));
     }
   }
 }
