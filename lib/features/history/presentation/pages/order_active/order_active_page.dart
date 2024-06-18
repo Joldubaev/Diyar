@@ -114,27 +114,27 @@ class _ActiveOrderPageState extends State<ActiveOrderPage> {
                 );
 
                 return Card(
-                  child: ExpansionTile(
-                    shape: const Border(
-                      bottom: BorderSide(color: Colors.transparent),
-                    ),
-                    childrenPadding: const EdgeInsets.fromLTRB(10, 10, 10, 8),
-                    title: Text(
-                      '${context.l10n.orderNumber} $orderNumber',
-                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                            color: AppColors.primary,
-                          ),
-                    ),
-                    children: [
-                      OrderStepper(orderStatus: orderStatus),
-                      CustomTextButton(
-                        onPressed: () => context.pushRoute(
-                          OrderDetailRoute(orderNumber: "$orderNumber"),
-                        ),
-                        textButton: context.l10n.orderDetails,
+                  child: ListTile(
+                      shape: const Border(
+                        bottom: BorderSide(color: Colors.transparent),
                       ),
-                    ],
-                  ),
+                      title: Text(
+                        '${context.l10n.orderNumber} $orderNumber',
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                              color: AppColors.primary,
+                            ),
+                      ),
+                      subtitle: Column(
+                        children: [
+                          OrderStepper(orderStatus: orderStatus),
+                          CustomTextButton(
+                            onPressed: () => context.pushRoute(
+                              OrderDetailRoute(orderNumber: "$orderNumber"),
+                            ),
+                            textButton: context.l10n.orderDetails,
+                          ),
+                        ],
+                      )),
                 );
               },
             );

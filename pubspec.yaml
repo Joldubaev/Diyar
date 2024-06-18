@@ -50,6 +50,7 @@ dependencies:
   connectivity_plus: ^5.0.2
   keyboard_dismisser: ^3.0.0
   flutter_datetime_picker_plus: ^2.2.0
+  package_info_plus: ^8.0.0
 
 dev_dependencies:
   flutter_test:

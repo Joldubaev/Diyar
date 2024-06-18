@@ -1,10 +1,6 @@
-import 'package:diyar/features/cart/data/models/cart_item_model.dart';
-import 'package:diyar/features/cart/presentation/cubit/cart_cubit.dart';
-import 'package:diyar/shared/components/buttons/submit_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:diyar/features/features.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProductBottomWidget extends StatelessWidget {
   final VoidCallback? onTap;
@@ -86,13 +82,13 @@ class ProductBottomWidget extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   text: TextSpan(
                     text: '${food.weight}',
-                    style: theme.textTheme.bodyMedium?.copyWith(
+                    style: theme.textTheme.titleSmall?.copyWith(
                       color: Colors.grey,
                     ),
                     children: [
                       TextSpan(
                         text: ' - ${food.price} сом',
-                        style: theme.textTheme.bodyMedium?.copyWith(
+                        style: theme.textTheme.titleSmall?.copyWith(
                           color: Colors.green,
                           fontWeight: FontWeight.w400,
                         ),
@@ -100,18 +96,6 @@ class ProductBottomWidget extends StatelessWidget {
                     ],
                   ),
                 ),
-              ),
-              const SizedBox(height: 10),
-              SubmitButtonWidget(
-                title: 'Добавить в корзину',
-                bgColor: theme.primaryColor,
-                textStyle: const TextStyle(color: Colors.white, fontSize: 16),
-                onTap: () {
-                  context.read<CartCubit>().addToCart(
-                        CartItemModel(food: food, quantity: 1),
-                      );
-                  Navigator.pop(context);
-                },
               ),
             ],
           ),

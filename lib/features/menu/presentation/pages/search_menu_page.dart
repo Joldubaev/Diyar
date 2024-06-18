@@ -23,7 +23,8 @@ class _SearchMenuPageState extends State<SearchMenuPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(context.l10n.searchMeal, style: Theme.of(context).textTheme.titleSmall),
+        title: Text(context.l10n.searchMeal,
+            style: Theme.of(context).textTheme.titleSmall),
       ),
       body: Column(
         children: [
@@ -76,7 +77,10 @@ class _SearchMenuPageState extends State<SearchMenuPage> {
                 } else if (state is SearchMenuLoading) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (state is SearchMenuFailure) {
-                  return Center(child: Text(context.l10n.loadedWrong));
+                  return Center(
+                      child: Text(
+                    context.l10n.notFound,
+                  ));
                 }
 
                 return foods.isEmpty
@@ -106,7 +110,8 @@ class _SearchMenuPageState extends State<SearchMenuPage> {
                                 final food = foods[index];
                                 final cartItem = cart.firstWhere(
                                   (element) => element.food?.id == food.id,
-                                  orElse: () => CartItemModel(food: food, quantity: 0),
+                                  orElse: () =>
+                                      CartItemModel(food: food, quantity: 0),
                                 );
                                 return ProductItemWidget(
                                   food: food,

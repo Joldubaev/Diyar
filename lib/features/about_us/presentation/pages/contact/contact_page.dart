@@ -24,7 +24,7 @@ class ContactPage extends StatelessWidget {
             }),
         title: Text(context.l10n.contact,
             style:
-                theme.textTheme.titleMedium!.copyWith(color: AppColors.white)),
+                theme.textTheme.titleSmall!.copyWith(color: AppColors.white)),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),

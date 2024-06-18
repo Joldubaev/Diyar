@@ -61,9 +61,6 @@ class CustomAboutWidget extends StatelessWidget {
                           fit: BoxFit.cover,
                           memCacheHeight: 300,
                           memCacheWidth: 300,
-                          errorWidget: (context, url, error) =>
-                              SvgPicture.asset('assets/icons/boxes.svg',
-                                  height: 50),
                         ),
                       ),
                     );
