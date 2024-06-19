@@ -1,10 +1,8 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/features/cart/data/models/cart_item_model.dart';
 import 'package:diyar/features/cart/presentation/cubit/cart_cubit.dart';
 import 'package:diyar/features/features.dart';
-import 'package:diyar/features/home_features/data/model/sale_model.dart';
 import 'package:diyar/features/home_features/presentation/cubit/home_features_cubit.dart';
 import 'package:diyar/features/profile/presentation/presentation.dart';
 import 'package:diyar/l10n/l10n.dart';
@@ -13,6 +11,8 @@ import 'package:diyar/shared/pages/widgets/news_widget.dart';
 import 'package:diyar/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../widgets/sales_section_page.dart';
 
 @RoutePage()
 class HomePage extends StatefulWidget {
@@ -25,15 +25,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<FoodModel> menu = [];
 
-  final PageController _pageController = PageController();
-
-  List<SaleModel> sales = [];
-
   @override
   void initState() {
     super.initState();
-    context.read<PopularCubit>().getPopularProducts().then((value) {
-      context.read<CartCubit>().getCartItems().then((value) {});
+    context.read<PopularCubit>().getPopularProducts().then((_) {
+      context.read<CartCubit>().getCartItems().then((_) {});
     });
     context.read<ProfileCubit>().getUser();
     context.read<HomeFeaturesCubit>().getSales();
@@ -86,58 +82,16 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  BlocBuilder<HomeFeaturesCubit, HomeFeaturesState>(
-                    builder: (context, state) {
-                      if (state is GetSalesLoaded) {
-                        sales = state.sales;
-                      }
-
-                      return sales.isEmpty
-                          ? const SizedBox()
-                          : ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: SizedBox(
-                                height: 200,
-                                child: PageView.builder(
-                                  controller: _pageController,
-                                  itemCount: sales.length,
-                                  // onPageChanged: (int page) {},
-                                  itemBuilder: (context, index) {
-                                    return GestureDetector(
-                                      onTap: () {
-                                        context.pushRoute(
-                                          SaleRoute(sale: sales[index]),
-                                        );
-                                      },
-                                      child: CachedNetworkImage(
-                                        imageUrl: sales[index].photoLink ?? '',
-                                        fit: BoxFit.cover,
-                                        width: double.infinity,
-                                        height: 200,
-                                        errorWidget: (context, url, error) {
-                                          return Image.asset(
-                                            "assets/images/app_icon.png",
-                                            fit: BoxFit.cover,
-                                          );
-                                        },
-                                        placeholder: (context, url) =>
-                                            const Center(
-                                          child: SizedBox(
-                                            width: 50,
-                                            height: 50,
-                                            child: CircularProgressIndicator(),
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            );
-                    },
+                  Text(
+                    context.l10n.sales,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      color: AppColors.black1,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
+                  const SalesSection(),
                   const SizedBox(height: 10),
-                  if (menu.isNotEmpty)
+                  if (menu.isNotEmpty) ...[
                     Text(
                       l10n.popularFood,
                       style: theme.textTheme.titleSmall?.copyWith(
@@ -145,8 +99,7 @@ class _HomePageState extends State<HomePage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                  if (menu.isNotEmpty) const SizedBox(height: 10),
-                  if (menu.isNotEmpty)
+                    const SizedBox(height: 10),
                     SizedBox(
                       width: double.infinity,
                       height: 220,
@@ -186,19 +139,20 @@ class _HomePageState extends State<HomePage> {
                         },
                       ),
                     ),
-                  const SizedBox(height: 20),
+                  ],
+                  const SizedBox(height: 10),
                   AboutUsWidget(
                     image: 'assets/images/about.png',
                     onTap: () => context.router.push(const AboutUsRoute()),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   NewsWidgets(
                     subtitle: l10n.news,
                     title: 'Дияр',
                     image: 'assets/images/news_da.png',
                     onTap: () => context.router.push(const NewsRoute()),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   Container(
                     padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                     decoration: BoxDecoration(
