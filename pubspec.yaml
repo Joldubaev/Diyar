@@ -51,6 +51,7 @@ dependencies:
   keyboard_dismisser: ^3.0.0
   flutter_datetime_picker_plus: ^2.2.0
   package_info_plus: ^8.0.0
+  carousel_slider: ^4.2.1
 
 dev_dependencies:
   flutter_test:
