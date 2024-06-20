@@ -29,13 +29,17 @@ class _OrderHistoryState extends State<OrderHistory> {
     return BlocBuilder<HistoryCubit, HistoryState>(
       builder: (context, state) {
         if (state is GetHistoryOrdersError) {
-          return const EmptyActiveOrders();
+          return const EmptyActiveOrders(
+            text: 'Произошла ошибка при загрузке истории заказов',
+          );
         } else if (state is GetHistoryOrdersLoading) {
           return const Center(child: CircularProgressIndicator());
         } else if (state is GetHistoryOrdersLoaded) {
           orders = state.orders;
           if (orders.isEmpty) {
-            return const EmptyActiveOrders();
+            return const EmptyActiveOrders(
+              text: 'У вас пока нет истории заказов',
+            );
           }
         }
 

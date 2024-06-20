@@ -11,8 +11,34 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 @RoutePage()
-class CartPage extends StatelessWidget {
+class CartPage extends StatefulWidget {
   const CartPage({super.key});
+
+  @override
+  CartPageState createState() => CartPageState();
+}
+
+class CartPageState extends State<CartPage>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    );
+    _animation = Tween<double>(begin: 0, end: 1).animate(_controller);
+  }
+
+  void _onHistoryIconTap() {
+    _controller.forward().then((value) {
+      _controller.reverse();
+      context.pushRoute(const OrderHistoryRoute());
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +55,18 @@ class CartPage extends StatelessWidget {
         ),
         automaticallyImplyLeading: false,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.history, size: 25, color: AppColors.white),
-            onPressed: () => context.pushRoute(const OrderHistoryRoute()),
+          GestureDetector(
+            onTap: _onHistoryIconTap,
+            child: AnimatedBuilder(
+              animation: _controller,
+              builder: (context, child) {
+                return Transform.rotate(
+                  angle: _animation.value * 2 * 3.14,
+                  child: const Icon(Icons.history,
+                      size: 40, color: AppColors.white),
+                );
+              },
+            ),
           ),
         ],
       ),
@@ -80,7 +115,6 @@ class CartPage extends StatelessWidget {
                           context.maybePop();
                           if (carts.length == 1) {
                             context.read<CartCubit>().dishCount = 0;
-                            
                           }
                         },
                       );

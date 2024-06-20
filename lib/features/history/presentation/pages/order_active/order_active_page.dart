@@ -78,14 +78,18 @@ class _ActiveOrderPageState extends State<ActiveOrderPage> {
     return BlocBuilder<HistoryCubit, HistoryState>(
       builder: (context, state) {
         if (state is GetActiveOrdersError) {
-          return const EmptyActiveOrders();
+          return const EmptyActiveOrders(
+            text: 'Произошла ошибка при загрузке активных заказов',
+          );
         } else if (state is GetActiveOrdersLoading) {
           return const Center(child: CircularProgressIndicator());
         } else if (state is GetActiveOrdersLoaded) {
           orders = state.orders;
           if (orders.isEmpty) {
             _channel.sink.close();
-            return const EmptyActiveOrders();
+            return const EmptyActiveOrders(
+              text: 'У вас пока нет активных заказов',
+            );
           }
         }
 
