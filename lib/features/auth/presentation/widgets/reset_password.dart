@@ -4,6 +4,7 @@ import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/components/components.dart';
 import 'package:diyar/features/features.dart';
 import 'package:diyar/shared/theme/theme.dart';
+import 'package:diyar/shared/utils/utils.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -122,17 +123,14 @@ class _RessetPasswordPageState extends State<RessetPasswordPage> {
               const SizedBox(height: 20),
               BlocConsumer<SignInCubit, SignInState>(
                 listener: (context, state) {
-                  if (state is SignInFailure) {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text(state.message),
-                        backgroundColor: AppColors.red));
-                  } else if (state is ResetPasswordSuccess) {
+                  if (state is ResetPasswordSuccess) {
                     if (!_isNavigated) {
                       _isNavigated = true;
                       WidgetsBinding.instance.addPostFrameCallback((_) {
-                        context.router.pushAndPopUntil(const MainRoute(),
+                        context.router.pushAndPopUntil(const SignInRoute(),
                             predicate: (_) => false);
                       });
+                      showToast('Пароль успешно изменен', isError: false);
                     }
                   }
                 },

@@ -76,23 +76,35 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
     final resultWithSession = await YandexSearch.searchByText(
       searchText: query,
       geometry: Geometry.fromBoundingBox(const BoundingBox(
-        southWest: Point(latitude: 42.7942, longitude: 74.4769),
-        northEast: Point(latitude: 42.8772, longitude: 74.6570),
+        southWest: Point(latitude: 42.8000, longitude: 74.4500),
+        northEast: Point(latitude: 42.9200, longitude: 74.6200),
       )),
       searchOptions: const SearchOptions(
         searchType: SearchType.geo,
         geometry: true,
+        userPosition: Point(latitude: 42.8700, longitude: 74.5900),
       ),
     );
 
     final searchSession = resultWithSession.$1;
     final searchResult = await resultWithSession.$2;
+    log('Search session: $searchSession');
+    log('Search result: $searchResult');
+
+    if (searchResult.error != null) {
+      log('Error: ${searchResult.error}');
+      setState(() {
+        _foundAddressesObj = [];
+      });
+      return;
+    }
+
     final List<SearchItem> filteredItems = searchResult.items!.where((item) {
       final point = item.geometry.first.point;
-      return point!.latitude >= 42.7942 &&
-          point.latitude <= 42.8772 &&
-          point.longitude >= 74.4769 &&
-          point.longitude <= 74.6570;
+      return point!.latitude >= 42.8000 &&
+          point.latitude <= 42.9200 &&
+          point.longitude >= 74.4500 &&
+          point.longitude <= 74.6200;
     }).toList();
 
     for (var item in filteredItems) {
@@ -108,9 +120,6 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
         _foundAddressesObj = [];
       });
     }
-
-    log('Search session: $searchSession');
-    log('Search result: $searchResult');
   }
 
   Widget _buildSuggestionsList() {
