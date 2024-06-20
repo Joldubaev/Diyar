@@ -57,11 +57,22 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
 
       if (res.statusCode != 200) {
-        throw ServerException();
+        throw DioException.badResponse(
+          requestOptions: RequestOptions(path: ApiConst.resetPsw),
+          statusCode: res.statusCode!,
+          response: res,
+        );
       }
     } catch (e) {
       log("$e");
-      throw ServerException();
+      if (e is DioException && e.response?.statusCode == 400) {
+        showToast(e.response?.data['developerMessage'], isError: true);
+        throw Exception(
+            e.response?.data['developerMessage'] ?? 'Ошибка сервера');
+      } else {
+        showToast('Ошибка сервера', isError: true);
+        throw Exception('Ошибка сервера');
+      }
     }
   }
 

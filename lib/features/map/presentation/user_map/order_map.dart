@@ -262,10 +262,10 @@ class _OrderMapPageState extends State<OrderMapPage> {
   }
 
   bool isInBishkekBounds(double latitude, double longitude) {
-    double minLatitude = 39.1917;
-    double maxLatitude = 43.2389;
-    double minLongitude = 69.2499;
-    double maxLongitude = 80.2590;
+    double minLatitude = 42.8000;
+    double maxLatitude = 42.9200;
+    double minLongitude = 74.4500;
+    double maxLongitude = 74.6200;
     return latitude >= minLatitude &&
         latitude <= maxLatitude &&
         longitude >= minLongitude &&
@@ -285,10 +285,8 @@ class _OrderMapPageState extends State<OrderMapPage> {
         final formattedAddress =
             geoObject.metaDataProperty?.geocoderMetaData?.address?.formatted;
 
-        // Ensure the address belongs to Kyrgyzstan and Bishkek
         if (formattedAddress != null &&
-            formattedAddress.contains('Кыргызстан') &&
-            formattedAddress.contains('Бишкек')) {
+            formattedAddress.contains('Кыргызстан')) {
           address = formattedAddress;
         } else {
           address = 'Адрес не найден';
