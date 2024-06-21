@@ -7,6 +7,7 @@ class SettingsTile extends StatelessWidget {
     this.onPressed,
     this.icon,
     this.color,
+    this.leading,
     super.key,
   });
 
@@ -14,12 +15,14 @@ class SettingsTile extends StatelessWidget {
   final Color? color;
   final IconData? icon;
   final void Function()? onPressed;
+  final Widget? leading;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         ListTile(
+          leading: leading,
           onTap: onPressed,
           hoverColor: Colors.black26,
           contentPadding: const EdgeInsets.all(0),

@@ -152,15 +152,15 @@ class _HomePageState extends State<HomePage> {
                     image: 'assets/images/news_da.png',
                     onTap: () => context.router.push(const NewsRoute()),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 20),
                   Container(
                     padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                     decoration: BoxDecoration(
-                      color: AppColors.primary,
+                      color: AppColors.white,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: SettingsTile(
-                      icon: Icons.phone,
+                      leading: const Icon(Icons.phone),
                       text: l10n.contact,
                       onPressed: () =>
                           context.router.push(const ContactRoute()),
