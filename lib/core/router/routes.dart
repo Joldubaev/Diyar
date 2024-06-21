@@ -13,6 +13,7 @@ class AppRouter extends $AppRouter {
           children: [
             AutoRoute(page: HomeRoute.page, initial: true),
             AutoRoute(page: MenuRoute.page),
+            AutoRoute(page: OrderHistoryRoute.page),
             AutoRoute(page: CartRoute.page),
             AutoRoute(page: ProfileRoute.page),
           ],
@@ -21,7 +22,6 @@ class AppRouter extends $AppRouter {
         AutoRoute(page: SearchMenuRoute.page),
         AutoRoute(page: ProfileInfoRoute.page),
         AutoRoute(page: ContactRoute.page),
-        AutoRoute(page: OrderHistoryRoute.page),
         AutoRoute(page: SignInRoute.page),
         AutoRoute(page: SignUpRoute.page),
         AutoRoute(page: CreateOrderRoute.page),

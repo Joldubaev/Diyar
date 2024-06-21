@@ -16,11 +16,8 @@ class OrderHistoryPage extends StatelessWidget {
         appBar: AppBar(
           title: Text(
             context.l10n.orderHistory,
-            style: theme.textTheme.titleSmall?.copyWith(
-              color: AppColors.white,
-            ),
+            style: theme.textTheme.bodyLarge,
           ),
-          centerTitle: true,
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(40),
             child: ClipRRect(

@@ -89,20 +89,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     color: AppColors.white,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: SettingsTile(
-                    text: context.l10n.orderHistory,
-                    onPressed: () {
-                      context.pushRoute(const OrderHistoryRoute());
-                    },
-                  ),
-                ),
-                const SizedBox(height: 15),
-                Container(
-                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
                   child: Column(
                     children: [
                       SettingsTile(
