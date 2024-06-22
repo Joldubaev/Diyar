@@ -10,31 +10,35 @@ class CurierCubit extends Cubit<CurierState> {
 
   final CurierRepository curierRepository;
 
-  void getUser() async {
+  GetUserModel? user;
+
+  Future getUser() async {
     emit(GetUserLoading());
     try {
-      final user = await curierRepository.getUser();
-      emit(GetUserLoaded(user));
+      user = await curierRepository.getUser();
+      emit(GetUserLoaded(user!));
     } catch (e) {
       emit(GetUserError('Error'));
     }
   }
 
-  void getCuriers() async {
-    emit(GetCourierActualOrdersLoading());
+  void getCurierOrders() async {
+    emit(GetCourierOrdersLoading());
     try {
-      final curiers = await curierRepository.getCuriers();
-      emit(GetCourierActualOrdersLoaded(curiers));
+      final curiers = await curierRepository.getCurierOrders();
+      emit(GetCourierOrdersLoaded(curiers));
     } catch (e) {
-      emit(GetCourierActualOrdersError('Error'));
+      emit(GetCourierOrdersError('Error'));
     }
   }
 
   Future getFinishOrder(int orderId) async {
+    emit(GetFinishedOrdersLoading());
     try {
       await curierRepository.getFinishOrder(orderId);
+      emit(GetFinishedOrdersLoaded());
     } catch (e) {
-      emit(GetCourierActualOrdersError('Error'));
+      emit(GetFinishedOrdersError());
     }
   }
 

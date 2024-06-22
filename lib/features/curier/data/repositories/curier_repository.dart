@@ -2,7 +2,7 @@ import 'package:diyar/features/curier/curier.dart';
 import 'package:diyar/features/curier/data/model/get_user_moderl.dart';
 
 abstract class CurierRepository {
-  Future<List<CurierOrderModel>> getCuriers();
+  Future<List<CurierOrderModel>> getCurierOrders();
   Future<void> getFinishOrder(int orderId);
   Future<List<CurierOrderModel>> getCurierHistory();
   Future<GetUserModel> getUser();
@@ -14,8 +14,8 @@ class CurierRepositoryImpl extends CurierRepository {
   CurierRepositoryImpl(this.dataSource);
 
   @override
-  Future<List<CurierOrderModel>> getCuriers() async {
-    return await dataSource.getCuriers();
+  Future<List<CurierOrderModel>> getCurierOrders() async {
+    return await dataSource.getCurierOrders();
   }
 
   @override

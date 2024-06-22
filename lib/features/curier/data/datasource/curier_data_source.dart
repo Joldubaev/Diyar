@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:diyar/core/error/exception.dart';
 import 'package:diyar/features/curier/data/model/curier_model.dart';
@@ -6,7 +8,7 @@ import 'package:diyar/shared/constants/constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class CurierDataSource {
-  Future<List<CurierOrderModel>> getCuriers();
+  Future<List<CurierOrderModel>> getCurierOrders();
   Future<void> getFinishOrder(int orderId);
   Future<List<CurierOrderModel>> getCurierHistory();
   Future<GetUserModel> getUser();
@@ -24,7 +26,8 @@ class CurierDataSourceImpl extends CurierDataSource {
       var res = await dio.post(ApiConst.getUser,
           data: {"email": prefs.getString(AppConst.email)},
           options: Options(
-            headers: ApiConst.authMap(prefs.getString(AppConst.accessToken) ?? ''),
+            headers:
+                ApiConst.authMap(prefs.getString(AppConst.accessToken) ?? ''),
           ));
       if (res.statusCode == 200) {
         return GetUserModel.fromJson(res.data);
@@ -37,14 +40,12 @@ class CurierDataSourceImpl extends CurierDataSource {
   }
 
   @override
-  Future<List<CurierOrderModel>> getCuriers() async {
+  Future<List<CurierOrderModel>> getCurierOrders() async {
     try {
       var token = prefs.getString(AppConst.accessToken) ?? '';
       final res = await dio.get(
         ApiConst.getCuriersAllOrder,
-        options: Options(
-          headers: ApiConst.authMap(token),
-        ),
+        options: Options(headers: ApiConst.authMap(token)),
       );
       if ([200, 201].contains(res.statusCode)) {
         return List<CurierOrderModel>.from(
@@ -54,6 +55,7 @@ class CurierDataSourceImpl extends CurierDataSource {
         throw Exception('Error getting active orders');
       }
     } catch (e) {
+      log(e.toString());
       throw Exception();
     }
   }

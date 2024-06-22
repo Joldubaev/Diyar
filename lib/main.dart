@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:diyar/core/core.dart';
 import 'package:diyar/core/router/routes.dart';
 import 'package:diyar/features/curier/curier.dart';
 import 'package:diyar/firebase_options.dart';
@@ -21,6 +24,10 @@ import 'shared/pages/app_wrapper_connection_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  FlutterError.onError = (details) {
+    log(details.exceptionAsString(), stackTrace: details.stack);
+  };
+  Bloc.observer = const AppBlocObserver(onLog: log);
   await di.init();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   SystemChrome.setPreferredOrientations([
