@@ -16,7 +16,7 @@ class EmptyActiveOrders extends StatelessWidget {
           const SizedBox(height: 20),
           Text(
             text,
-            style: theme.textTheme.titleSmall!.copyWith(color: AppColors.grey),
+            style: theme.textTheme.bodyLarge!.copyWith(color: AppColors.grey),
           ),
         ],
       ),

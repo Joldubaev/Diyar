@@ -110,7 +110,7 @@ class _MainPageState extends State<MainPage> {
                       ),
                     ),
                   ),
-                  label: 'Заказы',
+                  label: 'Мои Заказы',
                 ),
                 BottomNavigationBarItem(
                   icon: StreamBuilder<List<CartItemModel>>(
