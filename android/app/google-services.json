@@ -7,6 +7,25 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:280176558850:android:8ba2bf912b35695812f81b",
+        "android_client_info": {
+          "package_name": "kg.cdt.diyar_guest"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDayTEpImvH2Y2Fu3tmiwCVjwz0q-tD-q0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:280176558850:android:5697842d0058f97a12f81b",
         "android_client_info": {
           "package_name": "kg.easysoft.diyar"

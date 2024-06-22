@@ -1,4 +1,4 @@
-package kg.easysoft.diyar
+package kg.cdt.diyar_guest
   
 import androidx.annotation.NonNull
 import io.flutter.embedding.android.FlutterActivity
