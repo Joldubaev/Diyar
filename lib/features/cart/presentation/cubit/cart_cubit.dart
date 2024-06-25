@@ -6,84 +6,86 @@ import 'package:equatable/equatable.dart';
 part 'cart_state.dart';
 
 class CartCubit extends Cubit<CartState> {
-  final CartRepository _cartReposiory;
-  CartCubit(this._cartReposiory) : super(CartInitial());
+  final CartRepository _cartRepository;
+  CartCubit(this._cartRepository) : super(CartInitial());
 
   Stream<List<CartItemModel>> cart = const Stream.empty();
 
   int dishCount = 0;
   int totalPrice = 0;
 
-
-  Future getCartItems() async {
+  Future<void> getCartItems() async {
     emit(GetAllCartLoading());
     try {
-      cart = _cartReposiory.getAllCartItems();
+      cart = _cartRepository.getAllCartItems();
       emit(GetAllCartLoaded(items: cart));
     } catch (e) {
       emit(GetAllCartError());
     }
   }
 
-  addToCart(CartItemModel product) async {
+  Future<void> addToCart(CartItemModel product) async {
     try {
-      await _cartReposiory.addToCart(product);
+      await _cartRepository.addToCart(product);
       emit(AddToCartSuccess());
+      getCartItems(); // Refresh cart items
     } catch (e) {
       emit(AddToCartError());
     }
   }
 
-  removeFromCart(String id) async {
+  Future<void> removeFromCart(String id) async {
     try {
-      await _cartReposiory.removeFromCart(id);
+      await _cartRepository.removeFromCart(id);
       emit(RemoveFromCartSuccess());
+      getCartItems(); // Refresh cart items
     } catch (e) {
       emit(RemoveFromCartError());
     }
   }
 
-  incrementCart(String id) async {
-    await _cartReposiory.incrementCart(id);
+  Future<void> incrementCart(String id) async {
+    await _cartRepository.incrementCart(id);
+    getCartItems(); // Refresh cart items
   }
 
-  decrementCart(String id) async {
-    await _cartReposiory.decrementCart(id);
+  Future<void> decrementCart(String id) async {
+    await _cartRepository.decrementCart(id);
+    getCartItems(); // Refresh cart items
   }
 
-  incrementDishCount() {
-    emit(ChangeStateLoading());
+  void incrementDishCount() {
     dishCount++;
-    emit(ChangeStateLoaded());
+    emit(DishCountUpdated(dishCount: dishCount));
   }
 
-  decrementDishCount() {
-    emit(ChangeStateLoading());
+  void decrementDishCount() {
     dishCount--;
-    emit(ChangeStateLoaded());
+    emit(DishCountUpdated(dishCount: dishCount));
   }
 
-  changeTotalPrice(int price) {
-    emit(ChangeStateLoading());
+  void changeTotalPrice(int price) {
     totalPrice = price;
-    emit(ChangeStateLoaded());
+    emit(TotalPriceUpdated(totalPrice: totalPrice));
   }
 
-  clearCart() async {
+  Future<void> clearCart() async {
     emit(ClearCartLoading());
     try {
-      await _cartReposiory.clearCart();
+      await _cartRepository.clearCart();
       emit(ClearCartLoaded());
+      getCartItems(); // Refresh cart items
     } catch (e) {
       emit(ClearCartError());
     }
   }
 
-  setCartItemCount(CartItemModel cart) async {
+  Future<void> setCartItemCount(CartItemModel cart) async {
     emit(SetCartItemLoading());
     try {
-      await _cartReposiory.setCartItemCount(cart);
+      await _cartRepository.setCartItemCount(cart);
       emit(SetCartItemLoaded());
+      getCartItems(); // Refresh cart items
     } catch (e) {
       emit(SetCartItemError());
     }
