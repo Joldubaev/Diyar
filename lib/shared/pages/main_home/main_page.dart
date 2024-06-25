@@ -36,8 +36,8 @@ class _MainPageState extends State<MainPage> {
       routes: const [
         HomeRoute(),
         MenuRoute(),
-        OrderHistoryRoute(),
         CartRoute(),
+        OrderHistoryRoute(),
         ProfileRoute(),
       ],
       builder: (context, child) {
@@ -98,21 +98,6 @@ class _MainPageState extends State<MainPage> {
                   label: context.l10n.menu,
                 ),
                 BottomNavigationBarItem(
-                  icon: Padding(
-                    padding: const EdgeInsets.only(bottom: 4.0),
-                    child: SvgPicture.asset(
-                      "assets/icons/orders_icon.svg",
-                      colorFilter: ColorFilter.mode(
-                        _currentIndex == 2
-                            ? AppColors.primary
-                            : AppColors.black1,
-                        BlendMode.srcIn,
-                      ),
-                    ),
-                  ),
-                  label: 'Мои Заказы',
-                ),
-                BottomNavigationBarItem(
                   icon: StreamBuilder<List<CartItemModel>>(
                       stream: cartItems,
                       builder: (context, snapshot) {
@@ -129,7 +114,7 @@ class _MainPageState extends State<MainPage> {
                             child: SvgPicture.asset(
                               "assets/icons/cart_icon.svg",
                               colorFilter: ColorFilter.mode(
-                                _currentIndex == 3
+                                _currentIndex == 2
                                     ? AppColors.primary
                                     : AppColors.black1,
                                 BlendMode.srcIn,
@@ -139,6 +124,21 @@ class _MainPageState extends State<MainPage> {
                         );
                       }),
                   label: context.l10n.cart,
+                ),
+                BottomNavigationBarItem(
+                  icon: Padding(
+                    padding: const EdgeInsets.only(bottom: 4.0),
+                    child: SvgPicture.asset(
+                      "assets/icons/orders_icon.svg",
+                      colorFilter: ColorFilter.mode(
+                        _currentIndex == 3
+                            ? AppColors.primary
+                            : AppColors.black1,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                  ),
+                  label: 'Мои Заказы',
                 ),
                 BottomNavigationBarItem(
                   icon: Padding(
