@@ -15,10 +15,13 @@ import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
+import '../../widgets/custom_button.dart';
+import '../../widgets/custom_dialog_widget.dart';
+
 class PickupForm extends StatefulWidget {
   final List<CartItemModel> cart;
   final UserModel? user;
-  const PickupForm({super.key, required this.cart, this.user});
+  const PickupForm({Key? key, required this.cart, this.user}) : super(key: key);
 
   @override
   State<PickupForm> createState() => _PickupFormState();
@@ -60,26 +63,47 @@ class _PickupFormState extends State<PickupForm> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('${context.l10n.orderPickupAd} ${context.l10n.address}',
-              style: theme.textTheme.bodyLarge!.copyWith(fontSize: 16)),
-          content: Text('Общая сумма: $totalPrice' ' сом',
-              style: theme.textTheme.bodyMedium!.copyWith(fontSize: 16)),
+          title: Text(
+            '${context.l10n.orderPickupAd} ${context.l10n.address}',
+            style: theme.textTheme.bodyLarge!.copyWith(fontSize: 16),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Ожидания заказа 20 минут',
+                style: theme.textTheme.bodyMedium!.copyWith(
+                  color: AppColors.black1,
+                ),
+              ),
+              const Divider(),
+              CustomDialogWidget(
+                title: 'Сумма заказа:',
+                description: '$totalPrice сом',
+              ),
+            ],
+          ),
           actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                _submitOrder();
-              },
-              child: const Text('Подтвердить',
-                  style: TextStyle(color: AppColors.green)),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Отменить',
-                  style: TextStyle(color: AppColors.red)),
-            ),
+            Row(
+              children: [
+                CustomButton(
+                  title: 'Подтвердить',
+                  bgColor: AppColors.green,
+                  onTap: () {
+                    _submitOrder();
+                  },
+                ),
+                const SizedBox(width: 10),
+                CustomButton(
+                  title: 'Отменить',
+                  bgColor: AppColors.red,
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            )
           ],
         );
       },
@@ -157,17 +181,18 @@ class _PickupFormState extends State<PickupForm> {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             children: [
               CustomInputWidget(
-                  controller: _userName,
-                  hintText: context.l10n.nameExample,
-                  title: context.l10n.yourName,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return context.l10n.pleaseEnterName;
-                    } else if (value.length < 3) {
-                      return context.l10n.pleaseEnterCorrectName;
-                    }
-                    return null;
-                  }),
+                controller: _userName,
+                hintText: context.l10n.nameExample,
+                title: context.l10n.yourName,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return context.l10n.pleaseEnterName;
+                  } else if (value.length < 3) {
+                    return context.l10n.pleaseEnterCorrectName;
+                  }
+                  return null;
+                },
+              ),
               const SizedBox(height: 10),
               PhoneNumberMask(
                 title: context.l10n.phone,
@@ -187,35 +212,39 @@ class _PickupFormState extends State<PickupForm> {
               ),
               const SizedBox(height: 10),
               CustomInputWidget(
-                  controller: _commentController,
-                  hintText: 'Ваша еда очень вкусная ...',
-                  title: context.l10n.comment),
+                controller: _commentController,
+                hintText: '',
+                title: context.l10n.comment,
+              ),
               const SizedBox(height: 10),
               CustomInputWidget(
                 onTap: _selectTime,
                 controller: _timeController,
-                hintText: '18:00 | 12.12.2021',
+                hintText: '',
                 title: context.l10n.preparingForThe,
               ),
               const SizedBox(height: 10),
-              Text(context.l10n.orderPickupAd,
-                  style: theme.textTheme.bodyMedium!.copyWith(fontSize: 16)),
+              Text(
+                context.l10n.orderPickupAd,
+                style: theme.textTheme.bodyMedium!.copyWith(fontSize: 16),
+              ),
               Text(
                 context.l10n.address,
                 style: theme.textTheme.bodyMedium!.copyWith(fontSize: 16),
               ),
               const SizedBox(height: 10),
               SubmitButtonWidget(
-                  title: context.l10n.confirmOrder,
-                  bgColor: theme.primaryColor,
-                  textStyle:
-                      theme.textTheme.bodyMedium!.copyWith(color: Colors.white),
-                  onTap: () {
-                    if (_formKey.currentState!.validate()) {
-                      double totalPrice = _calculateTotalPrice();
-                      _showTotalPriceDialog(totalPrice);
-                    }
-                  }),
+                title: context.l10n.confirmOrder,
+                bgColor: theme.primaryColor,
+                textStyle:
+                    theme.textTheme.bodyMedium!.copyWith(color: Colors.white),
+                onTap: () {
+                  if (_formKey.currentState!.validate()) {
+                    double totalPrice = _calculateTotalPrice();
+                    _showTotalPriceDialog(totalPrice);
+                  }
+                },
+              ),
             ],
           ),
         );
@@ -224,4 +253,4 @@ class _PickupFormState extends State<PickupForm> {
   }
 }
 
-enum PaymentType { cash, card, online }
+
