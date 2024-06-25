@@ -14,6 +14,7 @@ class OrderHistoryPage extends StatelessWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: Text(
             context.l10n.orderHistory,
             style: theme.textTheme.bodyLarge,

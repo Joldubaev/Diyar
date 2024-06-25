@@ -11,7 +11,6 @@ import 'package:diyar/features/auth/presentation/widgets/phone_number.dart';
 import 'package:diyar/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
@@ -110,18 +109,18 @@ class _PickupFormState extends State<PickupForm> {
     );
   }
 
-  void _selectTime() {
-    DatePicker.showTimePicker(
-      context,
-      showSecondsColumn: false,
-      currentTime: DateTime.now(),
-      onConfirm: (time) {
-        setState(() {
-          _timeController.text =
-              '${time.hour}:${time.minute}:${time.second} | ${time.day}.${time.month}.${time.year}';
-        });
-      },
+  void _selectTime() async {
+    TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime:
+          TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute),
     );
+
+    if (pickedTime != null) {
+      setState(() {
+        _timeController.text = '${pickedTime.hour}:${pickedTime.minute}';
+      });
+    }
   }
 
   void _submitOrder() {
@@ -220,8 +219,14 @@ class _PickupFormState extends State<PickupForm> {
               CustomInputWidget(
                 onTap: _selectTime,
                 controller: _timeController,
-                hintText: '',
+                hintText: 'Выберите время',
                 title: context.l10n.preparingForThe,
+                validator: (value) {
+                  if (value == '') {
+                    return 'Выберите время';
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 10),
               Text(
@@ -252,5 +257,3 @@ class _PickupFormState extends State<PickupForm> {
     );
   }
 }
-
-
