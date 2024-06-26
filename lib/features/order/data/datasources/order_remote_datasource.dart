@@ -1,13 +1,19 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:diyar/features/order/data/data.dart';
 import 'package:diyar/features/order/data/models/pickup_order_model.dart';
 import 'package:diyar/shared/constants/constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../map/data/models/location_model.dart';
+
 abstract class OrderRemoteDataSource {
   Future<List<String>> getOrderHistory();
   Future<void> createOrder(CreateOrderModel order);
   Future<void> getPickupOrder(PickupOrderModel order);
+  Future<LocationModel> getGeoSuggestions({required String query});
 }
 
 class OrderRemoteDataSourceImpl extends OrderRemoteDataSource {
@@ -17,13 +23,44 @@ class OrderRemoteDataSourceImpl extends OrderRemoteDataSource {
   OrderRemoteDataSourceImpl(this._dio, this._prefs);
 
   @override
+  Future<LocationModel> getGeoSuggestions({required String query}) async {
+    try {
+      Map<String, dynamic> data = {
+        'apikey': '1d3a039d-6ce6-44a2-9ad1-209ee24e3eb1',
+        'geocode': query,
+        'format': 'json',
+        'lang': 'ru_RU',
+        'results': '5',
+      };
+
+      Dio dio = Dio();
+      final response = await dio.get(
+        'https://geocode-maps.yandex.ru/1.x/',
+        queryParameters: data,
+      );
+
+      if (response.statusCode == 200) {
+        log('Response: ${response.data}');
+        // Assuming LocationModel.fromJson is your method to parse JSON into your model
+        return LocationModel.fromJson(json.decode(response.data));
+      } else {
+        throw Exception('Failed to load suggestions');
+      }
+    } catch (e) {
+      log('Error: $e');
+      rethrow;
+    }
+  }
+
+  @override
   Future<void> getPickupOrder(PickupOrderModel order) async {
     try {
       var res = await _dio.post(
         ApiConst.getPickupOrder,
         data: order.toJson(),
         options: Options(
-          headers: ApiConst.authMap(_prefs.getString(AppConst.accessToken) ?? ''),
+          headers:
+              ApiConst.authMap(_prefs.getString(AppConst.accessToken) ?? ''),
         ),
       );
       if (![200, 201].contains(res.statusCode)) {
@@ -41,7 +78,8 @@ class OrderRemoteDataSourceImpl extends OrderRemoteDataSource {
         ApiConst.createOrder,
         data: order.toJson(),
         options: Options(
-          headers: ApiConst.authMap(_prefs.getString(AppConst.accessToken) ?? ''),
+          headers:
+              ApiConst.authMap(_prefs.getString(AppConst.accessToken) ?? ''),
         ),
       );
       if (![200, 201].contains(res.statusCode)) {
