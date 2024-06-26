@@ -475,6 +475,9 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                                                       quantity: e.quantity ?? 1,
                                                     ))
                                                 .toList(),
+                                            dishesCount: context
+                                                .read<CartCubit>()
+                                                .dishCount,
                                           ),
                                         )
                                         .then((value) {
