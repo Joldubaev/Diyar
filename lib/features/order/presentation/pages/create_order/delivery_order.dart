@@ -314,7 +314,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                     child: CustomInputWidget(
                       inputType: TextInputType.number,
                       controller: _floorController,
-                      hintText: context.l10n.floor,
+                      hintText: '',
                       title: context.l10n.floor,
                       validator: (value) {
                         if (value!.isEmpty) {
@@ -347,7 +347,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
               ),
               CustomInputWidget(
                 controller: _commentController,
-                hintText: 'Ваша еда очень вкусная ...',
+                hintText: '',
                 title: context.l10n.comment,
               ),
               const SizedBox(height: 10),
@@ -390,7 +390,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
               ),
               CustomInputWidget(
                 controller: _sdachaController,
-                hintText: context.l10n.change,
+                hintText: '',
                 title: context.l10n.change,
                 inputType: TextInputType.number,
                 validator: (value) {
@@ -483,6 +483,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                                     });
                                   },
                                 ),
+                                const SizedBox(width: 10),
                                 CustomButton(
                                   title: 'Отменить',
                                   bgColor: AppColors.red,

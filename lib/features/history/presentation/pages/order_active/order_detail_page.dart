@@ -76,7 +76,9 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                         ),
                         Expanded(
                           child: Text(detail.value,
-                              style: theme.textTheme.bodyMedium!
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
                                   .copyWith(color: AppColors.black1)),
                         ),
                       ],
@@ -92,6 +94,10 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   }
 
   List<OrderDetailItem> _buildDetailList() {
+    final totalPrice = order.price! + order.deliveryPrice!;
+    final paymentMethod =
+        order.paymentMethod == "cash" ? "наличными" : order.paymentMethod;
+
     return [
       OrderDetailItem(
           title: context.l10n.orderNumber, value: order.orderNumber.toString()),
@@ -114,10 +120,14 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
       OrderDetailItem(
           title: context.l10n.dishes, value: "${order.dishesCount}"),
       OrderDetailItem(
-          title: context.l10n.paymentMethod, value: order.paymentMethod ?? ""),
-      OrderDetailItem(title: 'Обшая сумма', value: "${order.price}"),
+          title: context.l10n.paymentMethod, value: paymentMethod ?? ""),
       OrderDetailItem(
-          title: context.l10n.deliveryPrice, value: "${order.deliveryPrice}"),
+          title: 'Общая сумма заказа еды', value: "${order.price} сом"),
+      OrderDetailItem(
+          title: context.l10n.deliveryPrice,
+          value: "${order.deliveryPrice} сом"),
+      OrderDetailItem(
+          title: 'Общая сумма с доставкой', value: "$totalPrice сом"),
       OrderDetailItem(title: context.l10n.change, value: "${order.sdacha} сом"),
       OrderDetailItem(title: context.l10n.comment, value: order.comment ?? ""),
     ];
