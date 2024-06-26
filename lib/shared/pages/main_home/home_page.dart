@@ -82,13 +82,7 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    context.l10n.sales,
-                    style: theme.textTheme.titleSmall?.copyWith(
-                      color: AppColors.black1,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                 
                   const SalesSection(),
                   const SizedBox(height: 10),
                   if (menu.isNotEmpty) ...[

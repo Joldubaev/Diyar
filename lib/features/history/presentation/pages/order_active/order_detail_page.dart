@@ -117,8 +117,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           title: 'Еда',
           value:
               order.foods!.map((e) => "${e.name} (${e.quantity})\n").join('')),
-      OrderDetailItem(
-          title: context.l10n.dishes, value: "${order.dishesCount}"),
+      OrderDetailItem(title: 'Столовые приборы', value: "${order.dishesCount}"),
       OrderDetailItem(
           title: context.l10n.paymentMethod, value: paymentMethod ?? ""),
       OrderDetailItem(

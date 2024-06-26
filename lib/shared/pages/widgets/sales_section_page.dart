@@ -2,6 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:diyar/core/router/routes.gr.dart';
+import 'package:diyar/l10n/l10n.dart';
+import 'package:diyar/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -32,6 +34,16 @@ class SalesSectionState extends State<SalesSection> {
               ? const SizedBox()
               : Column(
                   children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        context.l10n.sales,
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          color: AppColors.black1,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(20),
                       child: CarouselSlider.builder(

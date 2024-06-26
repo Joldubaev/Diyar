@@ -465,6 +465,9 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                                             floor: _floorController.text,
                                             entrance: _entranceController.text,
                                             paymentMethod: _paymentType.name,
+                                            dishesCount: context
+                                                .read<CartCubit>()
+                                                .dishCount,
                                             sdacha: int.tryParse(
                                                     _sdachaController.text) ??
                                                 0,
@@ -475,9 +478,6 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                                                       quantity: e.quantity ?? 1,
                                                     ))
                                                 .toList(),
-                                            dishesCount: context
-                                                .read<CartCubit>()
-                                                .dishCount,
                                           ),
                                         )
                                         .then((value) {
