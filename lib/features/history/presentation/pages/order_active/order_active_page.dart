@@ -79,7 +79,7 @@ class _ActiveOrderPageState extends State<ActiveOrderPage> {
       builder: (context, state) {
         if (state is GetActiveOrdersError) {
           return const EmptyActiveOrders(
-            text: 'Произошла ошибка при загрузке активных заказов',
+            text: 'Произошла ошибка при загрузке активных \n заказов',
           );
         } else if (state is GetActiveOrdersLoading) {
           return const Center(child: CircularProgressIndicator());
