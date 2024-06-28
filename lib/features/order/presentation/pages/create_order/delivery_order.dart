@@ -412,8 +412,11 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                   log(context.read<CartCubit>().totalPrice.toString());
                   if (_formKey.currentState!.validate()) {
                     final totalPrice = context.read<CartCubit>().totalPrice;
-                    final deliveryPrice =
+                    var deliveryPrice =
                         context.read<OrderCubit>().deliveryPrice;
+                    if (deliveryPrice == 0) {
+                      deliveryPrice = 550;
+                    }
 
                     showDialog(
                       context: context,

@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:diyar/features/curier/curier.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/theme/theme.dart';
-import 'package:diyar/shared/utils/fmt/show_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -27,23 +26,8 @@ class _HistoryPageState extends State<HistoryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(context.l10n.orderHistory, style: theme.textTheme.titleSmall),
-        actions: [
-          IconButton(
-            onPressed: () {
-              AppAlert.showConfirmDialog(
-                context: context,
-                title: context.l10n.orderHistory,
-                content: const Text('Вы уверены что хотите удалить все заказы?'),
-                cancelText: context.l10n.no,
-                confirmText: context.l10n.yes,
-                cancelPressed: () => Navigator.pop(context),
-                confirmPressed: () {},
-              );
-            },
-            icon: const Icon(Icons.delete),
-          )
-        ],
+        title:
+            Text(context.l10n.orderHistory, style: theme.textTheme.titleSmall),
       ),
       body: BlocConsumer<CurierCubit, CurierState>(
         listener: (context, state) {
@@ -91,7 +75,7 @@ class _HistoryPageState extends State<HistoryPage> {
                         style: theme.textTheme.bodyMedium,
                       ),
                       Text(
-                        '${context.l10n.som}: ${order.price ?? ""}',
+                        'Обшая Сумма: ${(order.price ?? 0) + (order.deliveryPrice ?? 0)}',
                         style: theme.textTheme.bodyMedium,
                       ),
                     ],
