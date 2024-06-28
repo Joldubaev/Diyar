@@ -9,16 +9,24 @@ class EmptyActiveOrders extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SvgPicture.asset('assets/icons/active.svg', width: 200, height: 200),
-          const SizedBox(height: 20),
-          Text(
-            text,
-            style: theme.textTheme.bodyLarge!.copyWith(color: AppColors.grey),
-          ),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset('assets/icons/active.svg',
+                width: 200, height: 200),
+            const SizedBox(height: 20),
+            FittedBox(
+              child: Text(
+                text,
+                style:
+                    theme.textTheme.bodyLarge!.copyWith(color: AppColors.grey),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

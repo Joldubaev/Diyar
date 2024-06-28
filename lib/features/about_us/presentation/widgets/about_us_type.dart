@@ -26,10 +26,10 @@ enum AboutUsType {
 
   String get getAsset {
     return switch (this) {
-      hall => 'assets/images/vip_hall.png',
+      hall => 'assets/images/rest_hall.png',
       vip => 'assets/images/vip_hall.png',
       restoran => 'assets/images/rest_hall.png',
-      cafe => 'assets/images/vip_hall.png',
+      cafe => 'assets/images/coffee_hall.png',
     };
   }
 

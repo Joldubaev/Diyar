@@ -82,7 +82,6 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                 
                   const SalesSection(),
                   const SizedBox(height: 10),
                   if (menu.isNotEmpty) ...[
