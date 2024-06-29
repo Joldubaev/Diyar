@@ -42,6 +42,9 @@ class AddressRepository {
           'format': 'json',
           'lang': 'ru_RU',
           'results': '1',
+          'bbox':
+              '69.2100,39.1800~80.2600,43.2600', // Координаты углов Кыргызстана
+          'strict_bounds': '1', // Строго ограничиваем поиск указанной областью
         },
       );
       log('response: ${response.data}');
