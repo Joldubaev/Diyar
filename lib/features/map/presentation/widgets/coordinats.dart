@@ -370,7 +370,7 @@ class Polygons {
             longitude: 74.63419062324456,
           ),
         ],
-        deliveryPrice: 180,
+        deliveryPrice: 160,
       ),
       DeliveryPolygon(
         id: 3,
