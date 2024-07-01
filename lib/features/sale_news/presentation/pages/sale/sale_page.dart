@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:diyar/features/home_features/data/model/sale_model.dart';
+import 'package:diyar/features/sale_news/data/model/sale_model.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/theme/theme.dart';
 import 'package:flutter/material.dart';

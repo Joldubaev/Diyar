@@ -316,14 +316,6 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                       controller: _floorController,
                       hintText: '',
                       title: context.l10n.floor,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Введите номер ';
-                        } else if (value.isEmpty || value.length > 4) {
-                          return 'Введите корректный номер этажа';
-                        }
-                        return null;
-                      },
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -333,14 +325,6 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                       controller: _intercomController,
                       hintText: '',
                       title: context.l10n.entranceNumber,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Введите номер подъезда';
-                        } else if (value.isEmpty || value.length > 4) {
-                          return 'Введите корректный номер подъезда';
-                        }
-                        return null;
-                      },
                     ),
                   ),
                 ],

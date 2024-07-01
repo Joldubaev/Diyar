@@ -29,106 +29,55 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    final viewInsets = MediaQuery.of(context).viewInsets;
-    final bottomPadding = viewInsets.bottom;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: SingleChildScrollView(
-        padding: EdgeInsets.only(bottom: bottomPadding),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              CustomInputWidget(
-                title: context.l10n.email,
-                hintText: '',
-                controller: _usernameController,
-                isPasswordField: false,
-                inputType: TextInputType.emailAddress,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return context.l10n.pleaseEnterEmail;
-                  } else if (!EmailValidator.validate(value)) {
-                    return context.l10n.pleaseEnterCorrectEmail;
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              CustomInputWidget(
-                title: context.l10n.password,
-                hintText: "",
-                controller: _passwordController,
-                isPasswordField: true,
-                inputType: TextInputType.text,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return context.l10n.pleaseEnterPassword;
-                  } else if (value.length < 5) {
-                    return context.l10n.pleaseEnterCorrectPassword;
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              BlocConsumer<SignInCubit, SignInState>(
-                listener: (context, state) {
-                  if (state is SignInFailure) {
-                    SnackBarMessage().showErrorSnackBar(
-                      message: "Неверный логин или пароль",
-                      context: context,
-                    );
-                  } else if (state is SignInSuccessWithUser) {
-                    var role =
-                        sl<SharedPreferences>().getString(AppConst.userRole);
-                    if (role?.toLowerCase() == "user".toLowerCase()) {
-                      context.router.pushAndPopUntil(
-                        const MainRoute(),
-                        predicate: (_) => false,
-                      );
-                    } else {
-                      context.router.pushAndPopUntil(
-                        const CurierRoute(),
-                        predicate: (_) => false,
-                      );
-                    }
-                  }
-                },
-                builder: (context, state) {
-                  return SubmitButtonWidget(
-                    textStyle: theme.textTheme.bodyLarge!
-                        .copyWith(color: AppColors.white),
-                    bgColor: AppColors.primary,
-                    isLoading: state is SignInLoading,
-                    title: 'Авторизоваться',
-                    onTap: () {
-                      if (_formKey.currentState!.validate()) {
-                        context.read<SignInCubit>().signInUser(
-                              UserModel(
-                                email: _usernameController.text,
-                                password: _passwordController.text,
-                              ),
-                            );
-                      }
-                    },
-                  );
-                },
-              ),
-              const LineOrWidget(),
-              GoogleButton(
-                  color: AppColors.black1,
-                  onPressed: () {
-                    SnackBarMessage().showErrorSnackBar(
-                        message: context.l10n.notAvailable, context: context);
-                  }),
-              TextCheckButton(
-                text: context.l10n.notHaveAccount,
-                route: context.l10n.register,
-                onPressed: () {
-                  context.pushRoute(const SignUpRoute());
-                },
-              ),
+    return Form(
+      key: _formKey,
+      child: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        children: <Widget>[
+          const Image(
+            height: 100,
+            width: 100,
+            color: AppColors.primary,
+            image: AssetImage("assets/images/auth_images.png"),
+          ),
+          const SizedBox(height: 40),
+          Align(
+              alignment: Alignment.center,
+              child:
+                  Text('Добро пожаловать', style: theme.textTheme.titleLarge)),
+          const SizedBox(height: 20),
+          CustomInputWidget(
+            hintText: context.l10n.email,
+            controller: _usernameController,
+            isPasswordField: false,
+            inputType: TextInputType.emailAddress,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return context.l10n.pleaseEnterEmail;
+              } else if (!EmailValidator.validate(value)) {
+                return context.l10n.pleaseEnterCorrectEmail;
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 20),
+          CustomInputWidget(
+            hintText: context.l10n.password,
+            controller: _passwordController,
+            isPasswordField: true,
+            inputType: TextInputType.text,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return context.l10n.pleaseEnterPassword;
+              } else if (value.length < 5) {
+                return context.l10n.pleaseEnterCorrectPassword;
+              }
+              return null;
+            },
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
               TextButton(
                 onPressed: () {
                   AppBottomSheet.showBottomSheet(
@@ -137,14 +86,67 @@ class _LoginFormState extends State<LoginForm> {
                     AuthBottomSheet(resedPasswordCode: resedPasswordCode),
                   );
                 },
-                child: Text(context.l10n.forgotPassword,
-                    style: theme.textTheme.bodyMedium!.copyWith(
-                      color: AppColors.blue,
-                    )),
+                child: Text(
+                  context.l10n.forgotPassword,
+                  style: theme.textTheme.bodyMedium!.copyWith(
+                    color: AppColors.blue,
+                  ),
+                ),
               ),
             ],
           ),
-        ),
+          const SizedBox(height: 30),
+          BlocConsumer<SignInCubit, SignInState>(
+            listener: (context, state) {
+              if (state is SignInFailure) {
+                SnackBarMessage().showErrorSnackBar(
+                  message: "Неверный логин или пароль",
+                  context: context,
+                );
+              } else if (state is SignInSuccessWithUser) {
+                var role = sl<SharedPreferences>().getString(AppConst.userRole);
+                if (role?.toLowerCase() == "user".toLowerCase()) {
+                  context.router.pushAndPopUntil(
+                    const MainRoute(),
+                    predicate: (_) => false,
+                  );
+                } else {
+                  context.router.pushAndPopUntil(
+                    const CurierRoute(),
+                    predicate: (_) => false,
+                  );
+                }
+              }
+            },
+            builder: (context, state) {
+              return SubmitButtonWidget(
+                textStyle:
+                    theme.textTheme.bodyLarge!.copyWith(color: AppColors.white),
+                bgColor: AppColors.primary,
+                isLoading: state is SignInLoading,
+                title: 'Авторизоваться',
+                onTap: () {
+                  if (_formKey.currentState!.validate()) {
+                    context.read<SignInCubit>().signInUser(
+                          UserModel(
+                            email: _usernameController.text,
+                            password: _passwordController.text,
+                          ),
+                        );
+                  }
+                },
+              );
+            },
+          ),
+          const SizedBox(height: 20),
+          TextCheckButton(
+            text: context.l10n.notHaveAccount,
+            route: context.l10n.register,
+            onPressed: () {
+              context.pushRoute(const SignUpRoute());
+            },
+          ),
+        ],
       ),
     );
   }

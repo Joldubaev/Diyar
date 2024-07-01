@@ -1,6 +1,6 @@
-import 'package:diyar/features/home_features/data/datasource/home_remote_data_source.dart';
-import 'package:diyar/features/home_features/data/model/news_model.dart';
-import 'package:diyar/features/home_features/data/model/sale_model.dart';
+import 'package:diyar/features/sale_news/data/datasource/home_remote_data_source.dart';
+import 'package:diyar/features/sale_news/data/model/news_model.dart';
+import 'package:diyar/features/sale_news/data/model/sale_model.dart';
 
 abstract class HomeRepository {
   Future<List<NewsModel>> getNews();
