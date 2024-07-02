@@ -44,13 +44,6 @@ import 'package:diyar/features/history/presentation/pages/order_active/order_det
     as _i14;
 import 'package:diyar/features/history/presentation/pages/order_history_page.dart'
     as _i15;
-import 'package:diyar/features/home_features/data/model/sale_model.dart'
-    as _i34;
-import 'package:diyar/features/home_features/presentation/pages/news/news_page.dart'
-
-    as _i13;
-import 'package:diyar/features/sale_news/presentation/pages/sale/sale_page.dart'
-    as _i22;
 import 'package:diyar/features/map/presentation/user_map/order_map.dart'
     as _i16;
 import 'package:diyar/features/menu/presentation/pages/menu_page.dart' as _i12;
@@ -66,6 +59,11 @@ import 'package:diyar/features/profile/presentation/pages/profile/profile_page.d
     as _i19;
 import 'package:diyar/features/profile/presentation/pages/profile_info/profile_info_page.dart'
     as _i18;
+import 'package:diyar/features/sale_news/data/model/sale_model.dart' as _i34;
+import 'package:diyar/features/sale_news/presentation/pages/news/news_page.dart'
+    as _i13;
+import 'package:diyar/features/sale_news/presentation/pages/sale/sale_page.dart'
+    as _i22;
 import 'package:diyar/shared/pages/main_home/home_page.dart' as _i10;
 import 'package:diyar/shared/pages/main_home/main_page.dart' as _i11;
 import 'package:flutter/material.dart' as _i31;
