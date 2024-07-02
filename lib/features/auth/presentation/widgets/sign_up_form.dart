@@ -1,4 +1,6 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:diyar/core/launch/launch.dart';
+import 'package:diyar/shared/constants/app_const/app_const.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,7 +12,6 @@ import 'package:diyar/features/features.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/components/components.dart';
 import 'package:diyar/shared/theme/theme.dart';
-import 'package:diyar/shared/utils/snackbar/snackbar_message.dart';
 
 class SignUpForm extends StatefulWidget {
   const SignUpForm({Key? key}) : super(key: key);
@@ -20,6 +21,7 @@ class SignUpForm extends StatefulWidget {
 }
 
 class _SignUpFormState extends State<SignUpForm> {
+  bool toc = false;
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _phoneController = TextEditingController(text: '+996');
@@ -41,12 +43,26 @@ class _SignUpFormState extends State<SignUpForm> {
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+      child: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         children: <Widget>[
+          Image.asset(
+            'assets/images/app_logo.png',
+            width: 100,
+            height: 100,
+            color: AppColors.primary,
+          ),
+          const SizedBox(height: 40),
+          Align(
+            alignment: Alignment.center,
+            child: Text(
+              context.l10n.registration,
+              style: theme.textTheme.titleMedium,
+            ),
+          ),
+          const SizedBox(height: 20),
           CustomInputWidget(
-            title: context.l10n.yourName,
-            hintText: '',
+            hintText: context.l10n.yourName,
             controller: _usernameController,
             validator: (value) {
               if (value!.isEmpty) {
@@ -59,8 +75,7 @@ class _SignUpFormState extends State<SignUpForm> {
           ),
           const SizedBox(height: 10),
           CustomInputWidget(
-            title: context.l10n.email,
-            hintText: '',
+            hintText: context.l10n.email,
             controller: _emailController,
             inputType: TextInputType.emailAddress,
             validator: (value) {
@@ -74,7 +89,6 @@ class _SignUpFormState extends State<SignUpForm> {
           ),
           const SizedBox(height: 10),
           PhoneNumberMask(
-            title: context.l10n.phone,
             hintText: '+996 (___) __-__-__',
             textController: _phoneController,
             hint: context.l10n.phone,
@@ -91,8 +105,7 @@ class _SignUpFormState extends State<SignUpForm> {
           ),
           const SizedBox(height: 10),
           CustomInputWidget(
-            title: context.l10n.password,
-            hintText: "",
+            hintText: context.l10n.password,
             controller: _passwordController,
             isPasswordField: true,
             validator: (value) {
@@ -105,21 +118,34 @@ class _SignUpFormState extends State<SignUpForm> {
             },
           ),
           const SizedBox(height: 10),
-          CustomInputWidget(
-            title: context.l10n.confirmPassword,
-            hintText: "",
-            controller: _confirmPasswordController,
-            isPasswordField: true,
-            validator: (value) {
-              if (value!.isEmpty) {
-                return context.l10n.confirmPassword;
-              } else if (value != _passwordController.text) {
-                return context.l10n.passwordsDoNotMatch;
-              }
-              return null;
-            },
+          Row(
+            children: [
+              Expanded(
+                child: Checkbox(
+                  value: toc,
+                  onChanged: (v) {
+                    setState(() {
+                      toc = v ?? true;
+                    });
+                  },
+                ),
+              ),
+              Expanded(
+                flex: 5,
+                child: TextButton(
+                  child: Text(
+                    'Я согласен(на) с условиями использования пользовательского соглашения',
+                    style: theme.textTheme.bodySmall!.copyWith(
+                      color: AppColors.blue,
+                    ),
+                    maxLines: 3,
+                  ),
+                  onPressed: () => AppLaunch.launchURL(AppConst.terms),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 20),
           BlocConsumer<SignUpCubit, SignUpState>(
             listener: (_, state) {
               if (state is SignUpSuccess) {
@@ -151,19 +177,10 @@ class _SignUpFormState extends State<SignUpForm> {
               );
             },
           ),
-          const LineOrWidget(),
-          GoogleButton(
-            color: AppColors.primary,
-            onPressed: () {
-              SnackBarMessage().showErrorSnackBar(
-                message: context.l10n.notAvailableTry,
-                context: context,
-              );
-            },
-          ),
+          const SizedBox(height: 20),
           TextCheckButton(
             text: context.l10n.alreadyHaveAccount,
-            route: context.l10n.entrance,
+            route: 'Войти',
             onPressed: () {
               context.pushRoute(const SignInRoute());
             },

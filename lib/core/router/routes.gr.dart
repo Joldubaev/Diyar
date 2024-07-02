@@ -42,11 +42,11 @@ import 'package:diyar/features/history/presentation/pages/order_active/order_det
     as _i14;
 import 'package:diyar/features/history/presentation/pages/order_history_page.dart'
     as _i15;
-import 'package:diyar/features/home_features/data/model/sale_model.dart'
+import 'package:diyar/features/sale_news/data/model/sale_model.dart'
     as _i33;
-import 'package:diyar/features/home_features/presentation/pages/news/news_page.dart'
+import 'package:diyar/features/sale_news/presentation/pages/news/news_page.dart'
     as _i13;
-import 'package:diyar/features/home_features/presentation/pages/sale/sale_page.dart'
+import 'package:diyar/features/sale_news/presentation/pages/sale/sale_page.dart'
     as _i22;
 import 'package:diyar/features/map/presentation/user_map/order_map.dart'
     as _i16;

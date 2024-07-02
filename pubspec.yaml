@@ -52,10 +52,14 @@ dependencies:
   flutter_datetime_picker_plus: ^2.2.0
   package_info_plus: ^8.0.0
   carousel_slider: ^4.2.1
-
+   
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_driver:
+    sdk: flutter
+  test: ^1.25.2
+  mocktail: ^1.0.3
 
   flutter_lints: ^2.0.0
   auto_route_generator: ^7.3.2

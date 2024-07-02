@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:diyar/config/config.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/core/router/routes.dart';
 import 'package:diyar/features/curier/curier.dart';
@@ -19,10 +20,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 
-import 'features/home_features/presentation/cubit/home_features_cubit.dart';
+import 'features/sale_news/presentation/cubit/home_features_cubit.dart';
 import 'shared/pages/app_wrapper_connection_page.dart';
 
-void main() async {
+Future <void> main({AppConfig appConfig = const AppConfig()}) async {
   WidgetsFlutterBinding.ensureInitialized();
   FlutterError.onError = (details) {
     log(details.exceptionAsString(), stackTrace: details.stack);
