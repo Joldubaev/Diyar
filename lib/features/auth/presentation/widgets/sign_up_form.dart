@@ -4,8 +4,6 @@ import 'package:diyar/shared/constants/app_const/app_const.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-
 import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/features/auth/data/models/user_mpdel.dart';
 import 'package:diyar/features/features.dart';
@@ -24,7 +22,7 @@ class _SignUpFormState extends State<SignUpForm> {
   bool toc = false;
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
-  final _phoneController = TextEditingController(text: '+996');
+  final _phoneController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
@@ -88,12 +86,14 @@ class _SignUpFormState extends State<SignUpForm> {
             },
           ),
           const SizedBox(height: 10),
-          PhoneNumberMask(
-            hintText: '+996 (___) __-__-__',
-            textController: _phoneController,
-            hint: context.l10n.phone,
-            formatter: MaskTextInputFormatter(mask: "+996 (###) ##-##-##"),
-            textInputType: TextInputType.phone,
+
+          CustomInputWidget(
+            hintText: '+996 ### ## ## ##',
+            filledColor: Colors.white,
+            controller: _phoneController,
+            inputType: TextInputType.phone,
+            inputFormatters: [phoneFormatter],
+
             validator: (value) {
               if (value!.isEmpty) {
                 return context.l10n.pleaseEnterPhone;
@@ -145,16 +145,10 @@ class _SignUpFormState extends State<SignUpForm> {
               ),
             ],
           ),
-          const SizedBox(height: 20),
-          BlocConsumer<SignUpCubit, SignUpState>(
-            listener: (_, state) {
-              if (state is SignUpSuccess) {
-                context.router.pushAndPopUntil(
-                  const SignUpSucces(),
-                  predicate: (_) => false,
-                );
-              }
-            },
+
+          const SizedBox(height: 10),
+          BlocBuilder<SignUpCubit, SignUpState>(
+
             builder: (context, state) {
               return SubmitButtonWidget(
                 isLoading: state is SignUpLoading,
@@ -164,13 +158,14 @@ class _SignUpFormState extends State<SignUpForm> {
                 title: context.l10n.register,
                 onTap: () {
                   if (_formKey.currentState!.validate()) {
-                    BlocProvider.of<SignUpCubit>(context).signUpUser(
-                      UserModel(
+                    context.pushRoute(
+                      SignUpOtpRoute(
+                          user: UserModel(
                         name: _usernameController.text,
                         email: _emailController.text,
                         password: _passwordController.text,
-                        phone: _phoneController.text,
-                      ),
+                        phone: _phoneController.text.replaceAll(' ', ''),
+                      )),
                     );
                   }
                 },

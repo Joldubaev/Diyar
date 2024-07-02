@@ -1,4 +1,7 @@
-import 'package:diyar/shared/theme/theme.dart';
+import 'dart:io';
+
+import 'package:diyar/shared/theme/app_colors.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class LoadingWidget extends StatelessWidget {
@@ -6,8 +9,10 @@ class LoadingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: CircularProgressIndicator(color: AppColors.primary),
+    return Center(
+      child: Platform.isIOS
+          ? const CupertinoActivityIndicator(color: AppColors.primary)
+          : const CircularProgressIndicator(color: AppColors.primary),
     );
   }
 }

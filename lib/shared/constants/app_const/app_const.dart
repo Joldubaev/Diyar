@@ -49,3 +49,9 @@ class AppConst {
   static const finished = "Finished";
   static const cancel = "canceled order";
 }
+
+String generateOtpCode() {
+  final now = DateTime.now();
+  final timestamp = now.millisecondsSinceEpoch;
+  return timestamp.toString().substring(timestamp.toString().length - 6);
+}
