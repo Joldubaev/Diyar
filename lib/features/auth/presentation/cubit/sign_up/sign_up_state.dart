@@ -16,3 +16,19 @@ final class SignUpFailure extends SignUpState {
 
   SignUpFailure(this.message);
 }
+
+// SMS for reset password
+
+final class SmsResetPasswordLoading extends SignUpState {}
+
+final class SmsResetPasswordLoaded extends SignUpState {}
+
+final class SmsResetPasswordError extends SignUpState {}
+
+// SMS for register user
+
+final class SmsSignUpLoading extends SignUpState {}
+
+final class SmsSignUpLoaded extends SignUpState {}
+
+final class SmsSignUpError extends SignUpState {}

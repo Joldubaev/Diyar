@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'core/network/network_info.dart';
 import 'package:get_it/get_it.dart';
 
+import 'features/auth/data/repositories/sms_repository.dart';
 import 'features/cart/data/datasources/cart_remote_data_source.dart';
 import 'features/cart/data/repository/cart_repository.dart';
 import 'features/home_features/data/datasource/home_remote_data_source.dart';
@@ -24,7 +25,7 @@ final sl = GetIt.instance;
 
 Future<void> init() async {
 // cubit or bloc
-  sl.registerFactory(() => SignUpCubit(sl()));
+  sl.registerFactory(() => SignUpCubit(sl(), sl()));
   sl.registerFactory(() => SignInCubit(sl()));
   sl.registerFactory(() => ProfileCubit(sl()));
   sl.registerFactory(() => MenuCubit(sl()));
@@ -55,6 +56,7 @@ Future<void> init() async {
   sl.registerLazySingleton<UserRepository>(() => UserRepositoryImpl(sl()));
   sl.registerLazySingleton<UserRemoteDataSource>(
       () => UserRemoteDataSourceImpl(sl(), sl()));
+
   // sl.registerLazySingleton<UserRepositoryImpl>(() => UserRepositoryImpl(sl()));
   // sl.registerLazySingleton<UserRemoteDataSource>(() => UserRemoteDataSourceImpl(sl(), sl()));
 
@@ -87,6 +89,11 @@ Future<void> init() async {
       () => HistoryRepositoryImpl(sl()));
   sl.registerLazySingleton<HistoryReDatasource>(
       () => HistoryReDatasourceImpl(sl(), sl()));
+
+  // SMS Repository
+  sl.registerLazySingleton<SmsRepository>(() => SmsRepositoryImpl(sl()));
+  sl.registerLazySingleton<SmsRemoteDataSource>(
+      () => SmsRemoteDataSourceImpl(dio: sl()));
 
   //! Core
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
