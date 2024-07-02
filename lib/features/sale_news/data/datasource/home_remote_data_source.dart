@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:diyar/core/error/exception.dart';
-import 'package:diyar/features/home_features/data/model/news_model.dart';
-import 'package:diyar/features/home_features/data/model/sale_model.dart';
+import 'package:diyar/features/sale_news/data/model/news_model.dart';
+import 'package:diyar/features/sale_news/data/model/sale_model.dart';
 import 'package:diyar/shared/shared.dart';
 
 abstract class HomeRemoteDataSource {

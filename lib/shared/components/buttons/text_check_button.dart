@@ -13,7 +13,7 @@ class TextCheckButton extends StatelessWidget {
   final void Function()? onPressed;
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(text,
@@ -24,8 +24,7 @@ class TextCheckButton extends StatelessWidget {
           child: FittedBox(
             child: Text(
               route,
-              style:
-                  theme.textTheme.bodyMedium!.copyWith(color: AppColors.blue),
+              style: theme.textTheme.bodyLarge!.copyWith(color: AppColors.blue),
             ),
           ),
         )

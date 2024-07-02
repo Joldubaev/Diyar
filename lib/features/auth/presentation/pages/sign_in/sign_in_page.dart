@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:diyar/shared/theme/theme.dart';
 import 'package:diyar/features/auth/presentation/presentation.dart';
 
 @RoutePage()
@@ -24,27 +23,9 @@ class _SignInPageState extends State<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: SafeArea(
-        child: ListView(
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(20.0),
-              child: Image(
-                height: 100,
-                width: 100,
-                color: AppColors.primary,
-                image: AssetImage("assets/images/auth_images.png"),
-              ),
-            ),
-            const SizedBox(height: 10),
-            Center(
-                child: Text('Добро пожаловать',
-                    style: theme.textTheme.titleLarge)),
-            const SizedBox(height: 10),
-            const LoginForm(),
-          ],
-        ),
+        child: LoginForm(),
       ),
     );
   }

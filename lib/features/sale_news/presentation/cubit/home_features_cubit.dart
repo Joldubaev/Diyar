@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
-import 'package:diyar/features/home_features/data/model/news_model.dart';
-import 'package:diyar/features/home_features/data/model/sale_model.dart';
-import 'package:diyar/features/home_features/data/repositories/home_repository.dart';
+import 'package:diyar/features/sale_news/data/model/news_model.dart';
+import 'package:diyar/features/sale_news/data/model/sale_model.dart';
+import 'package:diyar/features/sale_news/data/repositories/home_repository.dart';
 
 part 'home_features_state.dart';
 

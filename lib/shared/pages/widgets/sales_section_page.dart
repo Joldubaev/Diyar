@@ -7,7 +7,7 @@ import 'package:diyar/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../features/home_features/presentation/cubit/home_features_cubit.dart';
+import '../../../features/sale_news/presentation/cubit/home_features_cubit.dart';
 
 class SalesSection extends StatefulWidget {
   const SalesSection({super.key});

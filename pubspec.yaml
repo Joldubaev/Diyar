@@ -55,9 +55,14 @@ dependencies:
   pinput: ^5.0.0
   xml: ^6.5.0
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_driver:
+    sdk: flutter
+  test: ^1.25.2
+  mocktail: ^1.0.3
 
   flutter_lints: ^2.0.0
   auto_route_generator: ^7.3.2

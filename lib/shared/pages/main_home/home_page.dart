@@ -3,7 +3,7 @@ import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/features/cart/data/models/cart_item_model.dart';
 import 'package:diyar/features/cart/presentation/cubit/cart_cubit.dart';
 import 'package:diyar/features/features.dart';
-import 'package:diyar/features/home_features/presentation/cubit/home_features_cubit.dart';
+import 'package:diyar/features/sale_news/presentation/cubit/home_features_cubit.dart';
 import 'package:diyar/features/profile/presentation/presentation.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/cubit/popular_cubit.dart';

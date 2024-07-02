@@ -15,9 +15,9 @@ import 'package:get_it/get_it.dart';
 import 'features/auth/data/repositories/sms_repository.dart';
 import 'features/cart/data/datasources/cart_remote_data_source.dart';
 import 'features/cart/data/repository/cart_repository.dart';
-import 'features/home_features/data/datasource/home_remote_data_source.dart';
-import 'features/home_features/data/repositories/home_repository.dart';
-import 'features/home_features/presentation/cubit/home_features_cubit.dart';
+import 'features/sale_news/data/datasource/home_remote_data_source.dart';
+import 'features/sale_news/data/repositories/home_repository.dart';
+import 'features/sale_news/presentation/cubit/home_features_cubit.dart';
 import 'features/order/data/datasources/order_remote_datasource.dart';
 import 'features/profile/data/datasources/user_remote_data_source.dart';
 
