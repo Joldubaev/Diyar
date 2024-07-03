@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/components/product/product_item_widget.dart';
 import 'package:diyar/features/cart/cart.dart';
-import 'package:diyar/features/cart/data/models/cart_item_model.dart';
 import 'package:diyar/features/menu/data/models/category_model.dart';
 import 'package:diyar/features/menu/menu.dart';
 import 'package:diyar/shared/theme/theme.dart';

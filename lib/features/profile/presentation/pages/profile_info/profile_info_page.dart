@@ -1,11 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/components/components.dart';
-import 'package:diyar/features/auth/data/models/user_mpdel.dart';
-import 'package:diyar/features/auth/presentation/widgets/phone_number.dart';
+import 'package:diyar/features/auth/data/models/user_model.dart';
 import 'package:diyar/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:flutter_svg/svg.dart';
 
 @RoutePage()
@@ -20,20 +18,20 @@ class ProfileInfoPage extends StatefulWidget {
 class _ProfileInfoPageState extends State<ProfileInfoPage> {
   final formKey = GlobalKey<FormState>();
   final fullNameController = TextEditingController();
-  final phoneController = TextEditingController();
+  final _phoneController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     fullNameController.text = widget.user.name ?? '';
-    phoneController.text = widget.user.phone ?? '';
+    _phoneController.text = widget.user.phone ?? '';
   }
 
   @override
   dispose() {
     super.dispose();
     fullNameController.dispose();
-    phoneController.dispose();
+    _phoneController.dispose();
   }
 
   @override
@@ -89,15 +87,12 @@ class _ProfileInfoPageState extends State<ProfileInfoPage> {
                   },
                 ),
                 const SizedBox(height: 20),
-                PhoneNumberMask(
-                  isReadOnly: true,
-                  title: context.l10n.phone,
-                  hintText: '+996 (___) __-__-__',
-                  textController: phoneController,
-                  hint: context.l10n.phone,
-                  formatter:
-                      MaskTextInputFormatter(mask: "+996 (###) ##-##-##"),
-                  textInputType: TextInputType.phone,
+                CustomInputWidget(
+                  hintText: '+996',
+                  filledColor: Colors.white,
+                  controller: _phoneController,
+                  inputType: TextInputType.phone,
+                  inputFormatters: [phoneFormatter],
                   validator: (value) {
                     if (value!.isEmpty) {
                       return context.l10n.pleaseEnterPhone;

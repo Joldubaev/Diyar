@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:diyar/shared/constants/api_const/api_const.dart';
 import 'package:diyar/shared/constants/app_const/app_const.dart';
 import 'package:diyar/core/core.dart';
-import 'package:diyar/features/auth/data/models/user_mpdel.dart';
+import 'package:diyar/features/auth/data/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class UserRemoteDataSource {
@@ -23,9 +23,10 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   Future<UserModel> getUser() async {
     try {
       var res = await _dio.post(ApiConst.getUser,
-          data: {"email": _prefs.getString(AppConst.email)},
+          data: {"phone": _prefs.getString(AppConst.phone)},
           options: Options(
-            headers: ApiConst.authMap(_prefs.getString(AppConst.accessToken) ?? ''),
+            headers:
+                ApiConst.authMap(_prefs.getString(AppConst.accessToken) ?? ''),
           ));
       if (res.statusCode == 200) {
         return UserModel.fromJson(res.data);
@@ -59,7 +60,8 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
         ApiConst.updateUser,
         data: {"newPhoneNumber": phone, "newUserName": name},
         options: Options(
-          headers: ApiConst.authMap(_prefs.getString(AppConst.accessToken) ?? ''),
+          headers:
+              ApiConst.authMap(_prefs.getString(AppConst.accessToken) ?? ''),
         ),
       );
       if (res.statusCode != 200) {

@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/features/auth/auth.dart';
 import 'package:diyar/features/curier/curier.dart';
-import 'package:diyar/features/curier/data/model/get_user_moderl.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/theme/theme.dart';
 import 'package:diyar/shared/utils/utils.dart';

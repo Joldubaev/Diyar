@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/curier/curier.dart';
 import 'package:diyar/features/features.dart';
-import 'package:diyar/features/menu/data/repositories/menu_repository.dart';
 import 'package:diyar/features/profile/data/data.dart';
 import 'package:diyar/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:diyar/shared/cubit/bloc/internet_bloc.dart';
@@ -12,14 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'core/network/network_info.dart';
 import 'package:get_it/get_it.dart';
 
-import 'features/auth/data/repositories/sms_repository.dart';
-import 'features/cart/data/datasources/cart_remote_data_source.dart';
 import 'features/cart/data/repository/cart_repository.dart';
-import 'features/sale_news/data/datasource/home_remote_data_source.dart';
-import 'features/sale_news/data/repositories/home_repository.dart';
-import 'features/sale_news/presentation/cubit/home_features_cubit.dart';
-import 'features/order/data/datasources/order_remote_datasource.dart';
-import 'features/profile/data/datasources/user_remote_data_source.dart';
 
 final sl = GetIt.instance;
 

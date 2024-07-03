@@ -1,4 +1,3 @@
-import 'package:diyar/features/auth/data/models/user_mpdel.dart';
 import 'package:diyar/features/features.dart';
 
 abstract class AuthRepository {

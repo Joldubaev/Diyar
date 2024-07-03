@@ -1,11 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/launch/launch.dart';
 import 'package:diyar/shared/constants/app_const/app_const.dart';
+import 'package:diyar/shared/utils/show/bottom_sheet.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:diyar/core/router/routes.gr.dart';
-import 'package:diyar/features/auth/data/models/user_mpdel.dart';
 import 'package:diyar/features/features.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/components/components.dart';
@@ -86,14 +86,12 @@ class _SignUpFormState extends State<SignUpForm> {
             },
           ),
           const SizedBox(height: 10),
-
           CustomInputWidget(
-            hintText: '+996 ### ## ## ##',
+            hintText: '+996',
             filledColor: Colors.white,
             controller: _phoneController,
             inputType: TextInputType.phone,
             inputFormatters: [phoneFormatter],
-
             validator: (value) {
               if (value!.isEmpty) {
                 return context.l10n.pleaseEnterPhone;
@@ -145,10 +143,8 @@ class _SignUpFormState extends State<SignUpForm> {
               ),
             ],
           ),
-
           const SizedBox(height: 10),
           BlocBuilder<SignUpCubit, SignUpState>(
-
             builder: (context, state) {
               return SubmitButtonWidget(
                 isLoading: state is SignUpLoading,
@@ -157,16 +153,29 @@ class _SignUpFormState extends State<SignUpForm> {
                 bgColor: AppColors.primary,
                 title: context.l10n.register,
                 onTap: () {
-                  if (_formKey.currentState!.validate()) {
-                    context.pushRoute(
-                      SignUpOtpRoute(
-                          user: UserModel(
-                        name: _usernameController.text,
-                        email: _emailController.text,
-                        password: _passwordController.text,
-                        phone: _phoneController.text.replaceAll(' ', ''),
-                      )),
+                  if (!toc) {
+                    showToast(
+                      'Пожалуйста, примите условия пользовательского соглашения',
+                      isError: true,
                     );
+                  } else if (_formKey.currentState!.validate() &&
+                      !context.read<SignUpCubit>().isNavigating) {
+                    context.read<SignUpCubit>().isNavigating = true;
+                    context
+                        .pushRoute(
+                      SignUpOtpRoute(
+                        user: UserModel(
+                          name: _usernameController.text,
+                          email: _emailController.text,
+                          password: _passwordController.text,
+                          phone: _phoneController.text.replaceAll(' ', ''),
+                        ),
+                      ),
+                    )
+                        .then((_) {
+                      context.read<SignUpCubit>().isNavigating =
+                          false; // Reset the flag after navigation
+                    });
                   }
                 },
               );

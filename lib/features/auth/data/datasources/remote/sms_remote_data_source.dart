@@ -52,7 +52,7 @@ class SmsRemoteDataSourceImpl implements SmsRemoteDataSource {
       log("Response Data: ${response.data}");
 
       final parsedResponse = xml.XmlDocument.parse(response.data);
-      final status = parsedResponse.findAllElements('status').single.text;
+      final status = parsedResponse.findAllElements('status').single.value;
 
       if (status == '0') {
         log('SMS отправлено успешно');

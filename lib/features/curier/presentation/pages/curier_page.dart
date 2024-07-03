@@ -4,7 +4,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/features/auth/auth.dart';
 import 'package:diyar/features/curier/curier.dart';
-import 'package:diyar/features/curier/presentation/widgets/empty_curier.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/components/components.dart';
 import 'package:diyar/core/core.dart';

@@ -1,5 +1,4 @@
 import 'package:diyar/features/curier/curier.dart';
-import 'package:diyar/features/curier/data/model/get_user_moderl.dart';
 
 abstract class CurierRepository {
   Future<List<CurierOrderModel>> getCurierOrders();
