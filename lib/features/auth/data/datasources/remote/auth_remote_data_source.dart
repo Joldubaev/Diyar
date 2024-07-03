@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:diyar/shared/constants/constant.dart';
 import 'package:diyar/core/core.dart';
-import 'package:diyar/features/auth/data/models/user_mpdel.dart';
 import 'package:diyar/features/features.dart';
 import 'package:diyar/shared/utils/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -80,13 +79,13 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<void> login(UserModel user) async {
     try {
       var res = await _dio.post(ApiConst.signIn,
-          data: {"email": user.email, "password": user.password});
+          data: {"phone": user.phone, "password": user.password});
 
       if ([200, 201].contains(res.statusCode)) {
         await _localDataSource.setTokenToCache(
           refresh: res.data['refreshToken'],
           access: res.data['accessToken'],
-          email: user.email!,
+          phone: user.phone.toString(),
         );
         log("Token: ${res.data['accessToken']}");
       }
@@ -105,7 +104,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         await _localDataSource.setTokenToCache(
           refresh: res.data['refreshToken'],
           access: res.data['accessToken'],
-          email: user.email!,
+          phone: user.phone.toString(),
         );
       }
     } catch (e) {

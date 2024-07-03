@@ -1,13 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/router/routes.gr.dart';
-import 'package:diyar/features/auth/data/models/user_mpdel.dart';
 import 'package:diyar/features/cart/data/models/cart_item_model.dart';
 import 'package:diyar/features/cart/presentation/cubit/cart_cubit.dart';
-import 'package:diyar/features/order/data/models/create_order_model.dart';
-import 'package:diyar/features/order/data/models/pickup_order_model.dart';
-import 'package:diyar/features/order/presentation/cubit/order_cubit.dart';
+import 'package:diyar/features/features.dart';
 import 'package:diyar/l10n/l10n.dart';
-import 'package:diyar/features/auth/presentation/widgets/phone_number.dart';
 import 'package:diyar/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -1,6 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:diyar/features/about_us/data/models/restaurant_model.dart';
-import 'package:diyar/features/about_us/presentation/widgets/about_us_type.dart';
 import 'package:diyar/features/features.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/theme/theme.dart';

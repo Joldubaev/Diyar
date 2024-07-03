@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:diyar/features/history/data/model/order_status_model.dart';
 import 'package:diyar/features/history/history.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/constants/constant.dart';

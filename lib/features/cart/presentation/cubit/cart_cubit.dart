@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:diyar/features/cart/data/models/models.dart';
+import 'package:diyar/features/cart/data/data.dart';
 import 'package:diyar/features/cart/data/repository/cart_repository.dart';
 import 'package:equatable/equatable.dart';
 

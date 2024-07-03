@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:diyar/features/about_us/data/models/restaurant_model.dart';
 import 'package:diyar/features/features.dart';
 import 'package:equatable/equatable.dart';
 

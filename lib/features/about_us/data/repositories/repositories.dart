@@ -1,4 +1,3 @@
-import 'package:diyar/features/about_us/data/models/restaurant_model.dart';
 import 'package:diyar/features/features.dart';
 
 abstract class AboutUsRepository {

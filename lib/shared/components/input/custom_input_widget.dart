@@ -44,7 +44,7 @@ class CustomInputWidget extends StatefulWidget {
 }
 
 final phoneFormatter = MaskTextInputFormatter(
-  mask: "+996 ### ## ## ##",
+  mask: "+996 (###) ##-##-##",
   filter: {"#": RegExp(r'[0-9]')},
   type: MaskAutoCompletionType.lazy,
 );
@@ -67,7 +67,8 @@ class _CustomInputWidgetState extends State<CustomInputWidget> {
         if (widget.title != null)
           ListTile(
             dense: true,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
             visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
             title: Text(
               widget.title!,
@@ -124,7 +125,9 @@ class _CustomInputWidgetState extends State<CustomInputWidget> {
                           setState(() {});
                         },
                         child: Icon(
-                          _obsecureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                          _obsecureText
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined,
                           color: AppColors.black1.withOpacity(.6),
                         ),
                       )

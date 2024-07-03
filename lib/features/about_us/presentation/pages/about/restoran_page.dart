@@ -5,8 +5,6 @@ import 'package:diyar/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../data/models/restaurant_model.dart';
-import '../../widgets/about_us_type.dart';
 
 @RoutePage()
 class RestorantPage extends StatefulWidget {

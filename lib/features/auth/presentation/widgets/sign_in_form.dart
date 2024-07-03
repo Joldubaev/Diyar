@@ -3,13 +3,11 @@ import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/injection_container.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/components/components.dart';
-import 'package:diyar/features/auth/data/models/user_mpdel.dart';
 import 'package:diyar/features/features.dart';
 import 'package:diyar/shared/constants/app_const/app_const.dart';
 import 'package:diyar/shared/theme/theme.dart';
 import 'package:diyar/shared/utils/show/bottom_sheet.dart';
 import 'package:diyar/shared/utils/snackbar/snackbar_message.dart';
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,7 +21,7 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
-  final _usernameController = TextEditingController();
+  final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final resedPasswordCode = TextEditingController();
 
@@ -47,15 +45,16 @@ class _LoginFormState extends State<LoginForm> {
                   Text('Добро пожаловать', style: theme.textTheme.titleLarge)),
           const SizedBox(height: 20),
           CustomInputWidget(
-            hintText: context.l10n.email,
-            controller: _usernameController,
-            isPasswordField: false,
-            inputType: TextInputType.emailAddress,
+            hintText: '+996',
+            filledColor: Colors.white,
+            controller: _phoneController,
+            inputType: TextInputType.phone,
+            inputFormatters: [phoneFormatter],
             validator: (value) {
               if (value!.isEmpty) {
-                return context.l10n.pleaseEnterEmail;
-              } else if (!EmailValidator.validate(value)) {
-                return context.l10n.pleaseEnterCorrectEmail;
+                return context.l10n.pleaseEnterPhone;
+              } else if (value.length < 10) {
+                return context.l10n.pleaseEnterCorrectPhone;
               }
               return null;
             },
@@ -129,7 +128,7 @@ class _LoginFormState extends State<LoginForm> {
                   if (_formKey.currentState!.validate()) {
                     context.read<SignInCubit>().signInUser(
                           UserModel(
-                            email: _usernameController.text,
+                            phone: _phoneController.text,
                             password: _passwordController.text,
                           ),
                         );

@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:diyar/features/auth/auth.dart';
-import 'package:diyar/features/auth/data/models/user_mpdel.dart';
 import 'package:diyar/features/features.dart';
 import 'package:diyar/injection_container.dart';
 import 'package:diyar/shared/shared.dart';

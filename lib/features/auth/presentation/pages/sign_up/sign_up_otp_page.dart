@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/router/routes.gr.dart';
-import 'package:diyar/features/auth/data/models/user_mpdel.dart';
+import 'package:diyar/features/auth/data/models/user_model.dart';
 import 'package:diyar/features/auth/presentation/cubit/cubit.dart';
 import 'package:diyar/shared/shared.dart';
 import 'package:flutter/material.dart';

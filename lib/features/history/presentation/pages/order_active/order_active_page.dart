@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/features/curier/curier.dart';
-import 'package:diyar/features/history/data/model/order_status_model.dart';
 import 'package:diyar/features/history/history.dart';
 import 'package:diyar/features/order/presentation/widgets/order_stepper.dart';
 import 'package:diyar/injection_container.dart';

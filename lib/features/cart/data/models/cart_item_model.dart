@@ -1,4 +1,4 @@
-import 'package:diyar/features/menu/data/models/models.dart';
+import 'package:diyar/features/features.dart';
 
 class CartItemModel {
   final FoodModel? food;

@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:diyar/features/auth/data/models/user_mpdel.dart';
+import 'package:diyar/features/auth/data/models/user_model.dart';
 import 'package:diyar/features/profile/data/data.dart';
 import 'package:equatable/equatable.dart';
 

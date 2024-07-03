@@ -21,7 +21,7 @@ import 'package:diyar/features/about_us/presentation/pages/about/vip_page.dart'
     as _i29;
 import 'package:diyar/features/about_us/presentation/pages/contact/contact_page.dart'
     as _i4;
-import 'package:diyar/features/auth/data/models/user_mpdel.dart' as _i33;
+import 'package:diyar/features/auth/data/models/user_model.dart' as _i35;
 import 'package:diyar/features/auth/presentation/pages/sign_in/sign_in_page.dart'
     as _i24;
 import 'package:diyar/features/auth/presentation/pages/sign_up/sign_up_otp_page.dart'
@@ -34,12 +34,14 @@ import 'package:diyar/features/auth/presentation/pages/splash/splash_page.dart'
     as _i28;
 import 'package:diyar/features/auth/presentation/widgets/reset_password.dart'
     as _i20;
-import 'package:diyar/features/cart/data/models/models.dart' as _i32;
+import 'package:diyar/features/cart/cart.dart' as _i33;
+import 'package:diyar/features/cart/data/data.dart' as _i32;
 import 'package:diyar/features/cart/presentation/pages/cart_page.dart' as _i2;
 import 'package:diyar/features/curier/presentation/pages/curier_page.dart'
     as _i6;
 import 'package:diyar/features/curier/presentation/pages/history_page.dart'
     as _i9;
+import 'package:diyar/features/features.dart' as _i34;
 import 'package:diyar/features/history/presentation/pages/order_active/order_detail_page.dart'
     as _i14;
 import 'package:diyar/features/history/presentation/pages/order_history_page.dart'
@@ -59,7 +61,7 @@ import 'package:diyar/features/profile/presentation/pages/profile/profile_page.d
     as _i19;
 import 'package:diyar/features/profile/presentation/pages/profile_info/profile_info_page.dart'
     as _i18;
-import 'package:diyar/features/sale_news/data/model/sale_model.dart' as _i34;
+import 'package:diyar/features/sale_news/data/model/sale_model.dart' as _i36;
 import 'package:diyar/features/sale_news/presentation/pages/news/news_page.dart'
     as _i13;
 import 'package:diyar/features/sale_news/presentation/pages/sale/sale_page.dart'
@@ -395,8 +397,8 @@ class CurierRoute extends _i30.PageRouteInfo<void> {
 class DeliveryFormRoute extends _i30.PageRouteInfo<DeliveryFormRouteArgs> {
   DeliveryFormRoute({
     _i31.Key? key,
-    required List<_i32.CartItemModel> cart,
-    _i33.UserModel? user,
+    required List<_i33.CartItemModel> cart,
+    _i34.UserModel? user,
     List<_i30.PageRouteInfo>? children,
   }) : super(
           DeliveryFormRoute.name,
@@ -423,9 +425,9 @@ class DeliveryFormRouteArgs {
 
   final _i31.Key? key;
 
-  final List<_i32.CartItemModel> cart;
+  final List<_i33.CartItemModel> cart;
 
-  final _i33.UserModel? user;
+  final _i34.UserModel? user;
 
   @override
   String toString() {
@@ -602,7 +604,7 @@ class OrderSuccess extends _i30.PageRouteInfo<void> {
 class ProfileInfoRoute extends _i30.PageRouteInfo<ProfileInfoRouteArgs> {
   ProfileInfoRoute({
     _i31.Key? key,
-    required _i33.UserModel user,
+    required _i35.UserModel user,
     List<_i30.PageRouteInfo>? children,
   }) : super(
           ProfileInfoRoute.name,
@@ -627,7 +629,7 @@ class ProfileInfoRouteArgs {
 
   final _i31.Key? key;
 
-  final _i33.UserModel user;
+  final _i35.UserModel user;
 
   @override
   String toString() {
@@ -682,7 +684,7 @@ class RestorantRoute extends _i30.PageRouteInfo<void> {
 class SaleRoute extends _i30.PageRouteInfo<SaleRouteArgs> {
   SaleRoute({
     _i31.Key? key,
-    _i34.SaleModel? sale,
+    _i36.SaleModel? sale,
     List<_i30.PageRouteInfo>? children,
   }) : super(
           SaleRoute.name,
@@ -707,7 +709,7 @@ class SaleRouteArgs {
 
   final _i31.Key? key;
 
-  final _i34.SaleModel? sale;
+  final _i36.SaleModel? sale;
 
   @override
   String toString() {
@@ -748,7 +750,7 @@ class SignInRoute extends _i30.PageRouteInfo<void> {
 class SignUpOtpRoute extends _i30.PageRouteInfo<SignUpOtpRouteArgs> {
   SignUpOtpRoute({
     _i31.Key? key,
-    required _i33.UserModel user,
+    required _i35.UserModel user,
     List<_i30.PageRouteInfo>? children,
   }) : super(
           SignUpOtpRoute.name,
@@ -773,7 +775,7 @@ class SignUpOtpRouteArgs {
 
   final _i31.Key? key;
 
-  final _i33.UserModel user;
+  final _i35.UserModel user;
 
   @override
   String toString() {

@@ -1,6 +1,4 @@
 import 'package:diyar/features/map/data/models/location_model.dart';
-import 'package:diyar/features/order/data/datasources/order_remote_datasource.dart';
-import 'package:diyar/features/order/data/models/pickup_order_model.dart';
 import 'package:diyar/features/order/order.dart';
 
 abstract class OrderRepository {

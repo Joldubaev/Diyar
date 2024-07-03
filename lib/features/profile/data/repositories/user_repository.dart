@@ -1,4 +1,4 @@
-import 'package:diyar/features/auth/data/models/user_mpdel.dart';
+import 'package:diyar/features/auth/data/models/user_model.dart';
 
 import '../datasources/user_remote_data_source.dart';
 

@@ -20,10 +20,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 
-import 'features/sale_news/presentation/cubit/home_features_cubit.dart';
 import 'shared/pages/app_wrapper_connection_page.dart';
 
-Future <void> main({AppConfig appConfig = const AppConfig()}) async {
+Future<void> main({AppConfig appConfig = const AppConfig()}) async {
   WidgetsFlutterBinding.ensureInitialized();
   FlutterError.onError = (details) {
     log(details.exceptionAsString(), stackTrace: details.stack);

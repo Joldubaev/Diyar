@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:diyar/features/curier/curier.dart';
-import 'package:diyar/features/curier/data/model/get_user_moderl.dart';
 import 'package:meta/meta.dart';
 
 part 'curier_state.dart';
