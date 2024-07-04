@@ -22,7 +22,8 @@ class GoogleButton extends StatelessWidget {
           },
           child: Container(
             height: 50,
-            margin: const EdgeInsets.only(top: 0, bottom: 20, left: 10, right: 10),
+            margin:
+                const EdgeInsets.only(top: 0, bottom: 20, left: 10, right: 10),
             width: 50,
             decoration: BoxDecoration(
               border: Border.all(color: AppColors.blue),

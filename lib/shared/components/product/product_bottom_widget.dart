@@ -72,7 +72,8 @@ class ProductBottomWidget extends StatelessWidget {
                     fontSize: 18,
                   ),
                   overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
                 ),
               ),
               Padding(

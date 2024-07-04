@@ -12,12 +12,16 @@ class AboutUsModel {
   factory AboutUsModel.fromJson(Map<String, dynamic> json) => AboutUsModel(
         name: json['name'],
         description: json['description'],
-        photoLinks: json['photoLinks'] == null ? null : List.from(json['photoLinks']).map((x) => x).toList(),
+        photoLinks: json['photoLinks'] == null
+            ? null
+            : List.from(json['photoLinks']).map((x) => x).toList(),
       );
 
   Map<String, dynamic> toJson() => {
         'name': name,
         'description': description,
-        'photoLinks': photoLinks == null ? null : List<dynamic>.from(photoLinks!.map((x) => x.toJson())),
+        'photoLinks': photoLinks == null
+            ? null
+            : List<dynamic>.from(photoLinks!.map((x) => x.toJson())),
       };
 }

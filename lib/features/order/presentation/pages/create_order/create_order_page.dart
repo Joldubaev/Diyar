@@ -7,7 +7,6 @@ import 'package:diyar/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
 @RoutePage()
 class CreateOrderPage extends StatefulWidget {
   final List<CartItemModel> cart;

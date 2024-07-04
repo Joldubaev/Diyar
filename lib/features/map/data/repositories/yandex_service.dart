@@ -24,14 +24,18 @@ class LocationService implements AppLocation {
   @override
   Future<bool> requestPermission() async {
     return Geolocator.requestPermission()
-        .then((value) => value == LocationPermission.always || value == LocationPermission.whileInUse)
+        .then((value) =>
+            value == LocationPermission.always ||
+            value == LocationPermission.whileInUse)
         .catchError((e) => false);
   }
 
   @override
   Future<bool> checkPermission() async {
     return Geolocator.checkPermission()
-        .then((value) => value == LocationPermission.always || value == LocationPermission.whileInUse)
+        .then((value) =>
+            value == LocationPermission.always ||
+            value == LocationPermission.whileInUse)
         .catchError((e) => false);
   }
 }

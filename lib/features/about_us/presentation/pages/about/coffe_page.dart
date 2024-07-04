@@ -28,7 +28,9 @@ class _CofePageState extends State<CofePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primary,
-        title: Text(context.l10n.ecpessCoffee, style: theme.textTheme.titleMedium!.copyWith(color: AppColors.white)),
+        title: Text(context.l10n.ecpessCoffee,
+            style:
+                theme.textTheme.titleMedium!.copyWith(color: AppColors.white)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: AppColors.white),
           onPressed: () {

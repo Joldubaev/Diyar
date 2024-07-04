@@ -33,21 +33,26 @@ class SaleWidget extends StatelessWidget {
                       colors: [Colors.black54, Colors.transparent],
                       begin: Alignment.bottomCenter,
                       end: Alignment.topCenter),
-                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20))),
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(20),
+                      bottomRight: Radius.circular(20))),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(title,
-                      style: theme.textTheme.titleLarge?.copyWith(color: AppColors.white, fontWeight: FontWeight.bold)),
+                      style: theme.textTheme.titleLarge?.copyWith(
+                          color: AppColors.white, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 10),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20))),
                     onPressed: () {},
                     child: Text('$discount %',
-                        style:
-                            theme.textTheme.titleSmall?.copyWith(color: AppColors.white, fontWeight: FontWeight.bold)),
+                        style: theme.textTheme.titleSmall?.copyWith(
+                            color: AppColors.white,
+                            fontWeight: FontWeight.bold)),
                   )
                 ],
               ),

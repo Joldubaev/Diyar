@@ -7,7 +7,6 @@ part 'sign_up_state.dart';
 class SignUpCubit extends Cubit<SignUpState> {
   final SmsRepository _smsRepository;
   final AuthRepository authRepository;
-  bool isNavigating = false;
 
   SignUpCubit(
     this.authRepository,

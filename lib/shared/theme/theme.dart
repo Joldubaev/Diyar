@@ -13,7 +13,7 @@ ThemeData theme = ThemeData(
   colorScheme: const ColorScheme(
     primary: AppColors.primary,
     secondary: AppColors.primary,
-    surface: Colors.white,  // Replaced background with surface
+    surface: Colors.white, // Replaced background with surface
     error: Colors.red,
     onPrimary: Colors.white,
     onSecondary: Colors.white,

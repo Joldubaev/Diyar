@@ -21,7 +21,10 @@ class MenuCategoryNameListWidget extends StatelessWidget {
           child: Center(
             child: Text(
               "${context.l10n.category} $index",
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: Colors.white),
             ),
           ),
         ),

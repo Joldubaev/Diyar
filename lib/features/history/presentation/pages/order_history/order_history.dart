@@ -61,7 +61,8 @@ class _OrderHistoryState extends State<OrderHistory> {
                 ),
                 subtitle: Text(
                   '${context.l10n.orderNumber} ${orders[index].orderNumber}',
-                  style: theme.textTheme.bodySmall!.copyWith(color: AppColors.grey),
+                  style: theme.textTheme.bodySmall!
+                      .copyWith(color: AppColors.grey),
                 ),
                 children: [
                   CustomTile(

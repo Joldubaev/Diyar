@@ -6,7 +6,6 @@ abstract class OrderRepository {
   Future<void> createOrder(CreateOrderModel order);
   Future<void> getPickupOrder(PickupOrderModel order);
   Future<LocationModel> getGeoSuggestions({required String query});
-
 }
 
 class OrderRepositoryImpl extends OrderRepository {

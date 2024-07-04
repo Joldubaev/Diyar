@@ -5,7 +5,6 @@ import 'package:diyar/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
 @RoutePage()
 class RestorantPage extends StatefulWidget {
   const RestorantPage({super.key});
@@ -29,7 +28,9 @@ class _RestorantPageState extends State<RestorantPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primary,
-        title: Text(context.l10n.restaurant, style: theme.textTheme.titleMedium!.copyWith(color: AppColors.white)),
+        title: Text(context.l10n.restaurant,
+            style:
+                theme.textTheme.titleMedium!.copyWith(color: AppColors.white)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: AppColors.white),
           onPressed: () {

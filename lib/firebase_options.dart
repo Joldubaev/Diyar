@@ -65,5 +65,4 @@ class DefaultFirebaseOptions {
     projectId: 'diyar-d2556',
     storageBucket: 'diyar-d2556.appspot.com',
   );
-
 }

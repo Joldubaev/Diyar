@@ -101,7 +101,9 @@ class _OrderStepperState extends State<OrderStepper> {
   }
 
   bool _allowTabStepping(int index, StepEnabling enabling) {
-    return enabling == StepEnabling.sequential ? index <= reachedStep : reachedSteps.contains(index);
+    return enabling == StepEnabling.sequential
+        ? index <= reachedStep
+        : reachedSteps.contains(index);
   }
 
   checkStep() {

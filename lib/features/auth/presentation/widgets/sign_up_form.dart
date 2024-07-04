@@ -39,6 +39,8 @@ class _SignUpFormState extends State<SignUpForm> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Form(
       key: _formKey,
       child: ListView(
@@ -118,18 +120,15 @@ class _SignUpFormState extends State<SignUpForm> {
           const SizedBox(height: 10),
           Row(
             children: [
-              Expanded(
-                child: Checkbox(
-                  value: toc,
-                  onChanged: (v) {
-                    setState(() {
-                      toc = v ?? true;
-                    });
-                  },
-                ),
+              Checkbox(
+                value: toc,
+                onChanged: (v) {
+                  setState(() {
+                    toc = v ?? true;
+                  });
+                },
               ),
               Expanded(
-                flex: 5,
                 child: TextButton(
                   child: Text(
                     'Я согласен(на) с условиями использования пользовательского соглашения',
@@ -158,24 +157,16 @@ class _SignUpFormState extends State<SignUpForm> {
                       'Пожалуйста, примите условия пользовательского соглашения',
                       isError: true,
                     );
-                  } else if (_formKey.currentState!.validate() &&
-                      !context.read<SignUpCubit>().isNavigating) {
-                    context.read<SignUpCubit>().isNavigating = true;
-                    context
-                        .pushRoute(
+                  } else if (_formKey.currentState!.validate()) {
+                    context.pushRoute(
                       SignUpOtpRoute(
                         user: UserModel(
-                          name: _usernameController.text,
-                          email: _emailController.text,
-                          password: _passwordController.text,
-                          phone: _phoneController.text.replaceAll(' ', ''),
-                        ),
+                            name: _usernameController.text,
+                            email: _emailController.text,
+                            password: _passwordController.text,
+                            phone: _phoneController.text),
                       ),
-                    )
-                        .then((_) {
-                      context.read<SignUpCubit>().isNavigating =
-                          false; // Reset the flag after navigation
-                    });
+                    );
                   }
                 },
               );
