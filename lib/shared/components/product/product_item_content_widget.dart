@@ -113,7 +113,8 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                       ),
                       width: double.infinity,
                       height: 110,
-                      memCacheWidth: (MediaQuery.of(context).size.width*0.5).toInt(),
+                      memCacheWidth:
+                          (MediaQuery.of(context).size.width * 0.5).toInt(),
                       // memCacheHeight: 110,
                       placeholder: (context, url) => const Center(
                         child: SizedBox(

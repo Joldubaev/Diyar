@@ -79,7 +79,9 @@ class CurierOrderModel {
       userPhone: map['userPhone'],
       orderNumber: map['orderNumber'],
       dishesCount: map['dishesCount'],
-      foods: map['foods'] != null ? List<Food>.from(map['foods']?.map((x) => Food.fromJson(x))) : null,
+      foods: map['foods'] != null
+          ? List<Food>.from(map['foods']?.map((x) => Food.fromJson(x)))
+          : null,
       address: map['address'],
       houseNumber: map['houseNumber'],
       kvOffice: map['kvOffice'],

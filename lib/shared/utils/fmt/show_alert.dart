@@ -13,7 +13,8 @@ class AppAlert {
           title: Text('Loading', style: theme.textTheme.titleLarge!),
           content: Padding(
             padding: const EdgeInsets.only(top: 20, bottom: 20),
-            child: CupertinoActivityIndicator(color: theme.primaryColor, radius: 16),
+            child: CupertinoActivityIndicator(
+                color: theme.primaryColor, radius: 16),
           ),
         );
       },

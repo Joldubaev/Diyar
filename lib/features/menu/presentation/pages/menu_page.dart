@@ -116,7 +116,8 @@ class _MenuPageState extends State<MenuPage>
                           borderRadius: BorderRadius.circular(20),
                           border: index != _activeIndex
                               ? Border.all(color: AppColors.grey, width: 0.4)
-                              : Border.all(color: AppColors.primary, width: 0.4),
+                              : Border.all(
+                                  color: AppColors.primary, width: 0.4),
                         ),
                         child: Center(
                           child: Text(

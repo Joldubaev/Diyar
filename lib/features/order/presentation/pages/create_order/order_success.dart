@@ -14,7 +14,9 @@ class OrderSuccess extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          leading: IconButton(icon: const Icon(Icons.arrow_back_ios_sharp), onPressed: () => context.router.back())),
+          leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios_sharp),
+              onPressed: () => context.router.back())),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -27,7 +29,9 @@ class OrderSuccess extends StatelessWidget {
                 width: 150,
               ),
               const SizedBox(height: 30),
-              Text(context.l10n.yourOrdersConfirm, style: theme.textTheme.titleSmall, textAlign: TextAlign.center),
+              Text(context.l10n.yourOrdersConfirm,
+                  style: theme.textTheme.titleSmall,
+                  textAlign: TextAlign.center),
               FittedBox(
                 child: Text(
                   context.l10n.orderTime,
@@ -73,7 +77,8 @@ class _CreateOrderDialogState extends State<CreateOrderDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(context.l10n.createTemplate, style: theme.textTheme.titleSmall),
+      title:
+          Text(context.l10n.createTemplate, style: theme.textTheme.titleSmall),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -112,7 +117,8 @@ class _CreateOrderDialogState extends State<CreateOrderDialog> {
             },
             child: Text(
               context.l10n.edit,
-              style: theme.textTheme.bodyMedium!.copyWith(color: AppColors.blue),
+              style:
+                  theme.textTheme.bodyMedium!.copyWith(color: AppColors.blue),
             ),
           )
         ],

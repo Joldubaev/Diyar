@@ -44,7 +44,8 @@ class HistoryReDatasourceImpl implements HistoryReDatasource {
       );
 
       if ([200, 201].contains(res.statusCode)) {
-        return List<ActiveOrderModel>.from(res.data['orders'].map((x) => ActiveOrderModel.fromJson(x)));
+        return List<ActiveOrderModel>.from(
+            res.data['orders'].map((x) => ActiveOrderModel.fromJson(x)));
       } else {
         throw Exception('Error getting active orders');
       }

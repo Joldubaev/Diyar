@@ -6,7 +6,8 @@ class LocationModel {
   LocationModel({this.response});
 
   LocationModel.fromJson(Map<String, dynamic> json) {
-    response = json['response'] != null ? Response.fromJson(json['response']) : null;
+    response =
+        json['response'] != null ? Response.fromJson(json['response']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -24,8 +25,9 @@ class Response {
   Response({this.geoObjectCollection});
 
   Response.fromJson(Map<String, dynamic> json) {
-    geoObjectCollection =
-        json['GeoObjectCollection'] != null ? GeoObjectCollection.fromJson(json['GeoObjectCollection']) : null;
+    geoObjectCollection = json['GeoObjectCollection'] != null
+        ? GeoObjectCollection.fromJson(json['GeoObjectCollection'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -44,7 +46,9 @@ class GeoObjectCollection {
   GeoObjectCollection({this.metaDataProperty, this.featureMember});
 
   GeoObjectCollection.fromJson(Map<String, dynamic> json) {
-    metaDataProperty = json['metaDataProperty'] != null ? MetaDataProperty.fromJson(json['metaDataProperty']) : null;
+    metaDataProperty = json['metaDataProperty'] != null
+        ? MetaDataProperty.fromJson(json['metaDataProperty'])
+        : null;
     if (json['featureMember'] != null) {
       featureMember = <FeatureMember>[];
       json['featureMember'].forEach((v) {
@@ -93,7 +97,8 @@ class GeocoderResponseMetaData {
   String? results;
   String? found;
 
-  GeocoderResponseMetaData({this.point, this.request, this.results, this.found});
+  GeocoderResponseMetaData(
+      {this.point, this.request, this.results, this.found});
 
   GeocoderResponseMetaData.fromJson(Map<String, dynamic> json) {
     point = json['Point'] != null ? Points.fromJson(json['Point']) : null;
@@ -136,7 +141,9 @@ class FeatureMember {
   FeatureMember({this.geoObject});
 
   FeatureMember.fromJson(Map<String, dynamic> json) {
-    geoObject = json['GeoObject'] != null ? GeoObject.fromJson(json['GeoObject']) : null;
+    geoObject = json['GeoObject'] != null
+        ? GeoObject.fromJson(json['GeoObject'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -156,13 +163,23 @@ class GeoObject {
   String? uri;
   Points? point;
 
-  GeoObject({this.metaDataProperty, this.name, this.description, this.boundedBy, this.uri, this.point});
+  GeoObject(
+      {this.metaDataProperty,
+      this.name,
+      this.description,
+      this.boundedBy,
+      this.uri,
+      this.point});
 
   GeoObject.fromJson(Map<String, dynamic> json) {
-    metaDataProperty = json['metaDataProperty'] != null ? MetaDataProperty.fromJson(json['metaDataProperty']) : null;
+    metaDataProperty = json['metaDataProperty'] != null
+        ? MetaDataProperty.fromJson(json['metaDataProperty'])
+        : null;
     name = json['name'];
     description = json['description'];
-    boundedBy = json['boundedBy'] != null ? BoundedBy.fromJson(json['boundedBy']) : null;
+    boundedBy = json['boundedBy'] != null
+        ? BoundedBy.fromJson(json['boundedBy'])
+        : null;
     uri = json['uri'];
     point = json['Point'] != null ? Points.fromJson(json['Point']) : null;
   }
@@ -191,7 +208,9 @@ class MetaDataProperty {
   MetaDataProperty({this.geocoderMetaData});
 
   MetaDataProperty.fromJson(Map<String, dynamic> json) {
-    geocoderMetaData = json['GeocoderMetaData'] != null ? GeocoderMetaData.fromJson(json['GeocoderMetaData']) : null;
+    geocoderMetaData = json['GeocoderMetaData'] != null
+        ? GeocoderMetaData.fromJson(json['GeocoderMetaData'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -210,14 +229,22 @@ class GeocoderMetaData {
   Address? address;
   AddressDetails? addressDetails;
 
-  GeocoderMetaData({this.precision, this.text, this.kind, this.address, this.addressDetails});
+  GeocoderMetaData(
+      {this.precision,
+      this.text,
+      this.kind,
+      this.address,
+      this.addressDetails});
 
   GeocoderMetaData.fromJson(Map<String, dynamic> json) {
     precision = json['precision'];
     text = json['text'];
     kind = json['kind'];
-    address = json['Address'] != null ? Address.fromJson(json['Address']) : null;
-    addressDetails = json['AddressDetails'] != null ? AddressDetails.fromJson(json['AddressDetails']) : null;
+    address =
+        json['Address'] != null ? Address.fromJson(json['Address']) : null;
+    addressDetails = json['AddressDetails'] != null
+        ? AddressDetails.fromJson(json['AddressDetails'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -289,7 +316,8 @@ class AddressDetails {
   AddressDetails({this.country});
 
   AddressDetails.fromJson(Map<String, dynamic> json) {
-    country = json['Country'] != null ? Country.fromJson(json['Country']) : null;
+    country =
+        json['Country'] != null ? Country.fromJson(json['Country']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -307,14 +335,19 @@ class Country {
   String? countryName;
   AdministrativeArea? administrativeArea;
 
-  Country({this.addressLine, this.countryNameCode, this.countryName, this.administrativeArea});
+  Country(
+      {this.addressLine,
+      this.countryNameCode,
+      this.countryName,
+      this.administrativeArea});
 
   Country.fromJson(Map<String, dynamic> json) {
     addressLine = json['AddressLine'];
     countryNameCode = json['CountryNameCode'];
     countryName = json['CountryName'];
-    administrativeArea =
-        json['AdministrativeArea'] != null ? AdministrativeArea.fromJson(json['AdministrativeArea']) : null;
+    administrativeArea = json['AdministrativeArea'] != null
+        ? AdministrativeArea.fromJson(json['AdministrativeArea'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -337,8 +370,9 @@ class AdministrativeArea {
 
   AdministrativeArea.fromJson(Map<String, dynamic> json) {
     administrativeAreaName = json['AdministrativeAreaName'];
-    subAdministrativeArea =
-        json['SubAdministrativeArea'] != null ? SubAdministrativeArea.fromJson(json['SubAdministrativeArea']) : null;
+    subAdministrativeArea = json['SubAdministrativeArea'] != null
+        ? SubAdministrativeArea.fromJson(json['SubAdministrativeArea'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -359,7 +393,8 @@ class SubAdministrativeArea {
 
   SubAdministrativeArea.fromJson(Map<String, dynamic> json) {
     subAdministrativeAreaName = json['SubAdministrativeAreaName'];
-    locality = json['Locality'] != null ? Locality.fromJson(json['Locality']) : null;
+    locality =
+        json['Locality'] != null ? Locality.fromJson(json['Locality']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -378,7 +413,8 @@ class Locality {
   Locality({this.premise});
 
   Locality.fromJson(Map<String, dynamic> json) {
-    premise = json['Premise'] != null ? Premise.fromJson(json['Premise']) : null;
+    premise =
+        json['Premise'] != null ? Premise.fromJson(json['Premise']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -412,7 +448,8 @@ class BoundedBy {
   BoundedBy({this.envelope});
 
   BoundedBy.fromJson(Map<String, dynamic> json) {
-    envelope = json['Envelope'] != null ? Envelope.fromJson(json['Envelope']) : null;
+    envelope =
+        json['Envelope'] != null ? Envelope.fromJson(json['Envelope']) : null;
   }
 
   Map<String, dynamic> toJson() {

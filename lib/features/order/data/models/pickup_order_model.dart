@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'create_order_model.dart';
 
-PickupOrderModel pickupOrderModelFromJson(String str) => PickupOrderModel.fromJson(json.decode(str));
+PickupOrderModel pickupOrderModelFromJson(String str) =>
+    PickupOrderModel.fromJson(json.decode(str));
 
-String pickupOrderModelToJson(PickupOrderModel data) => json.encode(data.toJson());
+String pickupOrderModelToJson(PickupOrderModel data) =>
+    json.encode(data.toJson());
 
 class PickupOrderModel {
   final int? dishesCount;
@@ -26,7 +28,9 @@ class PickupOrderModel {
 
   Map<String, dynamic> toJson() => {
         "dishesCount": dishesCount,
-        "foods": foods == null ? [] : List<dynamic>.from(foods!.map((x) => x.toJson())),
+        "foods": foods == null
+            ? []
+            : List<dynamic>.from(foods!.map((x) => x.toJson())),
         "prepareFor": prepareFor,
         "price": price,
         "userName": userName,
@@ -34,10 +38,13 @@ class PickupOrderModel {
         "comment": comment,
       };
 
-  factory PickupOrderModel.fromJson(Map<String, dynamic> json) => PickupOrderModel(
+  factory PickupOrderModel.fromJson(Map<String, dynamic> json) =>
+      PickupOrderModel(
         dishesCount: json["dishesCount"],
-        foods:
-            json["foods"] == null ? [] : List<OrderFoodItem>.from(json["foods"]!.map((x) => OrderFoodItem.fromJson(x))),
+        foods: json["foods"] == null
+            ? []
+            : List<OrderFoodItem>.from(
+                json["foods"]!.map((x) => OrderFoodItem.fromJson(x))),
         prepareFor: json["prepareFor"],
         price: json["price"],
         userName: json["userName"],

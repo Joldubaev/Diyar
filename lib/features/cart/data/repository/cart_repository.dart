@@ -1,6 +1,4 @@
-
 import 'package:diyar/features/cart/data/data.dart';
-
 
 abstract class CartRepository {
   // CARTS
@@ -47,7 +45,7 @@ class CartRepositoryImpl implements CartRepository {
   Future<void> clearCart() {
     return _cartRemoteDataSource.clearCart();
   }
-  
+
   @override
   Future<void> setCartItemCount(CartItemModel cart) {
     return _cartRemoteDataSource.setCartItemCount(cart);

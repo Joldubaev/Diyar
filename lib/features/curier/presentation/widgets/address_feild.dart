@@ -13,12 +13,15 @@ class AddressField extends StatelessWidget {
       height: 50,
       width: double.infinity,
       child: DecoratedBox(
-        decoration: BoxDecoration(color: theme.colorScheme.surface, borderRadius: BorderRadius.circular(8)),
+        decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(8)),
         child: child ??
             Center(
               child: Text(
                 value ?? '',
-                style: theme.textTheme.bodyMedium!.copyWith(color: theme.colorScheme.onSurface),
+                style: theme.textTheme.bodyMedium!
+                    .copyWith(color: theme.colorScheme.onSurface),
               ),
             ),
       ),

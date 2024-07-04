@@ -47,10 +47,14 @@ class HallCardWidget extends StatelessWidget {
                   Expanded(
                     flex: 2,
                     child: Text(title,
-                        maxLines: 3, style: theme.textTheme.displayMedium!.copyWith(color: Colors.white, fontSize: 18)),
+                        maxLines: 3,
+                        style: theme.textTheme.displayMedium!
+                            .copyWith(color: Colors.white, fontSize: 18)),
                   ),
                   Expanded(
-                    child: ElevatedButton(onPressed: onPressed, child: const FittedBox(child: Text('Смотреть'))),
+                    child: ElevatedButton(
+                        onPressed: onPressed,
+                        child: const FittedBox(child: Text('Смотреть'))),
                   ),
                 ],
               ),

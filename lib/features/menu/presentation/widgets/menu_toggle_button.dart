@@ -45,7 +45,8 @@ class MenuToggleButton extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(context.l10n.menu, style: Theme.of(context).textTheme.titleSmall),
+                        Text(context.l10n.menu,
+                            style: Theme.of(context).textTheme.titleSmall),
                         GestureDetector(
                           onTap: () => context.maybePop(),
                           child: const Icon(Icons.close, size: 35),
@@ -73,7 +74,8 @@ class MenuToggleButton extends StatelessWidget {
                                   children: [
                                     Text(
                                       "${menu[index].foods?.length}",
-                                      style: Theme.of(context).textTheme.bodyLarge,
+                                      style:
+                                          Theme.of(context).textTheme.bodyLarge,
                                     ),
                                     const SizedBox(width: 6),
                                     const Icon(

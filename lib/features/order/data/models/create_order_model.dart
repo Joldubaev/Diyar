@@ -4,9 +4,11 @@
 
 import 'dart:convert';
 
-CreateOrderModel createOrderModelFromJson(String str) => CreateOrderModel.fromJson(json.decode(str));
+CreateOrderModel createOrderModelFromJson(String str) =>
+    CreateOrderModel.fromJson(json.decode(str));
 
-String createOrderModelToJson(CreateOrderModel data) => json.encode(data.toJson());
+String createOrderModelToJson(CreateOrderModel data) =>
+    json.encode(data.toJson());
 
 class CreateOrderModel {
   String? address;
@@ -43,14 +45,17 @@ class CreateOrderModel {
     this.sdacha,
   });
 
-  factory CreateOrderModel.fromJson(Map<String, dynamic> json) => CreateOrderModel(
+  factory CreateOrderModel.fromJson(Map<String, dynamic> json) =>
+      CreateOrderModel(
         address: json["address"],
         comment: json["comment"],
         dishesCount: json["dishesCount"],
         entrance: json["entrance"],
         floor: json["floor"],
-        foods:
-            json["foods"] == null ? [] : List<OrderFoodItem>.from(json["foods"]!.map((x) => OrderFoodItem.fromJson(x))),
+        foods: json["foods"] == null
+            ? []
+            : List<OrderFoodItem>.from(
+                json["foods"]!.map((x) => OrderFoodItem.fromJson(x))),
         houseNumber: json["houseNumber"],
         intercom: json["intercom"],
         kvOffice: json["kvOffice"],
@@ -68,7 +73,9 @@ class CreateOrderModel {
         "dishesCount": dishesCount,
         "entrance": entrance,
         "floor": floor,
-        "foods": foods == null ? [] : List<dynamic>.from(foods!.map((x) => x.toJson())),
+        "foods": foods == null
+            ? []
+            : List<dynamic>.from(foods!.map((x) => x.toJson())),
         "houseNumber": houseNumber,
         "intercom": intercom,
         "kvOffice": kvOffice,

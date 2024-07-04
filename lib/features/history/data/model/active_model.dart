@@ -17,7 +17,9 @@ class ActiveOrderModel {
 
   factory ActiveOrderModel.fromJson(Map<String, dynamic> map) {
     return ActiveOrderModel(
-      order: map['order'] != null ? OrderActiveItemModel.fromJson(map['order']) : null,
+      order: map['order'] != null
+          ? OrderActiveItemModel.fromJson(map['order'])
+          : null,
       courierName: map['courierName'],
       courierNumber: map['courierNumber'],
     );
@@ -105,7 +107,10 @@ class OrderActiveItemModel {
       userPhone: map['userPhone'],
       orderNumber: map['orderNumber']?.toInt(),
       dishesCount: map['dishesCount']?.toInt(),
-      foods: map['foods'] != null ? List<FoodModel>.from(map['foods']?.map((x) => FoodModel.fromJson(x))) : null,
+      foods: map['foods'] != null
+          ? List<FoodModel>.from(
+              map['foods']?.map((x) => FoodModel.fromJson(x)))
+          : null,
       address: map['address'],
       houseNumber: map['houseNumber'],
       kvOffice: map['kvOffice'],
