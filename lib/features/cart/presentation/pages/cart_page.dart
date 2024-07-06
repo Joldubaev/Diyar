@@ -146,9 +146,9 @@ class CartPageState extends State<CartPage>
                       bgColor: AppColors.primary,
                       title: context.l10n.confirmOrder,
                       onTap: () {
-                        context.pushRoute(CreateOrderRoute(
+                        context.pushRoute(OrderMapRoute(
                           cart: carts,
-                          dishCount: context.read<CartCubit>().dishCount,
+                          // dishCount: context.read<CartCubit>().dishCount,
                         ));
                       },
                     ),

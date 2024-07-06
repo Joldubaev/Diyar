@@ -1,12 +1,16 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:math' show asin, cos, sqrt;
 
 import 'package:auto_route/auto_route.dart';
+import 'package:diyar/core/router/routes.gr.dart';
+import 'package:diyar/core/utils/helper/helper.dart';
+import 'package:diyar/features/cart/cart.dart';
+import 'package:diyar/features/cart/data/data.dart';
 import 'package:diyar/features/map/data/models/location_model.dart';
 import 'package:diyar/features/map/data/repositories/location_repo.dart';
 import 'package:diyar/features/map/data/repositories/yandex_service.dart';
 import 'package:diyar/features/map/presentation/widgets/coordinats.dart';
+import 'package:diyar/features/map/presentation/widgets/widgets.dart';
 import 'package:diyar/features/order/order.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/shared.dart';
@@ -18,7 +22,8 @@ import 'package:geolocator/geolocator.dart';
 
 @RoutePage()
 class OrderMapPage extends StatefulWidget {
-  const OrderMapPage({Key? key}) : super(key: key);
+  final List<CartItemModel> cart;
+  const OrderMapPage({super.key, required this.cart});
 
   @override
   State<OrderMapPage> createState() => _OrderMapPageState();
@@ -27,6 +32,7 @@ class OrderMapPage extends StatefulWidget {
 class _OrderMapPageState extends State<OrderMapPage> {
   final mapControllerCompleter = Completer<YandexMapController>();
   final AddressRepository locationRepo = AddressRepository();
+  final TextEditingController textController = TextEditingController();
   final texControler = TextEditingController();
   String? address;
   Position? userLocation;
@@ -37,6 +43,7 @@ class _OrderMapPageState extends State<OrderMapPage> {
   late final List<MapObject> mapObjects = _getPolygonMapObject(context);
   final MapObjectId mapObjectId = const MapObjectId('polygon');
   List<PolygonMapObject> polygons = [];
+  List<String> suggestions = [];
 
   double lat = 0;
   double long = 0;
@@ -44,23 +51,28 @@ class _OrderMapPageState extends State<OrderMapPage> {
   @override
   void initState() {
     super.initState();
-    _initPermission().ignore();
+    _initPermission();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          context.l10n.chooseAddress,
-          style: theme.textTheme.titleSmall,
-        ),
-      ),
+          title: Text(
+            context.l10n.chooseAddress,
+            style: theme.textTheme.titleSmall,
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () =>
+                  showMapSearchBottom(context, onSearch: _searchMap),
+            ),
+          ]),
       body: Stack(
         children: [
           SizedBox(
-            height: MediaQuery.of(context).size.height / 1.5,
-            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height - 200,
             child: YandexMap(
               mapObjects: mapObjects,
               onMapTap: (point) {},
@@ -76,6 +88,7 @@ class _OrderMapPageState extends State<OrderMapPage> {
               },
               onMapCreated: (controller) {
                 mapControllerCompleter.complete(controller);
+                _fetchCurrentLocation();
               },
             ),
           ),
@@ -93,42 +106,33 @@ class _OrderMapPageState extends State<OrderMapPage> {
         ],
       ),
       bottomSheet: BottomSheet(
-        enableDrag: false,
         showDragHandle: true,
         backgroundColor: AppColors.white,
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.25,
-          minHeight: MediaQuery.of(context).size.height * 0.25,
-        ),
+        constraints: const BoxConstraints(maxHeight: 200, minHeight: 200),
         onClosing: () {},
         builder: (context) {
-          for (int i = 0; i < Polygons.getPolygons().length; i++) {
-            bool containsCoordinate =
-                Polygons.getPolygons()[i].coordinates.contains(
-                      Coordinate(latitude: lat, longitude: long),
-                    );
-            // ignore: avoid_print
-            print(containsCoordinate);
-          }
           return ListView(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
             children: [
-              ListTile(
-                title: Text(
-                  '${context.l10n.deliveryPrice}: ${isCoordinateInsidePolygons(lat, long, polygons: Polygons.getPolygons())} сом',
+              Text(
+                '${context.l10n.deliveryPrice}: ${MapHelper.isCoordinateInsidePolygons(lat, long, polygons: Polygons.getPolygons())} сом',
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  color: Colors.black,
                 ),
               ),
+              const SizedBox(height: 5),
               Card(
                 child: ListTile(
-                  title: Container(
-                    constraints: BoxConstraints(
-                        maxWidth: MediaQuery.of(context).size.width - 72),
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(address ?? context.l10n.addressIsNotFounded),
+                  title: Text(
+                    address ?? context.l10n.addressIsNotFounded,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: Colors.black,
                     ),
                   ),
                   leading: const Icon(Icons.location_on, color: AppColors.red),
                   onTap: () {
+                    if (address == null ||
+                        address == context.l10n.addressIsNotFounded) return;
                     AppAlert.showConfirmDialog(
                       context: context,
                       title: context.l10n.yourAddress,
@@ -139,17 +143,20 @@ class _OrderMapPageState extends State<OrderMapPage> {
                       confirmText: context.l10n.yes,
                       cancelPressed: () => Navigator.pop(context),
                       confirmPressed: () {
-                        Navigator.pop(context);
-                        context.router.maybePop().then((value) {
-                          context
-                              .read<OrderCubit>()
-                              .changeAddress(address ?? '');
-                          context.read<OrderCubit>().changeAddressSearch(false);
+                        // change address in order cubit
+                        context.read<OrderCubit>().changeAddress(address ?? '');
+                        context.read<OrderCubit>().changeAddressSearch(false);
 
-                          context.read<OrderCubit>().selectDeliveryPrice(
-                              isCoordinateInsidePolygons(lat, long,
-                                  polygons: Polygons.getPolygons()));
-                        });
+                        context.read<OrderCubit>().selectDeliveryPrice(
+                            MapHelper.isCoordinateInsidePolygons(lat, long,
+                                polygons: Polygons.getPolygons()));
+                        // push to create order page
+                        context.router.replace(
+                          CreateOrderRoute(
+                            cart: widget.cart,
+                            dishCount: context.read<CartCubit>().dishCount,
+                          ),
+                        );
                       },
                     );
                   },
@@ -165,8 +172,11 @@ class _OrderMapPageState extends State<OrderMapPage> {
         onPressed: () async {
           _fetchCurrentLocation();
           if (userLocation != null) {
-            double distance = calculateDistance(userLocation!.latitude,
-                userLocation!.longitude, 42.887931419030515, 74.66039095429396);
+            double distance = MapHelper.calculateDistance(
+                userLocation!.latitude,
+                userLocation!.longitude,
+                42.887931419030515,
+                74.66039095429396);
             setState(() {
               deliveryPrice = distance * pricePerKm;
             });
@@ -180,6 +190,31 @@ class _OrderMapPageState extends State<OrderMapPage> {
       ),
     );
   }
+
+  /// Search for address on the map
+  _searchMap(p0) async => await YandexSearch.searchByText(
+          searchText: p0,
+          searchOptions: const SearchOptions(),
+          geometry: Geometry.fromBoundingBox(
+            const BoundingBox(
+              northEast: Point(latitude: 42.8764, longitude: 74.6072),
+              southWest: Point(latitude: 42.7919, longitude: 74.4317),
+            ),
+          )).then((value) {
+        value.$2.then((value) {
+          if (value.items == null) return;
+          if (value.items?.first.geometry.first.point != null) {
+            final point = value.items!.first.geometry.first.point;
+            log(point.toString());
+            _moveToCurrentLocation(
+              point!.latitude,
+              point.longitude,
+            );
+          } else {
+            showToast("Адрес не найден", isError: true);
+          }
+        });
+      });
 
   List<PolygonMapObject> _getPolygonMapObject(BuildContext context) {
     return Polygons.getPolygons().map((polygon) {
@@ -214,62 +249,33 @@ class _OrderMapPageState extends State<OrderMapPage> {
   }
 
   Future<void> _fetchCurrentLocation() async {
-    AppLatLong location;
-    final defLocation = BiskekLocation();
-
     try {
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
       );
       setState(() {
         userLocation = position;
+        lat = position.latitude;
+        long = position.longitude;
       });
 
-      if (userLocation != null) {
-        location = AppLatLong(
-          latitude: userLocation!.latitude,
-          longitude: userLocation!.longitude,
-        );
-        lat = userLocation!.latitude;
-        long = userLocation!.longitude;
-        _moveToCurrentLocation(location);
-        await updateAddressDetails(location);
-        return;
-      }
+      log("User location: ($lat, $long)");
+      await _moveToCurrentLocation(lat, long);
     } catch (e) {
       log("Error getting location: $e");
     }
-
-    location = defLocation;
-    _moveToCurrentLocation(location);
-    await updateAddressDetails(location);
   }
 
-  Future<void> _moveToCurrentLocation(AppLatLong appLatLong) async {
-    if (isInBishkekBounds(appLatLong.latitude, appLatLong.longitude)) {
-      (await mapControllerCompleter.future).moveCamera(
-        CameraUpdate.newCameraPosition(
-          CameraPosition(
-            target: Point(
-              latitude: appLatLong.latitude,
-              longitude: appLatLong.longitude,
-            ),
-            zoom: 16,
-          ),
+  Future<void> _moveToCurrentLocation(double latitude, double longitude) async {
+    final controller = await mapControllerCompleter.future;
+    controller.moveCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: Point(latitude: latitude, longitude: longitude),
+          zoom: 16,
         ),
-      );
-    }
-  }
-
-  bool isInBishkekBounds(double latitude, double longitude) {
-    double minLatitude = 42.8000;
-    double maxLatitude = 42.9200;
-    double minLongitude = 74.4500;
-    double maxLongitude = 74.6200;
-    return latitude >= minLatitude &&
-        latitude <= maxLatitude &&
-        longitude >= minLongitude &&
-        longitude <= maxLongitude;
+      ),
+    );
   }
 
   Future<void> updateAddressDetails(AppLatLong latLong) async {
@@ -299,7 +305,7 @@ class _OrderMapPageState extends State<OrderMapPage> {
     }
 
     if (userLocation != null) {
-      double distance = calculateDistance(userLocation!.latitude,
+      double distance = MapHelper.calculateDistance(userLocation!.latitude,
           userLocation!.longitude, latLong.latitude, latLong.longitude);
       setState(() {
         deliveryPrice = distance * pricePerKm;
@@ -310,56 +316,5 @@ class _OrderMapPageState extends State<OrderMapPage> {
 
     setState(() {});
     log(' address: $address');
-  }
-
-  double calculateDistance(double startLatitude, double startLongitude,
-      double destinationLatitude, double destinationLongitude) {
-    var p = 0.017453292519943295;
-    var c = cos;
-    var a = 0.5 -
-        c((destinationLatitude - startLatitude) * p) / 2 +
-        c(startLatitude * p) *
-            c(destinationLatitude * p) *
-            (1 - c((destinationLongitude - startLongitude) * p)) /
-            2;
-    return 12742 * asin(sqrt(a));
-  }
-
-  double isCoordinateInsidePolygons(double latitude, double longitude,
-      {required List<DeliveryPolygon> polygons}) {
-    for (var polygon in polygons) {
-      if (isPointInPolygon(latitude, longitude, polygon.coordinates)) {
-        return polygon.deliveryPrice;
-      }
-    }
-    return maxDeliveryPrice;
-  }
-
-  bool isPointInPolygon(
-    double latitude,
-    double longitude,
-    List<Coordinate> coordinates,
-  ) {
-    int intersectCount = 0;
-    for (int i = 0; i < coordinates.length - 1; i++) {
-      double vertex1Lat = coordinates[i].latitude;
-      double vertex1Long = coordinates[i].longitude;
-      double vertex2Lat = coordinates[i + 1].latitude;
-      double vertex2Long = coordinates[i + 1].longitude;
-      // Check if the point is within the y-range of the edge
-      if ((vertex1Long > longitude) != (vertex2Long > longitude)) {
-        // Calculate the x-coordinate where the edge intersects with the vertical line of longitude
-        double xIntersect = (vertex2Lat - vertex1Lat) *
-                (longitude - vertex1Long) /
-                (vertex2Long - vertex1Long) +
-            vertex1Lat;
-        // Check if the intersection point is above the given latitude
-        if (latitude < xIntersect) {
-          intersectCount++;
-        }
-      }
-    }
-    // If the number of intersections is odd, the point is inside the polygon
-    return intersectCount % 2 == 1;
   }
 }

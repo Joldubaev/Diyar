@@ -4,16 +4,13 @@ import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/features.dart';
-import 'package:diyar/features/map/presentation/widgets/coordinats.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/components/components.dart';
 import 'package:diyar/shared/theme/theme.dart';
 import 'package:diyar/shared/utils/utils.dart';
-import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_dialog_widget.dart';
@@ -43,10 +40,6 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
   final TextEditingController _sdachaController = TextEditingController();
 
   PaymentTypeDelivery _paymentType = PaymentTypeDelivery.cash;
-  List<SearchItem> _foundAddressesObj = [];
-  late final List<MapObject> mapObjects = _getPolygonMapObject(context);
-  final MapObjectId mapObjectId = const MapObjectId('polygon');
-  List<PolygonMapObject> polygons = [];
 
   @override
   void initState() {
@@ -67,118 +60,6 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
     _commentController.dispose();
     _userName.dispose();
     super.dispose();
-  }
-
-  void _search(String query) async {
-    log('Search query: $query');
-
-    context.read<OrderCubit>().changeAddressSearch(true);
-
-    final resultWithSession = await YandexSearch.searchByText(
-      searchText: query,
-      geometry: Geometry.fromBoundingBox(const BoundingBox(
-        southWest: Point(latitude: 42.8000, longitude: 74.4500),
-        northEast: Point(latitude: 42.9200, longitude: 74.6200),
-      )),
-      searchOptions: const SearchOptions(
-        searchType: SearchType.geo,
-        geometry: true,
-        userPosition: Point(latitude: 42.8700, longitude: 74.5900),
-      ),
-    );
-
-    final searchSession = resultWithSession.$1;
-    final searchResult = await resultWithSession.$2;
-    log('Search session: $searchSession');
-    log('Search result: $searchResult');
-
-    if (searchResult.error != null) {
-      log('Error: ${searchResult.error}');
-      setState(() {
-        _foundAddressesObj = [];
-      });
-      return;
-    }
-
-    final List<SearchItem> filteredItems = searchResult.items!.where((item) {
-      final point = item.geometry.first.point;
-      return point!.latitude >= 42.8000 &&
-          point.latitude <= 42.9200 &&
-          point.longitude >= 74.4500 &&
-          point.longitude <= 74.6200;
-    }).toList();
-
-    for (var item in filteredItems) {
-      log('Found address: ${item.toponymMetadata?.address.formattedAddress}');
-    }
-
-    if (filteredItems.isNotEmpty) {
-      setState(() {
-        _foundAddressesObj = filteredItems;
-      });
-    } else {
-      setState(() {
-        _foundAddressesObj = [];
-      });
-    }
-  }
-
-  Widget _buildSuggestionsList() {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Text("Найдено ${_foundAddressesObj.length} адресов"),
-            const Spacer(),
-            IconButton(
-              onPressed: () => setState(() => _foundAddressesObj = []),
-              icon: const Icon(Icons.close),
-            ),
-          ],
-        ),
-        ListView.builder(
-          shrinkWrap: true,
-          itemCount: _foundAddressesObj.length,
-          itemBuilder: (context, index) {
-            var foundAdd = _foundAddressesObj[index].geometry.first.point;
-            var address = _foundAddressesObj[index]
-                .toponymMetadata
-                ?.address
-                .formattedAddress;
-            var addressParts = address?.split(',') ?? [];
-            String district =
-                addressParts.length > 1 ? addressParts[1].trim() : '';
-            String street =
-                addressParts.length > 2 ? addressParts[2].trim() : '';
-            String houseNumber =
-                addressParts.length > 3 ? addressParts[3].trim() : '';
-
-            return Card(
-              child: ListTile(
-                title: Text('$district, $street, $houseNumber',
-                    style: Theme.of(context).textTheme.bodyMedium!),
-                onTap: () {
-                  setState(() {
-                    _addressController.text = address ?? '';
-                    context
-                        .read<OrderCubit>()
-                        .selectDeliveryPrice(isCoordinateInsidePolygons(
-                          foundAdd!.latitude,
-                          foundAdd.longitude,
-                          polygons: Polygons.getPolygons(),
-                        ));
-                    _foundAddressesObj = [];
-                    log('Selected address: $address');
-                    log('Delivery price: ${context.read<OrderCubit>().deliveryPrice}');
-                  });
-                },
-              ),
-            );
-          },
-        ),
-      ],
-    );
   }
 
   @override
@@ -259,17 +140,11 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                 },
               ),
               CustomInputWidget(
-                onChanged: (value) {
-                  EasyDebounce.debounce(
-                    'search-address',
-                    const Duration(seconds: 1),
-                    () => _search(value),
-                  );
-                },
                 inputType: TextInputType.text,
                 hintText: 'Укажите ваш адрес',
                 title: context.l10n.adress,
                 controller: _addressController,
+                isReadOnly: true,
                 validator: (value) {
                   if (value!.isEmpty) {
                     return context.l10n.pleaseEnterAddress;
@@ -280,16 +155,6 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                 },
               ),
               const SizedBox(height: 4),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  GestureDetector(
-                    onTap: () => context.router.push(const OrderMapRoute()),
-                    child: Text(context.l10n.chooseOnMap),
-                  ),
-                ],
-              ),
-              if (_foundAddressesObj.isNotEmpty) _buildSuggestionsList(),
               CustomInputWidget(
                   inputType: TextInputType.text,
                   controller: _houseController,
@@ -495,64 +360,6 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
     );
   }
 
-  double isCoordinateInsidePolygons(double latitude, double longitude,
-      {required List<DeliveryPolygon> polygons}) {
-    for (var polygon in polygons) {
-      if (isPointInPolygon(latitude, longitude, polygon.coordinates)) {
-        return polygon.deliveryPrice;
-      }
-    }
-    return 500;
   }
-
-  bool isPointInPolygon(
-    double latitude,
-    double longitude,
-    List<Coordinate> coordinates,
-  ) {
-    int intersectCount = 0;
-    for (int i = 0; i < coordinates.length - 1; i++) {
-      double vertex1Lat = coordinates[i].latitude;
-      double vertex1Long = coordinates[i].longitude;
-      double vertex2Lat = coordinates[i + 1].latitude;
-      double vertex2Long = coordinates[i + 1].longitude;
-      if ((vertex1Long > longitude) != (vertex2Long > longitude)) {
-        double xIntersect = (vertex2Lat - vertex1Lat) *
-                (longitude - vertex1Long) /
-                (vertex2Long - vertex1Long) +
-            vertex1Lat;
-        if (latitude < xIntersect) {
-          intersectCount++;
-        }
-      }
-    }
-    return intersectCount % 2 == 1;
-  }
-
-  List<PolygonMapObject> _getPolygonMapObject(BuildContext context) {
-    return Polygons.getPolygons().map((polygon) {
-      return PolygonMapObject(
-        mapId: MapObjectId('polygon map object ${polygon.id}'),
-        polygon: Polygon(
-          outerRing: LinearRing(
-              points: polygon.coordinates
-                  .map((e) =>
-                      Point(latitude: e.latitude, longitude: e.longitude))
-                  .toList()),
-          innerRings: polygons.isEmpty
-              ? []
-              : polygons
-                  .map((e) => LinearRing(
-                      points: polygon.coordinates
-                          .map((e) => Point(
-                              latitude: e.latitude, longitude: e.longitude))
-                          .toList()))
-                  .toList(),
-        ),
-        strokeColor: Colors.transparent,
-      );
-    }).toList();
-  }
-}
 
 enum PaymentTypeDelivery { cash, card, online }
