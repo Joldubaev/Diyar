@@ -48,16 +48,6 @@ class SmsRemoteDataSourceImpl implements SmsRemoteDataSource {
       if (response.statusCode != 200) {
         throw Exception('Ошибка: ${response.statusCode}');
       }
-      // log("Response Data: ${response.data}");
-
-      // final parsedResponse = xml.XmlDocument.parse(response.data);
-      // final status = parsedResponse.findAllElements('status').single.value;
-
-      // if (status == '0') {
-      //   log('SMS отправлено успешно');
-      // } else {
-      //   throw Exception('Ошибка при отправке SMS: Status-$status');
-      // }
     } catch (e) {
       log('Ошибка: $e');
       throw Exception('Ошибка при отправке SMS: $e');

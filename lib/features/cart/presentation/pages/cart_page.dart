@@ -3,10 +3,9 @@ import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/features/cart/data/data.dart';
 import 'package:diyar/features/menu/data/models/food_model.dart';
 import 'package:diyar/l10n/l10n.dart';
-import 'package:diyar/shared/components/components.dart';
 import 'package:diyar/features/cart/presentation/presentation.dart';
 import 'package:diyar/features/cart/presentation/widgets/cart_empty_widget.dart';
-import 'package:diyar/shared/theme/theme.dart';
+import 'package:diyar/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -142,7 +141,7 @@ class CartPageState extends State<CartPage>
                     padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
                     child: SubmitButtonWidget(
                       textStyle: theme.textTheme.bodyLarge!.copyWith(
-                        color: Colors.white,
+                        color: AppColors.white,
                       ),
                       bgColor: AppColors.primary,
                       title: context.l10n.confirmOrder,
