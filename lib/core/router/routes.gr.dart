@@ -181,9 +181,13 @@ abstract class $AppRouter extends _i31.RootStackRouter {
       );
     },
     OrderMapRoute.name: (routeData) {
+      final args = routeData.argsAs<OrderMapRouteArgs>();
       return _i31.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i16.OrderMapPage(),
+        child: _i16.OrderMapPage(
+          key: args.key,
+          cart: args.cart,
+        ),
       );
     },
     OrderSuccess.name: (routeData) {
@@ -580,16 +584,40 @@ class OrderHistoryRoute extends _i31.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i16.OrderMapPage]
-class OrderMapRoute extends _i31.PageRouteInfo<void> {
-  const OrderMapRoute({List<_i31.PageRouteInfo>? children})
-      : super(
+class OrderMapRoute extends _i31.PageRouteInfo<OrderMapRouteArgs> {
+  OrderMapRoute({
+    _i32.Key? key,
+    required List<_i33.CartItemModel> cart,
+    List<_i31.PageRouteInfo>? children,
+  }) : super(
           OrderMapRoute.name,
+          args: OrderMapRouteArgs(
+            key: key,
+            cart: cart,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'OrderMapRoute';
 
-  static const _i31.PageInfo<void> page = _i31.PageInfo<void>(name);
+  static const _i31.PageInfo<OrderMapRouteArgs> page =
+      _i31.PageInfo<OrderMapRouteArgs>(name);
+}
+
+class OrderMapRouteArgs {
+  const OrderMapRouteArgs({
+    this.key,
+    required this.cart,
+  });
+
+  final _i32.Key? key;
+
+  final List<_i33.CartItemModel> cart;
+
+  @override
+  String toString() {
+    return 'OrderMapRouteArgs{key: $key, cart: $cart}';
+  }
 }
 
 /// generated route for
