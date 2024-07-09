@@ -161,34 +161,78 @@ class _CurierPageState extends State<CurierPage> {
                             Row(
                               children: [
                                 Expanded(
-                                  child: CustomTextButton(
-                                    onPressed: () {
-                                      context.router.push(
-                                        OrderDetailRoute(
-                                          orderNumber:
-                                              "${orders[index].orderNumber}",
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: AppColors.white,
+                                      borderRadius: BorderRadius.circular(5),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color:
+                                              AppColors.black1.withOpacity(0.2),
+                                          blurRadius: 5,
+                                          offset: const Offset(0, 2),
                                         ),
-                                      );
-                                    },
-                                    textButton: context.l10n.orderDetails,
+                                      ],
+                                    ),
+                                    child: CustomTextButton(
+                                      onPressed: () {
+                                        context.router.push(
+                                          OrderDetailRoute(
+                                            orderNumber:
+                                                "${orders[index].orderNumber}",
+                                          ),
+                                        );
+                                      },
+                                      textButton: context.l10n.orderDetails,
+                                    ),
                                   ),
                                 ),
                                 Expanded(
-                                  child: CustomTextButton(
-                                    onPressed: () {
-                                      _finishOrder(
-                                          orders[index].orderNumber ?? 0);
-                                    },
-                                    textButton: context.l10n.finishOrder,
+                                  child: Container(
+                                    margin: const EdgeInsets.only(left: 10),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.white,
+                                      borderRadius: BorderRadius.circular(5),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color:
+                                              AppColors.black1.withOpacity(0.2),
+                                          blurRadius: 5,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    child: CustomTextButton(
+                                      onPressed: () {
+                                        _finishOrder(
+                                            orders[index].orderNumber ?? 0);
+                                      },
+                                      textButton: context.l10n.finishOrder,
+                                    ),
                                   ),
                                 ),
                                 Expanded(
-                                  child: CustomTextButton(
-                                    onPressed: () {
-                                      final address = orders[index].address;
-                                      _openAddressIn2GIS(address!);
-                                    },
-                                    textButton: 'Открыть на карте',
+                                  child: Container(
+                                    margin: const EdgeInsets.only(left: 10),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.white,
+                                      borderRadius: BorderRadius.circular(5),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color:
+                                              AppColors.black1.withOpacity(0.2),
+                                          blurRadius: 5,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    child: CustomTextButton(
+                                      onPressed: () {
+                                        final address = orders[index].address;
+                                        _openAddressIn2GIS(address!);
+                                      },
+                                      textButton: 'Открыть на карте',
+                                    ),
                                   ),
                                 ),
                               ],
