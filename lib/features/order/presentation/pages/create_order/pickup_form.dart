@@ -53,58 +53,6 @@ class _PickupFormState extends State<PickupForm> {
             total + (item.food?.price ?? 0) * (item.quantity ?? 1));
   }
 
-  void _showTotalPriceDialog(double totalPrice) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-            '${context.l10n.orderPickupAd} ${context.l10n.address}',
-            style: theme.textTheme.bodyLarge!.copyWith(fontSize: 16),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Ожидания заказа 20 минут',
-                style: theme.textTheme.bodyMedium!.copyWith(
-                  color: AppColors.black1,
-                ),
-              ),
-              const Divider(),
-              CustomDialogWidget(
-                title: 'Сумма заказа:',
-                description: '$totalPrice сом',
-              ),
-            ],
-          ),
-          actions: [
-            Row(
-              children: [
-                CustomButton(
-                  title: 'Подтвердить',
-                  bgColor: AppColors.green,
-                  onTap: () {
-                    _submitOrder();
-                  },
-                ),
-                const SizedBox(width: 10),
-                CustomButton(
-                  title: 'Отменить',
-                  bgColor: AppColors.red,
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            )
-          ],
-        );
-      },
-    );
-  }
-
   void _selectTime() async {
     TimeOfDay? pickedTime = await showTimePicker(
       context: context,
@@ -242,7 +190,107 @@ class _PickupFormState extends State<PickupForm> {
                 onTap: () {
                   if (_formKey.currentState!.validate()) {
                     double totalPrice = _calculateTotalPrice();
-                    _showTotalPriceDialog(totalPrice);
+                    showModalBottomSheet(
+                        backgroundColor: Colors.white,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20),
+                          ),
+                        ),
+                        useSafeArea: true,
+                        isScrollControlled: true,
+                        context: context,
+                        builder: (context) {
+                          return DraggableScrollableSheet(
+                            initialChildSize: 0.3,
+                            minChildSize: 0.3,
+                            expand: false,
+                            maxChildSize: 0.3,
+                            builder: (context, scrollController) {
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 60,
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              '${context.l10n.orderPickupAd} ${context.l10n.address}',
+                                              style: theme.textTheme.bodyLarge!
+                                                  .copyWith(fontSize: 16),
+                                            ),
+                                          ),
+                                          IconButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            icon: const Icon(Icons.close),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const Divider(),
+                                    const SizedBox(height: 10),
+                                    CustomDialogWidget(
+                                      title: 'Сумма заказа:',
+                                      description: '$totalPrice сом',
+                                    ),
+                                    const SizedBox(height: 10),
+                                    CustomButton(
+                                      title: 'Подтвердить',
+                                      bgColor: AppColors.green,
+                                      onTap: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                title: Text(
+                                                  'Заказ принят!',
+                                                  style: theme
+                                                      .textTheme.bodyLarge!
+                                                      .copyWith(fontSize: 16),
+                                                ),
+                                                content: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'В течении 5 минут с вами свяжется оператор для подтверждения заказа',
+                                                      style: theme
+                                                          .textTheme.bodyMedium!
+                                                          .copyWith(
+                                                              color: AppColors
+                                                                  .black1),
+                                                    )
+                                                  ],
+                                                ),
+                                                actions: [
+                                                  CustomButton(
+                                                    title: 'ok',
+                                                    bgColor: AppColors.green,
+                                                    onTap: () {
+                                                      _submitOrder();
+                                                    },
+                                                  )
+                                                ],
+                                              );
+                                            });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          );
+                        });
                   }
                 },
               ),

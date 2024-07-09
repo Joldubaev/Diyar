@@ -5,9 +5,7 @@ import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/features.dart';
 import 'package:diyar/l10n/l10n.dart';
-import 'package:diyar/shared/components/components.dart';
-import 'package:diyar/shared/theme/theme.dart';
-import 'package:diyar/shared/utils/utils.dart';
+import 'package:diyar/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -67,10 +65,8 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
     return BlocConsumer<OrderCubit, OrderState>(
       listener: (context, state) {
         if (state is CreateOrderLoaded) {
-          context.router.pushAndPopUntil(
-            const MainRoute(),
-            predicate: (_) => false,
-          );
+          context.router
+              .pushAndPopUntil(const MainRoute(), predicate: (_) => false);
           showToast(context.l10n.orderIsSuccess);
         } else if (state is CreateOrderError) {
           showToast(context.l10n.someThingIsWrong, isError: true);
@@ -97,13 +93,11 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
           return const Center(child: CircularProgressIndicator());
         } else if (state is CreateOrderError) {
           return Center(
-            child: Text(
-              context.l10n.someThingIsWrong,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(color: AppColors.red),
-            ),
+            child: Text(context.l10n.someThingIsWrong,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .copyWith(color: AppColors.red)),
           );
         }
         return Form(
@@ -171,32 +165,25 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                   controller: _apartmentController,
                   hintText: '',
                   title: context.l10n.ofice),
-              Row(
-                children: [
-                  Expanded(
+              Row(children: [
+                Expanded(
                     child: CustomInputWidget(
-                      inputType: TextInputType.number,
-                      controller: _floorController,
-                      hintText: '',
-                      title: context.l10n.floor,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
+                        inputType: TextInputType.number,
+                        controller: _floorController,
+                        hintText: '',
+                        title: context.l10n.floor)),
+                const SizedBox(width: 10),
+                Expanded(
                     child: CustomInputWidget(
-                      inputType: TextInputType.number,
-                      controller: _intercomController,
-                      hintText: '',
-                      title: context.l10n.entranceNumber,
-                    ),
-                  ),
-                ],
-              ),
+                        inputType: TextInputType.number,
+                        controller: _intercomController,
+                        hintText: '',
+                        title: context.l10n.entranceNumber))
+              ]),
               CustomInputWidget(
-                controller: _commentController,
-                hintText: '',
-                title: context.l10n.comment,
-              ),
+                  controller: _commentController,
+                  hintText: '',
+                  title: context.l10n.comment),
               const SizedBox(height: 10),
               ElevatedButton(
                 onPressed: () {},
@@ -216,20 +203,19 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                   itemBuilder: (BuildContext context) {
                     return [
                       'Оплатить наличными',
+                      // 'Оплатить картой',
+                      // 'Оплатить онлайн'
                     ].map((String choice) {
                       return PopupMenuItem<String>(
-                        value: choice,
-                        child: Text(choice),
-                      );
+                          value: choice, child: Text(choice));
                     }).toList();
                   },
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(100),
-                        child: const Icon(Icons.payment),
-                      ),
+                          borderRadius: BorderRadius.circular(100),
+                          child: const Icon(Icons.payment)),
                       const Text('Оплатить наличными'),
                     ],
                   ),
@@ -252,105 +238,21 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
               const SizedBox(height: 10),
               SubmitButtonWidget(
                 title: context.l10n.confirmOrder,
-                bgColor: theme.primaryColor,
-                textStyle:
-                    theme.textTheme.bodyMedium!.copyWith(color: Colors.white),
+                bgColor: Theme.of(context).primaryColor,
+                textStyle: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .copyWith(color: AppColors.white),
                 onTap: () {
                   log(context.read<CartCubit>().totalPrice.toString());
                   if (_formKey.currentState!.validate()) {
-                    final totalPrice = context.read<CartCubit>().totalPrice;
                     var deliveryPrice =
                         context.read<OrderCubit>().deliveryPrice;
                     if (deliveryPrice == 0) {
                       deliveryPrice = 550;
                     }
-
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text(
-                            'Подтверждение заказа',
-                            style: theme.textTheme.bodyLarge!
-                                .copyWith(color: AppColors.black1),
-                          ),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              CustomDialogWidget(
-                                  title: 'Сумма заказа:',
-                                  description: '$totalPrice сом'),
-                              CustomDialogWidget(
-                                  title: 'Стоимость доставки:',
-                                  description: '$deliveryPrice сом'),
-                              const Divider(),
-                              CustomDialogWidget(
-                                  title: 'Итого:',
-                                  description:
-                                      '${totalPrice + deliveryPrice} сом'),
-                            ],
-                          ),
-                          actions: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                CustomButton(
-                                  title: 'Подтвердить',
-                                  bgColor: AppColors.green,
-                                  onTap: () {
-                                    context
-                                        .read<OrderCubit>()
-                                        .createOrder(
-                                          CreateOrderModel(
-                                            userPhone: _phoneController.text,
-                                            userName: _userName.text,
-                                            address: _addressController.text,
-                                            comment: _commentController.text,
-                                            price: totalPrice,
-                                            deliveryPrice: deliveryPrice,
-                                            houseNumber: _houseController.text,
-                                            kvOffice: _apartmentController.text,
-                                            intercom: _intercomController.text,
-                                            floor: _floorController.text,
-                                            entrance: _entranceController.text,
-                                            paymentMethod: _paymentType.name,
-                                            dishesCount: context
-                                                .read<CartCubit>()
-                                                .dishCount,
-                                            sdacha: int.tryParse(
-                                                    _sdachaController.text) ??
-                                                0,
-                                            foods: widget.cart
-                                                .map((e) => OrderFoodItem(
-                                                      name: e.food?.name ?? '',
-                                                      price: e.food?.price ?? 0,
-                                                      quantity: e.quantity ?? 1,
-                                                    ))
-                                                .toList(),
-                                          ),
-                                        )
-                                        .then((value) {
-                                      context.read<CartCubit>().clearCart();
-                                      context.maybePop();
-                                    });
-                                  },
-                                ),
-                                const SizedBox(width: 10),
-                                CustomButton(
-                                  title: 'Отменить',
-                                  bgColor: AppColors.red,
-                                  onTap: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                )
-                              ],
-                            )
-                          ],
-                        );
-                      },
-                    );
                   }
+                  showBottomSheet(context);
                 },
               ),
             ],
@@ -360,6 +262,130 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
     );
   }
 
+  Future<dynamic> showBottomSheet(BuildContext context) {
+    return showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+      ),
+      useSafeArea: true,
+      isScrollControlled: true,
+      builder: (context) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.35,
+          minChildSize: 0.35,
+          expand: false,
+          maxChildSize: 0.35,
+          builder: (BuildContext context, scrollController) {
+            return ListView(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Подтверждение заказа',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge!
+                          .copyWith(color: AppColors.black1),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+                CustomDialogWidget(
+                    title: 'Сумма заказа:',
+                    description: '${context.read<CartCubit>().totalPrice} сом'),
+                CustomDialogWidget(
+                    title: 'Стоимость доставки:',
+                    description:
+                        '${context.read<OrderCubit>().deliveryPrice} сом'),
+                const Divider(),
+                CustomDialogWidget(
+                    title: 'Итого:',
+                    description:
+                        '${context.read<CartCubit>().totalPrice + context.read<OrderCubit>().deliveryPrice} сом'),
+                CustomButton(
+                  title: 'Подтвердить',
+                  bgColor: AppColors.green,
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text('Заказ принят',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge!
+                                  .copyWith(color: AppColors.black1)),
+                          content: Text(
+                              'В течении 5 минут с вами свяжется оператор для подтверждения заказа',
+                              style: theme.textTheme.bodyMedium!
+                                  .copyWith(color: AppColors.black1),
+                              maxLines: 2),
+                          actions: [
+                            CustomButton(
+                              title: 'Ок',
+                              bgColor: AppColors.green,
+                              onTap: () {
+                                context
+                                    .read<OrderCubit>()
+                                    .createOrder(CreateOrderModel(
+                                        userPhone: _phoneController.text,
+                                        userName: _userName.text,
+                                        address: _addressController.text,
+                                        comment: _commentController.text,
+                                        price: context
+                                            .read<CartCubit>()
+                                            .totalPrice,
+                                        deliveryPrice: context
+                                            .read<OrderCubit>()
+                                            .deliveryPrice,
+                                        houseNumber: _houseController.text,
+                                        kvOffice: _apartmentController.text,
+                                        intercom: _intercomController.text,
+                                        floor: _floorController.text,
+                                        entrance: _entranceController.text,
+                                        paymentMethod: _paymentType.name,
+                                        dishesCount:
+                                            context.read<CartCubit>().dishCount,
+                                        sdacha: int.tryParse(
+                                                _sdachaController.text) ??
+                                            0,
+                                        foods: widget.cart
+                                            .map((e) => OrderFoodItem(
+                                                  name: e.food?.name ?? '',
+                                                  price: e.food?.price ?? 0,
+                                                  quantity: e.quantity ?? 1,
+                                                ))
+                                            .toList()))
+                                    .then((value) {
+                                  context.read<CartCubit>().clearCart();
+                                });
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
   }
+}
 
 enum PaymentTypeDelivery { cash, card, online }

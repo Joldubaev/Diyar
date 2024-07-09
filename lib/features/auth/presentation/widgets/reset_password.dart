@@ -144,7 +144,7 @@ class _RessetPasswordPageState extends State<RessetPasswordPage> {
                       children: [
                         Center(
                           child: Text(
-                            context.l10n.resgisterIsFailed,
+                            'Ошибка: ${state.message}',
                             style: theme.textTheme.bodyMedium!.copyWith(
                                 color: const Color.fromARGB(255, 233, 71, 35),
                                 fontWeight: FontWeight.bold),

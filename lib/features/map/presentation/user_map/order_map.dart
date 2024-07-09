@@ -5,7 +5,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/core/utils/helper/helper.dart';
 import 'package:diyar/features/cart/cart.dart';
-import 'package:diyar/features/cart/data/data.dart';
 import 'package:diyar/features/map/data/models/location_model.dart';
 import 'package:diyar/features/map/data/repositories/location_repo.dart';
 import 'package:diyar/features/map/data/repositories/yandex_service.dart';
