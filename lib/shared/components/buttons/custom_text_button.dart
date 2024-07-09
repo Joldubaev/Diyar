@@ -1,3 +1,4 @@
+import 'package:diyar/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 class CustomTextButton extends StatelessWidget {
@@ -18,7 +19,15 @@ class CustomTextButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(5),
-      child: TextButton(onPressed: onPressed, child: Text(textButton)),
+      child: TextButton(
+          onPressed: onPressed,
+          child: Text(
+            textButton,
+            style:
+                theme.textTheme.bodySmall!.copyWith(color: AppColors.primary),
+            maxLines: 2,
+            textAlign: TextAlign.center,
+          )),
     );
   }
 }

@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 @RoutePage()
 class HistoryPage extends StatefulWidget {
-  const HistoryPage({super.key});
+  const HistoryPage({Key? key}) : super(key: key);
 
   @override
   State<HistoryPage> createState() => _HistoryPageState();
@@ -26,8 +26,10 @@ class _HistoryPageState extends State<HistoryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:
-            Text(context.l10n.orderHistory, style: theme.textTheme.titleSmall),
+        title: Text(
+          context.l10n.orderHistory,
+          style: theme.textTheme.titleSmall,
+        ),
       ),
       body: BlocConsumer<CurierCubit, CurierState>(
         listener: (context, state) {
@@ -40,10 +42,10 @@ class _HistoryPageState extends State<HistoryPage> {
           }
         },
         builder: (context, state) {
-          if (state is GetCurierHistoryError) {
-            return const Center(child: Text('Ошибка при загрузке данных'));
-          } else if (state is GetCurierHistoryLoading) {
+          if (state is GetCurierHistoryLoading) {
             return const Center(child: CircularProgressIndicator());
+          } else if (state is GetCurierHistoryError) {
+            return const Center(child: Text('Ошибка при загрузке данных'));
           } else if (state is GetCurierHistoryLoaded) {
             orders = state.curiers;
             if (state.curiers.isEmpty) {
@@ -56,13 +58,27 @@ class _HistoryPageState extends State<HistoryPage> {
             itemCount: orders.length,
             itemBuilder: (context, index) {
               final order = orders[index];
-              return Card(
-                color: AppColors.primary[50],
+              return Container(
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: AppColors.black1.withOpacity(0.2),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.black1.withOpacity(0.1),
+                      blurRadius: 10,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
                 child: ListTile(
                   title: Text(
-                    '${context.l10n.orderNumber} ${order.orderNumber ?? ""}',
-                    style: theme.textTheme.bodyMedium,
-                  ),
+                      '${context.l10n.orderNumber} ${order.orderNumber ?? ""}',
+                      style: theme.textTheme.bodyLarge!.copyWith(
+                        color: AppColors.black1,
+                      )),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

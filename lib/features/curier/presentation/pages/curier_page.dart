@@ -1,18 +1,16 @@
 import 'dart:async';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/features/auth/auth.dart';
 import 'package:diyar/features/curier/curier.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/components/components.dart';
-import 'package:diyar/core/core.dart';
 import 'package:diyar/shared/theme/theme.dart';
 import 'package:diyar/shared/utils/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 @RoutePage()
 class CurierPage extends StatefulWidget {
@@ -110,12 +108,21 @@ class _CurierPageState extends State<CurierPage> {
                     padding: const EdgeInsets.all(20),
                     itemCount: orders.length,
                     itemBuilder: (context, index) {
+                      final totalPrice = (orders[index].price ?? 0) +
+                          (orders[index].deliveryPrice ?? 0);
                       return Card(
                         margin: const EdgeInsets.all(0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        elevation: 4,
                         child: ExpansionTile(
                           shape: const Border(
-                              bottom: BorderSide(
-                                  color: Colors.transparent, width: 0)),
+                            bottom: BorderSide(
+                              color: Colors.transparent,
+                              width: 0,
+                            ),
+                          ),
                           childrenPadding:
                               const EdgeInsets.fromLTRB(10, 10, 10, 8),
                           title: Text(
@@ -125,55 +132,109 @@ class _CurierPageState extends State<CurierPage> {
                             ),
                           ),
                           children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    '${orders[index].address}',
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    '${orders[index].address.toString()} ${orders[index].houseNumber.toString()}',
                                     maxLines: 3,
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
                                       color: AppColors.black1,
                                       fontSize: 14,
                                     ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  Text(
+                                    'Сумма заказа :$totalPrice сом',
+                                    style: theme.textTheme.bodyMedium!.copyWith(
+                                      color: AppColors.primary,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const Divider(color: AppColors.grey, thickness: 1),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: AppColors.white,
+                                      borderRadius: BorderRadius.circular(5),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color:
+                                              AppColors.black1.withOpacity(0.2),
+                                          blurRadius: 5,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    child: CustomTextButton(
+                                      onPressed: () {
+                                        context.router.push(
+                                          OrderDetailRoute(
+                                            orderNumber:
+                                                "${orders[index].orderNumber}",
+                                          ),
+                                        );
+                                      },
+                                      textButton: context.l10n.orderDetails,
+                                    ),
                                   ),
                                 ),
-                                const SizedBox(width: 10),
-                                IconButton(
-                                  icon: const Icon(Icons.copy_rounded),
-                                  onPressed: () {
-                                    Clipboard.setData(ClipboardData(
-                                        text: '${orders[index].address}'));
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content:
-                                            Text(context.l10n.addressIsCopied),
-                                      ),
-                                    );
-                                  },
+                                Expanded(
+                                  child: Container(
+                                    margin: const EdgeInsets.only(left: 5),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.white,
+                                      borderRadius: BorderRadius.circular(5),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color:
+                                              AppColors.black1.withOpacity(0.2),
+                                          blurRadius: 5,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    child: CustomTextButton(
+                                      onPressed: () {
+                                        _finishOrder(
+                                            orders[index].orderNumber ?? 0);
+                                      },
+                                      textButton: context.l10n.finishOrder,
+                                    ),
+                                  ),
                                 ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CustomTextButton(
-                                  onPressed: () {
-                                    context.router.push(
-                                      OrderDetailRoute(
-                                        orderNumber:
-                                            "${orders[index].orderNumber}",
-                                      ),
-                                    );
-                                  },
-                                  textButton: context.l10n.orderDetails,
-                                ),
-                                CustomTextButton(
-                                  onPressed: () {
-                                    _finishOrder(
-                                        orders[index].orderNumber ?? 0);
-                                  },
-                                  textButton: context.l10n.finishOrder,
+                                Expanded(
+                                  child: Container(
+                                    margin: const EdgeInsets.only(left: 5),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.white,
+                                      borderRadius: BorderRadius.circular(5),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color:
+                                              AppColors.black1.withOpacity(0.2),
+                                          blurRadius: 5,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    child: CustomTextButton(
+                                      onPressed: () {
+                                        final address = orders[index].address;
+                                        _openAddressIn2GIS(address!);
+                                      },
+                                      textButton: 'Открыть на карте',
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -184,12 +245,6 @@ class _CurierPageState extends State<CurierPage> {
                   ),
                 );
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          AppLaunch.launchURL('https://2gis.kg/bishkek');
-        },
-        child: Image.asset('assets/images/gis.png'),
       ),
       bottomSheet: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
@@ -215,5 +270,15 @@ class _CurierPageState extends State<CurierPage> {
         const SnackBar(content: Text('Error completing order')),
       );
     });
+  }
+
+  void _openAddressIn2GIS(String address) async {
+    final encodedAddress = Uri.encodeComponent(address);
+    final url = 'https://2gis.kg/kyrgyzstan/search/$encodedAddress';
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

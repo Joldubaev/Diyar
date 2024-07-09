@@ -24,7 +24,7 @@ class CurierDataSourceImpl extends CurierDataSource {
   Future<GetUserModel> getUser() async {
     try {
       var res = await dio.post(ApiConst.getUser,
-          data: {"email": prefs.getString(AppConst.email)},
+          data: {"phone": prefs.getString(AppConst.phone)},
           options: Options(
             headers:
                 ApiConst.authMap(prefs.getString(AppConst.accessToken) ?? ''),
