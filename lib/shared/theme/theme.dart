@@ -6,6 +6,7 @@ import 'app_colors.dart';
 export 'app_colors.dart';
 
 ThemeData theme = ThemeData(
+  useMaterial3: true,
   primaryColor: AppColors.primary,
   primarySwatch: AppColors.primary,
   fontFamily: "Roboto",

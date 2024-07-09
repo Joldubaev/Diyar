@@ -111,7 +111,7 @@ showMapSearchBottom(
                               child: Text(suggests[index].displayText),
                             ),
                           ),
-                          physics: const NeverScrollableScrollPhysics(),
+                          // physics: const NeverScrollableScrollPhysics(),
                           separatorBuilder: (context, index) => Divider(
                             color: Colors.grey[300],
                           ),
