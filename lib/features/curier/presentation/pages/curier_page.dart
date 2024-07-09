@@ -135,6 +135,8 @@ class _CurierPageState extends State<CurierPage> {
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 10),
                               child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     '${orders[index].address.toString()} ${orders[index].houseNumber.toString()}',
@@ -146,7 +148,6 @@ class _CurierPageState extends State<CurierPage> {
                                     ),
                                     textAlign: TextAlign.center,
                                   ),
-                                  const SizedBox(height: 10),
                                   Text(
                                     'Сумма заказа :$totalPrice сом',
                                     style: theme.textTheme.bodyMedium!.copyWith(
@@ -189,7 +190,7 @@ class _CurierPageState extends State<CurierPage> {
                                 ),
                                 Expanded(
                                   child: Container(
-                                    margin: const EdgeInsets.only(left: 10),
+                                    margin: const EdgeInsets.only(left: 5),
                                     decoration: BoxDecoration(
                                       color: AppColors.white,
                                       borderRadius: BorderRadius.circular(5),
@@ -213,7 +214,7 @@ class _CurierPageState extends State<CurierPage> {
                                 ),
                                 Expanded(
                                   child: Container(
-                                    margin: const EdgeInsets.only(left: 10),
+                                    margin: const EdgeInsets.only(left: 5),
                                     decoration: BoxDecoration(
                                       color: AppColors.white,
                                       borderRadius: BorderRadius.circular(5),
