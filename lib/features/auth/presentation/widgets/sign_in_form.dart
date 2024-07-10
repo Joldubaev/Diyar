@@ -42,7 +42,7 @@ class _LoginFormState extends State<LoginForm> {
           Align(
               alignment: Alignment.center,
               child:
-                  Text('Добро пожаловать', style: theme.textTheme.titleLarge)),
+                  Text(context.l10n.welcome, style: theme.textTheme.titleLarge)),
           const SizedBox(height: 20),
           CustomInputWidget(
             hintText: '+996',
@@ -99,7 +99,7 @@ class _LoginFormState extends State<LoginForm> {
             listener: (context, state) {
               if (state is SignInFailure) {
                 SnackBarMessage().showErrorSnackBar(
-                  message: "Неверный логин или пароль",
+                  message: context.l10n.loginError,
                   context: context,
                 );
               } else if (state is SignInSuccessWithUser) {
@@ -123,7 +123,7 @@ class _LoginFormState extends State<LoginForm> {
                     theme.textTheme.bodyLarge!.copyWith(color: AppColors.white),
                 bgColor: AppColors.primary,
                 isLoading: state is SignInLoading,
-                title: 'Авторизоваться',
+                title: context.l10n.authorize,
                 onTap: () {
                   if (_formKey.currentState!.validate()) {
                     context.read<SignInCubit>().signInUser(

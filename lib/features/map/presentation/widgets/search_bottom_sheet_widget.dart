@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/components/components.dart';
 import 'package:diyar/shared/theme/theme.dart';
 import 'package:easy_debounce/easy_debounce.dart';
@@ -43,7 +44,7 @@ showMapSearchBottom(
                     children: [
                       Expanded(
                         child: CustomInputWidget(
-                          hintText: "Введите адрес",
+                          hintText: context.l10n.pleaseEnterAddress,
                           leading: const Icon(Icons.search),
                           onChanged: (p0) {
                             EasyDebounce.debounce(

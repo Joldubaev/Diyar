@@ -4,6 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/features/auth/data/models/user_model.dart';
 import 'package:diyar/features/auth/presentation/cubit/cubit.dart';
+import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -73,7 +74,7 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
             predicate: (_) => false,
           );
         } else if (state is SmsSignUpError) {
-          showToast("Пожалуйста, попробуйте позже!", isError: true);
+          showToast(context.l10n.pleaseTryLater, isError: true);
           context.maybePop();
         }
       }, builder: (context, state) {
@@ -90,20 +91,20 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    'Введите код ',
-                    style: TextStyle(
+                   Text(
+                    context.l10n.enterCode,
+                    style: const TextStyle(
                       color: Color(0xFF3D3D3D),
                       fontSize: 26,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
                   const SizedBox(height: 10),
-                  const Center(
+                   Center(
                     child: Text(
-                      'Мы отправили вам код на указанный номер телефона.',
+                      context.l10n.receiveCode,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Color(0xFFB1B1B1),
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -127,7 +128,7 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
                         context.read<SignUpCubit>().signUpUser(widget.user);
                       } else {
                         showToast(
-                          "Пожалуйста, введите правильный код.",
+                          context.l10n.pleaseEnterCorrectCode,
                           isError: true,
                         );
                       }
@@ -157,7 +158,7 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
                             SizedBox(
                               width: 150,
                               child: Text(
-                                "Повторная генерация доступно через",
+                                context.l10n.regenerateAvailable,
                                 style: theme.textTheme.bodyMedium,
                                 textAlign: TextAlign.center,
                               ),
@@ -186,7 +187,7 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
                                 );
                           },
                           child: Text(
-                            "Переотправить код",
+                            context.l10n.resendCode,
                             style: theme.textTheme.bodyLarge?.copyWith(
                               color: Colors.red,
                               fontWeight: FontWeight.w500,

@@ -77,8 +77,8 @@ class _ActiveOrderPageState extends State<ActiveOrderPage> {
     return BlocBuilder<HistoryCubit, HistoryState>(
       builder: (context, state) {
         if (state is GetActiveOrdersError) {
-          return const EmptyActiveOrders(
-            text: 'Произошла ошибка при загрузке активных \n заказов',
+          return  EmptyActiveOrders(
+            text:context.l10n.errorLoadingActiveOrders
           );
         } else if (state is GetActiveOrdersLoading) {
           return const Center(child: CircularProgressIndicator());
@@ -86,8 +86,8 @@ class _ActiveOrderPageState extends State<ActiveOrderPage> {
           orders = state.orders;
           if (orders.isEmpty) {
             _channel.sink.close();
-            return const EmptyActiveOrders(
-              text: 'У вас пока нет активных заказов',
+            return  EmptyActiveOrders(
+              text: context.l10n.noActiveOrders
             );
           }
         }
@@ -96,7 +96,7 @@ class _ActiveOrderPageState extends State<ActiveOrderPage> {
           stream: _controller.stream,
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return const Center(child: Text('Ошибка при получении данных.'));
+              return  Center(child: Text(context.l10n.errorRetrievingData));
             } else if (!snapshot.hasData) {
               return const Center(child: CircularProgressIndicator());
             }
@@ -113,7 +113,7 @@ class _ActiveOrderPageState extends State<ActiveOrderPage> {
                 final orderStatus = orderStatuses.firstWhere(
                   (element) => element.orderNumber == orderNumber,
                   orElse: () => OrderStatusModel(
-                      orderNumber: orderNumber!, status: 'Unknown'),
+                      orderNumber: orderNumber!, status: context.l10n.unknown),
                 );
 
                 return Card(

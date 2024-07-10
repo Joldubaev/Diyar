@@ -146,7 +146,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   child: VersionWidgets(
                     leading: const Icon(Icons.local_fire_department),
-                    title: 'Версия приложения',
+                    title: context.l10n.appVersion,
                     trailing: Text(version, style: theme.textTheme.bodyMedium),
                   ),
                 ),

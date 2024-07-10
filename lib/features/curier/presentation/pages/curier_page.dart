@@ -149,7 +149,7 @@ class _CurierPageState extends State<CurierPage> {
                                     textAlign: TextAlign.center,
                                   ),
                                   Text(
-                                    'Сумма заказа :$totalPrice сом',
+                                    '${context.l10n.orderAmount} $totalPrice сом',
                                     style: theme.textTheme.bodyMedium!.copyWith(
                                       color: AppColors.primary,
                                       fontWeight: FontWeight.bold,
@@ -232,7 +232,7 @@ class _CurierPageState extends State<CurierPage> {
                                         final address = orders[index].address;
                                         _openAddressIn2GIS(address!);
                                       },
-                                      textButton: 'Открыть на карте',
+                                      textButton: context.l10n.openOnMap,
                                     ),
                                   ),
                                 ),
@@ -262,12 +262,12 @@ class _CurierPageState extends State<CurierPage> {
   Future _finishOrder(int orderNumber) async {
     context.read<CurierCubit>().getFinishOrder(orderNumber).then((value) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Order completed')),
+         SnackBar(content: Text(context.l10n.orderCompleted)),
       );
       context.read<CurierCubit>().getCurierOrders();
     }).catchError((error) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Error completing order')),
+         SnackBar(content: Text(context.l10n.errorCompletingOrder)),
       );
     });
   }
@@ -278,7 +278,8 @@ class _CurierPageState extends State<CurierPage> {
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url));
     } else {
-      throw 'Could not launch $url';
+      // ignore: use_build_context_synchronously
+      throw '${context.l10n.couldNotLaunch}$url';
     }
   }
 }

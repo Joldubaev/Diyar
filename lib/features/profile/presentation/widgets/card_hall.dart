@@ -1,3 +1,4 @@
+import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
 
@@ -54,7 +55,7 @@ class HallCardWidget extends StatelessWidget {
                   Expanded(
                     child: ElevatedButton(
                         onPressed: onPressed,
-                        child: const FittedBox(child: Text('Смотреть'))),
+                        child:  FittedBox(child: Text(context.l10n.look))),
                   ),
                 ],
               ),

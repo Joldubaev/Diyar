@@ -163,11 +163,11 @@ class _PickupFormState extends State<PickupForm> {
               CustomInputWidget(
                 onTap: _selectTime,
                 controller: _timeController,
-                hintText: 'Выберите время',
+                hintText: context.l10n.chooseTime,
                 title: context.l10n.preparingForThe,
                 validator: (value) {
                   if (value == '') {
-                    return 'Выберите время';
+                    return context.l10n.chooseTime;
                   }
                   return null;
                 },
@@ -238,12 +238,12 @@ class _PickupFormState extends State<PickupForm> {
                                     const Divider(),
                                     const SizedBox(height: 10),
                                     CustomDialogWidget(
-                                      title: 'Сумма заказа:',
+                                      title: context.l10n.orderAmount,
                                       description: '$totalPrice сом',
                                     ),
                                     const SizedBox(height: 10),
                                     CustomButton(
-                                      title: 'Подтвердить',
+                                      title: context.l10n.confirm,
                                       bgColor: AppColors.green,
                                       onTap: () {
                                         showDialog(
@@ -251,7 +251,7 @@ class _PickupFormState extends State<PickupForm> {
                                             builder: (context) {
                                               return AlertDialog(
                                                 title: Text(
-                                                  'Заказ принят!',
+                                                  context.l10n.yourOrdersConfirm,
                                                   style: theme
                                                       .textTheme.bodyLarge!
                                                       .copyWith(fontSize: 16),
@@ -263,7 +263,7 @@ class _PickupFormState extends State<PickupForm> {
                                                       CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                      'В течении 5 минут с вами свяжется оператор для подтверждения заказа',
+                                                      context.l10n.operatorContact,
                                                       style: theme
                                                           .textTheme.bodyMedium!
                                                           .copyWith(
@@ -274,7 +274,7 @@ class _PickupFormState extends State<PickupForm> {
                                                 ),
                                                 actions: [
                                                   CustomButton(
-                                                    title: 'ok',
+                                                    title: context.l10n.ok,
                                                     bgColor: AppColors.green,
                                                     onTap: () {
                                                       _submitOrder();
