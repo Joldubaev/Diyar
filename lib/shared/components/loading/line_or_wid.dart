@@ -1,3 +1,4 @@
+import 'package:diyar/shared/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class LineOrWidget extends StatelessWidget {
@@ -12,20 +13,17 @@ class LineOrWidget extends StatelessWidget {
         children: [
           ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 500),
-              child: const Divider(
-                thickness: 2,
-                color: Colors.grey,
-              )),
+              child: const Divider(thickness: 2, color: AppColors.grey)),
           Positioned(
             child: Container(
               decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Colors.black),
+                  color: AppColors.white,
+                  border: Border.all(color: AppColors.black),
                   borderRadius: BorderRadius.circular(15)),
               padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
               child: const Text(
                 'OR',
-                style: TextStyle(color: Colors.blue),
+                style: TextStyle(color: AppColors.blue),
               ),
             ),
           )

@@ -43,7 +43,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           } else if (state is GetOrderItemLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is GetOrderItemError) {
-            return  Center(child: Text(context.l10n.errorLoadingData));
+            return Center(child: Text(context.l10n.errorLoadingData));
           }
 
           return Card(
@@ -105,7 +105,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
       OrderDetailItem(
           title: context.l10n.yourAddress, value: order.address ?? ""),
       OrderDetailItem(title: context.l10n.phone, value: order.userPhone ?? ""),
-      OrderDetailItem(title: context.l10n.timeD, value: order.timeRequest ?? ""),
+      OrderDetailItem(
+          title: context.l10n.timeD, value: order.timeRequest ?? ""),
       OrderDetailItem(
           title: context.l10n.entranceNumber, value: order.intercom ?? ""),
       OrderDetailItem(
@@ -117,7 +118,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           title: context.l10n.food,
           value:
               order.foods!.map((e) => "${e.name} (${e.quantity})\n").join('')),
-      OrderDetailItem(title: context.l10n.cutlery, value: "${order.dishesCount}"),
+      OrderDetailItem(
+          title: context.l10n.cutlery, value: "${order.dishesCount}"),
       OrderDetailItem(
           title: context.l10n.paymentMethod, value: paymentMethod ?? ""),
       OrderDetailItem(

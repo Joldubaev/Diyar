@@ -90,7 +90,7 @@ class SalesSectionState extends State<SalesSection> {
                                   left: 10,
                                   right: 10,
                                   child: Container(
-                                    color: Colors.black.withOpacity(0.5),
+                                    color: AppColors.black.withOpacity(0.5),
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: 8,
                                       vertical: 4,
@@ -98,7 +98,7 @@ class SalesSectionState extends State<SalesSection> {
                                     child: Text(
                                       '${sales[index].name} - ${sales[index].discount}%',
                                       style: const TextStyle(
-                                        color: Colors.white,
+                                        color: AppColors.white,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -162,7 +162,7 @@ class SalesSectionState extends State<SalesSection> {
                                       left: 10,
                                       right: 10,
                                       child: Container(
-                                        color: Colors.black.withOpacity(0.5),
+                                        color: AppColors.black.withOpacity(0.5),
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: 8,
                                           vertical: 4,
@@ -170,7 +170,7 @@ class SalesSectionState extends State<SalesSection> {
                                         child: Text(
                                           '${sales[index].name} - ${sales[index].discount}%',
                                           style: const TextStyle(
-                                            color: Colors.white,
+                                            color: AppColors.white,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
@@ -190,8 +190,8 @@ class SalesSectionState extends State<SalesSection> {
                               shape: BoxShape.circle,
                               color: (Theme.of(context).brightness ==
                                           Brightness.dark
-                                      ? Colors.white
-                                      : Colors.black)
+                                      ? AppColors.white
+                                      : AppColors.black)
                                   .withOpacity(
                                       _currentIndex == entry.key ? 0.9 : 0.4),
                             ),

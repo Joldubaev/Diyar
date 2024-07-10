@@ -112,7 +112,7 @@ class _MenuPageState extends State<MenuPage>
                         decoration: BoxDecoration(
                           color: index == _activeIndex
                               ? AppColors.primary
-                              : Colors.transparent,
+                              : AppColors.transparent,
                           borderRadius: BorderRadius.circular(20),
                           border: index != _activeIndex
                               ? Border.all(color: AppColors.grey, width: 0.4)

@@ -80,7 +80,7 @@ class MenuToggleButton extends StatelessWidget {
                                     const SizedBox(width: 6),
                                     const Icon(
                                       Icons.arrow_forward_ios_sharp,
-                                      color: Colors.grey,
+                                      color: AppColors.grey,
                                     ),
                                   ],
                                 ),

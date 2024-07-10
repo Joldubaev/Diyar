@@ -251,7 +251,8 @@ class _PickupFormState extends State<PickupForm> {
                                             builder: (context) {
                                               return AlertDialog(
                                                 title: Text(
-                                                  context.l10n.yourOrdersConfirm,
+                                                  context
+                                                      .l10n.yourOrdersConfirm,
                                                   style: theme
                                                       .textTheme.bodyLarge!
                                                       .copyWith(fontSize: 16),
@@ -263,7 +264,8 @@ class _PickupFormState extends State<PickupForm> {
                                                       CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                      context.l10n.operatorContact,
+                                                      context
+                                                          .l10n.operatorContact,
                                                       style: theme
                                                           .textTheme.bodyMedium!
                                                           .copyWith(

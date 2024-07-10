@@ -1,3 +1,4 @@
+import 'package:diyar/shared/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:diyar/features/features.dart';
@@ -23,12 +24,12 @@ class ProductBottomWidget extends StatelessWidget {
     ThemeData theme = Theme.of(context);
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(10),
         boxShadow: isShadowVisible!
             ? [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
+                  color: AppColors.grey.withOpacity(0.2),
                   spreadRadius: 1,
                   blurRadius: 5,
                   offset: const Offset(0, 0),
@@ -46,9 +47,8 @@ class ProductBottomWidget extends StatelessWidget {
                 imageUrl:
                     food.urlPhoto ?? 'https://i.ibb.co/GkL25DB/ALE-1357-7.png',
                 errorWidget: (context, url, error) => Image.asset(
-                  'assets/images/app_logo.png',
-                  color: Colors.grey,
-                ),
+                    'assets/images/app_logo.png',
+                    color: AppColors.grey),
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height * 0.3,
                 memCacheWidth: 1080,
@@ -84,13 +84,13 @@ class ProductBottomWidget extends StatelessWidget {
                   text: TextSpan(
                     text: '${food.weight}',
                     style: theme.textTheme.titleSmall?.copyWith(
-                      color: Colors.grey,
+                      color: AppColors.grey,
                     ),
                     children: [
                       TextSpan(
                         text: ' - ${food.price} сом',
                         style: theme.textTheme.titleSmall?.copyWith(
-                          color: Colors.green,
+                          color: AppColors.green,
                           fontWeight: FontWeight.w400,
                         ),
                       ),

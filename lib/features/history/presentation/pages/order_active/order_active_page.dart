@@ -77,18 +77,14 @@ class _ActiveOrderPageState extends State<ActiveOrderPage> {
     return BlocBuilder<HistoryCubit, HistoryState>(
       builder: (context, state) {
         if (state is GetActiveOrdersError) {
-          return  EmptyActiveOrders(
-            text:context.l10n.errorLoadingActiveOrders
-          );
+          return EmptyActiveOrders(text: context.l10n.errorLoadingActiveOrders);
         } else if (state is GetActiveOrdersLoading) {
           return const Center(child: CircularProgressIndicator());
         } else if (state is GetActiveOrdersLoaded) {
           orders = state.orders;
           if (orders.isEmpty) {
             _channel.sink.close();
-            return  EmptyActiveOrders(
-              text: context.l10n.noActiveOrders
-            );
+            return EmptyActiveOrders(text: context.l10n.noActiveOrders);
           }
         }
 
@@ -96,7 +92,7 @@ class _ActiveOrderPageState extends State<ActiveOrderPage> {
           stream: _controller.stream,
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return  Center(child: Text(context.l10n.errorRetrievingData));
+              return Center(child: Text(context.l10n.errorRetrievingData));
             } else if (!snapshot.hasData) {
               return const Center(child: CircularProgressIndicator());
             }

@@ -29,7 +29,7 @@ class _OrderHistoryState extends State<OrderHistory> {
     return BlocBuilder<HistoryCubit, HistoryState>(
       builder: (context, state) {
         if (state is GetHistoryOrdersError) {
-          return  EmptyActiveOrders(
+          return EmptyActiveOrders(
             text: context.l10n.errorLoadingOrderHistory,
           );
         } else if (state is GetHistoryOrdersLoading) {
@@ -37,7 +37,7 @@ class _OrderHistoryState extends State<OrderHistory> {
         } else if (state is GetHistoryOrdersLoaded) {
           orders = state.orders;
           if (orders.isEmpty) {
-            return  EmptyActiveOrders(
+            return EmptyActiveOrders(
               text: context.l10n.noOrderHistory,
             );
           }

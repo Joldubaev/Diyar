@@ -28,7 +28,7 @@ class _AppWrapperConnectionPageState extends State<AppWrapperConnectionPage> {
             context: appRoute.navigatorKey.currentContext!,
             isScrollControlled: true,
             isDismissible: true,
-            backgroundColor: Colors.transparent,
+            backgroundColor: AppColors.transparent,
             constraints: const BoxConstraints(
               maxWidth: double.infinity,
               minHeight: 200,
@@ -40,7 +40,7 @@ class _AppWrapperConnectionPageState extends State<AppWrapperConnectionPage> {
                 margin: const EdgeInsets.all(10),
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.white,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const PopScope(

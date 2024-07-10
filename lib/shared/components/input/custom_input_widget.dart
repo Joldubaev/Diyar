@@ -14,7 +14,7 @@ class CustomInputWidget extends StatefulWidget {
     this.title,
     this.onTap,
     this.onChanged,
-    this.filledColor = Colors.white,
+    this.filledColor = AppColors.white,
     this.titleColor = AppColors.black1,
     this.maxLines = 1,
     this.leading,

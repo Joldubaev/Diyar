@@ -117,18 +117,16 @@ class _OrderMapPageState extends State<OrderMapPage> {
             children: [
               Text(
                 '${context.l10n.deliveryPrice}: ${MapHelper.isCoordinateInsidePolygons(lat, long, polygons: Polygons.getPolygons())} сом',
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  color: Colors.black,
-                ),
+                style:
+                    theme.textTheme.bodyLarge?.copyWith(color: AppColors.black),
               ),
               const SizedBox(height: 5),
               Card(
                 child: ListTile(
                   title: Text(
                     address ?? context.l10n.addressIsNotFounded,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: Colors.black,
-                    ),
+                    style: theme.textTheme.bodyMedium
+                        ?.copyWith(color: AppColors.black),
                   ),
                   leading: const Icon(Icons.location_on, color: AppColors.red),
                   onTap: () {
@@ -279,7 +277,7 @@ class _OrderMapPageState extends State<OrderMapPage> {
     );
   }
 
-  Future<void> updateAddressDetails(AppLatLong latLong ) async {
+  Future<void> updateAddressDetails(AppLatLong latLong) async {
     address = 'Поиск местоположения';
     setState(() {});
     LocationModel? data =

@@ -19,7 +19,7 @@ class ProfileTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: const BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.all(Radius.circular(12)),
       ),
       child: Row(
@@ -30,7 +30,7 @@ class ProfileTile extends StatelessWidget {
                 ? SvgPicture.asset(
                     imgPath,
                     colorFilter: const ColorFilter.mode(
-                      Colors.white,
+                      AppColors.white,
                       BlendMode.srcIn,
                     ),
                     width: 70,

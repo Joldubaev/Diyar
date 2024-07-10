@@ -175,7 +175,7 @@ class _SignUpFormState extends State<SignUpForm> {
           const SizedBox(height: 20),
           TextCheckButton(
             text: context.l10n.alreadyHaveAccount,
-            route:context.l10n.login,
+            route: context.l10n.login,
             onPressed: () {
               context.pushRoute(const SignInRoute());
             },

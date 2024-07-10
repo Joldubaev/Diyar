@@ -87,7 +87,7 @@ showMapSearchBottom(
                           color: AppColors.primary,
                           child: IconButton(
                             icon: const Icon(Icons.close),
-                            color: Colors.white,
+                            color: AppColors.white,
                             onPressed: () => context.maybePop(),
                           ),
                         ),
