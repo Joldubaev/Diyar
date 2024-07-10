@@ -19,7 +19,7 @@ class CartEmptyWidget extends StatelessWidget {
           Text(context.l10n.noOrders,
               style: theme.textTheme.titleSmall!
                   .copyWith(color: AppColors.black1)),
-          Text('Вы еще ничего не добавили в корзину',
+          Text(context.l10n.addToCart,
               style:
                   theme.textTheme.bodyMedium!.copyWith(color: AppColors.grey)),
         ],

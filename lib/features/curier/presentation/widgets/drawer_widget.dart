@@ -31,10 +31,10 @@ class CustomDrawer extends StatelessWidget {
                         colorFilter: const ColorFilter.mode(
                             AppColors.white, BlendMode.srcIn))),
                 const SizedBox(height: 10),
-                Text(user.userName ?? 'Нет',
+                Text(user.userName ?? context.l10n.no,
                     style:
                         const TextStyle(color: AppColors.black1, fontSize: 18)),
-                Text(user.phone ?? 'Нет номер телефона',
+                Text(user.phone ?? context.l10n.noPhoneNumber,
                     style: const TextStyle(color: AppColors.black1)),
               ],
             ),

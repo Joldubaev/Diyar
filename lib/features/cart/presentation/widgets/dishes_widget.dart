@@ -1,4 +1,5 @@
 import 'package:diyar/features/cart/cart.dart';
+import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,7 +32,7 @@ class DishesWidget extends StatelessWidget {
               children: [
                 SvgPicture.asset('assets/icons/menu_icon.svg', height: 30),
                 Text(
-                  'Столовые приборы',
+                  context.l10n.cutlery,
                   style: theme.textTheme.bodyMedium!.copyWith(
                     color: AppColors.black1,
                   ),

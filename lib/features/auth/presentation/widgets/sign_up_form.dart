@@ -131,7 +131,7 @@ class _SignUpFormState extends State<SignUpForm> {
               Expanded(
                 child: TextButton(
                   child: Text(
-                    'Я согласен(на) с условиями использования пользовательского соглашения',
+                    context.l10n.termsAgree,
                     style: theme.textTheme.bodySmall!.copyWith(
                       color: AppColors.blue,
                     ),
@@ -154,7 +154,7 @@ class _SignUpFormState extends State<SignUpForm> {
                 onTap: () {
                   if (!toc) {
                     showToast(
-                      'Пожалуйста, примите условия пользовательского соглашения',
+                      context.l10n.termsAccept,
                       isError: true,
                     );
                   } else if (_formKey.currentState!.validate()) {
@@ -175,7 +175,7 @@ class _SignUpFormState extends State<SignUpForm> {
           const SizedBox(height: 20),
           TextCheckButton(
             text: context.l10n.alreadyHaveAccount,
-            route: 'Войти',
+            route:context.l10n.login,
             onPressed: () {
               context.pushRoute(const SignInRoute());
             },

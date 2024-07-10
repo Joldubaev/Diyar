@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 import 'dart:developer';
 
@@ -210,7 +212,7 @@ class _OrderMapPageState extends State<OrderMapPage> {
               point.longitude,
             );
           } else {
-            showToast("Адрес не найден", isError: true);
+            showToast(context.l10n.addressIsNotFounded, isError: true);
           }
         });
       });
@@ -277,7 +279,7 @@ class _OrderMapPageState extends State<OrderMapPage> {
     );
   }
 
-  Future<void> updateAddressDetails(AppLatLong latLong) async {
+  Future<void> updateAddressDetails(AppLatLong latLong ) async {
     address = 'Поиск местоположения';
     setState(() {});
     LocationModel? data =
@@ -294,13 +296,13 @@ class _OrderMapPageState extends State<OrderMapPage> {
             formattedAddress.contains('Кыргызстан')) {
           address = formattedAddress;
         } else {
-          address = 'Адрес не найден';
+          address = context.l10n.addressIsNotFounded;
         }
       } else {
-        address = 'Адрес не найден';
+        address = context.l10n.addressIsNotFounded;
       }
     } else {
-      address = 'Адрес не найден';
+      address = context.l10n.addressIsNotFounded;
     }
 
     if (userLocation != null) {

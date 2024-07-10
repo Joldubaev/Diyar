@@ -35,8 +35,8 @@ class _HistoryPageState extends State<HistoryPage> {
         listener: (context, state) {
           if (state is GetCurierHistoryError) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Ошибка при загрузке данных'),
+               SnackBar(
+                content: Text(context.l10n.errorLoadingData),
               ),
             );
           }
@@ -45,11 +45,11 @@ class _HistoryPageState extends State<HistoryPage> {
           if (state is GetCurierHistoryLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is GetCurierHistoryError) {
-            return const Center(child: Text('Ошибка при загрузке данных'));
+            return  Center(child: Text(context.l10n.errorLoadingData));
           } else if (state is GetCurierHistoryLoaded) {
             orders = state.curiers;
             if (state.curiers.isEmpty) {
-              return const Center(child: Text('No orders'));
+              return  Center(child: Text(context.l10n.noOrders));
             }
           }
           return ListView.separated(
@@ -87,11 +87,11 @@ class _HistoryPageState extends State<HistoryPage> {
                         style: theme.textTheme.bodyMedium,
                       ),
                       Text(
-                        'Адреc: ${order.address ?? ""}',
+                        '${context.l10n.addressD}${order.address ?? ""}',
                         style: theme.textTheme.bodyMedium,
                       ),
                       Text(
-                        'Обшая Сумма: ${(order.price ?? 0) + (order.deliveryPrice ?? 0)}',
+                        '${context.l10n.totalAmount}${(order.price ?? 0) + (order.deliveryPrice ?? 0)}',
                         style: theme.textTheme.bodyMedium,
                       ),
                     ],

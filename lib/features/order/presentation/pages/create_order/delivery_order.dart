@@ -135,7 +135,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
               ),
               CustomInputWidget(
                 inputType: TextInputType.text,
-                hintText: 'Укажите ваш адрес',
+                hintText: context.l10n.enterAddress,
                 title: context.l10n.adress,
                 controller: _addressController,
                 isReadOnly: true,
@@ -191,18 +191,18 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                   onSelected: (String value) {
                     log('Selected: $value');
                     setState(() {
-                      if (value == 'Оплатить наличными') {
+                      if (value == context.l10n.payWithCash) {
                         _paymentType = PaymentTypeDelivery.cash;
-                      } else if (value == 'Оплатить картой') {
+                      } else if (value == context.l10n.payWithCard) {
                         _paymentType = PaymentTypeDelivery.card;
-                      } else if (value == 'Оплатить онлайн') {
+                      } else if (value == context.l10n.payOnline) {
                         _paymentType = PaymentTypeDelivery.online;
                       }
                     });
                   },
                   itemBuilder: (BuildContext context) {
                     return [
-                      'Оплатить наличными',
+                      context.l10n.payWithCash,
                       // 'Оплатить картой',
                       // 'Оплатить онлайн'
                     ].map((String choice) {
@@ -216,7 +216,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                       ClipRRect(
                           borderRadius: BorderRadius.circular(100),
                           child: const Icon(Icons.payment)),
-                      const Text('Оплатить наличными'),
+                       Text(context.l10n.payWithCash),
                     ],
                   ),
                 ),
@@ -288,7 +288,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Подтверждение заказа',
+                      context.l10n.orderConfirmation,
                       style: Theme.of(context)
                           .textTheme
                           .bodyLarge!
@@ -303,38 +303,38 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                   ],
                 ),
                 CustomDialogWidget(
-                    title: 'Сумма заказа:',
+                    title: context.l10n.orderAmount,
                     description: '${context.read<CartCubit>().totalPrice} сом'),
                 CustomDialogWidget(
-                    title: 'Стоимость доставки:',
+                    title: context.l10n.deliveryCost,
                     description:
                         '${context.read<OrderCubit>().deliveryPrice} сом'),
                 const Divider(),
                 CustomDialogWidget(
-                    title: 'Итого:',
+                    title: context.l10n.total,
                     description:
                         '${context.read<CartCubit>().totalPrice + context.read<OrderCubit>().deliveryPrice} сом'),
                 CustomButton(
-                  title: 'Подтвердить',
+                  title: context.l10n.confirm,
                   bgColor: AppColors.green,
                   onTap: () {
                     showDialog(
                       context: context,
                       builder: (context) {
                         return AlertDialog(
-                          title: Text('Заказ принят',
+                          title: Text(context.l10n.yourOrdersConfirm,
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyLarge!
                                   .copyWith(color: AppColors.black1)),
                           content: Text(
-                              'В течении 5 минут с вами свяжется оператор для подтверждения заказа',
+                              context.l10n.operatorContact,
                               style: theme.textTheme.bodyMedium!
                                   .copyWith(color: AppColors.black1),
                               maxLines: 2),
                           actions: [
                             CustomButton(
-                              title: 'Ок',
+                              title: context.l10n.ok,
                               bgColor: AppColors.green,
                               onTap: () {
                                 context

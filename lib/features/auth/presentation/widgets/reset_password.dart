@@ -99,7 +99,7 @@ class _RessetPasswordPageState extends State<RessetPasswordPage> {
                 inputType: TextInputType.text,
                 validator: (value) {
                   if (value!.isEmpty) {
-                    return 'Пожалуйста, введите пароль';
+                    return context.l10n.enterPassword;
                   } else if (value != _passwordController.text) {
                     return context.l10n.passwordsDoNotMatch;
                   }
@@ -130,7 +130,7 @@ class _RessetPasswordPageState extends State<RessetPasswordPage> {
                         context.router.pushAndPopUntil(const SignInRoute(),
                             predicate: (_) => false);
                       });
-                      showToast('Пароль успешно изменен', isError: false);
+                      showToast(context.l10n.passwordChanged, isError: false);
                     }
                   }
                 },
@@ -144,7 +144,7 @@ class _RessetPasswordPageState extends State<RessetPasswordPage> {
                       children: [
                         Center(
                           child: Text(
-                            'Ошибка: ${state.message}',
+                            '${context.l10n.error} ${state.message}',
                             style: theme.textTheme.bodyMedium!.copyWith(
                                 color: const Color.fromARGB(255, 233, 71, 35),
                                 fontWeight: FontWeight.bold),

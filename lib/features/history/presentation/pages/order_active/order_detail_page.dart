@@ -32,7 +32,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
         listener: (context, state) {
           if (state is GetOrderItemError) {
             SnackBarMessage().showErrorSnackBar(
-              message: "Ошибка при загрузке данных",
+              message: context.l10n.errorLoadingData,
               context: context,
             );
           }
@@ -43,7 +43,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           } else if (state is GetOrderItemLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is GetOrderItemError) {
-            return const Center(child: Text('Error'));
+            return  Center(child: Text(context.l10n.errorLoadingData));
           }
 
           return Card(
@@ -96,7 +96,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   List<OrderDetailItem> _buildDetailList() {
     final totalPrice = order.price! + order.deliveryPrice!;
     final paymentMethod =
-        order.paymentMethod == "cash" ? "наличными" : order.paymentMethod;
+        order.paymentMethod == "cash" ? context.l10n.cash : order.paymentMethod;
 
     return [
       OrderDetailItem(
@@ -105,7 +105,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
       OrderDetailItem(
           title: context.l10n.yourAddress, value: order.address ?? ""),
       OrderDetailItem(title: context.l10n.phone, value: order.userPhone ?? ""),
-      OrderDetailItem(title: 'Время', value: order.timeRequest ?? ""),
+      OrderDetailItem(title: context.l10n.timeD, value: order.timeRequest ?? ""),
       OrderDetailItem(
           title: context.l10n.entranceNumber, value: order.intercom ?? ""),
       OrderDetailItem(
@@ -114,19 +114,19 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
       OrderDetailItem(
           title: context.l10n.entrance, value: order.entrance ?? ""),
       OrderDetailItem(
-          title: 'Еда',
+          title: context.l10n.food,
           value:
               order.foods!.map((e) => "${e.name} (${e.quantity})\n").join('')),
-      OrderDetailItem(title: 'Столовые приборы', value: "${order.dishesCount}"),
+      OrderDetailItem(title: context.l10n.cutlery, value: "${order.dishesCount}"),
       OrderDetailItem(
           title: context.l10n.paymentMethod, value: paymentMethod ?? ""),
       OrderDetailItem(
-          title: 'Общая сумма заказа еды', value: "${order.price} сом"),
+          title: context.l10n.totalOrderAmount, value: "${order.price} сом"),
       OrderDetailItem(
           title: context.l10n.deliveryPrice,
           value: "${order.deliveryPrice} сом"),
       OrderDetailItem(
-          title: 'Общая сумма с доставкой', value: "$totalPrice сом"),
+          title: context.l10n.totalWithDelivery, value: "$totalPrice сом"),
       OrderDetailItem(title: context.l10n.change, value: "${order.sdacha} сом"),
       OrderDetailItem(title: context.l10n.comment, value: order.comment ?? ""),
     ];
