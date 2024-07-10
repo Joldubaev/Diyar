@@ -24,7 +24,7 @@ class CartItemWidgets extends StatelessWidget {
       padding: const EdgeInsets.all(4.0),
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: AppColors.grey,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
