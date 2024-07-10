@@ -37,7 +37,8 @@ class SubmitButtonWidget extends StatelessWidget {
               ? BorderSide(color: borderColor!)
               : BorderSide.none,
         ),
-        shadowColor: borderColor != null ? Colors.transparent : AppColors.grey1,
+        shadowColor:
+            borderColor != null ? AppColors.transparent : AppColors.grey1,
         minimumSize: width != null
             ? Size(width!, height ?? 50)
             : Size.fromHeight(height ?? 50),
@@ -47,9 +48,7 @@ class SubmitButtonWidget extends StatelessWidget {
           ? const SizedBox(
               width: 25,
               height: 25,
-              child: CircularProgressIndicator(
-                color: Colors.white,
-              ),
+              child: CircularProgressIndicator(color: AppColors.white),
             )
           : FittedBox(
               child: Text(

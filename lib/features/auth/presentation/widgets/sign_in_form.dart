@@ -41,8 +41,8 @@ class _LoginFormState extends State<LoginForm> {
           const SizedBox(height: 40),
           Align(
               alignment: Alignment.center,
-              child:
-                  Text(context.l10n.welcome, style: theme.textTheme.titleLarge)),
+              child: Text(context.l10n.welcome,
+                  style: theme.textTheme.titleLarge)),
           const SizedBox(height: 20),
           CustomInputWidget(
             hintText: '+996',

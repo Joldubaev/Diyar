@@ -17,9 +17,8 @@ class CustomTile extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(title,
-              style: theme.textTheme.bodyMedium!.copyWith(
-                color: Colors.grey,
-              )),
+              style:
+                  theme.textTheme.bodyMedium!.copyWith(color: AppColors.grey)),
           Text(
             trailing,
             style: theme.textTheme.bodyMedium!.copyWith(

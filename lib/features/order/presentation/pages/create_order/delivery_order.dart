@@ -216,7 +216,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                       ClipRRect(
                           borderRadius: BorderRadius.circular(100),
                           child: const Icon(Icons.payment)),
-                       Text(context.l10n.payWithCash),
+                      Text(context.l10n.payWithCash),
                     ],
                   ),
                 ),
@@ -327,8 +327,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                                   .textTheme
                                   .bodyLarge!
                                   .copyWith(color: AppColors.black1)),
-                          content: Text(
-                              context.l10n.operatorContact,
+                          content: Text(context.l10n.operatorContact,
                               style: theme.textTheme.bodyMedium!
                                   .copyWith(color: AppColors.black1),
                               maxLines: 2),

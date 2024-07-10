@@ -55,7 +55,7 @@ class HallCardWidget extends StatelessWidget {
                   Expanded(
                     child: ElevatedButton(
                         onPressed: onPressed,
-                        child:  FittedBox(child: Text(context.l10n.look))),
+                        child: FittedBox(child: Text(context.l10n.look))),
                   ),
                 ],
               ),

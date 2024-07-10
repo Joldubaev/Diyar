@@ -8,6 +8,8 @@ class AppColors {
   static const Color blue = Color(0xFF1672EC);
   static const Color green = Color(0xFF219653);
   static const Color red = Color(0xFFEB5757);
+  static const Color black = Color(0xFF000000);
+  static const Color transparent = Color(0x00000000);
 
   /// The color swatch for the application's primary color.
   static const MaterialColor primary =

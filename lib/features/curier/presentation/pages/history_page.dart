@@ -35,7 +35,7 @@ class _HistoryPageState extends State<HistoryPage> {
         listener: (context, state) {
           if (state is GetCurierHistoryError) {
             ScaffoldMessenger.of(context).showSnackBar(
-               SnackBar(
+              SnackBar(
                 content: Text(context.l10n.errorLoadingData),
               ),
             );
@@ -45,11 +45,11 @@ class _HistoryPageState extends State<HistoryPage> {
           if (state is GetCurierHistoryLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is GetCurierHistoryError) {
-            return  Center(child: Text(context.l10n.errorLoadingData));
+            return Center(child: Text(context.l10n.errorLoadingData));
           } else if (state is GetCurierHistoryLoaded) {
             orders = state.curiers;
             if (state.curiers.isEmpty) {
-              return  Center(child: Text(context.l10n.noOrders));
+              return Center(child: Text(context.l10n.noOrders));
             }
           }
           return ListView.separated(

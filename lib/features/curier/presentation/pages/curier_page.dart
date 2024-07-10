@@ -119,7 +119,7 @@ class _CurierPageState extends State<CurierPage> {
                         child: ExpansionTile(
                           shape: const Border(
                             bottom: BorderSide(
-                              color: Colors.transparent,
+                              color: AppColors.transparent,
                               width: 0,
                             ),
                           ),
@@ -262,12 +262,12 @@ class _CurierPageState extends State<CurierPage> {
   Future _finishOrder(int orderNumber) async {
     context.read<CurierCubit>().getFinishOrder(orderNumber).then((value) {
       ScaffoldMessenger.of(context).showSnackBar(
-         SnackBar(content: Text(context.l10n.orderCompleted)),
+        SnackBar(content: Text(context.l10n.orderCompleted)),
       );
       context.read<CurierCubit>().getCurierOrders();
     }).catchError((error) {
       ScaffoldMessenger.of(context).showSnackBar(
-         SnackBar(content: Text(context.l10n.errorCompletingOrder)),
+        SnackBar(content: Text(context.l10n.errorCompletingOrder)),
       );
     });
   }

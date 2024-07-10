@@ -91,7 +91,7 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                   Text(
+                  Text(
                     context.l10n.enterCode,
                     style: const TextStyle(
                       color: Color(0xFF3D3D3D),
@@ -100,7 +100,7 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                   Center(
+                  Center(
                     child: Text(
                       context.l10n.receiveCode,
                       textAlign: TextAlign.center,
@@ -115,7 +115,7 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
                   Text(
                     widget.user.phone!,
                     style: const TextStyle(
-                      color: Colors.black,
+                      color: AppColors.black,
                       fontSize: 22,
                       fontWeight: FontWeight.w400,
                     ),
@@ -167,7 +167,7 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
                             Text(
                               "$_start сек",
                               style: theme.textTheme.bodyLarge?.copyWith(
-                                color: Colors.red,
+                                color: AppColors.red,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -189,7 +189,7 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
                           child: Text(
                             context.l10n.resendCode,
                             style: theme.textTheme.bodyLarge?.copyWith(
-                              color: Colors.red,
+                              color: AppColors.red,
                               fontWeight: FontWeight.w500,
                             ),
                           ),

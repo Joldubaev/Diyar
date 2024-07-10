@@ -25,14 +25,14 @@ class CustomBoxWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(15.0),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
+                  color: AppColors.grey.withOpacity(0.5),
                   spreadRadius: 1,
                   blurRadius: 7,
                   offset: const Offset(0, 3),
                 ),
               ],
             ),
-            child: Icon(icon, size: 50.0, color: Colors.grey),
+            child: Icon(icon, size: 50.0, color: AppColors.grey),
           ),
           const SizedBox(height: 8.0),
           Text(
