@@ -40,16 +40,20 @@ class _CurierPageState extends State<CurierPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.primary,
+        backgroundColor: theme.colorScheme.primary,
         title: Text(
           context.l10n.activeOrders,
-          style: theme.textTheme.titleMedium!.copyWith(color: AppColors.white),
+          style: Theme.of(context)
+              .textTheme
+              .titleMedium!
+              .copyWith(color: theme.colorScheme.onPrimary),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout, color: AppColors.white),
+            icon: Icon(Icons.logout, color: theme.colorScheme.onPrimary),
             onPressed: () {
               AppAlert.showConfirmDialog(
                 context: context,
@@ -71,10 +75,10 @@ class _CurierPageState extends State<CurierPage> {
           ),
         ],
       ),
-      drawerScrimColor: AppColors.black1.withOpacity(0.5),
+      drawerScrimColor: theme.colorScheme.onSurface.withOpacity(0.6),
       drawer: Theme(
         data: Theme.of(context).copyWith(
-          iconTheme: const IconThemeData(color: AppColors.white),
+          iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
         ),
         child: const CustomDrawer(),
       ),
@@ -127,9 +131,10 @@ class _CurierPageState extends State<CurierPage> {
                               const EdgeInsets.fromLTRB(10, 10, 10, 8),
                           title: Text(
                             '${context.l10n.orderNumber} ${orders[index].orderNumber}',
-                            style: theme.textTheme.bodyLarge!.copyWith(
-                              color: AppColors.black1,
-                            ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge!
+                                .copyWith(color: theme.colorScheme.onSurface),
                           ),
                           children: [
                             Padding(
@@ -142,34 +147,40 @@ class _CurierPageState extends State<CurierPage> {
                                     '${orders[index].address.toString()} ${orders[index].houseNumber.toString()}',
                                     maxLines: 3,
                                     overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                      color: AppColors.black1,
+                                    style: TextStyle(
+                                      color: theme.colorScheme.onSurface,
                                       fontSize: 14,
                                     ),
                                     textAlign: TextAlign.center,
                                   ),
                                   Text(
                                     '${context.l10n.orderAmount} $totalPrice сом',
-                                    style: theme.textTheme.bodyMedium!.copyWith(
-                                      color: AppColors.primary,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(
+                                          color: theme.colorScheme.primary,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                   ),
                                 ],
                               ),
                             ),
-                            const Divider(color: AppColors.grey, thickness: 1),
+                            Divider(
+                                color: theme.colorScheme.onSurface
+                                    .withOpacity(0.6),
+                                thickness: 1),
                             Row(
                               children: [
                                 Expanded(
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      color: AppColors.white,
+                                      color: theme.colorScheme.surface,
                                       borderRadius: BorderRadius.circular(5),
                                       boxShadow: [
                                         BoxShadow(
-                                          color:
-                                              AppColors.black1.withOpacity(0.2),
+                                          color: theme.colorScheme.onSurface
+                                              .withOpacity(0.2),
                                           blurRadius: 5,
                                           offset: const Offset(0, 2),
                                         ),
@@ -192,12 +203,12 @@ class _CurierPageState extends State<CurierPage> {
                                   child: Container(
                                     margin: const EdgeInsets.only(left: 5),
                                     decoration: BoxDecoration(
-                                      color: AppColors.white,
+                                      color: theme.colorScheme.surface,
                                       borderRadius: BorderRadius.circular(5),
                                       boxShadow: [
                                         BoxShadow(
-                                          color:
-                                              AppColors.black1.withOpacity(0.2),
+                                          color: theme.colorScheme.onSurface
+                                              .withOpacity(0.2),
                                           blurRadius: 5,
                                           offset: const Offset(0, 2),
                                         ),
@@ -216,12 +227,12 @@ class _CurierPageState extends State<CurierPage> {
                                   child: Container(
                                     margin: const EdgeInsets.only(left: 5),
                                     decoration: BoxDecoration(
-                                      color: AppColors.white,
+                                      color: theme.colorScheme.surface,
                                       borderRadius: BorderRadius.circular(5),
                                       boxShadow: [
                                         BoxShadow(
-                                          color:
-                                              AppColors.black1.withOpacity(0.2),
+                                          color: theme.colorScheme.onSurface
+                                              .withOpacity(0.2),
                                           blurRadius: 5,
                                           offset: const Offset(0, 2),
                                         ),
@@ -252,8 +263,10 @@ class _CurierPageState extends State<CurierPage> {
           onTap: () => _refresh(),
           title: 'Обновить',
           bgColor: AppColors.primary,
-          textStyle:
-              theme.textTheme.bodyLarge!.copyWith(color: AppColors.white),
+          textStyle: Theme.of(context)
+              .textTheme
+              .bodyLarge!
+              .copyWith(color: AppColors.white),
         ),
       ),
     );

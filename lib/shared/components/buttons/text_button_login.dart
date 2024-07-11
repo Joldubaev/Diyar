@@ -20,7 +20,7 @@ class TextButtonLogin extends StatelessWidget {
         FittedBox(
           child: Text(
             title,
-            style: theme.textTheme.headlineLarge,
+            style: Theme.of(context).textTheme.headlineLarge,
           ),
         ),
         TextButton(
@@ -28,9 +28,9 @@ class TextButtonLogin extends StatelessWidget {
           child: FittedBox(
             child: Text(
               traling,
-              style: theme.textTheme.headlineLarge!.copyWith(
-                color: AppColors.primary,
-              ),
+              style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+                    color: AppColors.primary,
+                  ),
             ),
           ),
         ),

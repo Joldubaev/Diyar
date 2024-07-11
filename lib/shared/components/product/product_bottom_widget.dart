@@ -21,15 +21,15 @@ class ProductBottomWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
+    final theme = Theme.of(context);
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(10),
         boxShadow: isShadowVisible!
             ? [
                 BoxShadow(
-                  color: AppColors.grey.withOpacity(0.2),
+                  color: theme.colorScheme.onSurface.withOpacity(0.1),
                   spreadRadius: 1,
                   blurRadius: 5,
                   offset: const Offset(0, 0),
@@ -48,7 +48,7 @@ class ProductBottomWidget extends StatelessWidget {
                     food.urlPhoto ?? 'https://i.ibb.co/GkL25DB/ALE-1357-7.png',
                 errorWidget: (context, url, error) => Image.asset(
                     'assets/images/app_logo.png',
-                    color: AppColors.grey),
+                    color: theme.colorScheme.onSurface.withOpacity(0.1)),
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height * 0.3,
                 memCacheWidth: 1080,
@@ -64,18 +64,15 @@ class ProductBottomWidget extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Padding(
-                padding: const EdgeInsets.fromLTRB(6, 0, 6, 0),
-                child: Text(
-                  '${food.name}',
-                  style: theme.textTheme.bodyLarge!.copyWith(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                ),
-              ),
+                  padding: const EdgeInsets.fromLTRB(6, 0, 6, 0),
+                  child: Text('${food.name}',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge!
+                          .copyWith(fontWeight: FontWeight.bold, fontSize: 18),
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      maxLines: 2)),
               Padding(
                 padding: const EdgeInsets.fromLTRB(6, 0, 6, 0),
                 child: RichText(
@@ -83,17 +80,19 @@ class ProductBottomWidget extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   text: TextSpan(
                     text: '${food.weight}',
-                    style: theme.textTheme.titleSmall?.copyWith(
-                      color: AppColors.grey,
-                    ),
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleSmall
+                        ?.copyWith(color: theme.colorScheme.onSurface),
                     children: [
                       TextSpan(
-                        text: ' - ${food.price} сом',
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          color: AppColors.green,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
+                          text: ' - ${food.price} сом',
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleSmall
+                              ?.copyWith(
+                                  color: AppColors.green,
+                                  fontWeight: FontWeight.w400)),
                     ],
                   ),
                 ),

@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/l10n/l10n.dart';
-import 'package:diyar/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -57,9 +56,10 @@ class _MainPageState extends State<MainPage> {
                 });
               },
               type: BottomNavigationBarType.fixed,
-              selectedItemColor: AppColors.primary,
-              backgroundColor: Colors.white,
-              unselectedItemColor: AppColors.grey,
+              selectedItemColor: Theme.of(context).colorScheme.primary,
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              unselectedItemColor:
+                  Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
               useLegacyColorScheme: false,
               selectedLabelStyle: const TextStyle(
                 fontSize: 12,
@@ -73,8 +73,11 @@ class _MainPageState extends State<MainPage> {
                       "assets/icons/home_icon.svg",
                       colorFilter: ColorFilter.mode(
                         _currentIndex == 0
-                            ? AppColors.primary
-                            : AppColors.black1,
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withOpacity(0.6),
                         BlendMode.srcIn,
                       ),
                     ),
@@ -88,8 +91,11 @@ class _MainPageState extends State<MainPage> {
                       "assets/icons/menu_icon.svg",
                       colorFilter: ColorFilter.mode(
                         _currentIndex == 1
-                            ? AppColors.primary
-                            : AppColors.black1,
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withOpacity(0.6),
                         BlendMode.srcIn,
                       ),
                     ),
@@ -114,8 +120,11 @@ class _MainPageState extends State<MainPage> {
                               "assets/icons/cart_icon.svg",
                               colorFilter: ColorFilter.mode(
                                 _currentIndex == 2
-                                    ? AppColors.primary
-                                    : AppColors.black1,
+                                    ? Theme.of(context).colorScheme.primary
+                                    : Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
+                                        .withOpacity(0.6),
                                 BlendMode.srcIn,
                               ),
                             ),
@@ -131,8 +140,11 @@ class _MainPageState extends State<MainPage> {
                       "assets/icons/orders_icon.svg",
                       colorFilter: ColorFilter.mode(
                         _currentIndex == 3
-                            ? AppColors.primary
-                            : AppColors.black1,
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withOpacity(0.6),
                         BlendMode.srcIn,
                       ),
                     ),
@@ -146,8 +158,11 @@ class _MainPageState extends State<MainPage> {
                       "assets/icons/profile_icon.svg",
                       colorFilter: ColorFilter.mode(
                         _currentIndex == 4
-                            ? AppColors.primary
-                            : AppColors.black1,
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withOpacity(0.6),
                         BlendMode.srcIn,
                       ),
                     ),

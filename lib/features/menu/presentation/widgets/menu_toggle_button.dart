@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/features/menu/menu.dart';
 import 'package:diyar/l10n/l10n.dart';
-import 'package:diyar/shared/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -19,11 +18,12 @@ class MenuToggleButton extends StatelessWidget {
 
   showMenu(BuildContext context) {
     final menu = context.read<MenuCubit>().menu;
+    final theme = Theme.of(context);
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
-      backgroundColor: AppColors.white,
+      backgroundColor: theme.colorScheme.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(20),
@@ -78,9 +78,10 @@ class MenuToggleButton extends StatelessWidget {
                                           Theme.of(context).textTheme.bodyLarge,
                                     ),
                                     const SizedBox(width: 6),
-                                    const Icon(
+                                    Icon(
                                       Icons.arrow_forward_ios_sharp,
-                                      color: AppColors.grey,
+                                      color: theme.colorScheme.onSurface
+                                          .withOpacity(0.6),
                                     ),
                                   ],
                                 ),
@@ -88,8 +89,8 @@ class MenuToggleButton extends StatelessWidget {
                             ),
                           ),
                         ),
-                        separatorBuilder: (context, index) => const Divider(
-                          color: Color(0xffDDDDDD),
+                        separatorBuilder: (context, index) => Divider(
+                          color: theme.colorScheme.onSurface.withOpacity(0.6),
                         ),
                         itemCount: menu.length,
                       ),

@@ -1,7 +1,6 @@
 import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/components/components.dart';
 import 'package:diyar/features/cart/presentation/presentation.dart';
-import 'package:diyar/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -29,11 +28,11 @@ class _TotalPriceWidgetState extends State<TotalPriceWidget> {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-              color: AppColors.grey.withOpacity(0.2),
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
               blurRadius: 5,
               offset: const Offset(0, 0))
         ],
@@ -53,14 +52,19 @@ class _TotalPriceWidgetState extends State<TotalPriceWidget> {
                   trailing: '${widget.containerPrice} ${context.l10n.som}'),
               CustomTile(
                   title: context.l10n.sale, trailing: '${widget.sale} %'),
-              const Divider(color: AppColors.grey),
+              Divider(
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.2)),
               CustomTile(
                 title: context.l10n.total,
                 trailing: '${widget.totalPrice}${context.l10n.som}',
               ),
+              const SizedBox(height: 10),
               Text(context.l10n.totalToPay,
-                  style: theme.textTheme.bodySmall!
-                      .copyWith(color: AppColors.red)),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall!
+                      .copyWith(color: Theme.of(context).colorScheme.error)),
               const SizedBox(height: 10),
               const DishesWidget(),
             ],

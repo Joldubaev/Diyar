@@ -17,7 +17,7 @@ class OrderHistoryPage extends StatelessWidget {
           automaticallyImplyLeading: false,
           title: Text(
             context.l10n.orderHistory,
-            style: theme.textTheme.bodyLarge,
+            style: Theme.of(context).textTheme.bodyLarge,
           ),
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(40),

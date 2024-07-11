@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:diyar/features/cart/presentation/presentation.dart';
 import 'package:diyar/features/menu/data/data.dart';
 import 'package:diyar/l10n/l10n.dart';
-import 'package:diyar/shared/theme/theme.dart';
 import 'package:diyar/shared/utils/fmt/show_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -24,15 +23,14 @@ class CartItemWidgets extends StatelessWidget {
       padding: const EdgeInsets.all(4.0),
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
-              color: AppColors.grey.withOpacity(0.2),
-              spreadRadius: 1,
-              blurRadius: 5,
-              offset: const Offset(0, 0),
-            ),
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
+                spreadRadius: 1,
+                blurRadius: 5,
+                offset: const Offset(0, 0)),
           ],
         ),
         child: Padding(
@@ -42,11 +40,14 @@ class CartItemWidgets extends StatelessWidget {
               Expanded(
                 child: DecoratedBox(
                   decoration: BoxDecoration(
-                    color: AppColors.white,
+                    color: Theme.of(context).colorScheme.surface,
                     borderRadius: BorderRadius.circular(10),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.grey.withOpacity(0.2),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.2),
                         spreadRadius: 1,
                         blurRadius: 5,
                         offset: const Offset(0, 0),
@@ -87,7 +88,7 @@ class CartItemWidgets extends StatelessWidget {
                         Expanded(
                           child: Text(
                             "${food.name}",
-                            style: theme.textTheme.bodyMedium,
+                            style: Theme.of(context).textTheme.bodyMedium,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
                           ),
@@ -100,8 +101,14 @@ class CartItemWidgets extends StatelessWidget {
                                 content: Text(context.l10n.deleteOrderText),
                                 confirmPressed: onRemove);
                           },
-                          icon: SvgPicture.asset('assets/icons/delete.svg'),
-                        )
+                          icon: SvgPicture.asset(
+                            'assets/icons/delete.svg',
+                            colorFilter: ColorFilter.mode(
+                              Theme.of(context).colorScheme.error,
+                              BlendMode.srcIn,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                     Row(
@@ -111,15 +118,24 @@ class CartItemWidgets extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           text: TextSpan(
                             text: "${food.weight}",
-                            style: theme.textTheme.bodySmall!
-                                .copyWith(color: AppColors.grey),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall!
+                                .copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
+                                        .withOpacity(0.6)),
                           ),
                         ),
                         const SizedBox(width: 10),
                         Text(
                           '${food.price} сом',
-                          style: theme.textTheme.bodySmall!
-                              .copyWith(color: AppColors.green),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall!
+                              .copyWith(
+                                  color: Theme.of(context).colorScheme.primary),
                         ),
                       ],
                     ),

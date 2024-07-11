@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/components/components.dart';
 import 'package:diyar/features/auth/data/models/user_model.dart';
-import 'package:diyar/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -38,18 +37,21 @@ class _ProfileInfoPageState extends State<ProfileInfoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: AppColors.primary,
+          backgroundColor: Theme.of(context).colorScheme.primary,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios, color: AppColors.white),
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Theme.of(context).colorScheme.surface,
+            ),
             onPressed: () {
               context.router.maybePop();
             },
           ),
           title: Text(
             context.l10n.profile,
-            style: theme.textTheme.titleSmall?.copyWith(
-              color: AppColors.white,
-            ),
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  color: Theme.of(context).colorScheme.surface,
+                ),
           )),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -65,16 +67,18 @@ class _ProfileInfoPageState extends State<ProfileInfoPage> {
                     child: SvgPicture.asset(
                       'assets/icons/profile_icon.svg',
                       height: 100,
-                      colorFilter:
-                          const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                      colorFilter: ColorFilter.mode(
+                          Theme.of(context).colorScheme.surface,
+                          BlendMode.srcIn),
                     ),
                   ),
                 ),
                 const SizedBox(height: 10),
                 Text('${widget.user.name} ',
-                    style: theme.textTheme.titleMedium),
+                    style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 40),
                 CustomInputWidget(
+                  filledColor: Theme.of(context).colorScheme.surface,
                   isReadOnly: true,
                   title: context.l10n.name,
                   hintText: context.l10n.yourName,
@@ -89,7 +93,7 @@ class _ProfileInfoPageState extends State<ProfileInfoPage> {
                 const SizedBox(height: 20),
                 CustomInputWidget(
                   hintText: '+996',
-                  filledColor: Colors.white,
+                  filledColor: Theme.of(context).colorScheme.surface,
                   controller: _phoneController,
                   inputType: TextInputType.phone,
                   inputFormatters: [phoneFormatter],

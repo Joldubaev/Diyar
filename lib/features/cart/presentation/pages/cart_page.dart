@@ -19,55 +19,19 @@ class CartPage extends StatefulWidget {
 
 class CartPageState extends State<CartPage>
     with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(seconds: 1),
-      vsync: this,
-    );
-    _animation = Tween<double>(begin: 0, end: 1).animate(_controller);
-  }
-
-  void _onHistoryIconTap() {
-    _controller.forward().then((value) {
-      _controller.reverse();
-      context.pushRoute(const OrderHistoryRoute());
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     context.read<CartCubit>().getCartItems();
-
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.primary,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         title: Text(
           context.l10n.cart,
-          style: theme.textTheme.titleSmall?.copyWith(
-            color: AppColors.white,
-          ),
+          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                color: Theme.of(context).colorScheme.surface,
+              ),
         ),
         automaticallyImplyLeading: false,
-        actions: [
-          GestureDetector(
-            onTap: _onHistoryIconTap,
-            child: AnimatedBuilder(
-              animation: _controller,
-              builder: (context, child) {
-                return Transform.rotate(
-                  angle: _animation.value * 2 * 3.14,
-                  child: const Icon(Icons.history,
-                      size: 40, color: AppColors.white),
-                );
-              },
-            ),
-          ),
-        ],
       ),
       body: StreamBuilder<List<CartItemModel>>(
         stream: context.read<CartCubit>().cart,
@@ -140,10 +104,11 @@ class CartPageState extends State<CartPage>
                   Padding(
                     padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
                     child: SubmitButtonWidget(
-                      textStyle: theme.textTheme.bodyLarge!.copyWith(
-                        color: AppColors.white,
-                      ),
-                      bgColor: AppColors.primary,
+                      textStyle:
+                          Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                color: Theme.of(context).colorScheme.surface,
+                              ),
+                      bgColor: Theme.of(context).colorScheme.primary,
                       title: context.l10n.confirmOrder,
                       onTap: () {
                         context.pushRoute(OrderMapRoute(

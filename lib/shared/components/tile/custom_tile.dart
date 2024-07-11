@@ -1,4 +1,3 @@
-import 'package:diyar/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 class CustomTile extends StatelessWidget {
@@ -16,14 +15,19 @@ class CustomTile extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(title,
-              style:
-                  theme.textTheme.bodyMedium!.copyWith(color: AppColors.grey)),
+          Text(
+            title,
+            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                ),
+          ),
           Text(
             trailing,
-            style: theme.textTheme.bodyMedium!.copyWith(
-              color: AppColors.black1,
-            ),
+            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
+                ),
           ),
         ],
       ),

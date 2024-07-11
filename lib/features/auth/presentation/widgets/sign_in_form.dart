@@ -27,26 +27,27 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Form(
       key: _formKey,
       child: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         children: <Widget>[
-          const Image(
+          Image(
             height: 100,
             width: 100,
-            color: AppColors.primary,
-            image: AssetImage("assets/images/auth_images.png"),
+            color: theme.colorScheme.primary,
+            image: const AssetImage("assets/images/auth_images.png"),
           ),
           const SizedBox(height: 40),
           Align(
               alignment: Alignment.center,
               child: Text(context.l10n.welcome,
-                  style: theme.textTheme.titleLarge)),
+                  style: Theme.of(context).textTheme.titleLarge)),
           const SizedBox(height: 20),
           CustomInputWidget(
             hintText: '+996',
-            filledColor: Colors.white,
+            filledColor: theme.colorScheme.surface,
             controller: _phoneController,
             inputType: TextInputType.phone,
             inputFormatters: [phoneFormatter],
@@ -61,6 +62,7 @@ class _LoginFormState extends State<LoginForm> {
           ),
           const SizedBox(height: 20),
           CustomInputWidget(
+            filledColor: theme.colorScheme.surface,
             hintText: context.l10n.password,
             controller: _passwordController,
             isPasswordField: true,
@@ -119,9 +121,11 @@ class _LoginFormState extends State<LoginForm> {
             },
             builder: (context, state) {
               return SubmitButtonWidget(
-                textStyle:
-                    theme.textTheme.bodyLarge!.copyWith(color: AppColors.white),
-                bgColor: AppColors.primary,
+                textStyle: Theme.of(context)
+                    .textTheme
+                    .bodyLarge!
+                    .copyWith(color: theme.colorScheme.onPrimary),
+                bgColor: theme.colorScheme.primary,
                 isLoading: state is SignInLoading,
                 title: context.l10n.authorize,
                 onTap: () {

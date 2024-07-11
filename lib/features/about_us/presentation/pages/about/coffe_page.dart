@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/features/features.dart';
 import 'package:diyar/l10n/l10n.dart';
-import 'package:diyar/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -25,14 +24,17 @@ class _CofePageState extends State<CofePage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.primary,
+        backgroundColor: theme.colorScheme.primary,
         title: Text(context.l10n.ecpessCoffee,
-            style:
-                theme.textTheme.titleMedium!.copyWith(color: AppColors.white)),
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium!
+                .copyWith(color: theme.colorScheme.surface)),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: AppColors.white),
+          icon: Icon(Icons.arrow_back_ios, color: theme.colorScheme.surface),
           onPressed: () {
             context.router.maybePop();
           },

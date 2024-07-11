@@ -26,6 +26,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(title: Text(context.l10n.orderDetails)),
       body: BlocConsumer<HistoryCubit, HistoryState>(
@@ -47,16 +48,18 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           }
 
           return Card(
-            color: AppColors.white,
+            color: theme.colorScheme.surface,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
-              side: const BorderSide(color: Colors.grey),
+              side: BorderSide(
+                  color: theme.colorScheme.onSurface.withOpacity(0.1)),
             ),
             child: ListView.separated(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               separatorBuilder: (context, index) => SizedBox(
                 height: 1,
-                child: Container(color: AppColors.grey),
+                child: Container(
+                    color: theme.colorScheme.onSurface.withOpacity(0.1)),
               ),
               itemCount: _buildDetailList().length,
               itemBuilder: (context, index) {
@@ -79,7 +82,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium!
-                                  .copyWith(color: AppColors.black1)),
+                                  .copyWith(
+                                      color: theme.colorScheme.onSurface)),
                         ),
                       ],
                     ),

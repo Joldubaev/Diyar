@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:diyar/features/about_us/data/models/restaurant_model.dart';
-import 'package:diyar/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -20,6 +19,7 @@ class CustomAboutWidgetState extends State<CustomAboutWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -40,7 +40,7 @@ class CustomAboutWidgetState extends State<CustomAboutWidget> {
                       return Container(
                         margin: const EdgeInsets.symmetric(horizontal: 5.0),
                         decoration: BoxDecoration(
-                          color: Colors.grey[300],
+                          color: theme.colorScheme.surface,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: ClipRRect(
@@ -80,8 +80,8 @@ class CustomAboutWidgetState extends State<CustomAboutWidget> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: _current == index
-                              ? const Color.fromRGBO(0, 0, 0, 0.9)
-                              : const Color.fromRGBO(0, 0, 0, 0.4),
+                              ? theme.colorScheme.primary
+                              : theme.colorScheme.onSurface,
                         ),
                       );
                     }).toList(),
@@ -90,11 +90,13 @@ class CustomAboutWidgetState extends State<CustomAboutWidget> {
               ),
             const SizedBox(height: 20),
             Text(widget.model.name.toString(),
-                style: theme.textTheme.bodyLarge!
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge!
                     .copyWith(fontWeight: FontWeight.bold)),
             Text(
               widget.model.description.toString(),
-              style: theme.textTheme.bodyMedium,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
           ],
         ),

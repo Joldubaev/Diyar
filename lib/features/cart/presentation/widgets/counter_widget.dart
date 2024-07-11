@@ -36,7 +36,7 @@ class CounterWidget extends StatelessWidget {
                   }
                 },
               ),
-              Text(counter.toString(), style: theme.textTheme.bodyLarge),
+              Text(counter.toString(), style: Theme.of(context).textTheme.bodyLarge),
               IconButton(
                 icon: const Icon(Icons.add),
                 onPressed: () => context.read<CartCubit>().incrementCart(id),

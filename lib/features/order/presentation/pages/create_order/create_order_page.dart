@@ -3,7 +3,6 @@ import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/features.dart';
 import 'package:diyar/features/profile/prof.dart';
 import 'package:diyar/l10n/l10n.dart';
-import 'package:diyar/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -29,6 +28,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return BlocBuilder<ProfileCubit, ProfileState>(
       builder: (context, state) {
         if (state is ProfileGetLoading) {
@@ -43,10 +43,12 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
           length: 2,
           child: Scaffold(
             appBar: AppBar(
-              backgroundColor: AppColors.white,
+              backgroundColor: theme.colorScheme.surface,
               title: Text(context.l10n.orderDetails,
-                  style: theme.textTheme.titleSmall!
-                      .copyWith(color: AppColors.black1)),
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleSmall!
+                      .copyWith(color: theme.colorScheme.onSurface)),
               centerTitle: true,
               bottom: PreferredSize(
                 preferredSize: const Size.fromHeight(40),
@@ -54,18 +56,17 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                   height: 40,
                   margin: const EdgeInsets.symmetric(horizontal: 20),
                   decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(20)),
-                    color: AppColors.grey.withOpacity(0.2),
-                  ),
+                      borderRadius: const BorderRadius.all(Radius.circular(20)),
+                      color: theme.colorScheme.onSurface.withOpacity(0.1)),
                   child: TabBar(
                     indicatorSize: TabBarIndicatorSize.tab,
                     dividerColor: Colors.transparent,
-                    indicator: const BoxDecoration(
-                      color: AppColors.primary,
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                    indicator: BoxDecoration(
+                      color: theme.colorScheme.primary,
+                      borderRadius: const BorderRadius.all(Radius.circular(20)),
                     ),
-                    labelColor: AppColors.white,
-                    unselectedLabelColor: Colors.black54,
+                    labelColor: theme.colorScheme.surface,
+                    unselectedLabelColor: theme.colorScheme.onSurface,
                     tabs: [
                       TabItem(title: context.l10n.delivery),
                       TabItem(title: context.l10n.pickup),

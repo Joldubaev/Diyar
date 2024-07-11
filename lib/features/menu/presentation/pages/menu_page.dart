@@ -4,7 +4,6 @@ import 'package:diyar/shared/components/product/product_item_widget.dart';
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/menu/data/models/category_model.dart';
 import 'package:diyar/features/menu/menu.dart';
-import 'package:diyar/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
@@ -73,6 +72,7 @@ class _MenuPageState extends State<MenuPage>
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       body: BlocConsumer<MenuCubit, MenuState>(
         listener: (context, state) {
@@ -111,21 +111,24 @@ class _MenuPageState extends State<MenuPage>
                         padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
                         decoration: BoxDecoration(
                           color: index == _activeIndex
-                              ? AppColors.primary
-                              : AppColors.transparent,
+                              ? theme.colorScheme.primary
+                              : theme.colorScheme.surface,
                           borderRadius: BorderRadius.circular(20),
                           border: index != _activeIndex
-                              ? Border.all(color: AppColors.grey, width: 0.4)
+                              ? Border.all(
+                                  color: theme.colorScheme.onSurface,
+                                  width: 0.4)
                               : Border.all(
-                                  color: AppColors.primary, width: 0.4),
+                                  color: theme.colorScheme.primary, width: 0.4),
                         ),
                         child: Center(
                           child: Text(
                             "${menu[index].category?.name}",
                             style: TextStyle(
                               color: index == _activeIndex
-                                  ? AppColors.white
-                                  : AppColors.grey,
+                                  ? theme.colorScheme.surface
+                                  : theme.colorScheme.onSurface
+                                      .withOpacity(0.6),
                             ),
                           ),
                         ),
@@ -153,8 +156,8 @@ class _MenuPageState extends State<MenuPage>
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 color: index == _activeIndex
-                                    ? AppColors.primary
-                                    : AppColors.black1,
+                                    ? theme.colorScheme.primary
+                                    : theme.colorScheme.onSurface,
                               ),
                             ),
                           ),

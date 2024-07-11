@@ -1,5 +1,4 @@
 import 'package:diyar/l10n/l10n.dart';
-import 'package:diyar/shared/shared.dart';
 import 'package:flutter/material.dart';
 
 class AboutUsWidget extends StatelessWidget {
@@ -10,6 +9,7 @@ class AboutUsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return InkWell(
       onTap: onTap,
       child: Column(
@@ -29,17 +29,17 @@ class AboutUsWidget extends StatelessWidget {
           ),
           Container(
             padding: const EdgeInsets.all(16),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surface,
+              borderRadius: const BorderRadius.only(
                 bottomLeft: Radius.circular(20),
                 bottomRight: Radius.circular(20),
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black12,
+                  color: theme.colorScheme.onSurface.withOpacity(0.1),
                   blurRadius: 10,
-                  offset: Offset(0, 4),
+                  offset: const Offset(0, 4),
                 ),
               ],
             ),
@@ -48,31 +48,31 @@ class AboutUsWidget extends StatelessWidget {
               children: [
                 Text(
                   context.l10n.aboutUs,
-                  style: theme.textTheme.titleSmall?.copyWith(
-                    color: AppColors.black1,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        color: theme.colorScheme.onSurface,
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
                 Text(
                   context.l10n.allAbout,
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    color: AppColors.black1,
-                  ),
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: theme.colorScheme.onSurface,
+                      ),
                 ),
                 Row(
                   children: [
                     Text(
                       context.l10n.banket,
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        color: AppColors.black1,
-                      ),
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            color: theme.colorScheme.onSurface,
+                          ),
                     ),
                     const SizedBox(width: 10),
                     Text(
                       '→',
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        color: Colors.blue,
-                      ),
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            color: theme.colorScheme.primary,
+                          ),
                     ),
                   ],
                 ),

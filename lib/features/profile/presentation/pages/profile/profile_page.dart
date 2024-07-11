@@ -4,6 +4,7 @@ import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/features/auth/auth.dart';
 import 'package:diyar/features/profile/presentation/presentation.dart';
 import 'package:diyar/l10n/l10n.dart';
+import 'package:diyar/shared/cubit/theme/cubit/theme_cubit.dart';
 import 'package:diyar/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,13 +40,36 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.primary,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         title: Text(
           context.l10n.cabinet,
-          style: theme.textTheme.titleSmall?.copyWith(
-            color: AppColors.white,
-          ),
+          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: CircleAvatar(
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              child: IconButton(
+                icon: Icon(
+                  Theme.of(context).brightness == Brightness.dark
+                      ? Icons.sunny
+                      : Icons.nightlight_round,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+                onPressed: () {
+                  final isDarkMode =
+                      Theme.of(context).brightness == Brightness.dark;
+                  context.read<ThemeCubit>().toggleTheme(
+                        isDarkMode ? Brightness.light : Brightness.dark,
+                      );
+                },
+              ),
+            ),
+          ),
+        ],
         automaticallyImplyLeading: false,
       ),
       body: BlocConsumer<ProfileCubit, ProfileState>(
@@ -84,7 +108,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 Container(
                   padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                   decoration: BoxDecoration(
-                    color: AppColors.white,
+                    color: Theme.of(context).colorScheme.surface,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Column(
@@ -110,7 +134,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 Container(
                   padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                   decoration: BoxDecoration(
-                    color: AppColors.white,
+                    color: Theme.of(context).colorScheme.surface,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: SettingsTile(
@@ -134,20 +158,21 @@ class _ProfilePageState extends State<ProfilePage> {
                       );
                     },
                     icon: Icons.exit_to_app,
-                    color: theme.colorScheme.error,
+                    color: Theme.of(context).colorScheme.error,
                   ),
                 ),
                 const SizedBox(height: 15),
                 Container(
                   padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                   decoration: BoxDecoration(
-                    color: AppColors.white,
+                    color: Theme.of(context).colorScheme.surface,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: VersionWidgets(
                     leading: const Icon(Icons.local_fire_department),
                     title: context.l10n.appVersion,
-                    trailing: Text(version, style: theme.textTheme.bodyMedium),
+                    trailing: Text(version,
+                        style: Theme.of(context).textTheme.bodyMedium),
                   ),
                 ),
               ],

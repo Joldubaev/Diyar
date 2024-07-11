@@ -24,7 +24,7 @@ class ProductItemWidget extends StatelessWidget {
           quantity: quantity,
           isCounter: false,
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.surface,
       ),
     );
   }

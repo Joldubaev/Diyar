@@ -3,7 +3,6 @@ import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/components/components.dart';
 import 'package:diyar/features/features.dart';
-import 'package:diyar/shared/theme/theme.dart';
 import 'package:diyar/shared/utils/utils.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
@@ -27,19 +26,23 @@ class _RessetPasswordPageState extends State<RessetPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.primary,
+        backgroundColor: theme.colorScheme.primary,
         leading: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back_ios,
-            color: AppColors.white,
+            color: theme.colorScheme.onPrimary,
           ),
           onPressed: () => context.router.push(const SignInRoute()),
         ),
         title: Text(
           context.l10n.passwordRecovery,
-          style: theme.textTheme.titleSmall!.copyWith(color: AppColors.white),
+          style: Theme.of(context)
+              .textTheme
+              .titleSmall!
+              .copyWith(color: theme.colorScheme.onPrimary),
         ),
       ),
       body: Padding(
@@ -48,20 +51,22 @@ class _RessetPasswordPageState extends State<RessetPasswordPage> {
           key: _formKey,
           child: ListView(
             children: <Widget>[
-              const Image(
+              Image(
                 height: 100,
                 width: 100,
-                color: AppColors.primary,
-                image: AssetImage("assets/images/auth_images.png"),
+                color: theme.colorScheme.primary,
+                image: const AssetImage("assets/images/auth_images.png"),
               ),
               const SizedBox(height: 10),
               Text(
                 context.l10n.passwordRecoveryText,
-                style: theme.textTheme.bodyLarge!.copyWith(
-                    color: AppColors.primary, fontWeight: FontWeight.w600),
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                    color: theme.colorScheme.primary,
+                    fontWeight: FontWeight.w600),
                 textAlign: TextAlign.center,
               ),
               CustomInputWidget(
+                filledColor: theme.colorScheme.surface,
                 title: context.l10n.email,
                 hintText: context.l10n.email,
                 controller: _emailController,
@@ -77,6 +82,7 @@ class _RessetPasswordPageState extends State<RessetPasswordPage> {
                 },
               ),
               CustomInputWidget(
+                filledColor: theme.colorScheme.surface,
                 title: context.l10n.newPassword,
                 hintText: "******",
                 controller: _passwordController,
@@ -92,6 +98,7 @@ class _RessetPasswordPageState extends State<RessetPasswordPage> {
                 },
               ),
               CustomInputWidget(
+                filledColor: theme.colorScheme.surface,
                 title: context.l10n.confirmPassword,
                 hintText: "******",
                 controller: _confirmPasswordController,
@@ -107,6 +114,7 @@ class _RessetPasswordPageState extends State<RessetPasswordPage> {
                 },
               ),
               CustomInputWidget(
+                filledColor: theme.colorScheme.surface,
                 title: context.l10n.codeUpdate,
                 hintText: "******",
                 controller: resedPasswordCode,
@@ -145,16 +153,22 @@ class _RessetPasswordPageState extends State<RessetPasswordPage> {
                         Center(
                           child: Text(
                             '${context.l10n.error} ${state.message}',
-                            style: theme.textTheme.bodyMedium!.copyWith(
-                                color: const Color.fromARGB(255, 233, 71, 35),
-                                fontWeight: FontWeight.bold),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                    color:
+                                        const Color.fromARGB(255, 233, 71, 35),
+                                    fontWeight: FontWeight.bold),
                           ),
                         ),
                         const SizedBox(height: 10),
                         SubmitButtonWidget(
-                          textStyle: theme.textTheme.bodyLarge!
-                              .copyWith(color: AppColors.white),
-                          bgColor: AppColors.primary,
+                          textStyle: Theme.of(context)
+                              .textTheme
+                              .bodyLarge!
+                              .copyWith(color: theme.colorScheme.onPrimary),
+                          bgColor: theme.colorScheme.primary,
                           title: context.l10n.entrance,
                           onTap: () {
                             if (_formKey.currentState!.validate()) {
@@ -173,9 +187,11 @@ class _RessetPasswordPageState extends State<RessetPasswordPage> {
                   }
 
                   return SubmitButtonWidget(
-                    textStyle: theme.textTheme.bodyLarge!
-                        .copyWith(color: AppColors.white),
-                    bgColor: AppColors.primary,
+                    textStyle: Theme.of(context)
+                        .textTheme
+                        .bodyLarge!
+                        .copyWith(color: theme.colorScheme.onPrimary),
+                    bgColor: theme.colorScheme.primary,
                     title: context.l10n.entrance,
                     onTap: () {
                       if (_formKey.currentState!.validate()) {
