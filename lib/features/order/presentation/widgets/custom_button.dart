@@ -1,4 +1,3 @@
-import 'package:diyar/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 class CustomButton extends StatelessWidget {
@@ -26,7 +25,10 @@ class CustomButton extends StatelessWidget {
         child: FittedBox(
           child: Text(
             title,
-            style: theme.textTheme.bodyMedium!.copyWith(color: bgColor),
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium!
+                .copyWith(color: bgColor),
           ),
         ),
       ),

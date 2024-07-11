@@ -89,9 +89,9 @@ class _PickupFormState extends State<PickupForm> {
         )
         .then((value) => context.read<CartCubit>().clearCart());
   }
-
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return BlocConsumer<OrderCubit, OrderState>(
       listener: (context, state) {
         if (state is CreateOrderLoaded) {
@@ -114,7 +114,7 @@ class _PickupFormState extends State<PickupForm> {
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium!
-                  .copyWith(color: AppColors.red),
+                  .copyWith(color: theme.colorScheme.error),
             ),
           );
         }
@@ -124,6 +124,7 @@ class _PickupFormState extends State<PickupForm> {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             children: [
               CustomInputWidget(
+                filledColor: theme.colorScheme.surface,
                 controller: _userName,
                 hintText: context.l10n.nameExample,
                 title: context.l10n.yourName,
@@ -155,12 +156,14 @@ class _PickupFormState extends State<PickupForm> {
               ),
               const SizedBox(height: 10),
               CustomInputWidget(
+                filledColor: theme.colorScheme.surface,
                 controller: _commentController,
                 hintText: '',
                 title: context.l10n.comment,
               ),
               const SizedBox(height: 10),
               CustomInputWidget(
+                filledColor: theme.colorScheme.surface,
                 onTap: _selectTime,
                 controller: _timeController,
                 hintText: context.l10n.chooseTime,
@@ -175,23 +178,31 @@ class _PickupFormState extends State<PickupForm> {
               const SizedBox(height: 10),
               Text(
                 context.l10n.orderPickupAd,
-                style: theme.textTheme.bodyMedium!.copyWith(fontSize: 16),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .copyWith(fontSize: 16),
               ),
               Text(
                 context.l10n.address,
-                style: theme.textTheme.bodyMedium!.copyWith(fontSize: 16),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .copyWith(fontSize: 16),
               ),
               const SizedBox(height: 10),
               SubmitButtonWidget(
                 title: context.l10n.confirmOrder,
-                bgColor: theme.primaryColor,
-                textStyle:
-                    theme.textTheme.bodyMedium!.copyWith(color: Colors.white),
+                bgColor: Theme.of(context).colorScheme.primary,
+                textStyle: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .copyWith(color: theme.colorScheme.surface),
                 onTap: () {
                   if (_formKey.currentState!.validate()) {
                     double totalPrice = _calculateTotalPrice();
                     showModalBottomSheet(
-                        backgroundColor: Colors.white,
+                        backgroundColor: theme.colorScheme.surface,
                         shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(20),
@@ -211,7 +222,7 @@ class _PickupFormState extends State<PickupForm> {
                               return Padding(
                                 padding:
                                     const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                                child: Column(
+                                child: ListView(
                                   children: [
                                     SizedBox(
                                       height: 60,
@@ -222,7 +233,9 @@ class _PickupFormState extends State<PickupForm> {
                                           Expanded(
                                             child: Text(
                                               '${context.l10n.orderPickupAd} ${context.l10n.address}',
-                                              style: theme.textTheme.bodyLarge!
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyLarge!
                                                   .copyWith(fontSize: 16),
                                             ),
                                           ),
@@ -253,9 +266,13 @@ class _PickupFormState extends State<PickupForm> {
                                                 title: Text(
                                                   context
                                                       .l10n.yourOrdersConfirm,
-                                                  style: theme
-                                                      .textTheme.bodyLarge!
-                                                      .copyWith(fontSize: 16),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium!
+                                                      .copyWith(
+                                                          color: theme
+                                                              .colorScheme
+                                                              .onSurface),
                                                 ),
                                                 content: Column(
                                                   mainAxisSize:
@@ -266,11 +283,13 @@ class _PickupFormState extends State<PickupForm> {
                                                     Text(
                                                       context
                                                           .l10n.operatorContact,
-                                                      style: theme
-                                                          .textTheme.bodyMedium!
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyMedium!
                                                           .copyWith(
-                                                              color: AppColors
-                                                                  .black1),
+                                                              color: theme
+                                                                  .colorScheme
+                                                                  .onSurface),
                                                     )
                                                   ],
                                                 ),

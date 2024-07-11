@@ -72,9 +72,9 @@ class _CustomInputWidgetState extends State<CustomInputWidget> {
             visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
             title: Text(
               widget.title!,
-              style: theme.textTheme.bodyMedium!.copyWith(
-                color: widget.titleColor,
-              ),
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: widget.titleColor,
+                  ),
             ),
             trailing: widget.trailing,
           ),
@@ -84,7 +84,7 @@ class _CustomInputWidgetState extends State<CustomInputWidget> {
           obscureText: widget.isPasswordField == true ? _obsecureText : false,
           cursorColor: AppColors.black1,
           onTap: widget.onTap,
-          style: theme.textTheme.bodyMedium,
+          style: Theme.of(context).textTheme.bodyMedium,
           readOnly: isReadOnly,
           validator: widget.validator,
           inputFormatters: widget.inputFormatters,
@@ -98,7 +98,8 @@ class _CustomInputWidgetState extends State<CustomInputWidget> {
               borderRadius: BorderRadius.circular(10),
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide: const BorderSide(color: AppColors.primary),
+              borderSide:
+                  BorderSide(color: Theme.of(context).colorScheme.primary),
               borderRadius: BorderRadius.circular(10),
             ),
             errorBorder: const OutlineInputBorder(

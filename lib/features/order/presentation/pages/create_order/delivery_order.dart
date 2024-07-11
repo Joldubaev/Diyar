@@ -62,6 +62,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return BlocConsumer<OrderCubit, OrderState>(
       listener: (context, state) {
         if (state is CreateOrderLoaded) {
@@ -97,7 +98,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                 style: Theme.of(context)
                     .textTheme
                     .bodyMedium!
-                    .copyWith(color: AppColors.red)),
+                    .copyWith(color: theme.colorScheme.error)),
           );
         }
         return Form(
@@ -106,6 +107,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             children: [
               CustomInputWidget(
+                  filledColor: theme.colorScheme.surface,
                   controller: _userName,
                   hintText: context.l10n.nameExample,
                   title: context.l10n.yourName,
@@ -134,6 +136,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                 },
               ),
               CustomInputWidget(
+                filledColor: theme.colorScheme.surface,
                 inputType: TextInputType.text,
                 hintText: context.l10n.enterAddress,
                 title: context.l10n.adress,
@@ -150,6 +153,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
               ),
               const SizedBox(height: 4),
               CustomInputWidget(
+                  filledColor: theme.colorScheme.surface,
                   inputType: TextInputType.text,
                   controller: _houseController,
                   hintText: context.l10n.houseNumber,
@@ -161,6 +165,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                     return null;
                   }),
               CustomInputWidget(
+                  filledColor: theme.colorScheme.surface,
                   inputType: TextInputType.text,
                   controller: _apartmentController,
                   hintText: '',
@@ -168,6 +173,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
               Row(children: [
                 Expanded(
                     child: CustomInputWidget(
+                        filledColor: theme.colorScheme.surface,
                         inputType: TextInputType.number,
                         controller: _floorController,
                         hintText: '',
@@ -175,12 +181,14 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                 const SizedBox(width: 10),
                 Expanded(
                     child: CustomInputWidget(
+                        filledColor: theme.colorScheme.surface,
                         inputType: TextInputType.number,
                         controller: _intercomController,
                         hintText: '',
                         title: context.l10n.entranceNumber))
               ]),
               CustomInputWidget(
+                  filledColor: theme.colorScheme.surface,
                   controller: _commentController,
                   hintText: '',
                   title: context.l10n.comment),
@@ -222,6 +230,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                 ),
               ),
               CustomInputWidget(
+                filledColor: theme.colorScheme.surface,
                 controller: _sdachaController,
                 hintText: '',
                 title: context.l10n.change,
@@ -242,7 +251,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                 textStyle: Theme.of(context)
                     .textTheme
                     .bodyMedium!
-                    .copyWith(color: AppColors.white),
+                    .copyWith(color: theme.colorScheme.surface),
                 onTap: () {
                   log(context.read<CartCubit>().totalPrice.toString());
                   if (_formKey.currentState!.validate()) {
@@ -265,7 +274,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
   Future<dynamic> showBottomSheet(BuildContext context) {
     return showModalBottomSheet(
       context: context,
-      backgroundColor: AppColors.white,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(20),
@@ -289,10 +298,8 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                   children: [
                     Text(
                       context.l10n.orderConfirmation,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge!
-                          .copyWith(color: AppColors.black1),
+                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface),
                     ),
                     IconButton(
                       icon: const Icon(Icons.close),
@@ -326,10 +333,18 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyLarge!
-                                  .copyWith(color: AppColors.black1)),
+                                  .copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface)),
                           content: Text(context.l10n.operatorContact,
-                              style: theme.textTheme.bodyMedium!
-                                  .copyWith(color: AppColors.black1),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface),
                               maxLines: 2),
                           actions: [
                             CustomButton(

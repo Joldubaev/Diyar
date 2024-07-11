@@ -17,7 +17,7 @@ class ActiveTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 10),
-      color: theme.colorScheme.surface,
+      color: Theme.of(context).colorScheme.surface,
       child: ListTile(
         onTap: onPressed,
         contentPadding: const EdgeInsets.fromLTRB(10, 4, 6, 2),
@@ -27,10 +27,10 @@ class ActiveTile extends StatelessWidget {
             Expanded(
               flex: 2,
               child: Text(text,
-                  style: theme.textTheme.bodyLarge!.copyWith(
-                    color: theme.colorScheme.onSurface,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontWeight: FontWeight.w500,
+                      ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis),
             ),
@@ -48,7 +48,7 @@ class ActiveTile extends StatelessWidget {
         ),
         trailing: Icon(
           Icons.arrow_forward_ios,
-          color: theme.colorScheme.onSurface,
+          color: Theme.of(context).colorScheme.onSurface,
         ),
       ),
     );

@@ -1,5 +1,4 @@
 import 'package:diyar/l10n/l10n.dart';
-import 'package:diyar/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -18,7 +17,8 @@ class EmptyCurierOrder extends StatelessWidget {
             height: 200,
           ),
           const SizedBox(height: 10),
-          Text(context.l10n.noOrders, style: theme.textTheme.titleSmall),
+          Text(context.l10n.noOrders,
+              style: Theme.of(context).textTheme.titleSmall),
         ],
       ),
     );

@@ -20,8 +20,10 @@ class EmptyActiveOrders extends StatelessWidget {
             FittedBox(
               child: Text(
                 text,
-                style:
-                    theme.textTheme.bodyLarge!.copyWith(color: AppColors.grey),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge!
+                    .copyWith(color: AppColors.grey),
                 textAlign: TextAlign.center,
               ),
             ),

@@ -1,4 +1,3 @@
-import 'package:diyar/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 class AddressField extends StatelessWidget {
@@ -14,14 +13,16 @@ class AddressField extends StatelessWidget {
       width: double.infinity,
       child: DecoratedBox(
         decoration: BoxDecoration(
-            color: theme.colorScheme.surface,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(8)),
         child: child ??
             Center(
               child: Text(
                 value ?? '',
-                style: theme.textTheme.bodyMedium!
-                    .copyWith(color: theme.colorScheme.onSurface),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .copyWith(color: Theme.of(context).colorScheme.onSurface),
               ),
             ),
       ),

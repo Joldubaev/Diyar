@@ -1,5 +1,4 @@
 import 'package:diyar/l10n/l10n.dart';
-import 'package:diyar/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 class HallCardWidget extends StatelessWidget {
@@ -43,7 +42,7 @@ class HallCardWidget extends StatelessWidget {
                 children: [
                   Text(
                     hallName,
-                    style: theme.textTheme.displayLarge!
+                    style: Theme.of(context).textTheme.displayLarge!
                         .copyWith(color: Colors.white, fontSize: 18),
                   ),
                   Row(
@@ -54,7 +53,7 @@ class HallCardWidget extends StatelessWidget {
                         child: Text(
                           title,
                           maxLines: 3,
-                          style: theme.textTheme.displayMedium!
+                          style: Theme.of(context).textTheme.displayMedium!
                               .copyWith(color: Colors.white, fontSize: 14),
                         ),
                       ),

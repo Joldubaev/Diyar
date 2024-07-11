@@ -40,7 +40,6 @@ class _SignUpFormState extends State<SignUpForm> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
     return Form(
       key: _formKey,
       child: ListView(
@@ -50,18 +49,19 @@ class _SignUpFormState extends State<SignUpForm> {
             'assets/images/app_logo.png',
             width: 100,
             height: 100,
-            color: AppColors.primary,
+            color: theme.colorScheme.primary,
           ),
           const SizedBox(height: 40),
           Align(
             alignment: Alignment.center,
             child: Text(
               context.l10n.registration,
-              style: theme.textTheme.titleMedium,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
           ),
           const SizedBox(height: 20),
           CustomInputWidget(
+            filledColor: theme.colorScheme.surface,
             hintText: context.l10n.yourName,
             controller: _usernameController,
             validator: (value) {
@@ -75,6 +75,7 @@ class _SignUpFormState extends State<SignUpForm> {
           ),
           const SizedBox(height: 10),
           CustomInputWidget(
+            filledColor: theme.colorScheme.surface,
             hintText: context.l10n.email,
             controller: _emailController,
             inputType: TextInputType.emailAddress,
@@ -90,7 +91,7 @@ class _SignUpFormState extends State<SignUpForm> {
           const SizedBox(height: 10),
           CustomInputWidget(
             hintText: '+996',
-            filledColor: Colors.white,
+            filledColor: theme.colorScheme.surface,
             controller: _phoneController,
             inputType: TextInputType.phone,
             inputFormatters: [phoneFormatter],
@@ -105,6 +106,7 @@ class _SignUpFormState extends State<SignUpForm> {
           ),
           const SizedBox(height: 10),
           CustomInputWidget(
+            filledColor: theme.colorScheme.surface,
             hintText: context.l10n.password,
             controller: _passwordController,
             isPasswordField: true,
@@ -132,9 +134,9 @@ class _SignUpFormState extends State<SignUpForm> {
                 child: TextButton(
                   child: Text(
                     context.l10n.termsAgree,
-                    style: theme.textTheme.bodySmall!.copyWith(
-                      color: AppColors.blue,
-                    ),
+                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                          color: AppColors.blue,
+                        ),
                     maxLines: 3,
                   ),
                   onPressed: () => AppLaunch.launchURL(AppConst.terms),
@@ -147,9 +149,11 @@ class _SignUpFormState extends State<SignUpForm> {
             builder: (context, state) {
               return SubmitButtonWidget(
                 isLoading: state is SignUpLoading,
-                textStyle:
-                    theme.textTheme.bodyLarge!.copyWith(color: AppColors.white),
-                bgColor: AppColors.primary,
+                textStyle: Theme.of(context)
+                    .textTheme
+                    .bodyLarge!
+                    .copyWith(color: theme.colorScheme.onPrimary),
+                bgColor: theme.colorScheme.primary,
                 title: context.l10n.register,
                 onTap: () {
                   if (!toc) {

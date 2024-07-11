@@ -44,17 +44,17 @@ class NewsWidgets extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      color: AppColors.black1,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: AppColors.black1,
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
                   Text(
                     subtitle,
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      color: AppColors.black1,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: AppColors.black1,
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
                 ],
               ),

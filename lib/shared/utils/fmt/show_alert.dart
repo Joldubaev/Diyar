@@ -1,16 +1,17 @@
 import 'package:diyar/shared/components/components.dart';
-import 'package:diyar/shared/theme/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 @immutable
 class AppAlert {
   static Future<T?> showLoading<T>(BuildContext context) {
+    final theme = Theme.of(context); // Get the current theme
+
     return showAdaptiveDialog<T>(
       context: context,
       builder: (context) {
         return AlertDialog.adaptive(
-          title: Text('Loading', style: theme.textTheme.titleLarge!),
+          title: Text('Loading', style: Theme.of(context).textTheme.titleLarge),
           content: Padding(
             padding: const EdgeInsets.only(top: 20, bottom: 20),
             child: CupertinoActivityIndicator(
@@ -41,7 +42,7 @@ class AppAlert {
       context: context,
       builder: (context) {
         return CupertinoAlertDialog(
-          title: Text(title, style: theme.textTheme.titleLarge!),
+          title: Text(title, style: Theme.of(context).textTheme.titleLarge),
           content: content,
           actions: [
             if (showCancelButton)

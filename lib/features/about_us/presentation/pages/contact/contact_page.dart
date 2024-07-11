@@ -18,13 +18,16 @@ class ContactPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.primary,
         leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios, color: AppColors.white),
+            icon: Icon(Icons.arrow_back_ios,
+                color: Theme.of(context).colorScheme.surface),
             onPressed: () {
               context.router.maybePop();
             }),
         title: Text(context.l10n.contact,
-            style:
-                theme.textTheme.titleSmall!.copyWith(color: AppColors.white)),
+            style: Theme.of(context)
+                .textTheme
+                .titleSmall!
+                .copyWith(color: Theme.of(context).colorScheme.surface)),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),

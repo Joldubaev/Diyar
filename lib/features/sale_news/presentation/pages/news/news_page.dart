@@ -28,20 +28,21 @@ class _NewsPageState extends State<NewsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.primary,
+        backgroundColor: theme.colorScheme.primary,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: AppColors.white),
+          icon: Icon(Icons.arrow_back_ios, color: theme.colorScheme.surface),
           onPressed: () {
             context.router.maybePop();
           },
         ),
         title: Text(
           context.l10n.news,
-          style: theme.textTheme.titleSmall?.copyWith(
-            color: AppColors.white,
-          ),
+          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                color: theme.colorScheme.surface,
+              ),
         ),
       ),
       body: BlocConsumer<HomeFeaturesCubit, HomeFeaturesState>(
@@ -70,8 +71,10 @@ class _NewsPageState extends State<NewsPage> {
                       const SizedBox(height: 20),
                       Text(
                         context.l10n.emptyText,
-                        style: theme.textTheme.bodyLarge!
-                            .copyWith(color: AppColors.black1),
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyLarge!
+                            .copyWith(color: theme.colorScheme.onSurface),
                       ),
                     ],
                   ),

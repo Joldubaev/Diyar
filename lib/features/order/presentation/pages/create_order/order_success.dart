@@ -30,12 +30,12 @@ class OrderSuccess extends StatelessWidget {
               ),
               const SizedBox(height: 30),
               Text(context.l10n.yourOrdersConfirm,
-                  style: theme.textTheme.titleSmall,
+                  style: Theme.of(context).textTheme.titleSmall,
                   textAlign: TextAlign.center),
               FittedBox(
                 child: Text(
                   context.l10n.orderTime,
-                  style: theme.textTheme.bodyMedium,
+                  style: Theme.of(context).textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 ),
               )
@@ -48,9 +48,9 @@ class OrderSuccess extends StatelessWidget {
         child: SubmitButtonWidget(
           title: context.l10n.createTemplate,
           bgColor: AppColors.primary,
-          textStyle: theme.textTheme.bodyMedium!.copyWith(
-            color: AppColors.white,
-          ),
+          textStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                color: AppColors.white,
+              ),
           onTap: () {
             showAdaptiveDialog(
                 barrierColor: Colors.black.withOpacity(0.5),
@@ -77,14 +77,17 @@ class _CreateOrderDialogState extends State<CreateOrderDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title:
-          Text(context.l10n.createTemplate, style: theme.textTheme.titleSmall),
+      title: Text(context.l10n.createTemplate,
+          style: Theme.of(context).textTheme.titleSmall),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             context.l10n.templateDescription,
-            style: theme.textTheme.bodySmall!.copyWith(color: AppColors.grey),
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall!
+                .copyWith(color: AppColors.grey),
           ),
           const SizedBox(height: 20),
           CustomInputWidget(
@@ -101,9 +104,9 @@ class _CreateOrderDialogState extends State<CreateOrderDialog> {
           SubmitButtonWidget(
             title: context.l10n.create,
             bgColor: AppColors.primary,
-            textStyle: theme.textTheme.bodyMedium!.copyWith(
-              color: AppColors.white,
-            ),
+            textStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  color: AppColors.white,
+                ),
             onTap: () {
               if (_controller.text.isEmpty) {
                 return;
@@ -117,8 +120,10 @@ class _CreateOrderDialogState extends State<CreateOrderDialog> {
             },
             child: Text(
               context.l10n.edit,
-              style:
-                  theme.textTheme.bodyMedium!.copyWith(color: AppColors.blue),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .copyWith(color: AppColors.blue),
             ),
           )
         ],

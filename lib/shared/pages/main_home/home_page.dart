@@ -36,13 +36,13 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final l10n = context.l10n;
+    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: AppColors.primary,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         title: BlocBuilder<ProfileCubit, ProfileState>(
           builder: (context, state) {
             return Align(
@@ -50,9 +50,10 @@ class _HomePageState extends State<HomePage> {
               child: FittedBox(
                 child: Text(
                   '${l10n.welcome},${context.read<ProfileCubit>().user?.name ?? 'В Дияр'}!',
-                  style: theme.textTheme.titleSmall?.copyWith(
-                    color: AppColors.white,
-                  ),
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleSmall
+                      ?.copyWith(color: theme.colorScheme.surface),
                 ),
               ),
             );
@@ -65,9 +66,8 @@ class _HomePageState extends State<HomePage> {
             if (state is PopularError) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: AppColors.primary,
-                ),
+                    content: Text(state.message),
+                    backgroundColor: theme.colorScheme.primary),
               );
             } else if (state is PopularLoaded) {
               setState(() {
@@ -86,10 +86,10 @@ class _HomePageState extends State<HomePage> {
                   if (menu.isNotEmpty) ...[
                     Text(
                       l10n.popularFood,
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        color: AppColors.black1,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleSmall
+                          ?.copyWith(color: theme.colorScheme.onSurface),
                     ),
                     const SizedBox(height: 10),
                     SizedBox(
@@ -148,7 +148,7 @@ class _HomePageState extends State<HomePage> {
                   Container(
                     padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                     decoration: BoxDecoration(
-                      color: AppColors.white,
+                      color: theme.colorScheme.surface,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: SettingsTile(

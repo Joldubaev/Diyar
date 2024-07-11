@@ -37,7 +37,7 @@ class CustomBoxWidget extends StatelessWidget {
           const SizedBox(height: 8.0),
           Text(
             label,
-            style: theme.textTheme.bodyLarge?.copyWith(
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
               color: Colors.grey[800],
             ),
           ),

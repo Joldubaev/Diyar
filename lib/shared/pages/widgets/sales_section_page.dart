@@ -3,7 +3,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/l10n/l10n.dart';
-import 'package:diyar/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,6 +20,7 @@ class SalesSectionState extends State<SalesSection> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return BlocBuilder<HomeFeaturesCubit, HomeFeaturesState>(
       builder: (context, state) {
         if (state is GetSalesLoading) {
@@ -29,7 +29,6 @@ class SalesSectionState extends State<SalesSection> {
           return Center(child: Text(state.message));
         } else if (state is GetSalesLoaded) {
           final sales = state.sales;
-
           return sales.isEmpty
               ? const SizedBox()
               : Column(
@@ -38,10 +37,10 @@ class SalesSectionState extends State<SalesSection> {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         context.l10n.sales,
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          color: AppColors.black1,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleSmall
+                            ?.copyWith(color: theme.colorScheme.onSurface),
                       ),
                     ),
                     ClipRRect(
@@ -90,15 +89,16 @@ class SalesSectionState extends State<SalesSection> {
                                   left: 10,
                                   right: 10,
                                   child: Container(
-                                    color: AppColors.black.withOpacity(0.5),
+                                    color: theme.colorScheme.onSurface
+                                        .withOpacity(0.5),
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: 8,
                                       vertical: 4,
                                     ),
                                     child: Text(
                                       '${sales[index].name} - ${sales[index].discount}%',
-                                      style: const TextStyle(
-                                        color: AppColors.white,
+                                      style: TextStyle(
+                                        color: theme.colorScheme.onPrimary,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -162,15 +162,16 @@ class SalesSectionState extends State<SalesSection> {
                                       left: 10,
                                       right: 10,
                                       child: Container(
-                                        color: AppColors.black.withOpacity(0.5),
+                                        color: theme.colorScheme.onSurface
+                                            .withOpacity(0.5),
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: 8,
                                           vertical: 4,
                                         ),
                                         child: Text(
                                           '${sales[index].name} - ${sales[index].discount}%',
-                                          style: const TextStyle(
-                                            color: AppColors.white,
+                                          style: TextStyle(
+                                            color: theme.colorScheme.onPrimary,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
@@ -190,8 +191,8 @@ class SalesSectionState extends State<SalesSection> {
                               shape: BoxShape.circle,
                               color: (Theme.of(context).brightness ==
                                           Brightness.dark
-                                      ? AppColors.white
-                                      : AppColors.black)
+                                      ? theme.colorScheme.onSurface
+                                      : theme.colorScheme.onSurface)
                                   .withOpacity(
                                       _currentIndex == entry.key ? 0.9 : 0.4),
                             ),

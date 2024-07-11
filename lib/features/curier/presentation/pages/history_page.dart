@@ -24,11 +24,12 @@ class _HistoryPageState extends State<HistoryPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
           context.l10n.orderHistory,
-          style: theme.textTheme.titleSmall,
+          style: Theme.of(context).textTheme.titleSmall,
         ),
       ),
       body: BlocConsumer<CurierCubit, CurierState>(
@@ -60,14 +61,14 @@ class _HistoryPageState extends State<HistoryPage> {
               final order = orders[index];
               return Container(
                 decoration: BoxDecoration(
-                  color: AppColors.white,
+                  color: theme.colorScheme.surface,
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
                     color: AppColors.black1.withOpacity(0.2),
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.black1.withOpacity(0.1),
+                      color: theme.colorScheme.onSurface.withOpacity(0.1),
                       blurRadius: 10,
                       offset: const Offset(0, 2),
                     ),
@@ -76,23 +77,24 @@ class _HistoryPageState extends State<HistoryPage> {
                 child: ListTile(
                   title: Text(
                       '${context.l10n.orderNumber} ${order.orderNumber ?? ""}',
-                      style: theme.textTheme.bodyLarge!.copyWith(
-                        color: AppColors.black1,
-                      )),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge!
+                          .copyWith(color: theme.colorScheme.onSurface)),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         '${context.l10n.name}: ${order.userName ?? ""}',
-                        style: theme.textTheme.bodyMedium,
+                        style: Theme.of(context).textTheme.bodyMedium,
                       ),
                       Text(
                         '${context.l10n.addressD}${order.address ?? ""}',
-                        style: theme.textTheme.bodyMedium,
+                        style: Theme.of(context).textTheme.bodyMedium,
                       ),
                       Text(
                         '${context.l10n.totalAmount}${(order.price ?? 0) + (order.deliveryPrice ?? 0)}',
-                        style: theme.textTheme.bodyMedium,
+                        style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     ],
                   ),

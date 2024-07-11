@@ -66,14 +66,15 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(10),
         boxShadow: widget.isShadowVisible!
             ? [
                 BoxShadow(
-                  color: AppColors.grey.withOpacity(0.2),
+                  color: theme.colorScheme.onSurface.withOpacity(0.1),
                   spreadRadius: 1,
                   blurRadius: 5,
                   offset: const Offset(0, 0),
@@ -90,11 +91,11 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
               padding: const EdgeInsets.all(4.0),
               child: DecoratedBox(
                 decoration: BoxDecoration(
-                  color: AppColors.white,
+                  color: theme.colorScheme.surface,
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.grey.withOpacity(0.2),
+                      color: theme.colorScheme.onSurface.withOpacity(0.1),
                       spreadRadius: 1,
                       blurRadius: 5,
                       offset: const Offset(0, 0),
@@ -109,7 +110,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                       imageUrl: widget.food.urlPhoto ?? '',
                       errorWidget: (context, url, error) => Image.asset(
                           'assets/images/app_logo.png',
-                          color: AppColors.grey),
+                          color: theme.colorScheme.onSurface.withOpacity(0.1)),
                       width: double.infinity,
                       height: 110,
                       memCacheWidth:
@@ -141,7 +142,8 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                           },
                           child: DecoratedBox(
                             decoration: BoxDecoration(
-                              color: AppColors.black1.withOpacity(.3),
+                              color:
+                                  theme.colorScheme.onSurface.withOpacity(0.5),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Center(
@@ -152,7 +154,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                                     .textTheme
                                     .titleMedium
                                     ?.copyWith(
-                                      color: AppColors.white,
+                                      color: theme.colorScheme.surface,
                                       fontWeight: FontWeight.w500,
                                       fontSize: 60,
                                     ),
@@ -170,7 +172,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
             padding: const EdgeInsets.fromLTRB(6, 0, 6, 0),
             child: Text(
               '${widget.food.name}',
-              style: theme.textTheme.bodyLarge,
+              style: Theme.of(context).textTheme.bodyLarge,
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
             ),
@@ -182,16 +184,16 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
               overflow: TextOverflow.ellipsis,
               text: TextSpan(
                 text: '${widget.food.weight}',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: AppColors.grey,
-                ),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurface.withOpacity(0.5),
+                    ),
                 children: [
                   TextSpan(
                     text: ' - ${widget.food.price} сом',
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: AppColors.green,
-                      fontWeight: FontWeight.w400,
-                    ),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: AppColors.green,
+                          fontWeight: FontWeight.w400,
+                        ),
                   ),
                 ],
               ),
@@ -206,7 +208,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30),
                 border: Border.all(
-                  color: AppColors.grey.withOpacity(0.5),
+                  color: theme.colorScheme.onSurface.withOpacity(0.1),
                 ),
               ),
               child: Row(

@@ -1,4 +1,3 @@
-import 'package:diyar/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 class VersionWidgets extends StatelessWidget {
@@ -21,10 +20,10 @@ class VersionWidgets extends StatelessWidget {
       leading: leading,
       title: Text(title),
       trailing: trailing ?? const Icon(Icons.arrow_back_ios),
-      iconColor: theme.colorScheme.primaryContainer,
-      titleTextStyle: theme.textTheme.bodyMedium!.copyWith(
-        color: theme.colorScheme.secondaryContainer,
-      ),
+      iconColor: Theme.of(context).colorScheme.primaryContainer,
+      titleTextStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
+            color: Theme.of(context).colorScheme.primaryContainer,
+          ),
       contentPadding: EdgeInsets.zero,
       onTap: onTap,
     );

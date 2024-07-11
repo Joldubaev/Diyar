@@ -1,6 +1,5 @@
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/l10n/l10n.dart';
-import 'package:diyar/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -14,11 +13,11 @@ class DishesWidget extends StatelessWidget {
       builder: (context, state) {
         return DecoratedBox(
           decoration: BoxDecoration(
-            color: AppColors.white,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
               BoxShadow(
-                color: AppColors.grey.withOpacity(0.2),
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
                 spreadRadius: 1,
                 blurRadius: 5,
                 offset: const Offset(0, 0),
@@ -33,9 +32,12 @@ class DishesWidget extends StatelessWidget {
                 SvgPicture.asset('assets/icons/menu_icon.svg', height: 30),
                 Text(
                   context.l10n.cutlery,
-                  style: theme.textTheme.bodyMedium!.copyWith(
-                    color: AppColors.black1,
-                  ),
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.6),
+                      ),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -45,7 +47,10 @@ class DishesWidget extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
                         border: Border.all(
-                          color: AppColors.grey.withOpacity(0.5),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withOpacity(0.6),
                         ),
                       ),
                       child: Row(
@@ -62,7 +67,7 @@ class DishesWidget extends StatelessWidget {
                           ),
                           Text(
                             context.read<CartCubit>().dishCount.toString(),
-                            style: theme.textTheme.bodyLarge,
+                            style: Theme.of(context).textTheme.bodyLarge,
                           ),
                           IconButton(
                             icon: const Icon(Icons.add),

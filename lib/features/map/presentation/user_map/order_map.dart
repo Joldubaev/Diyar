@@ -57,11 +57,12 @@ class _OrderMapPageState extends State<OrderMapPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
           title: Text(
             context.l10n.chooseAddress,
-            style: theme.textTheme.titleSmall,
+            style: Theme.of(context).textTheme.titleSmall,
           ),
           actions: [
             IconButton(
@@ -93,22 +94,19 @@ class _OrderMapPageState extends State<OrderMapPage> {
               },
             ),
           ),
-          const Positioned(
+          Positioned(
             top: 0,
             left: 0,
             right: 0,
             bottom: 0,
-            child: Icon(
-              Icons.location_on,
-              size: 30,
-              color: AppColors.red,
-            ),
+            child: Icon(Icons.location_on,
+                size: 30, color: theme.colorScheme.error),
           ),
         ],
       ),
       bottomSheet: BottomSheet(
         showDragHandle: true,
-        backgroundColor: AppColors.white,
+        backgroundColor: theme.colorScheme.surface,
         constraints: const BoxConstraints(maxHeight: 200, minHeight: 200),
         onClosing: () {},
         builder: (context) {
@@ -117,18 +115,23 @@ class _OrderMapPageState extends State<OrderMapPage> {
             children: [
               Text(
                 '${context.l10n.deliveryPrice}: ${MapHelper.isCoordinateInsidePolygons(lat, long, polygons: Polygons.getPolygons())} сом',
-                style:
-                    theme.textTheme.bodyLarge?.copyWith(color: AppColors.black),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge
+                    ?.copyWith(color: theme.colorScheme.onSurface),
               ),
               const SizedBox(height: 5),
               Card(
                 child: ListTile(
                   title: Text(
                     address ?? context.l10n.addressIsNotFounded,
-                    style: theme.textTheme.bodyMedium
-                        ?.copyWith(color: AppColors.black),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.copyWith(color: theme.colorScheme.onSurface),
                   ),
-                  leading: const Icon(Icons.location_on, color: AppColors.red),
+                  leading:
+                      Icon(Icons.location_on, color: theme.colorScheme.error),
                   onTap: () {
                     if (address == null ||
                         address == context.l10n.addressIsNotFounded) return;

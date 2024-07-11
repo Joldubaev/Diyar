@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:diyar/features/sale_news/data/model/sale_model.dart';
 import 'package:diyar/l10n/l10n.dart';
-import 'package:diyar/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -28,20 +27,21 @@ class _SalePageState extends State<SalePage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.primary,
+        backgroundColor: theme.colorScheme.primary,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: AppColors.white),
+          icon: Icon(Icons.arrow_back_ios, color: theme.colorScheme.surface),
           onPressed: () {
             context.router.maybePop();
           },
         ),
         title: Text(
           context.l10n.sales,
-          style: theme.textTheme.titleSmall?.copyWith(
-            color: AppColors.white,
-          ),
+          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                color: theme.colorScheme.surface,
+              ),
         ),
       ),
       body: sale == null
@@ -54,8 +54,10 @@ class _SalePageState extends State<SalePage> {
                   const SizedBox(height: 20),
                   Text(
                     context.l10n.emptyText,
-                    style: theme.textTheme.bodyLarge!
-                        .copyWith(color: AppColors.black1),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge!
+                        .copyWith(color: theme.colorScheme.onSurface),
                   ),
                 ],
               ),

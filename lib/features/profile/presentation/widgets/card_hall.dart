@@ -49,7 +49,9 @@ class HallCardWidget extends StatelessWidget {
                     flex: 2,
                     child: Text(title,
                         maxLines: 3,
-                        style: theme.textTheme.displayMedium!
+                        style: Theme.of(context)
+                            .textTheme
+                            .displayMedium!
                             .copyWith(color: Colors.white, fontSize: 18)),
                   ),
                   Expanded(

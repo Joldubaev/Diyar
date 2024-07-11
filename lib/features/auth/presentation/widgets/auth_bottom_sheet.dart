@@ -3,7 +3,6 @@ import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/components/components.dart';
 import 'package:diyar/features/features.dart';
-import 'package:diyar/shared/theme/theme.dart';
 import 'package:diyar/shared/utils/utils.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +27,7 @@ class AuthBottomSheet extends StatelessWidget {
           Text(context.l10n.enterEmail),
           const SizedBox(height: 10),
           CustomInputWidget(
+            filledColor: Theme.of(context).colorScheme.surface,
             title: context.l10n.email,
             hintText: context.l10n.email,
             controller: resedPasswordCode,
@@ -44,10 +44,10 @@ class AuthBottomSheet extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           SubmitButtonWidget(
-            textStyle: theme.textTheme.bodyLarge!.copyWith(
-              color: AppColors.white,
-            ),
-            bgColor: AppColors.primary,
+            textStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+            bgColor: Theme.of(context).colorScheme.primary,
             title: context.l10n.send,
             onTap: () {
               if (resedPasswordCode.text.isNotEmpty &&

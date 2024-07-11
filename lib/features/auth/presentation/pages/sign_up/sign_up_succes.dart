@@ -30,7 +30,7 @@ class SignUpSucces extends StatelessWidget {
                 const SizedBox(height: 30),
                 Text(
                   context.l10n.accountCreatedSuccessfully,
-                  style: theme.textTheme.titleSmall,
+                  style: Theme.of(context).textTheme.titleSmall,
                   textAlign: TextAlign.center,
                 )
               ],
@@ -43,7 +43,7 @@ class SignUpSucces extends StatelessWidget {
         child: SubmitButtonWidget(
           title: context.l10n.next,
           bgColor: AppColors.primary,
-          textStyle: theme.textTheme.bodyMedium!.copyWith(
+          textStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
             color: AppColors.white,
           ),
           onTap: () {

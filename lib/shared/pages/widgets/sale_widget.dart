@@ -40,7 +40,7 @@ class SaleWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(title,
-                      style: theme.textTheme.titleLarge?.copyWith(
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           color: AppColors.white, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 10),
                   ElevatedButton(
@@ -50,7 +50,7 @@ class SaleWidget extends StatelessWidget {
                             borderRadius: BorderRadius.circular(20))),
                     onPressed: () {},
                     child: Text('$discount %',
-                        style: theme.textTheme.titleSmall?.copyWith(
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
                             color: AppColors.white,
                             fontWeight: FontWeight.bold)),
                   )

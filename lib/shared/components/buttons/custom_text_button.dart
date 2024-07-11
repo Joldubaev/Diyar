@@ -23,8 +23,10 @@ class CustomTextButton extends StatelessWidget {
           onPressed: onPressed,
           child: Text(
             textButton,
-            style:
-                theme.textTheme.bodySmall!.copyWith(color: AppColors.primary),
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall!
+                .copyWith(color: AppColors.primary),
             maxLines: 2,
             textAlign: TextAlign.center,
           )),

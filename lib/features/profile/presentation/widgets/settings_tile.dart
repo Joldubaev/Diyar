@@ -1,4 +1,3 @@
-import 'package:diyar/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 class SettingsTile extends StatelessWidget {
@@ -28,13 +27,13 @@ class SettingsTile extends StatelessWidget {
           contentPadding: const EdgeInsets.all(0),
           title: Text(
             text,
-            style: theme.textTheme.bodyLarge,
+            style: Theme.of(context).textTheme.bodyLarge,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
           trailing: Icon(
             icon ?? Icons.arrow_forward_ios,
-            color: color ?? theme.colorScheme.onSurface.withOpacity(0.6),
+            color: color ?? Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
           ),
         ),
       ],

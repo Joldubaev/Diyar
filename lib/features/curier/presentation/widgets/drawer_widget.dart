@@ -3,7 +3,6 @@ import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/features/auth/auth.dart';
 import 'package:diyar/features/curier/curier.dart';
 import 'package:diyar/l10n/l10n.dart';
-import 'package:diyar/shared/theme/theme.dart';
 import 'package:diyar/shared/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,13 +13,19 @@ class CustomDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     GetUserModel user = context.read<CurierCubit>().user!;
     return Drawer(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(20),
+        ),
+      ),
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
           DrawerHeader(
-            decoration: const BoxDecoration(color: AppColors.white),
+            decoration: BoxDecoration(color: theme.colorScheme.secondary),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -28,22 +33,25 @@ class CustomDrawer extends StatelessWidget {
                     radius: 30,
                     child: SvgPicture.asset('assets/icons/profile_icon.svg',
                         height: 80,
-                        colorFilter: const ColorFilter.mode(
-                            AppColors.white, BlendMode.srcIn))),
+                        colorFilter: ColorFilter.mode(
+                            theme.colorScheme.onSurface, BlendMode.srcIn))),
                 const SizedBox(height: 10),
                 Text(user.userName ?? context.l10n.no,
-                    style:
-                        const TextStyle(color: AppColors.black1, fontSize: 18)),
+                    style: TextStyle(
+                        color: theme.colorScheme.onSurface, fontSize: 18)),
                 Text(user.phone ?? context.l10n.noPhoneNumber,
-                    style: const TextStyle(color: AppColors.black1)),
+                    style: TextStyle(
+                        color: theme.colorScheme.onSurface, fontSize: 14)),
               ],
             ),
           ),
           ListTile(
             leading: const Icon(Icons.shopping_cart),
             title: Text(context.l10n.activeOrders,
-                style: theme.textTheme.bodyMedium!
-                    .copyWith(color: AppColors.black1)),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .copyWith(color: theme.colorScheme.onSurface)),
             onTap: () {
               Navigator.pop(context);
             },
@@ -51,8 +59,10 @@ class CustomDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.history),
             title: Text(context.l10n.orderHistory,
-                style: theme.textTheme.bodyMedium!
-                    .copyWith(color: AppColors.black1)),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .copyWith(color: theme.colorScheme.onSurface)),
             onTap: () {
               context.maybePop();
               context.router.push(const HistoryRoute());
@@ -62,14 +72,16 @@ class CustomDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.logout),
             title: Text(context.l10n.exit,
-                style:
-                    theme.textTheme.bodyMedium!.copyWith(color: AppColors.red)),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .copyWith(color: theme.colorScheme.error)),
             onTap: () {
               AppAlert.showConfirmDialog(
                 context: context,
                 title: context.l10n.exit,
                 content: Text(context.l10n.areYouSure,
-                    style: theme.textTheme.bodyMedium),
+                    style: Theme.of(context).textTheme.bodyMedium),
                 cancelText: context.l10n.no,
                 confirmText: context.l10n.yes,
                 cancelPressed: () => Navigator.pop(context),

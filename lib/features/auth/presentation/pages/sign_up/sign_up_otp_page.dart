@@ -159,14 +159,14 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
                               width: 150,
                               child: Text(
                                 context.l10n.regenerateAvailable,
-                                style: theme.textTheme.bodyMedium,
+                                style: Theme.of(context).textTheme.bodyMedium,
                                 textAlign: TextAlign.center,
                               ),
                             ),
                             const SizedBox(height: 6),
                             Text(
                               "$_start сек",
-                              style: theme.textTheme.bodyLarge?.copyWith(
+                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                                 color: AppColors.red,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -188,7 +188,7 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
                           },
                           child: Text(
                             context.l10n.resendCode,
-                            style: theme.textTheme.bodyLarge?.copyWith(
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                               color: AppColors.red,
                               fontWeight: FontWeight.w500,
                             ),

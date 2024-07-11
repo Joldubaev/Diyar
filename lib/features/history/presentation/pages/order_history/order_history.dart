@@ -55,13 +55,15 @@ class _OrderHistoryState extends State<OrderHistory> {
                 childrenPadding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
                 title: Text(
                   context.l10n.orderDetails,
-                  style: theme.textTheme.bodyLarge!.copyWith(
-                    color: AppColors.primary,
-                  ),
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        color: AppColors.primary,
+                      ),
                 ),
                 subtitle: Text(
                   '${context.l10n.orderNumber} ${orders[index].orderNumber}',
-                  style: theme.textTheme.bodySmall!
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall!
                       .copyWith(color: AppColors.grey),
                 ),
                 children: [
