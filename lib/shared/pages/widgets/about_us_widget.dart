@@ -46,33 +46,30 @@ class AboutUsWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  context.l10n.aboutUs,
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        color: theme.colorScheme.onSurface,
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-                Text(
-                  context.l10n.allAbout,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: theme.colorScheme.onSurface,
-                      ),
-                ),
+                Text(context.l10n.aboutUs,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleSmall
+                        ?.copyWith(color: theme.colorScheme.onSurface)),
+                Text(context.l10n.allAbout,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge
+                        ?.copyWith(color: theme.colorScheme.onSurface)),
                 Row(
                   children: [
-                    Text(
-                      context.l10n.banket,
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: theme.colorScheme.onSurface,
-                          ),
-                    ),
+                    Text(context.l10n.banket,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyLarge
+                            ?.copyWith(color: theme.colorScheme.onSurface)),
                     const SizedBox(width: 10),
                     Text(
                       '→',
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: theme.colorScheme.primary,
-                          ),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge
+                          ?.copyWith(color: theme.colorScheme.primary),
                     ),
                   ],
                 ),
