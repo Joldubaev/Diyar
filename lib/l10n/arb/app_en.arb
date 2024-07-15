@@ -207,5 +207,6 @@
     "operatorContact": "An operator will contact you within 5 minutes to confirm the order",
     "ok": "OK",
     "chooseTime": "Choose time",
-    "appVersion": "App version"
+    "appVersion": "App version",
+    "noNews":"Now there are no news"
 }
