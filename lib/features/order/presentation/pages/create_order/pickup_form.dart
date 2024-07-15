@@ -89,6 +89,7 @@ class _PickupFormState extends State<PickupForm> {
         )
         .then((value) => context.read<CartCubit>().clearCart());
   }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -214,99 +215,104 @@ class _PickupFormState extends State<PickupForm> {
                         context: context,
                         builder: (context) {
                           return DraggableScrollableSheet(
-                            initialChildSize: 0.3,
-                            minChildSize: 0.3,
+                            initialChildSize: 0.4,
+                            minChildSize: 0.4,
                             expand: false,
-                            maxChildSize: 0.3,
+                            maxChildSize: 0.4,
                             builder: (context, scrollController) {
                               return Padding(
                                 padding:
                                     const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                                child: ListView(
-                                  children: [
-                                    SizedBox(
-                                      height: 60,
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Expanded(
-                                            child: Text(
-                                              '${context.l10n.orderPickupAd} ${context.l10n.address}',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyLarge!
-                                                  .copyWith(fontSize: 16),
+                                child: SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.4,
+                                  child: ListView(
+                                    children: [
+                                      SizedBox(
+                                        height: 60,
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                '${context.l10n.orderPickupAd} ${context.l10n.address}',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyLarge!
+                                                    .copyWith(fontSize: 16),
+                                              ),
                                             ),
-                                          ),
-                                          IconButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            icon: const Icon(Icons.close),
-                                          ),
-                                        ],
+                                            IconButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              icon: const Icon(Icons.close),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    const Divider(),
-                                    const SizedBox(height: 10),
-                                    CustomDialogWidget(
-                                      title: context.l10n.orderAmount,
-                                      description: '$totalPrice сом',
-                                    ),
-                                    const SizedBox(height: 10),
-                                    CustomButton(
-                                      title: context.l10n.confirm,
-                                      bgColor: AppColors.green,
-                                      onTap: () {
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return AlertDialog(
-                                                title: Text(
-                                                  context
-                                                      .l10n.yourOrdersConfirm,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodyMedium!
-                                                      .copyWith(
-                                                          color: theme
-                                                              .colorScheme
-                                                              .onSurface),
-                                                ),
-                                                content: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      context
-                                                          .l10n.operatorContact,
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .bodyMedium!
-                                                          .copyWith(
-                                                              color: theme
-                                                                  .colorScheme
-                                                                  .onSurface),
+                                      const Divider(),
+                                      const SizedBox(height: 10),
+                                      CustomDialogWidget(
+                                        title: context.l10n.orderAmount,
+                                        description: '$totalPrice сом',
+                                      ),
+                                      const SizedBox(height: 10),
+                                      CustomButton(
+                                        title: context.l10n.confirm,
+                                        bgColor: AppColors.green,
+                                        onTap: () {
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return AlertDialog(
+                                                  title: Text(
+                                                    context
+                                                        .l10n.yourOrdersConfirm,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyMedium!
+                                                        .copyWith(
+                                                            color: theme
+                                                                .colorScheme
+                                                                .onSurface),
+                                                  ),
+                                                  content: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        context.l10n
+                                                            .operatorContact,
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .bodyMedium!
+                                                            .copyWith(
+                                                                color: theme
+                                                                    .colorScheme
+                                                                    .onSurface),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  actions: [
+                                                    CustomButton(
+                                                      title: context.l10n.ok,
+                                                      bgColor: AppColors.green,
+                                                      onTap: () {
+                                                        _submitOrder();
+                                                      },
                                                     )
                                                   ],
-                                                ),
-                                                actions: [
-                                                  CustomButton(
-                                                    title: context.l10n.ok,
-                                                    bgColor: AppColors.green,
-                                                    onTap: () {
-                                                      _submitOrder();
-                                                    },
-                                                  )
-                                                ],
-                                              );
-                                            });
-                                      },
-                                    ),
-                                  ],
+                                                );
+                                              });
+                                        },
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               );
                             },
