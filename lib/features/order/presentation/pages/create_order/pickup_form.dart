@@ -248,6 +248,21 @@ class _PickupFormState extends State<PickupForm> {
                                                 Navigator.of(context).pop();
                                               },
                                               icon: const Icon(Icons.close),
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 60,
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              '${context.l10n.orderPickupAd} ${context.l10n.address}',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyLarge!
+                                                  .copyWith(fontSize: 16),
                                             ),
                                           ],
                                         ),

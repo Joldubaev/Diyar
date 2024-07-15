@@ -60,7 +60,6 @@ class _NewsPageState extends State<NewsPage> {
           } else if (state is GetNewsLoaded) {
             news = state.news;
           }
-
           return news.isEmpty
               ? Center(
                   child: Column(
@@ -70,11 +69,10 @@ class _NewsPageState extends State<NewsPage> {
                           width: 200, height: 200),
                       const SizedBox(height: 20),
                       Text(
-                        context.l10n.emptyText,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyLarge!
-                            .copyWith(color: theme.colorScheme.onSurface),
+                        context.l10n.noNews,
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                            color:
+                                theme.colorScheme.onSurface.withOpacity(0.5)),
                       ),
                     ],
                   ),
