@@ -10,7 +10,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
-import '../../widgets/custom_button.dart';
 import '../../widgets/custom_dialog_widget.dart';
 
 class PickupForm extends StatefulWidget {
@@ -215,39 +214,14 @@ class _PickupFormState extends State<PickupForm> {
                         context: context,
                         builder: (context) {
                           return DraggableScrollableSheet(
-                            initialChildSize: 0.4,
-                            minChildSize: 0.4,
+                            initialChildSize: 0.3,
+                            minChildSize: 0.3,
                             expand: false,
-                            maxChildSize: 0.4,
+                            maxChildSize: 0.3,
                             builder: (context, scrollController) {
                               return Padding(
                                 padding:
                                     const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                                child: SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.4,
-                                  child: ListView(
-                                    children: [
-                                      SizedBox(
-                                        height: 60,
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Expanded(
-                                              child: Text(
-                                                '${context.l10n.orderPickupAd} ${context.l10n.address}',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyLarge!
-                                                    .copyWith(fontSize: 16),
-                                              ),
-                                            ),
-                                            IconButton(
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                              icon: const Icon(Icons.close),
                                 child: Column(
                                   children: [
                                     SizedBox(
@@ -259,75 +233,81 @@ class _PickupFormState extends State<PickupForm> {
                                           Expanded(
                                             child: Text(
                                               '${context.l10n.orderPickupAd} ${context.l10n.address}',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyLarge!
+                                              style: theme.textTheme.bodyLarge!
                                                   .copyWith(fontSize: 16),
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                          IconButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            icon: const Icon(Icons.close),
+                                          ),
+                                        ],
                                       ),
-                                      const Divider(),
-                                      const SizedBox(height: 10),
-                                      CustomDialogWidget(
-                                        title: context.l10n.orderAmount,
-                                        description: '$totalPrice сом',
-                                      ),
-                                      const SizedBox(height: 10),
-                                      CustomButton(
-                                        title: context.l10n.confirm,
-                                        bgColor: AppColors.green,
-                                        onTap: () {
-                                          showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                return AlertDialog(
-                                                  title: Text(
-                                                    context
-                                                        .l10n.yourOrdersConfirm,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .bodyMedium!
+                                    ),
+                                    const Divider(),
+                                    const SizedBox(height: 10),
+                                    CustomDialogWidget(
+                                      title: context.l10n.orderAmount,
+                                      description: '$totalPrice сом',
+                                    ),
+                                    const SizedBox(height: 10),
+                                    SubmitButtonWidget(
+                                      textStyle: theme.textTheme.bodyMedium!
+                                          .copyWith(
+                                              color: theme.colorScheme.surface),
+                                      title: context.l10n.confirm,
+                                      bgColor: AppColors.green,
+                                      onTap: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                title: Text(
+                                                  context
+                                                      .l10n.yourOrdersConfirm,
+                                                  style: theme
+                                                      .textTheme.bodyLarge!
+                                                      .copyWith(fontSize: 16),
+                                                ),
+                                                content: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      context
+                                                          .l10n.operatorContact,
+                                                      style: theme
+                                                          .textTheme.bodyMedium!
+                                                          .copyWith(
+                                                              color: AppColors
+                                                                  .black1),
+                                                    )
+                                                  ],
+                                                ),
+                                                actions: [
+                                                  SubmitButtonWidget(
+                                                    textStyle: theme
+                                                        .textTheme.bodyMedium!
                                                         .copyWith(
                                                             color: theme
                                                                 .colorScheme
-                                                                .onSurface),
-                                                  ),
-                                                  content: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        context.l10n
-                                                            .operatorContact,
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .bodyMedium!
-                                                            .copyWith(
-                                                                color: theme
-                                                                    .colorScheme
-                                                                    .onSurface),
-                                                      )
-                                                    ],
-                                                  ),
-                                                  actions: [
-                                                    CustomButton(
-                                                      title: context.l10n.ok,
-                                                      bgColor: AppColors.green,
-                                                      onTap: () {
-                                                        _submitOrder();
-                                                      },
-                                                    )
-                                                  ],
-                                                );
-                                              });
-                                        },
-                                      ),
-                                    ],
-                                  ),
+                                                                .surface),
+                                                    title: context.l10n.ok,
+                                                    bgColor: AppColors.green,
+                                                    onTap: () {
+                                                      _submitOrder();
+                                                    },
+                                                  )
+                                                ],
+                                              );
+                                            });
+                                      },
+                                    ),
+                                  ],
                                 ),
                               );
                             },
