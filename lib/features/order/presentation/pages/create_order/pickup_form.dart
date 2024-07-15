@@ -89,6 +89,7 @@ class _PickupFormState extends State<PickupForm> {
         )
         .then((value) => context.read<CartCubit>().clearCart());
   }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -222,7 +223,7 @@ class _PickupFormState extends State<PickupForm> {
                               return Padding(
                                 padding:
                                     const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                                child: ListView(
+                                child: Column(
                                   children: [
                                     SizedBox(
                                       height: 60,

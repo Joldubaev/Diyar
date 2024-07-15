@@ -290,110 +290,114 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
           expand: false,
           maxChildSize: 0.35,
           builder: (BuildContext context, scrollController) {
-            return ListView(
+            return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      context.l10n.orderConfirmation,
-                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.close),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
-                ),
-                CustomDialogWidget(
-                    title: context.l10n.orderAmount,
-                    description: '${context.read<CartCubit>().totalPrice} сом'),
-                CustomDialogWidget(
-                    title: context.l10n.deliveryCost,
-                    description:
-                        '${context.read<OrderCubit>().deliveryPrice} сом'),
-                const Divider(),
-                CustomDialogWidget(
-                    title: context.l10n.total,
-                    description:
-                        '${context.read<CartCubit>().totalPrice + context.read<OrderCubit>().deliveryPrice} сом'),
-                CustomButton(
-                  title: context.l10n.confirm,
-                  bgColor: AppColors.green,
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text(context.l10n.yourOrdersConfirm,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge!
-                                  .copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface)),
-                          content: Text(context.l10n.operatorContact,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface),
-                              maxLines: 2),
-                          actions: [
-                            CustomButton(
-                              title: context.l10n.ok,
-                              bgColor: AppColors.green,
-                              onTap: () {
-                                context
-                                    .read<OrderCubit>()
-                                    .createOrder(CreateOrderModel(
-                                        userPhone: _phoneController.text,
-                                        userName: _userName.text,
-                                        address: _addressController.text,
-                                        comment: _commentController.text,
-                                        price: context
-                                            .read<CartCubit>()
-                                            .totalPrice,
-                                        deliveryPrice: context
-                                            .read<OrderCubit>()
-                                            .deliveryPrice,
-                                        houseNumber: _houseController.text,
-                                        kvOffice: _apartmentController.text,
-                                        intercom: _intercomController.text,
-                                        floor: _floorController.text,
-                                        entrance: _entranceController.text,
-                                        paymentMethod: _paymentType.name,
-                                        dishesCount:
-                                            context.read<CartCubit>().dishCount,
-                                        sdacha: int.tryParse(
-                                                _sdachaController.text) ??
-                                            0,
-                                        foods: widget.cart
-                                            .map((e) => OrderFoodItem(
-                                                  name: e.food?.name ?? '',
-                                                  price: e.food?.price ?? 0,
-                                                  quantity: e.quantity ?? 1,
-                                                ))
-                                            .toList()))
-                                    .then((value) {
-                                  context.read<CartCubit>().clearCart();
-                                });
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                ),
-              ],
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        context.l10n.orderConfirmation,
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  ),
+                  CustomDialogWidget(
+                      title: context.l10n.orderAmount,
+                      description:
+                          '${context.read<CartCubit>().totalPrice} сом'),
+                  CustomDialogWidget(
+                      title: context.l10n.deliveryCost,
+                      description:
+                          '${context.read<OrderCubit>().deliveryPrice} сом'),
+                  const Divider(),
+                  CustomDialogWidget(
+                      title: context.l10n.total,
+                      description:
+                          '${context.read<CartCubit>().totalPrice + context.read<OrderCubit>().deliveryPrice} сом'),
+                  CustomButton(
+                    title: context.l10n.confirm,
+                    bgColor: AppColors.green,
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Text(context.l10n.yourOrdersConfirm,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface)),
+                            content: Text(context.l10n.operatorContact,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface),
+                                maxLines: 2),
+                            actions: [
+                              CustomButton(
+                                title: context.l10n.ok,
+                                bgColor: AppColors.green,
+                                onTap: () {
+                                  context
+                                      .read<OrderCubit>()
+                                      .createOrder(CreateOrderModel(
+                                          userPhone: _phoneController.text,
+                                          userName: _userName.text,
+                                          address: _addressController.text,
+                                          comment: _commentController.text,
+                                          price: context
+                                              .read<CartCubit>()
+                                              .totalPrice,
+                                          deliveryPrice: context
+                                              .read<OrderCubit>()
+                                              .deliveryPrice,
+                                          houseNumber: _houseController.text,
+                                          kvOffice: _apartmentController.text,
+                                          intercom: _intercomController.text,
+                                          floor: _floorController.text,
+                                          entrance: _entranceController.text,
+                                          paymentMethod: _paymentType.name,
+                                          dishesCount: context
+                                              .read<CartCubit>()
+                                              .dishCount,
+                                          sdacha: int.tryParse(
+                                                  _sdachaController.text) ??
+                                              0,
+                                          foods: widget.cart
+                                              .map((e) => OrderFoodItem(
+                                                    name: e.food?.name ?? '',
+                                                    price: e.food?.price ?? 0,
+                                                    quantity: e.quantity ?? 1,
+                                                  ))
+                                              .toList()))
+                                      .then((value) {
+                                    context.read<CartCubit>().clearCart();
+                                  });
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
             );
           },
         );
