@@ -60,7 +60,7 @@ showMapSearchBottom(
                                         latitude: 42.7919, longitude: 74.4317),
                                   ),
                                   suggestOptions: const SuggestOptions(
-                                    suggestType: SuggestType.geo,
+                                    suggestType: SuggestType.transit,
                                   ),
                                 ).then((value) {
                                   final result = value.$2;
