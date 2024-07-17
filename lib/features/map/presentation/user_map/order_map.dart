@@ -7,8 +7,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/core/utils/helper/helper.dart';
 import 'package:diyar/features/cart/cart.dart';
-import 'package:diyar/features/map/data/models/location_model.dart';
-import 'package:diyar/features/map/data/repositories/location_repo.dart';
 import 'package:diyar/features/map/data/repositories/yandex_service.dart';
 import 'package:diyar/features/map/presentation/widgets/coordinats.dart';
 import 'package:diyar/features/map/presentation/widgets/widgets.dart';
@@ -32,7 +30,6 @@ class OrderMapPage extends StatefulWidget {
 
 class _OrderMapPageState extends State<OrderMapPage> {
   final mapControllerCompleter = Completer<YandexMapController>();
-  final AddressRepository locationRepo = AddressRepository();
   final TextEditingController textController = TextEditingController();
   final texControler = TextEditingController();
   String? address;
@@ -281,42 +278,50 @@ class _OrderMapPageState extends State<OrderMapPage> {
   }
 
   Future<void> updateAddressDetails(AppLatLong latLong) async {
-    address = 'Поиск местоположения';
-    setState(() {});
-    LocationModel? data =
-        await locationRepo.getLocationByCoordinates(latLong: latLong);
+    setState(() {
+      address = 'Поиск местоположения';
+    });
 
-    if (data != null && data.response != null) {
-      final featureMembers = data.response!.geoObjectCollection!.featureMember!;
-      if (featureMembers.isNotEmpty) {
-        final geoObject = featureMembers.first.geoObject!;
-        final formattedAddress =
-            geoObject.metaDataProperty?.geocoderMetaData?.address?.formatted;
+    try {
+      final searchSessionData = await YandexSearch.searchByPoint(
+        point: Point(latitude: latLong.latitude, longitude: latLong.longitude),
+        searchOptions: const SearchOptions(),
+      );
 
-        if (formattedAddress != null &&
-            formattedAddress.contains('Кыргызстан')) {
+      final searchSessionResult = await searchSessionData.$2;
+
+      if (searchSessionResult.items != null &&
+          searchSessionResult.items!.isNotEmpty) {
+        final formattedAddress = searchSessionResult.items!.first.name;
+        setState(() {
           address = formattedAddress;
-        } else {
-          address = context.l10n.addressIsNotFounded;
-        }
+        });
       } else {
-        address = context.l10n.addressIsNotFounded;
+        setState(() {
+          address = context.l10n.addressIsNotFounded;
+        });
       }
-    } else {
-      address = context.l10n.addressIsNotFounded;
-    }
 
-    if (userLocation != null) {
-      double distance = MapHelper.calculateDistance(userLocation!.latitude,
-          userLocation!.longitude, latLong.latitude, latLong.longitude);
+      if (userLocation != null) {
+        double distance = MapHelper.calculateDistance(
+          userLocation!.latitude,
+          userLocation!.longitude,
+          latLong.latitude,
+          latLong.longitude,
+        );
+        setState(() {
+          deliveryPrice = distance * pricePerKm;
+        });
+
+        log("Distance to restaurant: $distance km");
+      }
+    } catch (e) {
       setState(() {
-        deliveryPrice = distance * pricePerKm;
+        address = context.l10n.addressIsNotFounded;
       });
-
-      log("Distance to restaurant: $distance km");
+      log('Error updating address details: $e');
     }
 
-    setState(() {});
-    log(' address: $address');
+    log('Address: $address');
   }
 }
