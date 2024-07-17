@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/components/components.dart';
-import 'package:diyar/shared/theme/theme.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
@@ -17,7 +16,7 @@ showMapSearchBottom(
 
   showModalBottomSheet(
     context: context,
-    backgroundColor: Colors.white,
+    backgroundColor: Theme.of(context).colorScheme.surface,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.only(
         topLeft: Radius.circular(20),
@@ -27,6 +26,7 @@ showMapSearchBottom(
     useSafeArea: true,
     isScrollControlled: true,
     builder: (_) {
+      final theme = Theme.of(context);
       return StatefulBuilder(builder: (context, setState) {
         return DraggableScrollableSheet(
           initialChildSize: 0.8,
@@ -44,6 +44,7 @@ showMapSearchBottom(
                     children: [
                       Expanded(
                         child: CustomInputWidget(
+                          filledColor: theme.colorScheme.surface,
                           hintText: context.l10n.pleaseEnterAddress,
                           leading: const Icon(Icons.search),
                           onChanged: (p0) {
@@ -84,10 +85,10 @@ showMapSearchBottom(
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: ColoredBox(
-                          color: AppColors.primary,
+                          color: theme.colorScheme.primary,
                           child: IconButton(
                             icon: const Icon(Icons.close),
-                            color: AppColors.white,
+                            color: theme.colorScheme.onPrimary,
                             onPressed: () => context.maybePop(),
                           ),
                         ),
@@ -114,7 +115,7 @@ showMapSearchBottom(
                           ),
                           // physics: const NeverScrollableScrollPhysics(),
                           separatorBuilder: (context, index) => Divider(
-                            color: Colors.grey[300],
+                            color: theme.colorScheme.onSurface,
                           ),
                           itemCount: suggests.length,
                         ),

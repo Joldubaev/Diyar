@@ -111,6 +111,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (e is DioException && e.response?.statusCode == 400) {
         showToast('Пользователь с таким email уже существует', isError: true);
         throw ServerException();
+      } else if (e is DioException && e.response?.statusCode == 418) {
+        showToast('Пользователь с таким номером телефона уже существует',
+            isError: true);
+        throw ServerException();
       } else {
         throw DioException(
           error: 'Ошибка сервера',
