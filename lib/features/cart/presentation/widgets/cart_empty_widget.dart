@@ -1,5 +1,4 @@
 import 'package:diyar/l10n/l10n.dart';
-import 'package:diyar/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -20,7 +19,7 @@ class CartEmptyWidget extends StatelessWidget {
               style: Theme.of(context)
                   .textTheme
                   .titleSmall!
-                  .copyWith(color: AppColors.black1)),
+                  .copyWith(color: Theme.of(context).colorScheme.onSurface)),
           Text(context.l10n.addToCart,
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                   color: Theme.of(context)

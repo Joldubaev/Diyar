@@ -53,7 +53,7 @@ class _HomePageState extends State<HomePage> {
                   style: Theme.of(context)
                       .textTheme
                       .titleSmall
-                      ?.copyWith(color: theme.colorScheme.surface),
+                      ?.copyWith(color: AppColors.white),
                 ),
               ),
             );

@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/features/features.dart';
 import 'package:diyar/l10n/l10n.dart';
+import 'package:diyar/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -32,9 +33,9 @@ class _RestorantPageState extends State<RestorantPage> {
             style: Theme.of(context)
                 .textTheme
                 .titleMedium!
-                .copyWith(color: theme.colorScheme.surface)),
+                .copyWith(color: AppColors.white)),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: theme.colorScheme.surface),
+          icon: const Icon(Icons.arrow_back_ios, color: AppColors.white),
           onPressed: () {
             context.router.maybePop();
           },

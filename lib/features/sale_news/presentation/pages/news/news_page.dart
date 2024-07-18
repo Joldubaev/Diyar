@@ -33,16 +33,17 @@ class _NewsPageState extends State<NewsPage> {
       appBar: AppBar(
         backgroundColor: theme.colorScheme.primary,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: theme.colorScheme.surface),
+          icon: const Icon(Icons.arrow_back_ios, color: AppColors.white),
           onPressed: () {
             context.router.maybePop();
           },
         ),
         title: Text(
           context.l10n.news,
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                color: theme.colorScheme.surface,
-              ),
+          style: Theme.of(context)
+              .textTheme
+              .titleSmall
+              ?.copyWith(color: AppColors.white),
         ),
       ),
       body: BlocConsumer<HomeFeaturesCubit, HomeFeaturesState>(

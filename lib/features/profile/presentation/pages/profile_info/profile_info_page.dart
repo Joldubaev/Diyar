@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/components/components.dart';
 import 'package:diyar/features/auth/data/models/user_model.dart';
+import 'package:diyar/shared/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -39,19 +40,17 @@ class _ProfileInfoPageState extends State<ProfileInfoPage> {
       appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.primary,
           leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: Theme.of(context).colorScheme.surface,
-            ),
+            icon: const Icon(Icons.arrow_back_ios, color: AppColors.white),
             onPressed: () {
               context.router.maybePop();
             },
           ),
           title: Text(
             context.l10n.profile,
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  color: Theme.of(context).colorScheme.surface,
-                ),
+            style: Theme.of(context)
+                .textTheme
+                .titleSmall
+                ?.copyWith(color: AppColors.white),
           )),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -67,9 +66,8 @@ class _ProfileInfoPageState extends State<ProfileInfoPage> {
                     child: SvgPicture.asset(
                       'assets/icons/profile_icon.svg',
                       height: 100,
-                      colorFilter: ColorFilter.mode(
-                          Theme.of(context).colorScheme.surface,
-                          BlendMode.srcIn),
+                      colorFilter: const ColorFilter.mode(
+                          AppColors.white, BlendMode.srcIn),
                     ),
                   ),
                 ),
