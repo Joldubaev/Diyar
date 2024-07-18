@@ -91,6 +91,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             children: [
               CustomInputWidget(
+                  titleColor: theme.colorScheme.onSurface,
                   filledColor: theme.colorScheme.surface,
                   controller: _userName,
                   hintText: context.l10n.nameExample,
@@ -120,6 +121,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                 },
               ),
               CustomInputWidget(
+                titleColor: theme.colorScheme.onSurface,
                 filledColor: theme.colorScheme.surface,
                 inputType: TextInputType.text,
                 hintText: context.l10n.enterAddress,
@@ -136,6 +138,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                 },
               ),
               CustomInputWidget(
+                  titleColor: theme.colorScheme.onSurface,
                   filledColor: theme.colorScheme.surface,
                   inputType: TextInputType.text,
                   controller: _houseController,
@@ -151,6 +154,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                 children: [
                   Expanded(
                     child: CustomInputWidget(
+                      titleColor: theme.colorScheme.onSurface,
                       filledColor: theme.colorScheme.surface,
                       inputType: TextInputType.text,
                       controller: _entranceController,
@@ -161,6 +165,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                   const SizedBox(width: 8),
                   Expanded(
                     child: CustomInputWidget(
+                      titleColor: theme.colorScheme.onSurface,
                       filledColor: theme.colorScheme.surface,
                       inputType: TextInputType.text,
                       controller: _floorController,
@@ -174,6 +179,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                 children: [
                   Expanded(
                     child: CustomInputWidget(
+                      titleColor: theme.colorScheme.onSurface,
                       filledColor: theme.colorScheme.surface,
                       inputType: TextInputType.text,
                       controller: _apartmentController,
@@ -184,6 +190,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                   const SizedBox(width: 8),
                   Expanded(
                     child: CustomInputWidget(
+                      titleColor: theme.colorScheme.onSurface,
                       filledColor: theme.colorScheme.surface,
                       inputType: TextInputType.text,
                       controller: _intercomController,
@@ -194,6 +201,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                 ],
               ),
               CustomInputWidget(
+                titleColor: theme.colorScheme.onSurface,
                 filledColor: theme.colorScheme.surface,
                 inputType: TextInputType.number,
                 controller: _sdachaController,
@@ -209,6 +217,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                 },
               ),
               CustomInputWidget(
+                titleColor: theme.colorScheme.onSurface,
                 filledColor: theme.colorScheme.surface,
                 controller: _commentController,
                 hintText: context.l10n.comment,

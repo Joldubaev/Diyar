@@ -124,6 +124,7 @@ class _PickupFormState extends State<PickupForm> {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             children: [
               CustomInputWidget(
+                titleColor: theme.colorScheme.onSurface,
                 filledColor: theme.colorScheme.surface,
                 controller: _userName,
                 hintText: context.l10n.nameExample,
@@ -156,6 +157,7 @@ class _PickupFormState extends State<PickupForm> {
               ),
               const SizedBox(height: 10),
               CustomInputWidget(
+                titleColor: theme.colorScheme.onSurface,
                 filledColor: theme.colorScheme.surface,
                 controller: _commentController,
                 hintText: '',

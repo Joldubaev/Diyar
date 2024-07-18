@@ -8,6 +8,7 @@ import 'package:diyar/shared/cubit/theme/cubit/theme_cubit.dart';
 import 'package:diyar/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 @RoutePage()
@@ -43,15 +44,16 @@ class _ProfilePageState extends State<ProfilePage> {
         backgroundColor: Theme.of(context).colorScheme.primary,
         title: Text(
           context.l10n.cabinet,
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                color: Theme.of(context).colorScheme.onPrimary,
-              ),
+          style: Theme.of(context)
+              .textTheme
+              .titleSmall
+              ?.copyWith(color: AppColors.white),
         ),
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: CircleAvatar(
-              backgroundColor: Theme.of(context).colorScheme.surface,
+              backgroundColor: AppColors.white,
               child: IconButton(
                 icon: Icon(
                   Theme.of(context).brightness == Brightness.dark
@@ -114,16 +116,34 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: Column(
                     children: [
                       SettingsTile(
+                        leading: SvgPicture.asset('assets/icons/about.svg',
+                            height: 40),
                         text: context.l10n.aboutUs,
                         onPressed: () =>
                             context.pushRoute(const AboutUsRoute()),
                       ),
+                      Divider(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withOpacity(0.2),
+                          height: 1),
                       SettingsTile(
+                        leading: SvgPicture.asset('assets/icons/phone.svg',
+                            height: 40),
                         text: context.l10n.contact,
                         onPressed: () =>
                             context.pushRoute(const ContactRoute()),
                       ),
+                      Divider(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withOpacity(0.2),
+                          height: 1),
                       SettingsTile(
+                        leading: SvgPicture.asset('assets/icons/document.svg',
+                            height: 40),
                         text: context.l10n.policy,
                         onPressed: () => AppLaunch.launchURL(AppConst.terms),
                       ),
@@ -138,6 +158,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: SettingsTile(
+                    leading: const Icon(Icons.exit_to_app, size: 30),
                     text: context.l10n.exit,
                     onPressed: () {
                       AppAlert.showConfirmDialog(

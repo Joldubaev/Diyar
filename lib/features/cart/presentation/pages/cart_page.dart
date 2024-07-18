@@ -27,9 +27,10 @@ class CartPageState extends State<CartPage>
         backgroundColor: Theme.of(context).colorScheme.primary,
         title: Text(
           context.l10n.cart,
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                color: Theme.of(context).colorScheme.surface,
-              ),
+          style: Theme.of(context)
+              .textTheme
+              .titleSmall
+              ?.copyWith(color: AppColors.white),
         ),
         automaticallyImplyLeading: false,
       ),

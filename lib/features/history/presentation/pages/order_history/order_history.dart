@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/router/routes.gr.dart';
+import 'package:diyar/features/curier/presentation/presentation.dart';
 import 'package:diyar/features/history/history.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/components/components.dart';
@@ -38,7 +39,7 @@ class _OrderHistoryState extends State<OrderHistory> {
           } else if (state is GetHistoryOrdersLoaded) {
             orders = state.orders;
             if (orders.isEmpty) {
-              return Center(child: Text(context.l10n.noOrderHistory));
+              return EmptyActiveOrders(text: context.l10n.noOrderHistory);
             }
           }
 

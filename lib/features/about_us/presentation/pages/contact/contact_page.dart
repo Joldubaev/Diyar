@@ -18,8 +18,7 @@ class ContactPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.primary,
         leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios,
-                color: Theme.of(context).colorScheme.surface),
+            icon: const Icon(Icons.arrow_back_ios, color: AppColors.white),
             onPressed: () {
               context.router.maybePop();
             }),
@@ -27,7 +26,7 @@ class ContactPage extends StatelessWidget {
             style: Theme.of(context)
                 .textTheme
                 .titleSmall!
-                .copyWith(color: Theme.of(context).colorScheme.surface)),
+                .copyWith(color: AppColors.white)),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
