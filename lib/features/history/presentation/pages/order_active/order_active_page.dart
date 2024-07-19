@@ -74,6 +74,7 @@ class _ActiveOrderPageState extends State<ActiveOrderPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return BlocBuilder<HistoryCubit, HistoryState>(
       builder: (context, state) {
         if (state is GetActiveOrdersError) {
@@ -119,14 +120,16 @@ class _ActiveOrderPageState extends State<ActiveOrderPage> {
                       ),
                       title: Text(
                         '${context.l10n.orderNumber} $orderNumber',
-                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                              color: AppColors.primary,
-                            ),
+                        style: theme.textTheme.bodyLarge!.copyWith(
+                          color: AppColors.primary,
+                        ),
                       ),
                       subtitle: Column(
                         children: [
                           OrderStepper(orderStatus: orderStatus),
                           CustomTextButton(
+                            textStyle: theme.textTheme.bodyLarge!
+                                .copyWith(color: AppColors.primary),
                             onPressed: () => context.pushRoute(
                               OrderDetailRoute(orderNumber: "$orderNumber"),
                             ),

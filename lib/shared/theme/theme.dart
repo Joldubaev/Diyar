@@ -71,6 +71,10 @@ final lightTheme = ThemeData(
       borderRadius: BorderRadius.circular(50),
     ),
   ),
+  bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+    selectedLabelStyle: TextStyle(fontSize: 14),
+    unselectedLabelStyle: TextStyle(fontSize: 14),
+  ),
 );
 
 final darkTheme = ThemeData(

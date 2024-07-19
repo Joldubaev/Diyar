@@ -50,17 +50,14 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           return Card(
             color: theme.colorScheme.surface,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-              side: BorderSide(
-                  color: theme.colorScheme.onSurface.withOpacity(0.1)),
-            ),
+                borderRadius: BorderRadius.circular(10),
+                side: BorderSide(
+                    color: theme.colorScheme.onSurface.withOpacity(0.1))),
             child: ListView.separated(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              separatorBuilder: (context, index) => SizedBox(
-                height: 1,
-                child: Container(
-                    color: theme.colorScheme.onSurface.withOpacity(0.1)),
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              separatorBuilder: (context, index) => Divider(
+                  color: theme.colorScheme.onSurface.withOpacity(0.2),
+                  height: 1),
               itemCount: _buildDetailList().length,
               itemBuilder: (context, index) {
                 final detail = _buildDetailList()[index];
@@ -69,22 +66,18 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                     Row(
                       children: [
                         Expanded(
-                          child: Text(
-                            detail.title,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
+                            child: Text(detail.title,
+                                style: theme.textTheme.bodyMedium!.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    color: theme.colorScheme.onSurface))),
                         Expanded(
-                          child: Text(detail.value,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .copyWith(
-                                      color: theme.colorScheme.onSurface)),
-                        ),
+                            child: Text(detail.value,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(
+                                        fontWeight: FontWeight.w500,
+                                        color: theme.colorScheme.onSurface))),
                       ],
                     ),
                   ],

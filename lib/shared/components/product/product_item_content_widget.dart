@@ -54,7 +54,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
     if (oldWidget.quantity != widget.quantity) {
       _controller.text = widget.quantity.toString();
       isChangedCounter = true;
-      Future.delayed(const Duration(milliseconds: 400), () {
+      Future.delayed(const Duration(milliseconds: 200), () {
         if (mounted) {
           setState(() {
             isChangedCounter = false;
@@ -132,7 +132,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                         left: 0,
                         bottom: 0,
                         child: AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 400),
+                          duration: const Duration(milliseconds: 200),
                           transitionBuilder:
                               (Widget child, Animation<double> animation) {
                             return ScaleTransition(
