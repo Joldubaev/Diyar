@@ -8,12 +8,14 @@ class CustomTextButton extends StatelessWidget {
     this.onPressed,
     this.time,
     this.description,
+    this.textStyle,
   });
 
   final String textButton;
   final String? description;
   final DateTime? time;
   final Function()? onPressed;
+  final TextStyle? textStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -23,10 +25,10 @@ class CustomTextButton extends StatelessWidget {
           onPressed: onPressed,
           child: Text(
             textButton,
-            style: Theme.of(context)
-                .textTheme
-                .bodySmall!
-                .copyWith(color: AppColors.primary),
+            style: textStyle ??
+                Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      color: AppColors.primary,
+                    ),
             maxLines: 2,
             textAlign: TextAlign.center,
           )),

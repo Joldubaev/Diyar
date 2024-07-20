@@ -20,20 +20,20 @@ class CartPage extends StatefulWidget {
 class CartPageState extends State<CartPage>
     with SingleTickerProviderStateMixin {
   @override
-  Widget build(BuildContext context) {
+  void initState() {
     context.read<CartCubit>().getCartItems();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        title: Text(
-          context.l10n.cart,
-          style: Theme.of(context)
-              .textTheme
-              .titleSmall
-              ?.copyWith(color: AppColors.white),
-        ),
-        automaticallyImplyLeading: false,
-      ),
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          title: Text(context.l10n.cart,
+              style: theme.textTheme.titleSmall
+                  ?.copyWith(color: AppColors.white))),
       body: StreamBuilder<List<CartItemModel>>(
         stream: context.read<CartCubit>().cart,
         builder: (context, snapshot) {
@@ -51,15 +51,13 @@ class CartPageState extends State<CartPage>
             );
             final totalPrice = containerPrice +
                 (carts.fold(
-                          0,
-                          (prevValue, element) =>
-                              prevValue +
-                              (element.food?.price ?? 0) *
-                                  (element.quantity ?? 0),
-                        ) *
+                            0,
+                            (prevValue, element) =>
+                                prevValue +
+                                (element.food?.price ?? 0) *
+                                    (element.quantity ?? 0)) *
                         0.9)
                     .toInt();
-
             return SingleChildScrollView(
               child: Column(
                 children: [
@@ -105,17 +103,12 @@ class CartPageState extends State<CartPage>
                   Padding(
                     padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
                     child: SubmitButtonWidget(
-                      textStyle:
-                          Theme.of(context).textTheme.bodyLarge!.copyWith(
-                                color: Theme.of(context).colorScheme.surface,
-                              ),
+                      textStyle: theme.textTheme.bodyLarge!.copyWith(
+                          color: Theme.of(context).colorScheme.surface),
                       bgColor: Theme.of(context).colorScheme.primary,
                       title: context.l10n.confirmOrder,
                       onTap: () {
-                        context.pushRoute(OrderMapRoute(
-                          cart: carts,
-                          // dishCount: context.read<CartCubit>().dishCount,
-                        ));
+                        _showDeliveryDialog(context, carts);
                       },
                     ),
                   ),
@@ -128,6 +121,66 @@ class CartPageState extends State<CartPage>
           }
         },
       ),
+    );
+  }
+
+  void _showDeliveryDialog(BuildContext context, List<CartItemModel> carts) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    flex: 5,
+                    child: Text(
+                      'Выберите способ доставки',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: Theme.of(context).colorScheme.error,
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                  ),
+                  Expanded(
+                    child: IconButton(
+                      icon: const Icon(Icons.close, color: AppColors.red),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Expanded(
+                    child: CustomBoxWidget(
+                      icon: Icons.delivery_dining,
+                      label: context.l10n.delivery,
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        context.pushRoute(OrderMapRoute(cart: carts));
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: CustomBoxWidget(
+                      icon: Icons.store,
+                      label: context.l10n.pickup,
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        context.pushRoute(PickupFormRoute(cart: carts));
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

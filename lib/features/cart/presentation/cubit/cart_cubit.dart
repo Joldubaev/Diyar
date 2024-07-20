@@ -38,7 +38,7 @@ class CartCubit extends Cubit<CartState> {
     try {
       await _cartRepository.removeFromCart(id);
       emit(RemoveFromCartSuccess());
-      getCartItems(); // Refresh cart items
+      getCartItems(); 
     } catch (e) {
       emit(RemoveFromCartError());
     }

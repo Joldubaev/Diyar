@@ -34,7 +34,6 @@ class _MainPageState extends State<MainPage> {
       routes: const [
         HomeRoute(),
         MenuRoute(),
-        CartRoute(),
         OrderHistoryRoute(),
         ProfileRoute(),
       ],
@@ -42,6 +41,58 @@ class _MainPageState extends State<MainPage> {
         final tabsRouter = AutoTabsRouter.of(context);
         return Scaffold(
           body: child,
+          floatingActionButton: StreamBuilder<List<CartItemModel>>(
+              stream: cartItems,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  cart = snapshot.data!;
+                }
+                final cartCount = (cart.isNotEmpty
+                    ? cart
+                        .map((e) => e.quantity)
+                        .reduce((vl, el) => (vl ?? 0) + (el ?? 0))
+                    : 0);
+                return SizedBox(
+                  child: Stack(
+                    children: [
+                      FloatingActionButton(
+                        onPressed: () {
+                          context.router.push(const CartRoute());
+                        },
+                        child: SvgPicture.asset(
+                          "assets/icons/cart_icon.svg",
+                          colorFilter: ColorFilter.mode(
+                            Theme.of(context).colorScheme.onTertiaryFixed,
+                            BlendMode.srcIn,
+                          ),
+                        ),
+                      ),
+                      if (cart.isNotEmpty)
+                        Positioned(
+                          right: 0,
+                          top: 0,
+                          child: Badge(
+                            largeSize: 20,
+                            label: Text(
+                              "${(cartCount ?? 0) > 99 ? "99+" : cartCount}",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onTertiary,
+                                    height: 1,
+                                  ),
+                            ),
+                            isLabelVisible: cart.isNotEmpty,
+                          ),
+                        ),
+                    ],
+                  ),
+                );
+              }),
+          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
           bottomNavigationBar: SizedBox(
             height: 100,
             child: BottomNavigationBar(
@@ -61,10 +112,6 @@ class _MainPageState extends State<MainPage> {
               unselectedItemColor:
                   Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
               useLegacyColorScheme: false,
-              selectedLabelStyle: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w400,
-              ),
               items: [
                 BottomNavigationBarItem(
                   icon: Padding(
@@ -103,43 +150,12 @@ class _MainPageState extends State<MainPage> {
                   label: context.l10n.menu,
                 ),
                 BottomNavigationBarItem(
-                  icon: StreamBuilder<List<CartItemModel>>(
-                      stream: cartItems,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          cart = snapshot.data ?? [];
-                        }
-
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 4.0),
-                          child: Badge(
-                            label: Text(
-                                "${cart.isNotEmpty ? cart.map((e) => e.quantity).reduce((vl, el) => (vl ?? 0) + (el ?? 0)) : 0}"),
-                            isLabelVisible: cart.isNotEmpty,
-                            child: SvgPicture.asset(
-                              "assets/icons/cart_icon.svg",
-                              colorFilter: ColorFilter.mode(
-                                _currentIndex == 2
-                                    ? Theme.of(context).colorScheme.primary
-                                    : Theme.of(context)
-                                        .colorScheme
-                                        .onSurface
-                                        .withOpacity(0.6),
-                                BlendMode.srcIn,
-                              ),
-                            ),
-                          ),
-                        );
-                      }),
-                  label: context.l10n.cart,
-                ),
-                BottomNavigationBarItem(
                   icon: Padding(
                     padding: const EdgeInsets.only(bottom: 4.0),
                     child: SvgPicture.asset(
                       "assets/icons/orders_icon.svg",
                       colorFilter: ColorFilter.mode(
-                        _currentIndex == 3
+                        _currentIndex == 2
                             ? Theme.of(context).colorScheme.primary
                             : Theme.of(context)
                                 .colorScheme
@@ -149,7 +165,7 @@ class _MainPageState extends State<MainPage> {
                       ),
                     ),
                   ),
-                  label: 'Мои Заказы',
+                  label: 'Заказы',
                 ),
                 BottomNavigationBarItem(
                   icon: Padding(
@@ -157,7 +173,7 @@ class _MainPageState extends State<MainPage> {
                     child: SvgPicture.asset(
                       "assets/icons/profile_icon.svg",
                       colorFilter: ColorFilter.mode(
-                        _currentIndex == 4
+                        _currentIndex == 3
                             ? Theme.of(context).colorScheme.primary
                             : Theme.of(context)
                                 .colorScheme

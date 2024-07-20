@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'dart:async';
 import 'dart:developer';
 
@@ -57,17 +55,8 @@ class _OrderMapPageState extends State<OrderMapPage> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-          title: Text(
-            context.l10n.chooseAddress,
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: () =>
-                  showMapSearchBottom(context, onSearch: _searchMap),
-            ),
-          ]),
+          title: Text(context.l10n.chooseAddress,
+              style: theme.textTheme.titleSmall)),
       body: Stack(
         children: [
           SizedBox(
@@ -92,105 +81,100 @@ class _OrderMapPageState extends State<OrderMapPage> {
             ),
           ),
           Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Icon(Icons.location_on,
-                size: 30, color: theme.colorScheme.error),
-          ),
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Icon(Icons.location_on,
+                  size: 30, color: theme.colorScheme.error)),
         ],
       ),
       bottomSheet: BottomSheet(
         showDragHandle: true,
         backgroundColor: theme.colorScheme.surface,
-        constraints: const BoxConstraints(maxHeight: 200, minHeight: 200),
+        constraints: const BoxConstraints(maxHeight: 250, minHeight: 250),
         onClosing: () {},
         builder: (context) {
           return ListView(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             children: [
               Text(
-                '${context.l10n.deliveryPrice}: ${MapHelper.isCoordinateInsidePolygons(lat, long, polygons: Polygons.getPolygons())} сом',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyLarge
-                    ?.copyWith(color: theme.colorScheme.onSurface),
-              ),
-              const SizedBox(height: 5),
+                  '${context.l10n.deliveryPrice}: ${MapHelper.isCoordinateInsidePolygons(lat, long, polygons: Polygons.getPolygons())} сом',
+                  style: theme.textTheme.bodyLarge
+                      ?.copyWith(color: theme.colorScheme.onSurface)),
+              const SizedBox(height: 10),
               Card(
+                color: theme.colorScheme.primary,
                 child: ListTile(
-                  title: Text(
-                    address ?? context.l10n.addressIsNotFounded,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(color: theme.colorScheme.onSurface),
-                  ),
-                  leading:
-                      Icon(Icons.location_on, color: theme.colorScheme.error),
+                  title: Text(address ?? context.l10n.addressIsNotFounded,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.onTertiaryFixed,
+                          fontWeight: FontWeight.w500)),
+                  trailing: Icon(Icons.arrow_forward_ios,
+                      color: theme.colorScheme.onTertiaryFixed),
                   onTap: () {
                     if (address == null ||
                         address == context.l10n.addressIsNotFounded) return;
-                    AppAlert.showConfirmDialog(
-                      context: context,
-                      title: context.l10n.yourAddress,
-                      content: Text(
-                        '${context.l10n.areYouSureAddress}: $address',
-                      ),
-                      cancelText: context.l10n.no,
-                      confirmText: context.l10n.yes,
-                      cancelPressed: () => Navigator.pop(context),
-                      confirmPressed: () {
-                        // change address in order cubit
-                        context.read<OrderCubit>().changeAddress(address ?? '');
-                        context.read<OrderCubit>().changeAddressSearch(false);
+                    context.read<OrderCubit>().changeAddress(address ?? '');
+                    context.read<OrderCubit>().changeAddressSearch(false);
 
-                        context.read<OrderCubit>().selectDeliveryPrice(
-                            MapHelper.isCoordinateInsidePolygons(lat, long,
-                                polygons: Polygons.getPolygons()));
-                        // push to create order page
-                        context.router.replace(
-                          CreateOrderRoute(
-                            cart: widget.cart,
-                            dishCount: context.read<CartCubit>().dishCount,
-                          ),
-                        );
-                      },
-                    );
+                    context.read<OrderCubit>().selectDeliveryPrice(
+                        MapHelper.isCoordinateInsidePolygons(lat, long,
+                            polygons: Polygons.getPolygons()));
+                    context.router.push(DeliveryFormRoute(
+                        cart: widget.cart,
+                        dishCount: context.read<CartCubit>().dishCount));
                   },
                 ),
               ),
-              const SizedBox(height: 20),
             ],
           );
         },
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          _fetchCurrentLocation();
-          if (userLocation != null) {
-            double distance = MapHelper.calculateDistance(
-                userLocation!.latitude,
-                userLocation!.longitude,
-                42.887931419030515,
-                74.66039095429396);
-            setState(() {
-              deliveryPrice = distance * pricePerKm;
-            });
+      floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
+      floatingActionButton: Align(
+        alignment: Alignment.centerRight,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            FloatingActionButton(
+              heroTag: 1,
+              onPressed: () async {
+                _fetchCurrentLocation();
+                if (userLocation != null) {
+                  double distance = MapHelper.calculateDistance(
+                      userLocation!.latitude,
+                      userLocation!.longitude,
+                      42.887931419030515,
+                      74.66039095429396);
+                  setState(() {
+                    deliveryPrice = distance * pricePerKm;
+                  });
 
-            log("Distance to restaurant: $distance km");
-          } else {
-            log("User location not available.");
-          }
-        },
-        child: const Icon(Icons.navigation),
+                  log("Distance to restaurant: $distance km");
+                } else {
+                  log("User location not available.");
+                }
+              },
+              child: const Icon(Icons.navigation),
+            ),
+            const SizedBox(height: 10),
+            FloatingActionButton(
+              heroTag: 2,
+              backgroundColor: theme.colorScheme.onTertiaryFixed,
+              onPressed: () async {
+                showMapSearchBottom(context, onSearch: _searchMap);
+              },
+              child: Icon(Icons.search,
+                  color: theme.colorScheme.onSurface, size: 40),
+            ),
+            const SizedBox(height: 140),
+          ],
+        ),
       ),
     );
   }
 
-  /// Search for address on the map
   _searchMap(p0) async => await YandexSearch.searchByText(
           searchText: p0,
           searchOptions: const SearchOptions(),

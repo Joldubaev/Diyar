@@ -5,6 +5,7 @@ import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/features.dart';
 import 'package:diyar/features/order/presentation/widgets/custom_dialog_widget.dart';
+import 'package:diyar/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/shared.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +15,9 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 @RoutePage()
 class DeliveryFormPage extends StatefulWidget {
   final List<CartItemModel> cart;
-  final UserModel? user;
-  const DeliveryFormPage({super.key, required this.cart, this.user});
+  final int dishCount;
+  const DeliveryFormPage(
+      {super.key, required this.cart, required this.dishCount});
 
   @override
   State<DeliveryFormPage> createState() => _DeliveryFormPageState();
@@ -35,11 +37,11 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
   final _sdachaController = TextEditingController();
 
   final PaymentTypeDelivery _paymentType = PaymentTypeDelivery.cash;
+  UserModel? user;
 
   @override
   void initState() {
-    _userName.text = widget.user?.name ?? '';
-    _phoneController.text = widget.user?.phone ?? '+996';
+    context.read<ProfileCubit>().getUser();
     super.initState();
   }
 
@@ -60,182 +62,209 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return BlocConsumer<OrderCubit, OrderState>(
-      listener: (context, state) {
-        if (state is CreateOrderLoaded) {
-          context.router
-              .pushAndPopUntil(const MainRoute(), predicate: (_) => false);
-          showToast(context.l10n.orderIsSuccess);
-        } else if (state is CreateOrderError) {
-          showToast(context.l10n.someThingIsWrong, isError: true);
-        }
-      },
+    return BlocBuilder<ProfileCubit, ProfileState>(
       builder: (context, state) {
-        if (!context.read<OrderCubit>().isAddressSearch) {
-          _addressController.text = context.read<OrderCubit>().address;
-        }
-        log(_addressController.text);
-        _extractHouseNumberFromAddress();
-        if (state is CreateOrderLoading) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (state is CreateOrderError) {
-          return Center(
-            child: Text(context.l10n.someThingIsWrong,
-                style: theme.textTheme.bodyMedium!
-                    .copyWith(color: theme.colorScheme.error)),
+        if (state is ProfileGetLoading) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
           );
+        } else if (state is ProfileGetLoaded) {
+          user = state.userModel;
+          _userName.text = user?.name ?? '';
+          _phoneController.text = user?.phone ?? '+996';
         }
-        return Form(
-          key: _formKey,
-          child: ListView(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            children: [
-              CustomInputWidget(
-                  titleColor: theme.colorScheme.onSurface,
-                  filledColor: theme.colorScheme.surface,
-                  controller: _userName,
-                  hintText: context.l10n.nameExample,
-                  title: context.l10n.yourName,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return context.l10n.pleaseEnterName;
-                    } else if (value.length < 3) {
-                      return context.l10n.pleaseEnterCorrectName;
-                    }
-                    return null;
-                  }),
-              PhoneNumberMask(
-                title: context.l10n.phone,
-                hintText: '+996 (___) __-__-__',
-                textController: _phoneController,
-                hint: context.l10n.phone,
-                formatter: MaskTextInputFormatter(mask: "+996 (###) ##-##-##"),
-                textInputType: TextInputType.phone,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return context.l10n.pleaseEnterPhone;
-                  } else if (value.length < 10) {
-                    return context.l10n.pleaseEnterCorrectPhone;
-                  }
-                  return null;
-                },
+        return BlocConsumer<OrderCubit, OrderState>(
+          listener: (context, state) {
+            if (state is CreateOrderLoaded) {
+              context.router
+                  .pushAndPopUntil(const MainRoute(), predicate: (_) => false);
+              showToast(context.l10n.orderIsSuccess);
+            } else if (state is CreateOrderError) {
+              showToast(context.l10n.someThingIsWrong, isError: true);
+            }
+          },
+          builder: (context, state) {
+            if (!context.read<OrderCubit>().isAddressSearch) {
+              _addressController.text = context.read<OrderCubit>().address;
+            }
+            log(_addressController.text);
+            _extractHouseNumberFromAddress();
+            if (state is CreateOrderLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is CreateOrderError) {
+              return Center(
+                child: Text(context.l10n.someThingIsWrong,
+                    style: theme.textTheme.bodyMedium!
+                        .copyWith(color: theme.colorScheme.error)),
+              );
+            }
+            return Scaffold(
+              appBar: AppBar(
+                backgroundColor: theme.colorScheme.primary,
+                title: Text(context.l10n.orderDetails,
+                    style: theme.textTheme.titleSmall!
+                        .copyWith(color: theme.colorScheme.onTertiaryFixed)),
+                centerTitle: true,
+                leading: IconButton(
+                  icon: Icon(Icons.arrow_back_ios_sharp,
+                      color: theme.colorScheme.onTertiaryFixed),
+                  onPressed: () {
+                    context.router.maybePop();
+                  },
+                ),
               ),
-              CustomInputWidget(
-                titleColor: theme.colorScheme.onSurface,
-                filledColor: theme.colorScheme.surface,
-                inputType: TextInputType.text,
-                hintText: context.l10n.enterAddress,
-                title: context.l10n.adress,
-                controller: _addressController,
-                isReadOnly: true,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return context.l10n.pleaseEnterAddress;
-                  } else if (value.length < 3) {
-                    return context.l10n.pleaseEnterCorrectAddress;
-                  }
-                  return null;
-                },
-              ),
-              CustomInputWidget(
-                  titleColor: theme.colorScheme.onSurface,
-                  filledColor: theme.colorScheme.surface,
-                  inputType: TextInputType.text,
-                  controller: _houseController,
-                  hintText: '',
-                  title: context.l10n.houseNumber,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return context.l10n.pleaseEnterHouseNumber;
-                    }
-                    return null;
-                  }),
-              Row(
-                children: [
-                  Expanded(
-                    child: CustomInputWidget(
+              body: Form(
+                key: _formKey,
+                child: ListView(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  children: [
+                    CustomInputWidget(
+                        titleColor: theme.colorScheme.onSurface,
+                        filledColor: theme.colorScheme.surface,
+                        controller: _userName,
+                        hintText: context.l10n.yourName,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return context.l10n.pleaseEnterName;
+                          } else if (value.length < 3) {
+                            return context.l10n.pleaseEnterCorrectName;
+                          }
+                          return null;
+                        }),
+                    const SizedBox(height: 10),
+                    PhoneNumberMask(
+                      hintText: '+996 (___) __-__-__',
+                      textController: _phoneController,
+                      hint: context.l10n.phone,
+                      formatter:
+                          MaskTextInputFormatter(mask: "+996 (###) ##-##-##"),
+                      textInputType: TextInputType.phone,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return context.l10n.pleaseEnterPhone;
+                        } else if (value.length < 10) {
+                          return context.l10n.pleaseEnterCorrectPhone;
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    CustomInputWidget(
                       titleColor: theme.colorScheme.onSurface,
                       filledColor: theme.colorScheme.surface,
                       inputType: TextInputType.text,
-                      controller: _entranceController,
-                      hintText: '',
-                      title: context.l10n.entrance,
+                      hintText: context.l10n.adress,
+                      controller: _addressController,
+                      isReadOnly: true,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return context.l10n.pleaseEnterAddress;
+                        } else if (value.length < 3) {
+                          return context.l10n.pleaseEnterCorrectAddress;
+                        }
+                        return null;
+                      },
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: CustomInputWidget(
+                    const SizedBox(height: 10),
+                    CustomInputWidget(
+                        titleColor: theme.colorScheme.onSurface,
+                        filledColor: theme.colorScheme.surface,
+                        inputType: TextInputType.text,
+                        controller: _houseController,
+                        hintText: context.l10n.houseNumber,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return context.l10n.pleaseEnterHouseNumber;
+                          }
+                          return null;
+                        }),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: CustomInputWidget(
+                            titleColor: theme.colorScheme.onSurface,
+                            filledColor: theme.colorScheme.surface,
+                            inputType: TextInputType.text,
+                            controller: _entranceController,
+                            hintText: context.l10n.entrance,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: CustomInputWidget(
+                            titleColor: theme.colorScheme.onSurface,
+                            filledColor: theme.colorScheme.surface,
+                            inputType: TextInputType.text,
+                            controller: _floorController,
+                            hintText: context.l10n.floor,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: CustomInputWidget(
+                            titleColor: theme.colorScheme.onSurface,
+                            filledColor: theme.colorScheme.surface,
+                            inputType: TextInputType.text,
+                            controller: _apartmentController,
+                            hintText: context.l10n.ofice,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: CustomInputWidget(
+                            titleColor: theme.colorScheme.onSurface,
+                            filledColor: theme.colorScheme.surface,
+                            inputType: TextInputType.text,
+                            controller: _intercomController,
+                            hintText: context.l10n.codeIntercom,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    CustomInputWidget(
                       titleColor: theme.colorScheme.onSurface,
                       filledColor: theme.colorScheme.surface,
-                      inputType: TextInputType.text,
-                      controller: _floorController,
-                      hintText: '',
-                      title: context.l10n.floor,
+                      inputType: TextInputType.number,
+                      controller: _sdachaController,
+                      hintText: context.l10n.change,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return context.l10n.confirmOrder;
+                        } else if (value.length < 2) {
+                          return context.l10n.confirmOrder;
+                        }
+                        return null;
+                      },
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: CustomInputWidget(
+                    const SizedBox(height: 10),
+                    CustomInputWidget(
                       titleColor: theme.colorScheme.onSurface,
                       filledColor: theme.colorScheme.surface,
-                      inputType: TextInputType.text,
-                      controller: _apartmentController,
-                      hintText: '',
-                      title: context.l10n.ofice,
+                      controller: _commentController,
+                      hintText: context.l10n.comment,
+                      validator: (val) => null,
+                      maxLines: 3,
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: CustomInputWidget(
-                      titleColor: theme.colorScheme.onSurface,
-                      filledColor: theme.colorScheme.surface,
-                      inputType: TextInputType.text,
-                      controller: _intercomController,
-                      hintText: '',
-                      title: context.l10n.codeIntercom,
+                    const SizedBox(height: 20),
+                    SubmitButtonWidget(
+                      title: context.l10n.confirmOrder,
+                      bgColor: theme.colorScheme.primary,
+                      textStyle: theme.textTheme.bodyMedium!
+                          .copyWith(color: theme.colorScheme.onPrimary),
+                      onTap: _onSubmit,
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-              CustomInputWidget(
-                titleColor: theme.colorScheme.onSurface,
-                filledColor: theme.colorScheme.surface,
-                inputType: TextInputType.number,
-                controller: _sdachaController,
-                hintText: '',
-                title: context.l10n.change,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return context.l10n.confirmOrder;
-                  } else if (value.length < 2) {
-                    return context.l10n.confirmOrder;
-                  }
-                  return null;
-                },
-              ),
-              CustomInputWidget(
-                titleColor: theme.colorScheme.onSurface,
-                filledColor: theme.colorScheme.surface,
-                controller: _commentController,
-                hintText: context.l10n.comment,
-                title: context.l10n.comment,
-                validator: (val) => null,
-                maxLines: 3,
-              ),
-              const SizedBox(height: 16),
-              SubmitButtonWidget(
-                title: context.l10n.confirmOrder,
-                bgColor: theme.colorScheme.primary,
-                textStyle: theme.textTheme.bodyMedium!
-                    .copyWith(color: theme.colorScheme.onPrimary),
-                onTap: _onSubmit,
-              ),
-              const SizedBox(height: 16),
-            ],
-          ),
+            );
+          },
         );
       },
     );

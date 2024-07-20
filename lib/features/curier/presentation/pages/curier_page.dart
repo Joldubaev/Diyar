@@ -144,7 +144,7 @@ class _CurierPageState extends State<CurierPage> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    '${orders[index].address.toString()} ${orders[index].houseNumber.toString()}',
+                                    orders[index].address.toString(),
                                     maxLines: 3,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
@@ -187,6 +187,8 @@ class _CurierPageState extends State<CurierPage> {
                                       ],
                                     ),
                                     child: CustomTextButton(
+                                      textStyle: theme.textTheme.bodySmall!
+                                          .copyWith(color: AppColors.primary),
                                       onPressed: () {
                                         context.router.push(
                                           OrderDetailRoute(
@@ -215,6 +217,8 @@ class _CurierPageState extends State<CurierPage> {
                                       ],
                                     ),
                                     child: CustomTextButton(
+                                      textStyle: theme.textTheme.bodySmall!
+                                          .copyWith(color: AppColors.primary),
                                       onPressed: () {
                                         _finishOrder(
                                             orders[index].orderNumber ?? 0);
@@ -239,6 +243,8 @@ class _CurierPageState extends State<CurierPage> {
                                       ],
                                     ),
                                     child: CustomTextButton(
+                                      textStyle: theme.textTheme.bodySmall!
+                                          .copyWith(color: AppColors.primary),
                                       onPressed: () {
                                         final address = orders[index].address;
                                         _openAddressIn2GIS(address!);

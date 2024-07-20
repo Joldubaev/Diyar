@@ -138,67 +138,73 @@ class _MenuPageState extends State<MenuPage>
                 ),
                 const SizedBox(height: 10),
                 Expanded(
-                  child: ScrollablePositionedList.builder(
-                    itemScrollController: _itemScrollController,
-                    itemPositionsListener: _itemPositionsListener,
-                    itemCount: menu.length,
-                    itemBuilder: (context, index) {
-                      final category = menu[index];
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 8),
-                            child: Text(
-                              category.category?.name ?? '',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: index == _activeIndex
-                                    ? theme.colorScheme.primary
-                                    : theme.colorScheme.onSurface,
+                  child: RefreshIndicator(
+                    onRefresh: () async {
+                      context.read<MenuCubit>().getProductsWithMenu();
+                    },
+                    child: ScrollablePositionedList.builder(
+                      itemScrollController: _itemScrollController,
+                      itemPositionsListener: _itemPositionsListener,
+                      itemCount: menu.length,
+                      itemBuilder: (context, index) {
+                        final category = menu[index];
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
+                              child: Text(
+                                category.category?.name ?? '',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: index == _activeIndex
+                                      ? theme.colorScheme.primary
+                                      : theme.colorScheme.onSurface,
+                                ),
                               ),
                             ),
-                          ),
-                          StreamBuilder<List<CartItemModel>>(
-                            stream: context.read<CartCubit>().cart,
-                            builder: (context, snapshot) {
-                              List cart = [];
-                              if (snapshot.hasData) {
-                                cart = snapshot.data ?? [];
-                              }
-                              return GridView.count(
-                                crossAxisCount: 2,
-                                mainAxisSpacing: 10,
-                                crossAxisSpacing: 10,
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 16),
-                                childAspectRatio: 0.72,
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                children: List.generate(
-                                  category.foods?.length ?? 0,
-                                  (index) {
-                                    final food = category.foods![index];
-                                    final cartItem = cart.firstWhere(
-                                      (element) => element.food?.id == food.id,
-                                      orElse: () => CartItemModel(
-                                          food: food, quantity: 0),
-                                    );
-                                    return ProductItemWidget(
-                                      food: food,
-                                      quantity: cartItem.quantity ?? 0,
-                                    );
-                                  },
-                                ),
-                              );
-                            },
-                          ),
-                          const SizedBox(height: 15),
-                        ],
-                      );
-                    },
+                            StreamBuilder<List<CartItemModel>>(
+                              stream: context.read<CartCubit>().cart,
+                              builder: (context, snapshot) {
+                                List cart = [];
+                                if (snapshot.hasData) {
+                                  cart = snapshot.data ?? [];
+                                }
+                                return GridView.count(
+                                  crossAxisCount: 2,
+                                  mainAxisSpacing: 10,
+                                  crossAxisSpacing: 10,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16),
+                                  childAspectRatio: 0.72,
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  children: List.generate(
+                                    category.foods?.length ?? 0,
+                                    (index) {
+                                      final food = category.foods![index];
+                                      final cartItem = cart.firstWhere(
+                                        (element) =>
+                                            element.food?.id == food.id,
+                                        orElse: () => CartItemModel(
+                                            food: food, quantity: 0),
+                                      );
+                                      return ProductItemWidget(
+                                        food: food,
+                                        quantity: cartItem.quantity ?? 0,
+                                      );
+                                    },
+                                  ),
+                                );
+                              },
+                            ),
+                            const SizedBox(height: 15),
+                          ],
+                        );
+                      },
+                    ),
                   ),
                 ),
               ],
