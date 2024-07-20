@@ -84,7 +84,7 @@ class _ContactBodyState extends State<ContactBody> {
     });
   }
 
-  Future<void> _makePhoneCall(String phoneNumber) async {
+  Future<void> makePhoneCall(String phoneNumber) async {
     final Uri launchUri = Uri(
       scheme: 'tel',
       path: phoneNumber,
@@ -104,7 +104,7 @@ class _ContactBodyState extends State<ContactBody> {
             imagePath: contactType.getAsset,
             title: contactType.getTitle(context),
             onPressed: _hasCallSupport
-                ? () => _makePhoneCall(contactType.getNumber())
+                ? () => makePhoneCall(contactType.getNumber())
                 : () {});
       },
     );
