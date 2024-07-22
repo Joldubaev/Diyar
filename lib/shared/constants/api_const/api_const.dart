@@ -58,6 +58,8 @@ class ApiConst {
   static const getActualOrders =
       "$baseUrl/orders/get-all-actual-orders-by-user";
   static const getPickupOrder = "$baseUrl/pickup-orders/create-pickup-order";
+  static const getPickupHistoryOrders =
+      "$baseUrl/pickup-orders/get-all-pickup-orders-by-user";
   static const getOrderItem = "$baseUrl/orders/get-order";
   static const getOrderHistory = "$baseUrl/orders/get-history";
 

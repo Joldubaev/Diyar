@@ -14,6 +14,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web_socket_channel/io.dart';
 
+@RoutePage()
 class ActiveOrderPage extends StatefulWidget {
   const ActiveOrderPage({super.key});
 
@@ -75,74 +76,80 @@ class _ActiveOrderPageState extends State<ActiveOrderPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return BlocBuilder<HistoryCubit, HistoryState>(
-      builder: (context, state) {
-        if (state is GetActiveOrdersError) {
-          return EmptyActiveOrders(text: context.l10n.errorLoadingActiveOrders);
-        } else if (state is GetActiveOrdersLoading) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (state is GetActiveOrdersLoaded) {
-          orders = state.orders;
-          if (orders.isEmpty) {
-            _channel.sink.close();
-            return EmptyActiveOrders(text: context.l10n.noActiveOrders);
-          }
-        }
-
-        return StreamBuilder<List<OrderStatusModel>>(
-          stream: _controller.stream,
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return Center(child: Text(context.l10n.errorRetrievingData));
-            } else if (!snapshot.hasData) {
-              return const Center(child: CircularProgressIndicator());
+    return Scaffold(
+      appBar: AppBar(title: Text(context.l10n.activeOrders)),
+      body: BlocBuilder<HistoryCubit, HistoryState>(
+        builder: (context, state) {
+          if (state is GetActiveOrdersError) {
+            return EmptyActiveOrders(
+                text: context.l10n.errorLoadingActiveOrders);
+          } else if (state is GetActiveOrdersLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is GetActiveOrdersLoaded) {
+            orders = state.orders;
+            if (orders.isEmpty) {
+              _channel.sink.close();
+              return EmptyActiveOrders(text: context.l10n.noActiveOrders);
             }
+          }
 
-            final orderStatuses = snapshot.data!;
+          return StreamBuilder<List<OrderStatusModel>>(
+            stream: _controller.stream,
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Center(child: Text(context.l10n.errorRetrievingData));
+              } else if (!snapshot.hasData) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-            return ListView.separated(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              itemCount: orders.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 10),
-              itemBuilder: (context, index) {
-                final order = orders[index];
-                final orderNumber = order.order?.orderNumber;
-                final orderStatus = orderStatuses.firstWhere(
-                  (element) => element.orderNumber == orderNumber,
-                  orElse: () => OrderStatusModel(
-                      orderNumber: orderNumber!, status: context.l10n.unknown),
-                );
+              final orderStatuses = snapshot.data!;
 
-                return Card(
-                  child: ListTile(
-                      shape: const Border(
-                        bottom: BorderSide(color: Colors.transparent),
-                      ),
-                      title: Text(
-                        '${context.l10n.orderNumber} $orderNumber',
-                        style: theme.textTheme.bodyLarge!.copyWith(
-                          color: AppColors.primary,
+              return ListView.separated(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                itemCount: orders.length,
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 10),
+                itemBuilder: (context, index) {
+                  final order = orders[index];
+                  final orderNumber = order.order?.orderNumber;
+                  final orderStatus = orderStatuses.firstWhere(
+                    (element) => element.orderNumber == orderNumber,
+                    orElse: () => OrderStatusModel(
+                        orderNumber: orderNumber!,
+                        status: context.l10n.unknown),
+                  );
+
+                  return Card(
+                    child: ListTile(
+                        shape: const Border(
+                          bottom: BorderSide(color: Colors.transparent),
                         ),
-                      ),
-                      subtitle: Column(
-                        children: [
-                          OrderStepper(orderStatus: orderStatus),
-                          CustomTextButton(
-                            textStyle: theme.textTheme.bodyLarge!
-                                .copyWith(color: AppColors.primary),
-                            onPressed: () => context.pushRoute(
-                              OrderDetailRoute(orderNumber: "$orderNumber"),
-                            ),
-                            textButton: context.l10n.orderDetails,
+                        title: Text(
+                          '${context.l10n.orderNumber} $orderNumber',
+                          style: theme.textTheme.bodyLarge!.copyWith(
+                            color: AppColors.primary,
                           ),
-                        ],
-                      )),
-                );
-              },
-            );
-          },
-        );
-      },
+                        ),
+                        subtitle: Column(
+                          children: [
+                            OrderStepper(orderStatus: orderStatus),
+                            CustomTextButton(
+                              textStyle: theme.textTheme.bodyLarge!
+                                  .copyWith(color: AppColors.primary),
+                              onPressed: () => context.pushRoute(
+                                OrderDetailRoute(orderNumber: "$orderNumber"),
+                              ),
+                              textButton: context.l10n.orderDetails,
+                            ),
+                          ],
+                        )),
+                  );
+                },
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
