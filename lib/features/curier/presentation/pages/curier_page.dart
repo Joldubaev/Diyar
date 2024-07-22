@@ -3,6 +3,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/features/auth/auth.dart';
 import 'package:diyar/features/curier/curier.dart';
+import 'package:diyar/features/features.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/components/components.dart';
 import 'package:diyar/shared/theme/theme.dart';
@@ -32,6 +33,14 @@ class _CurierPageState extends State<CurierPage> {
       },
     );
     super.initState();
+  }
+
+  Future<void> makePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    await launchUrl(launchUri);
   }
 
   Future<void> _refresh() async {
@@ -163,6 +172,11 @@ class _CurierPageState extends State<CurierPage> {
                                           fontWeight: FontWeight.bold,
                                         ),
                                   ),
+                                  TextButton.icon(
+                                      onPressed: () => makePhoneCall(
+                                          orders[index].userPhone.toString()),
+                                      icon: const Icon(Icons.phone),
+                                      label: const Text('Позвонить')),
                                 ],
                               ),
                             ),

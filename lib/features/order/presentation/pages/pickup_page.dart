@@ -6,6 +6,7 @@ import 'package:diyar/features/features.dart';
 import 'package:diyar/features/profile/presentation/presentation.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/shared.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -49,16 +50,47 @@ class _PickupFormPageState extends State<PickupFormPage> {
         (total, item) =>
             total + (item.food?.price ?? 0) * (item.quantity ?? 1));
   }
+
   void _selectTime() async {
-    TimeOfDay? pickedTime = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay(
-            hour: DateTime.now().hour, minute: DateTime.now().minute));
-    if (pickedTime != null) {
-      setState(() {
-        _timeController.text = '${pickedTime.hour}:${pickedTime.minute}';
-      });
-    }
+    DateTime now = DateTime.now();
+    DateTime initialTime = now.add(const Duration(minutes: 20));
+
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text(
+          'Внимание! время подготовки заказа займет не менее 15 минут',
+          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+              fontSize: 16, color: Theme.of(context).colorScheme.error),
+          textAlign: TextAlign.center,
+        ),
+        content: SizedBox(
+          height: 160,
+          child: CupertinoDatePicker(
+            mode: CupertinoDatePickerMode.time,
+            initialDateTime: initialTime,
+            minuteInterval: 1,
+            use24hFormat: true,
+            onDateTimeChanged: (DateTime newTime) {
+              if (newTime.isAfter(initialTime)) {
+                _timeController.text =
+                    '${newTime.hour.toString().padLeft(2, '0')}:${newTime.minute.toString().padLeft(2, '0')}';
+              }
+            },
+          ),
+        ),
+        actions: [
+          TextButton(
+            child: const Text('Отменить'),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          TextButton(
+            child: const Text('Выбрать'),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ],
+      ),
+    );
   }
 
   void _submitOrder() {
