@@ -112,7 +112,8 @@ class CartPageState extends State<CartPage>
                       bgColor: Theme.of(context).colorScheme.primary,
                       title: context.l10n.confirmOrder,
                       onTap: () {
-                        _showDeliveryDialog(context, carts);
+                        _showDeliveryDialog(context, carts, totalPrice);
+                        context.read<CartCubit>().dishCount = 0;
                       },
                     ),
                   ),
@@ -128,8 +129,9 @@ class CartPageState extends State<CartPage>
     );
   }
 
-  void _showDeliveryDialog(BuildContext context, List<CartItemModel> carts) {
-    showDialog(
+  Future<dynamic> _showDeliveryDialog(
+      BuildContext context, List<CartItemModel> carts, int totalPrice) {
+    return showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
@@ -165,7 +167,8 @@ class CartPageState extends State<CartPage>
                       label: context.l10n.delivery,
                       onTap: () {
                         Navigator.of(context).pop();
-                        context.pushRoute(OrderMapRoute(cart: carts));
+                        context.pushRoute(
+                            OrderMapRoute(cart: carts, totalPrice: totalPrice));
                       },
                     ),
                   ),
@@ -175,7 +178,8 @@ class CartPageState extends State<CartPage>
                       label: context.l10n.pickup,
                       onTap: () {
                         Navigator.of(context).pop();
-                        context.pushRoute(PickupFormRoute(cart: carts));
+                        context.pushRoute(PickupFormRoute(
+                            cart: carts, totalPrice: totalPrice));
                       },
                     ),
                   ),

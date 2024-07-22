@@ -15,7 +15,9 @@ import '../widgets/custom_dialog_widget.dart';
 @RoutePage()
 class PickupFormPage extends StatefulWidget {
   final List<CartItemModel> cart;
-  const PickupFormPage({Key? key, required this.cart}) : super(key: key);
+  final int totalPrice;
+  const PickupFormPage({Key? key, required this.cart, required this.totalPrice})
+      : super(key: key);
 
   @override
   State<PickupFormPage> createState() => _PickupFormPageState();
@@ -130,7 +132,7 @@ class _PickupFormPageState extends State<PickupFormPage> {
             userName: _userName.text,
             prepareFor: _timeController.text,
             comment: _commentController.text,
-            price: context.read<CartCubit>().totalPrice,
+            price: widget.totalPrice,
             dishesCount: context.read<CartCubit>().dishCount,
             foods: widget.cart
                 .map((e) => OrderFoodItem(
@@ -161,9 +163,39 @@ class _PickupFormPageState extends State<PickupFormPage> {
         return BlocConsumer<OrderCubit, OrderState>(
           listener: (context, state) {
             if (state is CreateOrderLoaded) {
-              context.router.pushAndPopUntil(
-                const MainRoute(),
-                predicate: (_) => false,
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return PopScope(
+                    canPop: false,
+                    child: AlertDialog(
+                      title: Text(context.l10n.yourOrdersConfirm,
+                          style: theme.textTheme.bodyLarge!
+                              .copyWith(fontSize: 16)),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(context.l10n.operatorContact,
+                              style: theme.textTheme.bodyMedium!
+                                  .copyWith(color: AppColors.black1)),
+                          const SizedBox(height: 10),
+                          SubmitButtonWidget(
+                              textStyle: theme.textTheme.bodyMedium!
+                                  .copyWith(color: theme.colorScheme.surface),
+                              title: context.l10n.ok,
+                              bgColor: AppColors.green,
+                              onTap: () {
+                                context.router.pushAndPopUntil(
+                                  const MainRoute(),
+                                  predicate: (_) => false,
+                                );
+                              })
+                        ],
+                      ),
+                    ),
+                  );
+                },
               );
               showToast(context.l10n.orderIsSuccess);
             } else if (state is CreateOrderError) {
@@ -171,19 +203,6 @@ class _PickupFormPageState extends State<PickupFormPage> {
             }
           },
           builder: (context, state) {
-            if (state is CreateOrderLoading) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (state is CreateOrderError) {
-              return Center(
-                child: Text(
-                  context.l10n.someThingIsWrong,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyMedium!
-                      .copyWith(color: theme.colorScheme.error),
-                ),
-              );
-            }
             return Scaffold(
               appBar: AppBar(
                   backgroundColor: theme.colorScheme.primary,
@@ -327,41 +346,17 @@ class _PickupFormPageState extends State<PickupFormPage> {
                   const SizedBox(height: 10),
                   CustomDialogWidget(
                       title: context.l10n.orderAmount,
-                      description: '$totalPrice сом'),
+                      description: '${widget.totalPrice} сом'),
                   const SizedBox(height: 10),
-                  SubmitButtonWidget(
-                    textStyle: theme.textTheme.bodyMedium!
-                        .copyWith(color: theme.colorScheme.surface),
-                    title: context.l10n.confirm,
-                    bgColor: AppColors.green,
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: Text(context.l10n.yourOrdersConfirm,
-                                style: theme.textTheme.bodyLarge!
-                                    .copyWith(fontSize: 16)),
-                            content: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(context.l10n.operatorContact,
-                                    style: theme.textTheme.bodyMedium!
-                                        .copyWith(color: AppColors.black1)),
-                                const SizedBox(height: 10),
-                                SubmitButtonWidget(
-                                    textStyle: theme.textTheme.bodyMedium!
-                                        .copyWith(
-                                            color: theme.colorScheme.surface),
-                                    title: context.l10n.ok,
-                                    bgColor: AppColors.green,
-                                    onTap: _submitOrder)
-                              ],
-                            ),
-                          );
-                        },
-                      );
+                  BlocBuilder<OrderCubit, OrderState>(
+                    builder: (context, state) {
+                      return SubmitButtonWidget(
+                          isLoading: state is CreateOrderLoading,
+                          textStyle: theme.textTheme.bodyMedium!
+                              .copyWith(color: theme.colorScheme.surface),
+                          title: context.l10n.confirm,
+                          bgColor: AppColors.green,
+                          onTap: _submitOrder);
                     },
                   ),
                 ],
