@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:diyar/features/history/data/data.dart';
+import 'package:diyar/features/history/data/model/user_pickup_history_model.dart';
 import 'package:meta/meta.dart';
 
 part 'history_state.dart';
@@ -38,6 +39,16 @@ class HistoryCubit extends Cubit<HistoryState> {
       emit(GetHistoryOrdersLoaded(orders));
     } catch (e) {
       emit(GetHistoryOrdersError());
+    }
+  }
+
+  getPickupHistory() async {
+    emit(GetPickupHistoryLoading());
+    try {
+      final orders = await historyRepository.getPickupHistory();
+      emit(GetPickupHistoryLoaded(orders));
+    } catch (e) {
+      emit(GetPickupHistoryError());
     }
   }
 }

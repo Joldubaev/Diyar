@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:diyar/features/history/data/model/user_pickup_history_model.dart';
 import 'package:diyar/features/history/history.dart';
 import 'package:diyar/shared/constants/constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,6 +8,7 @@ abstract class HistoryReDatasource {
   Future<OrderActiveItemModel> getOrderItem({required int num});
   Future<List<ActiveOrderModel>> getActiveOrders();
   Future<List<OrderActiveItemModel>> getHistoryOrders();
+  Future<List<UserPickupHistoryModel>> getPickupHistory();
 }
 
 class HistoryReDatasourceImpl implements HistoryReDatasource {
@@ -66,6 +68,27 @@ class HistoryReDatasourceImpl implements HistoryReDatasource {
       if ([200, 201].contains(res.statusCode)) {
         return List<OrderActiveItemModel>.from(
           res.data['orders'].map((x) => OrderActiveItemModel.fromJson(x)),
+        );
+      } else {
+        throw Exception('Error getting history orders');
+      }
+    } catch (e) {
+      throw Exception();
+    }
+  }
+
+  @override
+  Future<List<UserPickupHistoryModel>> getPickupHistory() async {
+    try {
+      var token = prefs.getString(AppConst.accessToken) ?? '';
+      final res = await dio.post(
+        ApiConst.getPickupHistoryOrders,
+        options: Options(headers: ApiConst.authMap(token)),
+      );
+
+      if ([200, 201].contains(res.statusCode)) {
+        return List<UserPickupHistoryModel>.from(
+          res.data.map((x) => UserPickupHistoryModel.fromJson(x)),
         );
       } else {
         throw Exception('Error getting history orders');

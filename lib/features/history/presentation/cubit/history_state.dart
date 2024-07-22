@@ -34,3 +34,15 @@ final class GetHistoryOrdersLoaded extends HistoryState {
 }
 
 final class GetHistoryOrdersError extends HistoryState {}
+
+// get history orders
+
+final class GetPickupHistoryLoading extends HistoryState {}
+
+final class GetPickupHistoryLoaded extends HistoryState {
+  final List<UserPickupHistoryModel> orders;
+
+  GetPickupHistoryLoaded(this.orders);
+}
+
+final class GetPickupHistoryError extends HistoryState {}
