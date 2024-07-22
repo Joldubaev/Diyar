@@ -53,43 +53,72 @@ class _PickupFormPageState extends State<PickupFormPage> {
 
   void _selectTime() async {
     DateTime now = DateTime.now();
-    DateTime initialTime = now.add(const Duration(minutes: 20));
+    DateTime initialTime = now.add(const Duration(minutes: 15));
+    DateTime selectedTime = initialTime;
 
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        title: Text(
-          'Внимание! время подготовки заказа займет не менее 15 минут',
-          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-              fontSize: 16, color: Theme.of(context).colorScheme.error),
-          textAlign: TextAlign.center,
-        ),
-        content: SizedBox(
-          height: 160,
-          child: CupertinoDatePicker(
-            mode: CupertinoDatePickerMode.time,
-            initialDateTime: initialTime,
-            minuteInterval: 1,
-            use24hFormat: true,
-            onDateTimeChanged: (DateTime newTime) {
-              if (newTime.isAfter(initialTime)) {
-                _timeController.text =
-                    '${newTime.hour.toString().padLeft(2, '0')}:${newTime.minute.toString().padLeft(2, '0')}';
-              }
-            },
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Внимание! время подготовки заказа займет не менее 15 минут',
+            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                fontSize: 16, color: Theme.of(context).colorScheme.error),
+            textAlign: TextAlign.center,
           ),
-        ),
-        actions: [
-          TextButton(
-            child: const Text('Отменить'),
-            onPressed: () => Navigator.of(context).pop(),
+          content: SizedBox(
+            height: 240,
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 160,
+                  child: CupertinoDatePicker(
+                    mode: CupertinoDatePickerMode.time,
+                    initialDateTime: initialTime,
+                    minuteInterval: 1,
+                    use24hFormat: true,
+                    onDateTimeChanged: (DateTime newTime) {
+                      selectedTime = newTime;
+                    },
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text(
+                        'Отмена',
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            fontSize: 16,
+                            color: Theme.of(context).colorScheme.primary),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        if (selectedTime.isAfter(initialTime)) {
+                          _timeController.text =
+                              '${selectedTime.hour.toString().padLeft(2, '0')}:${selectedTime.minute.toString().padLeft(2, '0')}';
+                        } else {
+                          _timeController.text =
+                              '${initialTime.hour.toString().padLeft(2, '0')}:${initialTime.minute.toString().padLeft(2, '0')}';
+                        }
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        'Подтвердить',
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            fontSize: 16,
+                            color: Theme.of(context).colorScheme.primary),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-          TextButton(
-            child: const Text('Выбрать'),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -260,86 +289,87 @@ class _PickupFormPageState extends State<PickupFormPage> {
   Future<dynamic> showBottomDialog(
       ThemeData theme, BuildContext context, double totalPrice) {
     return showModalBottomSheet(
-        backgroundColor: theme.colorScheme.surface,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20), topRight: Radius.circular(20))),
-        useSafeArea: true,
-        isScrollControlled: true,
-        context: context,
-        builder: (context) {
-          return DraggableScrollableSheet(
-            initialChildSize: 0.3,
-            minChildSize: 0.3,
-            expand: false,
-            maxChildSize: 0.3,
-            builder: (context, scrollController) {
-              return Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 60,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                              child: Text(
-                                  '${context.l10n.orderPickupAd} ${context.l10n.address}',
-                                  style: theme.textTheme.bodyLarge!
-                                      .copyWith(fontSize: 16))),
-                          IconButton(
-                              onPressed: () => context.maybePop(),
-                              icon: const Icon(Icons.close)),
-                        ],
-                      ),
+      backgroundColor: theme.colorScheme.surface,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+      useSafeArea: true,
+      isScrollControlled: true,
+      context: context,
+      builder: (context) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.3,
+          minChildSize: 0.3,
+          expand: false,
+          maxChildSize: 0.3,
+          builder: (context, scrollController) {
+            return Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 60,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                            child: Text(
+                                '${context.l10n.orderPickupAd} ${context.l10n.address}',
+                                style: theme.textTheme.bodyLarge!
+                                    .copyWith(fontSize: 16))),
+                        IconButton(
+                            onPressed: () => context.maybePop(),
+                            icon: const Icon(Icons.close)),
+                      ],
                     ),
-                    const Divider(),
-                    const SizedBox(height: 10),
-                    CustomDialogWidget(
-                        title: context.l10n.orderAmount,
-                        description: '$totalPrice сом'),
-                    const SizedBox(height: 10),
-                    SubmitButtonWidget(
-                      textStyle: theme.textTheme.bodyMedium!
-                          .copyWith(color: theme.colorScheme.surface),
-                      title: context.l10n.confirm,
-                      bgColor: AppColors.green,
-                      onTap: () {
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: Text(context.l10n.yourOrdersConfirm,
-                                    style: theme.textTheme.bodyLarge!
-                                        .copyWith(fontSize: 16)),
-                                content: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(context.l10n.operatorContact,
-                                        style: theme.textTheme.bodyMedium!
-                                            .copyWith(color: AppColors.black1)),
-                                    const SizedBox(height: 10),
-                                    SubmitButtonWidget(
-                                        textStyle: theme.textTheme.bodyMedium!
-                                            .copyWith(
-                                                color:
-                                                    theme.colorScheme.surface),
-                                        title: context.l10n.ok,
-                                        bgColor: AppColors.green,
-                                        onTap: _submitOrder)
-                                  ],
-                                ),
-                              );
-                            });
-                      },
-                    ),
-                  ],
-                ),
-              );
-            },
-          );
-        });
+                  ),
+                  const Divider(),
+                  const SizedBox(height: 10),
+                  CustomDialogWidget(
+                      title: context.l10n.orderAmount,
+                      description: '$totalPrice сом'),
+                  const SizedBox(height: 10),
+                  SubmitButtonWidget(
+                    textStyle: theme.textTheme.bodyMedium!
+                        .copyWith(color: theme.colorScheme.surface),
+                    title: context.l10n.confirm,
+                    bgColor: AppColors.green,
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Text(context.l10n.yourOrdersConfirm,
+                                style: theme.textTheme.bodyLarge!
+                                    .copyWith(fontSize: 16)),
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(context.l10n.operatorContact,
+                                    style: theme.textTheme.bodyMedium!
+                                        .copyWith(color: AppColors.black1)),
+                                const SizedBox(height: 10),
+                                SubmitButtonWidget(
+                                    textStyle: theme.textTheme.bodyMedium!
+                                        .copyWith(
+                                            color: theme.colorScheme.surface),
+                                    title: context.l10n.ok,
+                                    bgColor: AppColors.green,
+                                    onTap: _submitOrder)
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 }
