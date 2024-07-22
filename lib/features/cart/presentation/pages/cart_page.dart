@@ -31,6 +31,10 @@ class CartPageState extends State<CartPage>
     return Scaffold(
       appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.primary,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios, color: AppColors.white),
+            onPressed: () => context.maybePop(),
+          ),
           title: Text(context.l10n.cart,
               style: theme.textTheme.titleSmall
                   ?.copyWith(color: AppColors.white))),

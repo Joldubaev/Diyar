@@ -158,7 +158,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: SettingsTile(
-                    leading: const Icon(Icons.exit_to_app, size: 30),
+                    leading:
+                        SvgPicture.asset('assets/icons/logout.svg', height: 40),
                     text: context.l10n.exit,
                     onPressed: () {
                       AppAlert.showConfirmDialog(
