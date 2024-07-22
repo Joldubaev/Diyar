@@ -410,6 +410,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                                                 .toList()))
                                         .then((value) {
                                       context.read<CartCubit>().clearCart();
+                                      context.maybePop();
                                     });
                                   },
                                 ),

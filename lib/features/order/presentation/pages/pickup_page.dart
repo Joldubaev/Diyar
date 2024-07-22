@@ -110,7 +110,10 @@ class _PickupFormPageState extends State<PickupFormPage> {
                       quantity: e.quantity ?? 1,
                     ))
                 .toList()))
-        .then((value) => context.read<CartCubit>().clearCart());
+        .then(
+          (value) => context.read<CartCubit>().clearCart(),
+        );
+    context.maybePop();
   }
 
   @override

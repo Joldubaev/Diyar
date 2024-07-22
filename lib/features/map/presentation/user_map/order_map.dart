@@ -168,7 +168,7 @@ class _OrderMapPageState extends State<OrderMapPage> {
               child: Icon(Icons.search,
                   color: theme.colorScheme.onSurface, size: 40),
             ),
-            const SizedBox(height: 140),
+            const SizedBox(height: 170),
           ],
         ),
       ),

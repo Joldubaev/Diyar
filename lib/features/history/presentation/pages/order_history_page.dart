@@ -1,8 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/l10n/l10n.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:diyar/shared/theme/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 @RoutePage()
 class OrderHistoryPage extends StatelessWidget {
@@ -10,6 +11,7 @@ class OrderHistoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -17,9 +19,8 @@ class OrderHistoryPage extends StatelessWidget {
           backgroundColor: Theme.of(context).primaryColor,
           automaticallyImplyLeading: false,
           title: Text(context.l10n.orderHistory,
-              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  fontWeight: FontWeight.bold)),
+              style:
+                  theme.textTheme.bodyLarge!.copyWith(color: AppColors.white)),
           // bottom: PreferredSize(
           //   preferredSize: const Size.fromHeight(40),
           //   child: ClipRRect(
@@ -62,7 +63,7 @@ class OrderHistoryPage extends StatelessWidget {
             children: [
               OrderButton(
                 text: context.l10n.activeOrders,
-                icon: Icons.delivery_dining,
+                icon: 'assets/icons/del.svg',
                 onPressed: () {
                   context.router.push(const ActiveOrderRoute());
                 },
@@ -70,7 +71,7 @@ class OrderHistoryPage extends StatelessWidget {
               const SizedBox(height: 20),
               OrderButton(
                 text: context.l10n.pickup,
-                icon: CupertinoIcons.car_detailed,
+                icon: 'assets/icons/pickup.svg',
                 onPressed: () {
                   context.router.push(const UserPickupHistoryRoute());
                 },
@@ -78,7 +79,7 @@ class OrderHistoryPage extends StatelessWidget {
               const SizedBox(height: 20),
               OrderButton(
                 text: context.l10n.orderHistory,
-                icon: Icons.history,
+                icon: 'assets/icons/history.svg',
                 onPressed: () {
                   context.router.push(const UserOrderHistoryRoute());
                 },
@@ -99,11 +100,12 @@ class OrderButton extends StatelessWidget {
       required this.onPressed});
 
   final String text;
-  final IconData icon;
+  final String icon;
   final void Function() onPressed;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
@@ -123,15 +125,13 @@ class OrderButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Icon(icon, color: Theme.of(context).primaryColor),
+            SvgPicture.asset(icon, height: 50),
             const SizedBox(width: 15),
             Expanded(
               child: Text(
                 text,
-                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
-                      fontWeight: FontWeight.bold,
-                    ),
+                style: theme.textTheme.bodyLarge!
+                    .copyWith(color: Theme.of(context).colorScheme.onSurface),
               ),
             ),
             Icon(Icons.arrow_forward_ios, color: Colors.grey[500]),
