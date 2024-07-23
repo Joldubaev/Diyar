@@ -197,7 +197,6 @@ class _PickupFormPageState extends State<PickupFormPage> {
                   );
                 },
               );
-              showToast(context.l10n.orderIsSuccess);
             } else if (state is CreateOrderError) {
               showToast(context.l10n.someThingIsWrong, isError: true);
             }
