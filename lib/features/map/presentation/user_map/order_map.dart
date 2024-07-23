@@ -113,7 +113,7 @@ class _OrderMapPageState extends State<OrderMapPage> {
                           style: theme.textTheme.bodyLarge
                               ?.copyWith(color: theme.colorScheme.surface)),
                       const SizedBox(height: 10),
-                      Text('Сумма заказа: ${widget.totalPrice}сом',
+                      Text('Сумма заказа: ${widget.totalPrice} сом',
                           style: theme.textTheme.bodyLarge
                               ?.copyWith(color: theme.colorScheme.surface)),
                     ],
@@ -264,9 +264,8 @@ class _OrderMapPageState extends State<OrderMapPage> {
   Future<void> _moveToCurrentLocation(double latitude, double longitude) async {
     final controller = await mapControllerCompleter.future;
     const tilt = 0.0;
-    const zoom = 18.0;
+    const zoom = 16.0;
     const azimuth = 0.0;
-
     controller.moveCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(

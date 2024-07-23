@@ -61,6 +61,7 @@ class _MainPageState extends State<MainPage> {
                         },
                         child: SvgPicture.asset(
                           "assets/icons/cart_icon.svg",
+                          height: 40,
                           colorFilter: ColorFilter.mode(
                             Theme.of(context).colorScheme.onTertiaryFixed,
                             BlendMode.srcIn,

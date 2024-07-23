@@ -98,12 +98,6 @@ class _HomePageState extends State<HomePage> {
                       child: StreamBuilder<List<CartItemModel>>(
                         stream: context.read<CartCubit>().cart,
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }
                           final cart = snapshot.data ?? [];
                           return ListView.separated(
                             scrollDirection: Axis.horizontal,
@@ -118,7 +112,6 @@ class _HomePageState extends State<HomePage> {
                                 orElse: () =>
                                     CartItemModel(food: food, quantity: 0),
                               );
-
                               return SizedBox(
                                 width: 200,
                                 child: ProductItemWidget(

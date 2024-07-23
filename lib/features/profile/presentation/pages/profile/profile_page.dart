@@ -179,8 +179,6 @@ class _ProfilePageState extends State<ProfilePage> {
                         },
                       );
                     },
-                    icon: Icons.exit_to_app,
-                    color: Theme.of(context).colorScheme.error,
                   ),
                 ),
                 const SizedBox(height: 15),

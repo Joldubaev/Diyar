@@ -177,8 +177,8 @@ class _PickupFormPageState extends State<PickupFormPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(context.l10n.operatorContact,
-                              style: theme.textTheme.bodyMedium!
-                                  .copyWith(color: AppColors.black1)),
+                              style: theme.textTheme.bodyMedium!.copyWith(
+                                  color: theme.colorScheme.onSurface)),
                           const SizedBox(height: 10),
                           SubmitButtonWidget(
                               textStyle: theme.textTheme.bodyMedium!
