@@ -112,10 +112,7 @@ class _OrderMapPageState extends State<OrderMapPage> {
                           '${context.l10n.deliveryPrice}: ${MapHelper.isCoordinateInsidePolygons(lat, long, polygons: Polygons.getPolygons())} сом',
                           style: theme.textTheme.bodyLarge
                               ?.copyWith(color: theme.colorScheme.surface)),
-                      const SizedBox(height: 10),
-                      Text('Сумма заказа: ${widget.totalPrice} сом',
-                          style: theme.textTheme.bodyLarge
-                              ?.copyWith(color: theme.colorScheme.surface)),
+                   
                     ],
                   )),
               const SizedBox(height: 10),

@@ -116,6 +116,11 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
             }
           },
           builder: (context, state) {
+            var deliveryPrice = context.read<OrderCubit>().deliveryPrice;
+            final totalOrderCost = widget.totalPrice + deliveryPrice;
+            if (deliveryPrice == 0) {
+              deliveryPrice = 550;
+            }
             if (!context.read<OrderCubit>().isAddressSearch) {
               _addressController.text = context.read<OrderCubit>().address;
             }
@@ -276,12 +281,16 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                         validator: (val) => null,
                         maxLines: 3),
                     const SizedBox(height: 20),
-                    SubmitButtonWidget(
-                      title: context.l10n.confirmOrder,
-                      bgColor: theme.colorScheme.primary,
-                      textStyle: theme.textTheme.bodyMedium!
-                          .copyWith(color: theme.colorScheme.onPrimary),
-                      onTap: _onSubmit,
+                    Card(
+                      color: theme.colorScheme.primary,
+                      child: ListTile(
+                          title: Text('Сумма заказа $totalOrderCost сом',
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: theme.colorScheme.onTertiaryFixed,
+                                  fontWeight: FontWeight.w500)),
+                          trailing: Icon(Icons.arrow_forward_ios,
+                              color: theme.colorScheme.onTertiaryFixed),
+                          onTap: _onSubmit),
                     ),
                   ],
                 ),
