@@ -144,6 +144,7 @@ class _PickupFormPageState extends State<PickupFormPage> {
         .then(
           (value) => context.read<CartCubit>().clearCart(),
         );
+    context.read<CartCubit>().dishCount = 0;
     context.maybePop();
   }
 

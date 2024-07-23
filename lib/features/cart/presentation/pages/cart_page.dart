@@ -105,18 +105,15 @@ class CartPageState extends State<CartPage>
                   ),
                   const SizedBox(height: 10),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
-                    child: SubmitButtonWidget(
-                      textStyle: theme.textTheme.bodyLarge!.copyWith(
-                          color: Theme.of(context).colorScheme.surface),
-                      bgColor: Theme.of(context).colorScheme.primary,
-                      title: context.l10n.confirmOrder,
-                      onTap: () {
-                        _showDeliveryDialog(context, carts, totalPrice);
-                        context.read<CartCubit>().dishCount = 0;
-                      },
-                    ),
-                  ),
+                      padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
+                      child: SubmitButtonWidget(
+                          textStyle: theme.textTheme.bodyLarge!.copyWith(
+                              color: Theme.of(context).colorScheme.surface),
+                          bgColor: Theme.of(context).colorScheme.primary,
+                          title: context.l10n.confirmOrder,
+                          onTap: () {
+                            _showDeliveryDialog(context, carts, totalPrice);
+                          })),
                   const SizedBox(height: 20),
                 ],
               ),
