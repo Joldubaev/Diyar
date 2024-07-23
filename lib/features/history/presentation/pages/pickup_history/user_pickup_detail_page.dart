@@ -61,7 +61,6 @@ class _UserPickupDetailPageState extends State<UserPickupDetailPage> {
   }
 
   List<OrderDetailItem> _buildDetailList() {
-    final totalPrice = order.price!;
     return [
       OrderDetailItem(
           title: context.l10n.orderNumber, value: order.orderNumber.toString()),
@@ -78,8 +77,6 @@ class _UserPickupDetailPageState extends State<UserPickupDetailPage> {
       OrderDetailItem(title: context.l10n.paymentMethod, value: 'Наличные'),
       OrderDetailItem(
           title: context.l10n.totalOrderAmount, value: "${order.price} сом"),
-      OrderDetailItem(
-          title: context.l10n.totalWithDelivery, value: "$totalPrice сом"),
       OrderDetailItem(title: context.l10n.comment, value: order.comment ?? ""),
     ];
   }

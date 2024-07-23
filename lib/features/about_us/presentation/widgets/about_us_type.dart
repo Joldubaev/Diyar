@@ -8,7 +8,7 @@ enum AboutUsType {
 
   String getUIName(BuildContext context) {
     return switch (this) {
-      hall => 'Зал',
+      hall => 'Залов',
       vip => 'VIP',
       restoran => 'Ресторан',
       cafe => 'Кафе',
