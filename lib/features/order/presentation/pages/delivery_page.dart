@@ -15,9 +15,13 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 @RoutePage()
 class DeliveryFormPage extends StatefulWidget {
   final List<CartItemModel> cart;
+  final int totalPrice;
   final int dishCount;
   const DeliveryFormPage(
-      {super.key, required this.cart, required this.dishCount});
+      {super.key,
+      required this.cart,
+      required this.dishCount,
+      required this.totalPrice});
 
   @override
   State<DeliveryFormPage> createState() => _DeliveryFormPageState();
@@ -76,9 +80,37 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
         return BlocConsumer<OrderCubit, OrderState>(
           listener: (context, state) {
             if (state is CreateOrderLoaded) {
-              context.router
-                  .pushAndPopUntil(const MainRoute(), predicate: (_) => false);
-              showToast(context.l10n.orderIsSuccess);
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return PopScope(
+                    canPop: false,
+                    child: AlertDialog(
+                      title: Text(context.l10n.yourOrdersConfirm,
+                          style: theme.textTheme.bodyLarge!
+                              .copyWith(color: theme.colorScheme.onSurface)),
+                      content: Text(context.l10n.operatorContact,
+                          style: theme.textTheme.bodyMedium!
+                              .copyWith(color: theme.colorScheme.onSurface),
+                          maxLines: 2),
+                      actions: [
+                        SubmitButtonWidget(
+                          textStyle: theme.textTheme.bodyMedium!
+                              .copyWith(color: theme.colorScheme.onPrimary),
+                          title: context.l10n.ok,
+                          bgColor: AppColors.green,
+                          onTap: () {
+                            context.router.pushAndPopUntil(
+                              const MainRoute(),
+                              predicate: (route) => false,
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              );
             } else if (state is CreateOrderError) {
               showToast(context.l10n.someThingIsWrong, isError: true);
             }
@@ -89,15 +121,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
             }
             log(_addressController.text);
             _extractHouseNumberFromAddress();
-            if (state is CreateOrderLoading) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (state is CreateOrderError) {
-              return Center(
-                child: Text(context.l10n.someThingIsWrong,
-                    style: theme.textTheme.bodyMedium!
-                        .copyWith(color: theme.colorScheme.error)),
-              );
-            }
+
             return Scaffold(
               appBar: AppBar(
                 backgroundColor: theme.colorScheme.primary,
@@ -245,13 +269,12 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                     ),
                     const SizedBox(height: 10),
                     CustomInputWidget(
-                      titleColor: theme.colorScheme.onSurface,
-                      filledColor: theme.colorScheme.surface,
-                      controller: _commentController,
-                      hintText: context.l10n.comment,
-                      validator: (val) => null,
-                      maxLines: 3,
-                    ),
+                        titleColor: theme.colorScheme.onSurface,
+                        filledColor: theme.colorScheme.surface,
+                        controller: _commentController,
+                        hintText: context.l10n.comment,
+                        validator: (val) => null,
+                        maxLines: 3),
                     const SizedBox(height: 20),
                     SubmitButtonWidget(
                       title: context.l10n.confirmOrder,
@@ -271,15 +294,27 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
   }
 
   void _onSubmit() {
+    final theme = Theme.of(context);
     log(context.read<CartCubit>().totalPrice.toString());
+
     if (_formKey.currentState!.validate()) {
       var deliveryPrice = context.read<OrderCubit>().deliveryPrice;
       if (deliveryPrice == 0) {
         deliveryPrice = 550;
       }
+
+      final totalOrderCost = widget.totalPrice + deliveryPrice;
+      final sdacha = int.tryParse(_sdachaController.text) ?? 0;
+
+      if (sdacha < totalOrderCost) {
+        showToast('Сдача должна быть больше или равна общей стоимости заказа',
+            isError: true);
+        return;
+      }
+
       showModalBottomSheet(
         context: context,
-        backgroundColor: Theme.of(context).colorScheme.surface,
+        backgroundColor: theme.colorScheme.surface,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20),
@@ -306,116 +341,66 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                       children: [
                         Text(
                           context.l10n.orderConfirmation,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyLarge!
-                              .copyWith(
-                                  color:
-                                      Theme.of(context).colorScheme.onSurface),
+                          style: theme.textTheme.bodyLarge!
+                              .copyWith(color: theme.colorScheme.onSurface),
                         ),
                         IconButton(
                           icon: const Icon(Icons.close),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
+                          onPressed: () => context.maybePop(),
                         ),
                       ],
                     ),
                     CustomDialogWidget(
-                        title: context.l10n.orderAmount,
-                        description:
-                            '${context.read<CartCubit>().totalPrice} сом'),
+                      title: context.l10n.orderAmount,
+                      description: '${widget.totalPrice} сом',
+                    ),
                     CustomDialogWidget(
-                        title: context.l10n.deliveryCost,
-                        description:
-                            '${context.read<OrderCubit>().deliveryPrice} сом'),
+                      title: context.l10n.deliveryCost,
+                      description: '$deliveryPrice сом',
+                    ),
                     const Divider(),
                     CustomDialogWidget(
-                        title: context.l10n.total,
-                        description:
-                            '${context.read<CartCubit>().totalPrice + context.read<OrderCubit>().deliveryPrice} сом'),
-                    SubmitButtonWidget(
-                      textStyle: Theme.of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .copyWith(
-                              color: Theme.of(context).colorScheme.onPrimary),
-                      title: context.l10n.confirm,
-                      bgColor: AppColors.green,
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: Text(context.l10n.yourOrdersConfirm,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge!
-                                      .copyWith(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onSurface)),
-                              content: Text(context.l10n.operatorContact,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .copyWith(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onSurface),
-                                  maxLines: 2),
-                              actions: [
-                                SubmitButtonWidget(
-                                  textStyle: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium!
-                                      .copyWith(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onPrimary),
-                                  title: context.l10n.ok,
-                                  bgColor: AppColors.green,
-                                  onTap: () {
-                                    context
-                                        .read<OrderCubit>()
-                                        .createOrder(CreateOrderModel(
-                                            userPhone: _phoneController.text,
-                                            userName: _userName.text,
-                                            address: _addressController.text,
-                                            comment: _commentController.text,
-                                            price: context
-                                                .read<CartCubit>()
-                                                .totalPrice,
-                                            deliveryPrice: context
-                                                .read<OrderCubit>()
-                                                .deliveryPrice,
-                                            houseNumber: _houseController.text,
-                                            kvOffice: _apartmentController.text,
-                                            intercom: _intercomController.text,
-                                            floor: _floorController.text,
-                                            entrance: _entranceController.text,
-                                            paymentMethod: _paymentType.name,
-                                            dishesCount: context
-                                                .read<CartCubit>()
-                                                .dishCount,
-                                            sdacha: int.tryParse(
-                                                    _sdachaController.text) ??
-                                                0,
-                                            foods: widget.cart
-                                                .map((e) => OrderFoodItem(
-                                                      name: e.food?.name ?? '',
-                                                      price: e.food?.price ?? 0,
-                                                      quantity: e.quantity ?? 1,
-                                                    ))
-                                                .toList()))
-                                        .then((value) {
-                                      context.read<CartCubit>().clearCart();
-                                      context.maybePop();
-                                    });
-                                  },
-                                ),
-                              ],
-                            );
+                      title: context.l10n.total,
+                      description: '$totalOrderCost сом',
+                    ),
+                    const SizedBox(height: 15),
+                    BlocBuilder<OrderCubit, OrderState>(
+                      builder: (context, state) {
+                        return SubmitButtonWidget(
+                          textStyle: theme.textTheme.bodyMedium!
+                              .copyWith(color: theme.colorScheme.onPrimary),
+                          title: context.l10n.confirm,
+                          bgColor: AppColors.green,
+                          isLoading: state is CreateOrderLoading,
+                          onTap: () {
+                            context
+                                .read<OrderCubit>()
+                                .createOrder(CreateOrderModel(
+                                  userPhone: _phoneController.text,
+                                  userName: _userName.text,
+                                  address: _addressController.text,
+                                  comment: _commentController.text,
+                                  price: widget.totalPrice,
+                                  deliveryPrice: deliveryPrice,
+                                  houseNumber: _houseController.text,
+                                  kvOffice: _apartmentController.text,
+                                  intercom: _intercomController.text,
+                                  floor: _floorController.text,
+                                  entrance: _entranceController.text,
+                                  paymentMethod: _paymentType.name,
+                                  dishesCount: widget.dishCount,
+                                  sdacha: sdacha,
+                                  foods: widget.cart
+                                      .map((e) => OrderFoodItem(
+                                            name: e.food?.name ?? '',
+                                            price: e.food?.price ?? 0,
+                                            quantity: e.quantity ?? 1,
+                                          ))
+                                      .toList(),
+                                ))
+                                .then((value) {
+                              context.read<CartCubit>().clearCart();
+                            });
                           },
                         );
                       },
