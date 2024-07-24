@@ -112,7 +112,7 @@ class CartPageState extends State<CartPage>
                           bgColor: Theme.of(context).colorScheme.primary,
                           title: context.l10n.confirmOrder,
                           onTap: () {
-                            _showDeliveryDialog(context, carts, totalPrice);
+                            _showAppropriateDialog(context, carts, totalPrice);
                           })),
                   const SizedBox(height: 20),
                 ],
@@ -124,6 +124,34 @@ class CartPageState extends State<CartPage>
         },
       ),
     );
+  }
+
+  void _showAppropriateDialog(
+      BuildContext context, List<CartItemModel> carts, int totalPrice) {
+    final currentTime = DateTime.now();
+    const startWorkTime = TimeOfDay(hour: 10, minute: 0);
+    const endWorkTime = TimeOfDay(hour: 22, minute: 0);
+    int timeOfDayToMinutes(TimeOfDay time) => time.hour * 60 + time.minute;
+
+    final currentTimeOfDay = TimeOfDay.fromDateTime(currentTime);
+    final currentTimeInMinutes = timeOfDayToMinutes(currentTimeOfDay);
+    final startWorkTimeInMinutes = timeOfDayToMinutes(startWorkTime);
+    final endWorkTimeInMinutes = timeOfDayToMinutes(endWorkTime);
+
+    bool isShopClosed;
+    if (startWorkTimeInMinutes < endWorkTimeInMinutes) {
+      isShopClosed = currentTimeInMinutes < startWorkTimeInMinutes ||
+          currentTimeInMinutes > endWorkTimeInMinutes;
+    } else {
+      isShopClosed = currentTimeInMinutes < startWorkTimeInMinutes &&
+          currentTimeInMinutes > endWorkTimeInMinutes;
+    }
+
+    if (isShopClosed) {
+      _showClosedAlertDialog(context);
+    } else {
+      _showDeliveryDialog(context, carts, totalPrice);
+    }
   }
 
   Future<dynamic> _showDeliveryDialog(
@@ -181,6 +209,42 @@ class CartPageState extends State<CartPage>
                     ),
                   ),
                 ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<dynamic> _showClosedAlertDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.error.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  'Доставка и самовывоз доступны с 10:00 до 22:00. Пожалуйста, оформите заказ в это время.',
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.error,
+                        fontWeight: FontWeight.bold,
+                      ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () => context.maybePop(),
+                child: const Text('Закрыть'),
               ),
             ],
           ),

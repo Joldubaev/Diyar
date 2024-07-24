@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:diyar/features/history/data/model/user_pickup_history_model.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 @RoutePage()
 class UserPickupDetailPage extends StatefulWidget {
@@ -17,74 +18,110 @@ class _UserPickupDetailPageState extends State<UserPickupDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(title: Text(context.l10n.orderDetails)),
-      body: Card(
-        color: theme.colorScheme.surface,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-            side: BorderSide(
-                color: theme.colorScheme.onSurface.withOpacity(0.1))),
-        child: ListView.separated(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          separatorBuilder: (context, index) => Divider(
-              color: theme.colorScheme.onSurface.withOpacity(0.2), height: 1),
-          itemCount: _buildDetailList().length,
-          itemBuilder: (context, index) {
-            final detail = _buildDetailList()[index];
-            return Column(
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                        child: Text(detail.title,
-                            style: theme.textTheme.bodyMedium!.copyWith(
-                                fontWeight: FontWeight.w500,
-                                color: theme.colorScheme.onSurface))),
-                    Expanded(
-                        child: Text(detail.value,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    color: theme.colorScheme.onSurface))),
-                  ],
-                ),
-              ],
-            );
-          },
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Column(
+          children: [
+            _buildCard([
+              _buildDetailItem(
+                context.l10n.name,
+                order.userName ?? "",
+                'about',
+              ),
+              _buildDetailItem(
+                'Время выдачи',
+                order.prepareFor ?? "",
+                'history',
+              ),
+              _buildDetailItem(
+                context.l10n.phone,
+                order.userPhone ?? "",
+                'phone',
+              ),
+              _buildDetailItem(
+                context.l10n.comment,
+                order.comment ?? "",
+                'document',
+              ),
+            ]),
+            _buildCard([
+              _buildDetailItem(
+                'Ваш заказ',
+                order.foods!.map((e) => "${e.name} (${e.quantity})").join('\n'),
+                'meal',
+              ),
+              _buildDetailItem(
+                context.l10n.cutlery,
+                "${order.dishesCount}",
+                'cutler',
+              ),
+              _buildDetailItem(
+                context.l10n.total,
+                "${order.price} сом",
+                'del',
+              ),
+            ]),
+          ],
         ),
       ),
     );
   }
 
-  List<OrderDetailItem> _buildDetailList() {
-    return [
-      OrderDetailItem(
-          title: context.l10n.orderNumber, value: order.orderNumber.toString()),
-      OrderDetailItem(title: context.l10n.name, value: order.userName ?? ""),
-      OrderDetailItem(title: context.l10n.phone, value: order.userPhone ?? ""),
-      OrderDetailItem(
-          title: context.l10n.timeD, value: order.timeRequest ?? ""),
-      OrderDetailItem(
-          title: context.l10n.food,
-          value:
-              order.foods!.map((e) => "${e.name} (${e.quantity})\n").join('')),
-      OrderDetailItem(
-          title: context.l10n.cutlery, value: "${order.dishesCount}"),
-      OrderDetailItem(title: context.l10n.paymentMethod, value: 'Наличные'),
-      OrderDetailItem(
-          title: context.l10n.totalOrderAmount, value: "${order.price} сом"),
-      OrderDetailItem(title: context.l10n.comment, value: order.comment ?? ""),
-    ];
+  Widget _buildCard(List<Widget> children) {
+    final theme = Theme.of(context);
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+        side: BorderSide(
+          color: theme.colorScheme.onSurface.withOpacity(0.1),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: children,
+        ),
+      ),
+    );
   }
-}
 
-class OrderDetailItem {
-  final String title;
-  final String value;
-
-  OrderDetailItem({required this.title, required this.value});
+  Widget _buildDetailItem(String title, String value, String icon) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SvgPicture.asset('assets/icons/$icon.svg'),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Divider(
+                  color: theme.colorScheme.onSurface.withOpacity(0.1),
+                  thickness: 1,
+                ),
+                Text(
+                  title,
+                  style: theme.textTheme.titleSmall!.copyWith(
+                    color: theme.colorScheme.onSurface.withOpacity(0.6),
+                  ),
+                ),
+                Text(
+                  value,
+                  style: theme.textTheme.bodyLarge!.copyWith(
+                    color: theme.colorScheme.onSurface,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
