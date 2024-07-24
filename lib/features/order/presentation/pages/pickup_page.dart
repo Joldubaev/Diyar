@@ -63,7 +63,7 @@ class _PickupFormPageState extends State<PickupFormPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            'Внимание! время подготовки заказа займет не менее 15 минут',
+            'Внимание! Время подготовки заказа займет не менее 15 минут',
             style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                 fontSize: 16, color: Theme.of(context).colorScheme.error),
             textAlign: TextAlign.center,

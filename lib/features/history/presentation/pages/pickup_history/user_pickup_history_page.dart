@@ -62,31 +62,36 @@ class _UserPickupHistoryPageState extends State<UserPickupHistoryPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(context.l10n.orderDetails,
-                                style: theme.textTheme.bodyLarge!.copyWith(
-                                    color: theme.colorScheme.primary,
-                                    fontWeight: FontWeight.bold)),
                             Text(
                                 '${context.l10n.orderNumber} ${orders[index].orderNumber}',
-                                style: theme.textTheme.bodyMedium!.copyWith(
+                                style: theme.textTheme.titleSmall!.copyWith(
                                     color: theme.colorScheme.onSurface)),
                             Divider(
                                 color: theme.colorScheme.onSurface
                                     .withOpacity(0.5),
                                 thickness: 1),
                             CustomTile(
-                                title: '${context.l10n.costOfMeal}:',
+                                title: 'Стоимость заказа:',
                                 trailing: '${orders[index].price} сoм'),
+                            const SizedBox(height: 10),
                             Align(
                               alignment: Alignment.centerRight,
-                              child: CustomTextButton(
-                                onPressed: () {
-                                  context.pushRoute(
-                                    UserPickupDetailRoute(order: orders[index]),
-                                  );
-                                },
-                                textButton: context.l10n.orderDetailsText,
-                                description: context.l10n.orderCancelText2,
+                              child: SizedBox(
+                                height: 40,
+                                width: MediaQuery.of(context).size.width * 0.5,
+                                child: SubmitButtonWidget(
+                                  title: context.l10n.orderDetailsText,
+                                  bgColor: theme.colorScheme.primary,
+                                  textStyle: theme.textTheme.bodyLarge!
+                                      .copyWith(
+                                          color: theme.colorScheme.onPrimary),
+                                  onTap: () {
+                                    context.pushRoute(
+                                      UserPickupDetailRoute(
+                                          order: orders[index]),
+                                    );
+                                  },
+                                ),
                               ),
                             ),
                           ],
