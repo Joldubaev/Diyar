@@ -57,7 +57,7 @@ class _TotalPriceWidgetState extends State<TotalPriceWidget> {
                       Theme.of(context).colorScheme.onSurface.withOpacity(0.2)),
               CustomTile(
                 title: context.l10n.total,
-                trailing: '${widget.totalPrice}${context.l10n.som}',
+                trailing: '${widget.totalPrice} ${context.l10n.som}',
               ),
               const SizedBox(height: 10),
               Text(context.l10n.totalToPay,

@@ -74,7 +74,8 @@ class _UserOrderHistoryPageState extends State<UserOrderHistoryPage> {
                                 thickness: 1),
                             CustomTile(
                                 title: '${context.l10n.costOfMeal}:',
-                                trailing: '${orders[index].price} сoм'),
+                                trailing:
+                                    '${(orders[index].price! + (orders[index].deliveryPrice)!).toString()} сом'),
                             Align(
                               alignment: Alignment.centerRight,
                               child: CustomTextButton(
