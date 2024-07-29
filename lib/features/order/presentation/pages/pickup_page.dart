@@ -105,13 +105,34 @@ class _PickupFormPageState extends State<PickupFormPage> {
                           _timeController.text =
                               '${initialTime.hour.toString().padLeft(2, '0')}:${initialTime.minute.toString().padLeft(2, '0')}';
                         }
-                        Navigator.of(context).pop();
+                        context.maybePop();
                       },
-                      child: Text(
-                        'Подтвердить',
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            fontSize: 16,
-                            color: Theme.of(context).colorScheme.primary),
+                      child: TextButton(
+                        onPressed: () {
+                          if (selectedTime.isAfter(initialTime)) {
+                            final hour = selectedTime.hour;
+                            if (hour >= 10 && hour < 11) {
+                              _timeController.text =
+                                  '${selectedTime.hour.toString().padLeft(2, '0')}:${selectedTime.minute.toString().padLeft(2, '0')}';
+                            } else {
+                              showToast('Выбранное время недопустимо.',
+                                  isError: true);
+                            }
+                          } else {
+                            showToast('Выбранное время недопустимо.',
+                                isError: true);
+                          }
+                          context.maybePop();
+                        },
+                        child: Text(
+                          'Подтвердить',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .copyWith(
+                                  fontSize: 16,
+                                  color: Theme.of(context).colorScheme.primary),
+                        ),
                       ),
                     ),
                   ],

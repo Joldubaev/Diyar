@@ -1,8 +1,10 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:diyar/features/profile/prof.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/components/components.dart';
 import 'package:diyar/features/auth/data/models/user_model.dart';
 import 'package:diyar/shared/theme/app_colors.dart';
+import 'package:diyar/shared/utils/fmt/show_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -103,6 +105,34 @@ class _ProfileInfoPageState extends State<ProfileInfoPage> {
                     }
                     return null;
                   },
+                ),
+                const SizedBox(height: 40),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: SettingsTile(
+                    leading: SvgPicture.asset(
+                      'assets/icons/logout.svg',
+                      height: 40,
+                    ),
+                    text: 'Удалить аккаунт',
+                    onPressed: () {
+                      AppAlert.showConfirmDialog(
+                        context: context,
+                        title: 'Удалить',
+                        content: const Text(
+                            'Вы уверены что хотите удалить аккаунт?'),
+                        cancelText: context.l10n.no,
+                        confirmText: context.l10n.yes,
+                        cancelPressed: () => Navigator.pop(context),
+                        confirmPressed: () {},
+                      );
+                    },
+                    color: Theme.of(context).colorScheme.error,
+                  ),
                 ),
               ],
             ),

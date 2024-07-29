@@ -113,6 +113,11 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                     'cutler',
                   ),
                   _buildDetailItem(
+                    context.l10n.change,
+                    "${order.sdacha} ${context.l10n.som}",
+                    'del',
+                  ),
+                  _buildDetailItem(
                     context.l10n.total,
                     "$totalPrice ${context.l10n.som}",
                     'del',
