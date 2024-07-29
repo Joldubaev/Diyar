@@ -43,13 +43,11 @@ class _MainPageState extends State<MainPage> {
       shouldPopScope: () => true,
       onUpdate: () {
         if (Platform.isIOS) {
-          // TODO: Add link to the app app store
           launchUrl(
-              Uri.parse("https://apps.apple.com/ru/app/diyar/id1581440734"));
+              Uri.parse("https://apps.apple.com/app/id6503710331"));
         } else {
-          // TODO: Add link to the app google play
           launchUrl(Uri.parse(
-              "https://play.google.com/store/apps/details?id=com.diyar.app"));
+              "https://play.google.com/store/apps/details?id=kg.cdt.diyar_guest"));
         }
         return true;
       },
