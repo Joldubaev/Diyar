@@ -11,9 +11,7 @@ abstract class AuthRemoteDataSource {
   Future<void> login(UserModel user);
   Future<void> register(UserModel user);
   Future<void> refreshToken();
-  // Future<void> confirmEmail(String email, int code);
   Future<void> sendForgotPasswordCodeToEmail(String email);
-
   Future<void> confirmResetPassword({required ResetModel model});
 }
 
@@ -23,23 +21,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final Dio _dio;
 
   AuthRemoteDataSourceImpl(this._dio, this._localDataSource, this._prefs);
-
-  // @override
-  // Future<void> confirmEmail(String email, int code) async {
-  //   try {
-  //     var res = await _dio.post("/api/auth/email-confirm/", queryParameters: {
-  //       "email": email,
-  //       "confirmCode": code,
-  //     });
-
-  //     if (res.statusCode != 200) {
-  //       throw ServerException();
-  //     }
-  //   } catch (e) {
-  //     log("$e");
-  //     throw ServerException();
-  //   }
-  // }
 
   @override
   Future<void> confirmResetPassword({

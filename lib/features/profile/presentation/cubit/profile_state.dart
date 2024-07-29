@@ -21,3 +21,11 @@ class ProfileGetLoaded extends ProfileState {
 }
 
 class ProfileGetError extends ProfileState {}
+
+// Delete user
+
+class ProfileDeleteLoading extends ProfileState {}
+
+class ProfileDeleteLoaded extends ProfileState {}
+
+class ProfileDeleteError extends ProfileState {}

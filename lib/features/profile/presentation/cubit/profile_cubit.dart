@@ -20,4 +20,14 @@ class ProfileCubit extends Cubit<ProfileState> {
       emit(ProfileGetError());
     }
   }
+
+  deleteUser() async {
+    emit(ProfileDeleteLoading());
+    try {
+      await _userRepository.deleteUser();
+      emit(ProfileDeleteLoaded());
+    } catch (e) {
+      emit(ProfileDeleteError());
+    }
+  }
 }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:diyar/shared/constants/api_const/api_const.dart';
 import 'package:diyar/shared/constants/app_const/app_const.dart';
@@ -7,8 +9,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class UserRemoteDataSource {
   Future<UserModel> getUser();
-  Future<void> updateEmail();
-  Future<void> updatePhone();
   Future<void> updateUser(String name, String phone);
   Future<void> deleteUser();
 }
@@ -39,18 +39,21 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   }
 
   @override
-  Future<void> updateEmail() {
-    throw UnimplementedError();
-  }
+  Future<void> deleteUser() async {
+    try {
+      final token = _prefs.getString(AppConst.accessToken);
+      var res = await _dio.post(
+        ApiConst.deleteUser,
+        options: Options(headers: ApiConst.authMap(token ?? '')),
+      );
 
-  @override
-  Future<void> updatePhone() {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> deleteUser() {
-    throw UnimplementedError();
+      if (res.statusCode != 200) {
+        throw ServerException();
+      }
+    } catch (e) {
+      log(e.toString());
+      throw Exception(e);
+    }
   }
 
   @override

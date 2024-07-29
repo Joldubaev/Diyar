@@ -4,8 +4,6 @@ import '../datasources/user_remote_data_source.dart';
 
 abstract class UserRepository {
   Future<UserModel> getUser();
-  Future<void> updateEmail();
-  Future<void> updatePhone();
   Future<void> updateUser(String name, String phone);
   Future<void> deleteUser();
 }
@@ -18,16 +16,6 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<UserModel> getUser() async {
     return _remoteDataSource.getUser();
-  }
-
-  @override
-  Future<void> updateEmail() async {
-    return _remoteDataSource.updateEmail();
-  }
-
-  @override
-  Future<void> updatePhone() async {
-    return _remoteDataSource.updatePhone();
   }
 
   @override

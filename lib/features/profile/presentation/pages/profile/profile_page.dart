@@ -76,10 +76,10 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       body: BlocConsumer<ProfileCubit, ProfileState>(
         listener: (context, state) {
-          if (state is ProfileGetError) {
+          if (state is ProfileGetError || state is ProfileDeleteLoaded) {
             context.read<SignInCubit>().logout().then((value) {
               context.router.pushAndPopUntil(
-                const MainRoute(),
+                const SignInRoute(),
                 predicate: (_) => false,
               );
             });
@@ -181,7 +181,32 @@ class _ProfilePageState extends State<ProfilePage> {
                     },
                   ),
                 ),
-    
+                const SizedBox(height: 15),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: SettingsTile(
+                    leading:
+                        const Icon(Icons.delete_outlined, color: AppColors.red),
+                    text: "Удалить аккаунт",
+                    onPressed: () {
+                      AppAlert.showConfirmDialog(
+                        context: context,
+                        title: "Удалить аккаунт",
+                        content: Text(context.l10n.areYouSure),
+                        cancelText: context.l10n.no,
+                        confirmText: context.l10n.yes,
+                        cancelPressed: () => Navigator.pop(context),
+                        confirmPressed: () {
+                          context.read<ProfileCubit>().deleteUser();
+                        },
+                      );
+                    },
+                  ),
+                ),
                 const SizedBox(height: 15),
                 Container(
                   padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),

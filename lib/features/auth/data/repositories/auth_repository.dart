@@ -1,12 +1,6 @@
 import 'package:diyar/features/features.dart';
 
 abstract class AuthRepository {
-  // Future<void> confirmEmail(String email, int code);
-  // Future<void> confirmResetPassword({
-  //   required String email,
-  //   required String otpCode,
-  //   required String newPassword,
-  // });
   Future<void> login(UserModel user);
   Future<void> register(UserModel user);
   Future<void> sendForgotPasswordCodeToEmail(String email);
@@ -20,24 +14,6 @@ class AuthRepositoryImpl implements AuthRepository {
   final AuthLocalDataSource _localDataSource;
 
   AuthRepositoryImpl(this._remoteDataSource, this._localDataSource);
-
-  // @override
-  // Future<void> confirmEmail(String email, int code) async {
-  //   return _remoteDataSource.confirmEmail(email, code);
-  // }
-
-  // @override
-  // Future<void> confirmResetPassword({
-  //   required String email,
-  //   required String otpCode,
-  //   required String newPassword,
-  // }) async {
-  //   return _remoteDataSource.confirmResetPassword(
-  //     email: email,
-  //     otpCode: otpCode,
-  //     newPassword: newPassword,
-  //   );
-  // }
 
   @override
   Future<void> login(UserModel user) async {
