@@ -42,7 +42,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   Future<void> deleteUser() async {
     try {
       final token = _prefs.getString(AppConst.accessToken);
-      var res = await _dio.post(
+      var res = await _dio.delete(
         ApiConst.deleteUser,
         options: Options(headers: ApiConst.authMap(token ?? '')),
       );
@@ -50,9 +50,24 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
       if (res.statusCode != 200) {
         throw ServerException();
       }
+    } on DioException catch (e) {
+      if (e.response != null) {
+        // Check the status code and handle different scenarios
+        if (e.response!.statusCode == 404) {
+          log('Error: User not found (404). $e');
+          throw Exception('User not found.');
+        } else {
+          log('Error: ${e.response!.statusCode} - ${e.response!.statusMessage}');
+          throw Exception('Server error: ${e.response!.statusCode}');
+        }
+      } else {
+        // If there's no response, it might be a network issue
+        log('Network error: ${e.message}');
+        throw Exception('Network error: ${e.message}');
+      }
     } catch (e) {
-      log(e.toString());
-      throw Exception(e);
+      log('Unexpected error: $e');
+      throw Exception('Unexpected error: $e');
     }
   }
 

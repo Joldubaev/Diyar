@@ -36,9 +36,9 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
   @override
   void initState() {
     _controller.text = widget.quantity.toString();
-    if (widget.quantity == 0) {
-      context.read<CartCubit>().removeFromCart(widget.food.id!);
-    }
+    // if (widget.quantity == 0) {
+    //   context.read<CartCubit>().removeFromCart(widget.food.id!);
+    // }
     super.initState();
   }
 

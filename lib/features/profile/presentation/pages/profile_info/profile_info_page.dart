@@ -6,6 +6,7 @@ import 'package:diyar/features/auth/data/models/user_model.dart';
 import 'package:diyar/shared/theme/app_colors.dart';
 import 'package:diyar/shared/utils/fmt/show_alert.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 @RoutePage()
@@ -128,7 +129,9 @@ class _ProfileInfoPageState extends State<ProfileInfoPage> {
                         cancelText: context.l10n.no,
                         confirmText: context.l10n.yes,
                         cancelPressed: () => Navigator.pop(context),
-                        confirmPressed: () {},
+                        confirmPressed: () {
+                           context.read<ProfileCubit>().deleteUser();
+                        },
                       );
                     },
                     color: Theme.of(context).colorScheme.error,
