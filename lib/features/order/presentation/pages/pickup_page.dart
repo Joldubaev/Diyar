@@ -107,32 +107,11 @@ class _PickupFormPageState extends State<PickupFormPage> {
                         }
                         context.maybePop();
                       },
-                      child: TextButton(
-                        onPressed: () {
-                          if (selectedTime.isAfter(initialTime)) {
-                            final hour = selectedTime.hour;
-                            if (hour >= 10 && hour < 11) {
-                              _timeController.text =
-                                  '${selectedTime.hour.toString().padLeft(2, '0')}:${selectedTime.minute.toString().padLeft(2, '0')}';
-                            } else {
-                              showToast('Выбранное время недопустимо.',
-                                  isError: true);
-                            }
-                          } else {
-                            showToast('Выбранное время недопустимо.',
-                                isError: true);
-                          }
-                          context.maybePop();
-                        },
-                        child: Text(
-                          'Подтвердить',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium!
-                              .copyWith(
-                                  fontSize: 16,
-                                  color: Theme.of(context).colorScheme.primary),
-                        ),
+                      child: Text(
+                        'Подтвердить',
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            fontSize: 16,
+                            color: Theme.of(context).colorScheme.primary),
                       ),
                     ),
                   ],
@@ -146,6 +125,20 @@ class _PickupFormPageState extends State<PickupFormPage> {
   }
 
   void _submitOrder() {
+    final selectedTime = _timeController.text;
+
+    if (selectedTime.isEmpty) {
+      showToast('Please select a valid time.');
+      return;
+    }
+
+    final hour = int.parse(selectedTime.split(':')[0]);
+
+    if ((hour >= 23) || (hour < 10)) {
+      showToast('Orders cannot be placed between 23:00 and 10:00.');
+      return;
+    }
+
     context
         .read<OrderCubit>()
         .getPickupOrder(PickupOrderModel(
