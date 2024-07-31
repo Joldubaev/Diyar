@@ -234,7 +234,7 @@ class _PickupFormPageState extends State<PickupFormPage> {
                 key: _formKey,
                 child: ListView(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                      const EdgeInsets.all(20),
                   children: [
                     CustomInputWidget(
                       titleColor: theme.colorScheme.onSurface,
@@ -337,7 +337,7 @@ class _PickupFormPageState extends State<PickupFormPage> {
           maxChildSize: 0.3,
           builder: (context, scrollController) {
             return Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
                   SizedBox(

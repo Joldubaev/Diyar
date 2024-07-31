@@ -65,7 +65,7 @@ class _SalePageState extends State<SalePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: const BorderRadius.all(Radius.circular(20)),
                     child: CachedNetworkImage(
                       imageUrl: sale?.photoLink ?? '',
                       width: double.infinity,

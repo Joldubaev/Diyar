@@ -9,7 +9,7 @@ class ApiConst {
   static const signIn = "$baseUrl/auth/sign-in";
   static const refreshToken = "$baseUrl/auth/refresh-token";
   static const resetPsw = "$baseUrl/auth/reset-password";
-  static const sendCodeToEmail = "$baseUrl/auth/send-code-to-email";
+  static const sendCodeToPhone = "$baseUrl/auth/send-code-to-phone";
 
   // USER
   static const getUser = "$baseUrl/user/get-user-info";

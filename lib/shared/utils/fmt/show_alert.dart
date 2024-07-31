@@ -13,7 +13,7 @@ class AppAlert {
         return AlertDialog.adaptive(
           title: Text('Loading', style: Theme.of(context).textTheme.titleLarge),
           content: Padding(
-            padding: const EdgeInsets.only(top: 20, bottom: 20),
+            padding: const EdgeInsets.symmetric(vertical: 20),
             child: CupertinoActivityIndicator(
                 color: theme.primaryColor, radius: 16),
           ),

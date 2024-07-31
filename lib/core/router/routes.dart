@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/shared/constants/app_const/app_const.dart';
 import 'package:diyar/injection_container.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 @AutoRouterConfig()
@@ -14,13 +15,13 @@ class AppRouter extends $AppRouter {
             AutoRoute(page: HomeRoute.page, initial: true),
             AutoRoute(page: MenuRoute.page),
             AutoRoute(page: OrderHistoryRoute.page),
-            AutoRoute(page: ProfileRoute.page),
+            AutoRoute(page: ProfileRoute.page, guards: [AuthGuard()]),
           ],
         ),
         AutoRoute(page: SplashRoute.page, initial: true),
-        AutoRoute(page: CartRoute.page),
+        AutoRoute(page: CartRoute.page, guards: [AuthGuard()]),
         AutoRoute(page: SearchMenuRoute.page),
-        AutoRoute(page: ProfileInfoRoute.page),
+        AutoRoute(page: ProfileInfoRoute.page, guards: [AuthGuard()]),
         AutoRoute(page: ContactRoute.page),
         AutoRoute(page: SignInRoute.page),
         AutoRoute(page: SignUpRoute.page),
@@ -53,10 +54,22 @@ class AuthGuard extends AutoRouteGuard {
 
   @override
   void onNavigation(NavigationResolver resolver, StackRouter router) {
-    if (prefs.getString(AppConst.accessToken) != null) {
-      resolver.next(true);
-    } else {
+    final token = prefs.getString(AppConst.accessToken);
+    final role = prefs.getString(AppConst.userRole);
+
+    if (token == null || JwtDecoder.isExpired(token)) {
+      // Если токен отсутствует или истек, перенаправляем на экран входа
       router.push(const SignInRoute());
+    } else if (resolver.route.name == 'ProfileRoute' ||
+        resolver.route.name == 'CartRoute') {
+      // Проверяем роль для защищенных маршрутов
+      if (role == null) {
+        router.push(const SignInRoute());
+      } else {
+        resolver.next(true);
+      }
+    } else {
+      resolver.next(true);
     }
   }
 }

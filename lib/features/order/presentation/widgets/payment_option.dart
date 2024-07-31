@@ -24,7 +24,7 @@ class PaymentTypeOption extends StatelessWidget {
             color: isSelected
                 ? Theme.of(context).colorScheme.primary
                 : Colors.transparent,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
           ),
           child: Center(
             child: Text(

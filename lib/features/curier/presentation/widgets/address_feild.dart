@@ -14,7 +14,7 @@ class AddressField extends StatelessWidget {
       child: DecoratedBox(
         decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surface,
-            borderRadius: BorderRadius.circular(8)),
+            borderRadius: const BorderRadius.all(Radius.circular(8))),
         child: child ??
             Center(
               child: Text(

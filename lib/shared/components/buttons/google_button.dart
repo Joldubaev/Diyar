@@ -22,12 +22,13 @@ class GoogleButton extends StatelessWidget {
           },
           child: Container(
             height: 50,
-            margin:
-                const EdgeInsets.only(top: 0, bottom: 20, left: 10, right: 10),
+            margin: const EdgeInsets.all(12),
             width: 50,
             decoration: BoxDecoration(
-              border: Border.all(color: AppColors.blue),
-              borderRadius: BorderRadius.circular(50),
+              border: Border.fromBorderSide(
+                BorderSide(color: color ?? AppColors.blue),
+              ),
+              borderRadius: const BorderRadius.all( Radius.circular(50)),
             ),
             child: Padding(
               padding: const EdgeInsets.all(10),

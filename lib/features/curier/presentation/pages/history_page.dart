@@ -62,7 +62,7 @@ class _HistoryPageState extends State<HistoryPage> {
               return Container(
                 decoration: BoxDecoration(
                   color: theme.colorScheme.surface,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
                   border: Border.all(
                     color: AppColors.black1.withOpacity(0.2),
                   ),

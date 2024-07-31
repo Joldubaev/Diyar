@@ -133,19 +133,23 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
                         );
                       }
                     },
-                    defaultPinTheme: PinTheme(
+                    defaultPinTheme: const PinTheme(
                       width: 60,
                       height: 50,
-                      textStyle: const TextStyle(
+                      textStyle: TextStyle(
                         fontSize: 20,
                         color: Colors.black,
                         fontWeight: FontWeight.w600,
                       ),
                       decoration: BoxDecoration(
-                        border: Border.all(
-                          color: const Color.fromRGBO(234, 239, 243, 1),
+                        border: Border.fromBorderSide(
+                          BorderSide(
+                            color:  Color.fromRGBO(234, 239, 243, 1),
+                            width: 1,
+                          ),
                         ),
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius:
+                            BorderRadius.all(Radius.circular(15)),
                       ),
                     ),
                   ),
@@ -166,10 +170,13 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
                             const SizedBox(height: 6),
                             Text(
                               "$_start сек",
-                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                color: AppColors.red,
-                                fontWeight: FontWeight.w500,
-                              ),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.copyWith(
+                                    color: AppColors.red,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                             ),
                           ],
                         ),
@@ -188,10 +195,11 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
                           },
                           child: Text(
                             context.l10n.resendCode,
-                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              color: AppColors.red,
-                              fontWeight: FontWeight.w500,
-                            ),
+                            style:
+                                Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                      color: AppColors.red,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                           ),
                         ),
                     ],

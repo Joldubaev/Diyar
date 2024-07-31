@@ -4,7 +4,6 @@ import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/components/components.dart';
 import 'package:diyar/features/features.dart';
 import 'package:diyar/shared/utils/utils.dart';
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,7 +17,7 @@ class RessetPasswordPage extends StatefulWidget {
 
 class _RessetPasswordPageState extends State<RessetPasswordPage> {
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   final resedPasswordCode = TextEditingController();
@@ -66,17 +65,16 @@ class _RessetPasswordPageState extends State<RessetPasswordPage> {
                 textAlign: TextAlign.center,
               ),
               CustomInputWidget(
+                hintText: '+996',
                 filledColor: theme.colorScheme.surface,
-                title: context.l10n.email,
-                hintText: context.l10n.email,
-                controller: _emailController,
-                isPasswordField: false,
-                inputType: TextInputType.emailAddress,
+                controller: _phoneController,
+                inputType: TextInputType.phone,
+                inputFormatters: [phoneFormatter],
                 validator: (value) {
                   if (value!.isEmpty) {
-                    return context.l10n.pleaseEnterEmail;
-                  } else if (!EmailValidator.validate(value)) {
-                    return context.l10n.pleaseEnterCorrectEmail;
+                    return context.l10n.pleaseEnterPhone;
+                  } else if (value.length < 10) {
+                    return context.l10n.pleaseEnterCorrectPhone;
                   }
                   return null;
                 },
@@ -174,7 +172,7 @@ class _RessetPasswordPageState extends State<RessetPasswordPage> {
                             if (_formKey.currentState!.validate()) {
                               context.read<SignInCubit>().resetPassword(
                                     model: ResetModel(
-                                      email: _emailController.text,
+                                      phone: _phoneController.text,
                                       newPassword: _passwordController.text,
                                       code: int.parse(resedPasswordCode.text),
                                     ),
@@ -197,7 +195,7 @@ class _RessetPasswordPageState extends State<RessetPasswordPage> {
                       if (_formKey.currentState!.validate()) {
                         context.read<SignInCubit>().resetPassword(
                               model: ResetModel(
-                                email: _emailController.text,
+                                phone: _phoneController.text,
                                 newPassword: _passwordController.text,
                                 code: int.parse(resedPasswordCode.text),
                               ),

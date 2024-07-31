@@ -4,7 +4,7 @@ description: "A new Flutter project."
 publish_to: "none"
 
 # version: 3.3.0+44l # This is andriod the version of the app.
-version: 3.3.0+43 # This is  ios the version of the app.
+version: 3.3.0+44 # This is  ios the version of the app.
 
 environment:
   sdk: ">=3.3.3 <4.0.0"

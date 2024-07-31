@@ -56,16 +56,16 @@ class PhoneNumberMaskState extends State<PhoneNumberMask> {
                 fontWeight: FontWeight.w400,
                 fontSize: 16,
               ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(
+              enabledBorder: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12)),
+                borderSide: BorderSide(
                   color: AppColors.grey,
                   width: 0.1,
                 ),
               ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: AppColors.primary),
-                borderRadius: BorderRadius.circular(10),
+              focusedBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: AppColors.primary),
+                borderRadius: BorderRadius.all(Radius.circular(10)),
               ),
               filled: true,
               errorBorder: const UnderlineInputBorder(

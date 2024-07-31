@@ -102,7 +102,7 @@ class _OrderMapPageState extends State<OrderMapPage> {
               Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
                       color: theme.colorScheme.error,
                       border: Border.all(color: theme.colorScheme.onSurface)),
                   child: Column(
@@ -112,7 +112,6 @@ class _OrderMapPageState extends State<OrderMapPage> {
                           '${context.l10n.deliveryPrice}: ${MapHelper.isCoordinateInsidePolygons(lat, long, polygons: Polygons.getPolygons())} сом',
                           style: theme.textTheme.bodyLarge
                               ?.copyWith(color: theme.colorScheme.surface)),
-                   
                     ],
                   )),
               const SizedBox(height: 10),

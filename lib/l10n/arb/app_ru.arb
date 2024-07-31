@@ -27,7 +27,7 @@
     "pleaseEnterCorrectEmail": "Пожалуйста, введите корректный E-Mail",
     "send": "Отправить",
     "passwordRecovery":"Восстановление пароля",
-    "passwordRecoveryText":"Введите ваш E-Mail и код восстановления и новый пароль, который мы отправили вам на почту.",
+    "passwordRecoveryText":"Введите номер телефона и новый пароль. Код восстановления был отправлен вам на телефон.",
     "newPassword":"Новый пароль",
     "pleaseEnterPassword":"Пожалуйста, введите ваш пароль",
     "pleaseEnterCorrectPassword":"Пароль должен содержать не менее 5 символов",

@@ -24,7 +24,7 @@ class CartItemWidgets extends StatelessWidget {
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
           boxShadow: [
             BoxShadow(
                 color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
@@ -41,7 +41,7 @@ class CartItemWidgets extends StatelessWidget {
                 child: DecoratedBox(
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.surface,
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
                     boxShadow: [
                       BoxShadow(
                         color: Theme.of(context)
@@ -113,10 +113,8 @@ class CartItemWidgets extends StatelessWidget {
                     ),
                     Row(
                       children: [
-                        RichText(
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          text: TextSpan(
+                        Text.rich(
+                          TextSpan(
                             text: "${food.weight}",
                             style: Theme.of(context)
                                 .textTheme
@@ -127,6 +125,8 @@ class CartItemWidgets extends StatelessWidget {
                                         .onSurface
                                         .withOpacity(0.6)),
                           ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(width: 10),
                         Text(

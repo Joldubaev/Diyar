@@ -22,7 +22,7 @@ class CustomBoxWidget extends StatelessWidget {
             padding: const EdgeInsets.all(10.0),
             decoration: BoxDecoration(
               color: AppColors.primary[50],
-              borderRadius: BorderRadius.circular(15.0),
+              borderRadius: const BorderRadius.all(Radius.circular(15)),
               boxShadow: [
                 BoxShadow(
                   color: AppColors.grey.withOpacity(0.5),
@@ -38,8 +38,8 @@ class CustomBoxWidget extends StatelessWidget {
           Text(
             label,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              color: Colors.grey[800],
-            ),
+                  color: Colors.grey[800],
+                ),
           ),
         ],
       ),

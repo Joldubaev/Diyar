@@ -11,7 +11,7 @@ abstract class AuthRemoteDataSource {
   Future<void> login(UserModel user);
   Future<void> register(UserModel user);
   Future<void> refreshToken();
-  Future<void> sendForgotPasswordCodeToEmail(String email);
+  Future<void> sendForgotPasswordCodeToPhone(String phone);
   Future<void> confirmResetPassword({required ResetModel model});
 }
 
@@ -30,9 +30,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       var res = await _dio.post(
         ApiConst.resetPsw,
         data: {
-          "email": model.email,
           "code": model.code,
-          "newPassword": model.newPassword
+          "newPassword": model.newPassword,
+          "phone": model.phone,
         },
       );
 
@@ -106,11 +106,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<void> sendForgotPasswordCodeToEmail(String email) async {
+  Future<void> sendForgotPasswordCodeToPhone(String phone) async {
     try {
       var res = await _dio.post(
-        ApiConst.sendCodeToEmail,
-        data: {"email": email},
+        ApiConst.sendCodeToPhone,
+        data: {"phone": phone},
       );
 
       if (res.statusCode != 200) {

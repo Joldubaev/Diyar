@@ -29,7 +29,7 @@ class _TotalPriceWidgetState extends State<TotalPriceWidget> {
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
         boxShadow: [
           BoxShadow(
               color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2),

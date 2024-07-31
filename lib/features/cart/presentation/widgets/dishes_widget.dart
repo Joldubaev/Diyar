@@ -14,7 +14,7 @@ class DishesWidget extends StatelessWidget {
         return DecoratedBox(
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surface,
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
             boxShadow: [
               BoxShadow(
                 color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
@@ -45,7 +45,8 @@ class DishesWidget extends StatelessWidget {
                     Container(
                       height: 40,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(30)),
                         border: Border.all(
                           color: Theme.of(context)
                               .colorScheme

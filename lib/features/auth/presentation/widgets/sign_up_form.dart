@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/launch/launch.dart';
 import 'package:diyar/shared/constants/app_const/app_const.dart';
 import 'package:diyar/shared/utils/show/bottom_sheet.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:diyar/core/router/routes.gr.dart';
@@ -78,6 +79,14 @@ class _SignUpFormState extends State<SignUpForm> {
             hintText: context.l10n.email,
             controller: _emailController,
             inputType: TextInputType.emailAddress,
+            validator: (value) {
+              if (value!.isNotEmpty) {
+                return context.l10n.pleaseEnterEmail;
+              } else if (!EmailValidator.validate(value)) {
+                return context.l10n.pleaseEnterCorrectEmail;
+              }
+              return null;
+            },
           ),
           const SizedBox(height: 10),
           CustomInputWidget(

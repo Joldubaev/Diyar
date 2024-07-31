@@ -3,7 +3,7 @@ import 'package:diyar/features/features.dart';
 abstract class AuthRepository {
   Future<void> login(UserModel user);
   Future<void> register(UserModel user);
-  Future<void> sendForgotPasswordCodeToEmail(String email);
+  Future<void> sendForgotPasswordCodeToPhone(String phone);
   Future<void> resetPassword({required ResetModel model});
   Future<void> refreshToken();
   Future<void> logout();
@@ -26,8 +26,8 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<void> sendForgotPasswordCodeToEmail(String email) async {
-    return _remoteDataSource.sendForgotPasswordCodeToEmail(email);
+  Future<void> sendForgotPasswordCodeToPhone(String phone) async {
+    return _remoteDataSource.sendForgotPasswordCodeToPhone(phone);
   }
 
   @override

@@ -109,8 +109,8 @@ class OrderButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(30)),
           ),
           padding: EdgeInsets.zero,
           elevation: 3),
@@ -119,7 +119,7 @@ class OrderButton extends StatelessWidget {
         height: 100,
         padding: const EdgeInsets.symmetric(horizontal: 20),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: const BorderRadius.all(Radius.circular(30)),
           border: Border.all(color: Colors.grey[300]!),
         ),
         child: Row(

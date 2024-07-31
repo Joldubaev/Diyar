@@ -125,8 +125,9 @@ class _CurierPageState extends State<CurierPage> {
                           (orders[index].deliveryPrice ?? 0);
                       return Card(
                         margin: const EdgeInsets.all(0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                        shape: const RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(10)),
                         ),
                         elevation: 4,
                         child: ExpansionTile(
@@ -190,7 +191,8 @@ class _CurierPageState extends State<CurierPage> {
                                   child: Container(
                                     decoration: BoxDecoration(
                                       color: theme.colorScheme.surface,
-                                      borderRadius: BorderRadius.circular(5),
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(5)),
                                       boxShadow: [
                                         BoxShadow(
                                           color: theme.colorScheme.onSurface
@@ -220,7 +222,8 @@ class _CurierPageState extends State<CurierPage> {
                                     margin: const EdgeInsets.only(left: 5),
                                     decoration: BoxDecoration(
                                       color: theme.colorScheme.surface,
-                                      borderRadius: BorderRadius.circular(5),
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(5)),
                                       boxShadow: [
                                         BoxShadow(
                                           color: theme.colorScheme.onSurface
@@ -246,7 +249,8 @@ class _CurierPageState extends State<CurierPage> {
                                     margin: const EdgeInsets.only(left: 5),
                                     decoration: BoxDecoration(
                                       color: theme.colorScheme.surface,
-                                      borderRadius: BorderRadius.circular(5),
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(5)),
                                       boxShadow: [
                                         BoxShadow(
                                           color: theme.colorScheme.onSurface

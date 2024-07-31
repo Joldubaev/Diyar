@@ -65,10 +65,10 @@ final lightTheme = ThemeData(
     shadowColor: Colors.transparent,
     surfaceTintColor: Colors.transparent,
   ),
-  floatingActionButtonTheme: FloatingActionButtonThemeData(
+  floatingActionButtonTheme: const FloatingActionButtonThemeData(
     backgroundColor: AppColors.primary,
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(50),
+      borderRadius: BorderRadius.all(Radius.circular(50)),
     ),
   ),
   bottomNavigationBarTheme: const BottomNavigationBarThemeData(
@@ -137,10 +137,10 @@ final darkTheme = ThemeData(
     shadowColor: Colors.transparent,
     surfaceTintColor: Colors.transparent,
   ),
-  floatingActionButtonTheme: FloatingActionButtonThemeData(
+  floatingActionButtonTheme: const FloatingActionButtonThemeData(
     backgroundColor: AppColors.primary,
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(50),
+      borderRadius: BorderRadius.all(Radius.circular(50)),
     ),
   ),
 );

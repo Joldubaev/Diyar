@@ -33,14 +33,14 @@ class _SearchMenuPageState extends State<SearchMenuPage> {
               style: Theme.of(context).textTheme.bodyMedium,
               decoration: InputDecoration(
                 hintText: context.l10n.search,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
+                border: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(30)),
                   borderSide: BorderSide.none,
                 ),
                 prefixIcon: const Icon(Icons.search),
                 fillColor: AppColors.grey1,
                 filled: true,
-                contentPadding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 12),
                 constraints: const BoxConstraints(maxHeight: 40),
               ),
               onChanged: (value) {

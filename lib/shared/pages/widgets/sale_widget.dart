@@ -46,9 +46,10 @@ class SaleWidget extends StatelessWidget {
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20))),
-                    onPressed: () {},
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                        )),
+                    onPressed: onTap,
                     child: Text('$discount %',
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
                             color: AppColors.white,

@@ -26,10 +26,15 @@ class SignInCubit extends Cubit<SignInState> {
     }
   }
 
-  void sendCodeToEmail(String email) async {
+  String unformatPhoneNumber(String formattedPhoneNumber) {
+    return formattedPhoneNumber.replaceAll(RegExp(r'\D'), '');
+  }
+
+  void sendCodeToPhone(String phone) async {
     emit(SignInLoading());
     try {
-      await authRepository.sendForgotPasswordCodeToEmail(email);
+      String unformattedPhone = unformatPhoneNumber(phone);
+      await authRepository.sendForgotPasswordCodeToPhone(unformattedPhone);
       emit(FogotPasswordSuccess());
     } catch (e) {
       emit(SignInFailure(e.toString()));

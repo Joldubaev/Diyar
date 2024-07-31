@@ -62,59 +62,66 @@ class CartPageState extends State<CartPage>
                                     (element.quantity ?? 0)) *
                         0.9)
                     .toInt();
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: carts.length,
-                    padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
-                    itemBuilder: (context, index) {
-                      return CartItemWidgets(
-                        counter: carts[index].quantity ?? 0,
-                        food: carts[index].food ?? FoodModel(),
-                        onRemove: () {
-                          context
-                              .read<CartCubit>()
-                              .removeFromCart(carts[index].food!.id ?? '');
-                          context.maybePop();
-                          if (carts.length == 1) {
-                            context.read<CartCubit>().dishCount = 0;
-                          }
-                        },
-                      );
-                    },
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
-                    child: TotalPriceWidget(
-                      containerPrice: containerPrice,
-                      price: (carts.fold(
-                                0,
-                                (previousValue, element) =>
-                                    previousValue +
-                                    (element.food?.price ?? 0) *
-                                        (element.quantity ?? 0),
-                              ) *
-                              0.9)
-                          .toInt(),
-                      sale: 10,
-                      totalPrice: totalPrice,
+            return Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: CustomScrollView(
+                slivers: [
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        return CartItemWidgets(
+                          counter: carts[index].quantity ?? 0,
+                          food: carts[index].food ?? FoodModel(),
+                          onRemove: () {
+                            context
+                                .read<CartCubit>()
+                                .removeFromCart(carts[index].food!.id ?? '');
+                            context.maybePop();
+                            if (carts.length == 1) {
+                              context.read<CartCubit>().dishCount = 0;
+                            }
+                          },
+                        );
+                      },
+                      childCount: carts.length,
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  Padding(
-                      padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
+                  SliverPadding(
+                    padding: const EdgeInsets.all(8),
+                    sliver: SliverToBoxAdapter(
+                      child: TotalPriceWidget(
+                        containerPrice: containerPrice,
+                        price: (carts.fold(
+                                  0,
+                                  (previousValue, element) =>
+                                      previousValue +
+                                      (element.food?.price ?? 0) *
+                                          (element.quantity ?? 0),
+                                ) *
+                                0.9)
+                            .toInt(),
+                        sale: 10,
+                        totalPrice: totalPrice,
+                      ),
+                    ),
+                  ),
+                  SliverPadding(
+                    padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
+                    sliver: SliverToBoxAdapter(
                       child: SubmitButtonWidget(
-                          textStyle: theme.textTheme.bodyLarge!.copyWith(
-                              color: Theme.of(context).colorScheme.surface),
-                          bgColor: Theme.of(context).colorScheme.primary,
-                          title: context.l10n.confirmOrder,
-                          onTap: () {
-                            _showAppropriateDialog(context, carts, totalPrice);
-                          })),
-                  const SizedBox(height: 20),
+                        textStyle: theme.textTheme.bodyLarge!.copyWith(
+                            color: Theme.of(context).colorScheme.surface),
+                        bgColor: Theme.of(context).colorScheme.primary,
+                        title: context.l10n.confirmOrder,
+                        onTap: () {
+                          _showAppropriateDialog(context, carts, totalPrice);
+                        },
+                      ),
+                    ),
+                  ),
+                  const SliverToBoxAdapter(
+                    child: SizedBox(height: 20),
+                  ),
                 ],
               ),
             );
@@ -230,7 +237,7 @@ class CartPageState extends State<CartPage>
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.error.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
                 ),
                 child: Text(
                   'Доставка и самовывоз доступны с 10:00 до 22:00. Пожалуйста, оформите заказ в это время.',
