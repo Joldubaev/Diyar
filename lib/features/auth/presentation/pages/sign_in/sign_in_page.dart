@@ -1,3 +1,4 @@
+import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
@@ -12,24 +13,27 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-
-  @override
-  void dispose() {
-    super.dispose();
-    _emailController.dispose();
-    _passwordController.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text(context.l10n.authorize),
-          leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios),
-              onPressed: () => context.maybePop())),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        title: Text(context.l10n.authorize,
+            style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                color: Theme.of(context).colorScheme.onPrimary,
+                fontWeight: FontWeight.bold)),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios,
+              color: Theme.of(context).colorScheme.onPrimary),
+          onPressed: () {
+            if (AutoRouter.of(context).canPop()) {
+              AutoRouter.of(context).maybePop();
+            } else {
+              AutoRouter.of(context).replace(const MainRoute());
+            }
+          },
+        ),
+      ),
       body: const SafeArea(
         child: LoginForm(),
       ),
