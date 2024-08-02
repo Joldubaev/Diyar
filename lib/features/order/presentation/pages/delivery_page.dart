@@ -216,7 +216,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                             filledColor: theme.colorScheme.surface,
                             inputType: TextInputType.text,
                             controller: _entranceController,
-                            hintText: 'Номер квартиры',
+                            hintText: 'Подъезд',
                           ),
                         ),
                         const SizedBox(width: 8),
