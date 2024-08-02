@@ -32,7 +32,6 @@ dependencies:
   auto_route: ^7.9.0
   dio: ^5.4.1
   jwt_decoder: ^2.0.1
-  email_validator: ^2.1.17
   internet_connection_checker_plus: ^2.2.0
   dartz: ^0.10.1
   get_it: ^7.6.7

@@ -216,7 +216,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                             filledColor: theme.colorScheme.surface,
                             inputType: TextInputType.text,
                             controller: _entranceController,
-                            hintText: context.l10n.entrance,
+                            hintText: 'Номер квартиры',
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -341,8 +341,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
               return SizedBox(
                 height: MediaQuery.of(context).size.height * 0.35,
                 child: ListView(
-                  padding:
-                      const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

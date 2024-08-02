@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
               alignment: Alignment.centerLeft,
               child: FittedBox(
                 child: Text(
-                  '${l10n.welcome},${context.read<ProfileCubit>().user?.name ?? 'В Дияр'}!',
+                  '${l10n.welcome},${context.read<ProfileCubit>().user?.name ?? 'в Дияр Экспресс'}!',
                   style: Theme.of(context)
                       .textTheme
                       .titleSmall

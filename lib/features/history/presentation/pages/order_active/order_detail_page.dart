@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../pickup_history/user_pickup_detail_page.dart';
+
 @RoutePage()
 class OrderDetailPage extends StatefulWidget {
   final String orderNumber;
@@ -52,75 +54,75 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Column(
               children: [
-                _buildCard([
-                  _buildDetailItem(
-                    context.l10n.name,
-                    order.userName ?? "",
-                    'about',
+                DetailCard(children: [
+                  DetailItem(
+                    icon: 'about',
+                    title: context.l10n.name,
+                    value: order.userName ?? "",
                   ),
-                  _buildDetailItem(
-                    context.l10n.yourAddress,
-                    order.address ?? "",
-                    'location',
+                  DetailItem(
+                    icon: 'location',
+                    title: context.l10n.yourAddress,
+                    value: order.address ?? "",
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      _buildDetailItem2(
-                        context.l10n.entranceNumber,
-                        order.entrance ?? "",
+                      DetailItem2(
+                        title: context.l10n.entranceNumber,
+                        value: order.entrance ?? "",
                       ),
-                      _buildDetailItem2(
-                        context.l10n.houseNumber,
-                        order.houseNumber ?? "",
+                      DetailItem2(
+                        title: context.l10n.houseNumber,
+                        value: order.houseNumber ?? "",
                       ),
-                      _buildDetailItem2(
-                        context.l10n.floor,
-                        order.floor ?? "",
+                      DetailItem2(
+                        title: context.l10n.floor,
+                        value: order.floor ?? "",
                       ),
-                      _buildDetailItem2(
-                        context.l10n.entrance,
-                        order.entrance ?? "",
+                      DetailItem2(
+                        title: context.l10n.ofice,
+                        value: order.kvOffice ?? "",
                       ),
-                      _buildDetailItem2(
-                        context.l10n.timeD,
-                        order.timeRequest ?? "",
+                      DetailItem2(
+                        title: context.l10n.timeD,
+                        value: order.timeRequest ?? "",
                       ),
                     ],
                   ),
-                  _buildDetailItem(
-                    context.l10n.phone,
-                    order.userPhone ?? "",
-                    'phone',
+                  DetailItem(
+                    icon: 'phone',
+                    title: context.l10n.phone,
+                    value: order.userPhone ?? "",
                   ),
-                  _buildDetailItem(
-                    context.l10n.comment,
-                    order.comment ?? "",
-                    'document',
+                  DetailItem(
+                    icon: 'document',
+                    title: context.l10n.comment,
+                    value: order.comment ?? "",
                   ),
                 ]),
-                _buildCard([
-                  _buildDetailItem(
-                    'Ваш заказ',
-                    order.foods!
+                DetailCard(children: [
+                  DetailItem(
+                    icon: 'meal',
+                    title: 'Ваш заказ',
+                    value: order.foods!
                         .map((e) => "${e.name} (${e.quantity})")
                         .join('\n'),
-                    'meal',
                   ),
-                  _buildDetailItem(
-                    context.l10n.cutlery,
-                    "${order.dishesCount}",
-                    'cutler',
+                  DetailItem(
+                    icon: 'cutler',
+                    title: context.l10n.cutlery,
+                    value: "${order.dishesCount}",
                   ),
-                  _buildDetailItem(
-                    context.l10n.change,
-                    "${order.sdacha} ${context.l10n.som}",
-                    'del',
+                  DetailItem(
+                    icon: 'del',
+                    title: context.l10n.change,
+                    value: "$totalPrice сом",
                   ),
-                  _buildDetailItem(
-                    context.l10n.total,
-                    "$totalPrice ${context.l10n.som}",
-                    'del',
+                  DetailItem(
+                    icon: 'del',
+                    title: context.l10n.total,
+                    value: "${order.sdacha} сом",
                   ),
                 ]),
               ],
