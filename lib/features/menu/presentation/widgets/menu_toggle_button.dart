@@ -58,7 +58,8 @@ class MenuToggleButton extends StatelessWidget {
                       child: ListView.separated(
                         controller: ctrl,
                         itemBuilder: (context, index) => InkWell(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10)),
                           onTap: () => onTapItem?.call(index),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),

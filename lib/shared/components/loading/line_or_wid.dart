@@ -16,10 +16,10 @@ class LineOrWidget extends StatelessWidget {
               child: const Divider(thickness: 2, color: AppColors.grey)),
           Positioned(
             child: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   color: AppColors.white,
-                  border: Border.all(color: AppColors.black),
-                  borderRadius: BorderRadius.circular(15)),
+                  border: Border.fromBorderSide(BorderSide(color: AppColors.black)),
+                  borderRadius: BorderRadius.all(Radius.circular(15)),),
               padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
               child: const Text(
                 'OR',

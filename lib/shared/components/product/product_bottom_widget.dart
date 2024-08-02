@@ -25,7 +25,7 @@ class ProductBottomWidget extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
         boxShadow: isShadowVisible!
             ? [
                 BoxShadow(
@@ -40,7 +40,7 @@ class ProductBottomWidget extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+          padding: const EdgeInsets.all(10),
           child: Column(
             children: [
               CachedNetworkImage(
@@ -64,21 +64,22 @@ class ProductBottomWidget extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Padding(
-                  padding: const EdgeInsets.fromLTRB(6, 0, 6, 0),
-                  child: Text('${food.name}',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge!
-                          .copyWith(fontWeight: FontWeight.bold, fontSize: 18),
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                      maxLines: 2)),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(6, 0, 6, 0),
-                child: RichText(
-                  maxLines: 1,
+                padding: const EdgeInsets.symmetric(horizontal: 6),
+                child: Text(
+                  '${food.name}',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyLarge!
+                      .copyWith(fontWeight: FontWeight.bold, fontSize: 18),
                   overflow: TextOverflow.ellipsis,
-                  text: TextSpan(
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 6),
+                child: Text.rich(
+                  TextSpan(
                     text: '${food.weight}',
                     style: Theme.of(context)
                         .textTheme
@@ -86,15 +87,15 @@ class ProductBottomWidget extends StatelessWidget {
                         ?.copyWith(color: theme.colorScheme.onSurface),
                     children: [
                       TextSpan(
-                          text: ' - ${food.price} сом',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleSmall
-                              ?.copyWith(
-                                  color: AppColors.green,
-                                  fontWeight: FontWeight.w400)),
+                        text: ' - ${food.price} сом',
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                            color: AppColors.green,
+                            fontWeight: FontWeight.w400),
+                      ),
                     ],
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],

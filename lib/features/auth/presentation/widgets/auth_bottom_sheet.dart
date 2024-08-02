@@ -4,7 +4,6 @@ import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/components/components.dart';
 import 'package:diyar/features/features.dart';
 import 'package:diyar/shared/utils/utils.dart';
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -24,20 +23,19 @@ class AuthBottomSheet extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(context.l10n.enterEmail),
+          Text(context.l10n.phone),
           const SizedBox(height: 10),
           CustomInputWidget(
+            hintText: '+996',
             filledColor: Theme.of(context).colorScheme.surface,
-            title: context.l10n.email,
-            hintText: context.l10n.email,
             controller: resedPasswordCode,
-            isPasswordField: false,
-            inputType: TextInputType.emailAddress,
+            inputType: TextInputType.phone,
+            inputFormatters: [phoneFormatter],
             validator: (value) {
               if (value!.isEmpty) {
-                return context.l10n.pleaseEnterEmail;
-              } else if (!EmailValidator.validate(value)) {
-                return context.l10n.pleaseEnterCorrectEmail;
+                return context.l10n.pleaseEnterPhone;
+              } else if (value.length < 10) {
+                return context.l10n.pleaseEnterCorrectPhone;
               }
               return null;
             },
@@ -50,15 +48,14 @@ class AuthBottomSheet extends StatelessWidget {
             bgColor: Theme.of(context).colorScheme.primary,
             title: context.l10n.send,
             onTap: () {
-              if (resedPasswordCode.text.isNotEmpty &&
-                  EmailValidator.validate(resedPasswordCode.text)) {
+              if (resedPasswordCode.text.isNotEmpty) {
                 context
                     .read<SignInCubit>()
-                    .sendCodeToEmail(resedPasswordCode.text);
-                context.router.replace(const RessetPasswordRoute());
+                    .sendCodeToPhone(resedPasswordCode.text);
+                context.router.push(const RessetPasswordRoute());
               } else {
                 SnackBarMessage().showErrorSnackBar(
-                  message: context.l10n.pleaseEnterCorrectEmail,
+                  message: context.l10n.pleaseEnterCorrectPhone,
                   context: context,
                 );
               }

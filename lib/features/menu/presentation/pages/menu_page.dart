@@ -100,7 +100,7 @@ class _MenuPageState extends State<MenuPage>
                   height: 35,
                   child: ListView.separated(
                     controller: _scrollController,
-                    padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
                     separatorBuilder: (context, index) =>
                         const SizedBox(width: 10),
                     itemCount: menu.length,
@@ -108,12 +108,13 @@ class _MenuPageState extends State<MenuPage>
                     itemBuilder: (context, index) => GestureDetector(
                       onTap: () => _scrollToCategory(index),
                       child: Container(
-                        padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
                         decoration: BoxDecoration(
                           color: index == _activeIndex
                               ? theme.colorScheme.primary
                               : theme.colorScheme.surface,
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(20)),
                           border: index != _activeIndex
                               ? Border.all(
                                   color: theme.colorScheme.onSurface,

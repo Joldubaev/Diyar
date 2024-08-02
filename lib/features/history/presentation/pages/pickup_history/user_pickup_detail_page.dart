@@ -1,8 +1,8 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:diyar/features/features.dart';
 import 'package:diyar/features/history/data/model/user_pickup_history_model.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 @RoutePage()
 class UserPickupDetailPage extends StatefulWidget {
@@ -24,56 +24,68 @@ class _UserPickupDetailPageState extends State<UserPickupDetailPage> {
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Column(
           children: [
-            _buildCard([
-              _buildDetailItem(
-                context.l10n.name,
-                order.userName ?? "",
-                'about',
-              ),
-              _buildDetailItem(
-                'Время выдачи',
-                order.prepareFor ?? "",
-                'history',
-              ),
-              _buildDetailItem(
-                context.l10n.phone,
-                order.userPhone ?? "",
-                'phone',
-              ),
-              _buildDetailItem(
-                context.l10n.comment,
-                order.comment ?? "",
-                'document',
-              ),
-            ]),
-            _buildCard([
-              _buildDetailItem(
-                'Ваш заказ',
-                order.foods!.map((e) => "${e.name} (${e.quantity})").join('\n'),
-                'meal',
-              ),
-              _buildDetailItem(
-                context.l10n.cutlery,
-                "${order.dishesCount}",
-                'cutler',
-              ),
-              _buildDetailItem(
-                context.l10n.total,
-                "${order.price} сом",
-                'del',
-              ),
-            ]),
+            DetailCard(
+              children: [
+                DetailItem(
+                  title: context.l10n.name,
+                  value: order.userName ?? "",
+                  icon: 'about',
+                ),
+                DetailItem(
+                  title: 'Время выдачи',
+                  value: order.prepareFor ?? "",
+                  icon: 'history',
+                ),
+                DetailItem(
+                  title: context.l10n.phone,
+                  value: order.userPhone ?? "",
+                  icon: 'phone',
+                ),
+                DetailItem(
+                  title: context.l10n.comment,
+                  value: order.comment ?? "",
+                  icon: 'document',
+                ),
+              ],
+            ),
+            DetailCard(
+              children: [
+                DetailItem(
+                  title: 'Ваш заказ',
+                  value: order.foods!
+                      .map((e) => "${e.name} (${e.quantity})")
+                      .join('\n'),
+                  icon: 'meal',
+                ),
+                DetailItem(
+                  title: context.l10n.cutlery,
+                  value: "${order.dishesCount}",
+                  icon: 'cutler',
+                ),
+                DetailItem(
+                  title: context.l10n.total,
+                  value: "${order.price} сом",
+                  icon: 'del',
+                ),
+              ],
+            ),
           ],
         ),
       ),
     );
   }
+}
 
-  Widget _buildCard(List<Widget> children) {
+class DetailCard extends StatelessWidget {
+  final List<Widget> children;
+  const DetailCard({super.key, required this.children});
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Card(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
         side: BorderSide(
           color: theme.colorScheme.onSurface.withOpacity(0.1),
         ),
@@ -84,43 +96,6 @@ class _UserPickupDetailPageState extends State<UserPickupDetailPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: children,
         ),
-      ),
-    );
-  }
-
-  Widget _buildDetailItem(String title, String value, String icon) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SvgPicture.asset('assets/icons/$icon.svg'),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Divider(
-                  color: theme.colorScheme.onSurface.withOpacity(0.1),
-                  thickness: 1,
-                ),
-                Text(
-                  title,
-                  style: theme.textTheme.titleSmall!.copyWith(
-                    color: theme.colorScheme.onSurface.withOpacity(0.6),
-                  ),
-                ),
-                Text(
-                  value,
-                  style: theme.textTheme.bodyLarge!.copyWith(
-                    color: theme.colorScheme.onSurface,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }

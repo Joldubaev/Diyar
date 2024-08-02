@@ -31,7 +31,7 @@ class _LoginFormState extends State<LoginForm> {
     return Form(
       key: _formKey,
       child: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        padding: const EdgeInsets.all(20),
         children: <Widget>[
           Image(
             height: 100,

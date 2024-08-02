@@ -52,8 +52,8 @@ class _UserOrderHistoryPageState extends State<UserOrderHistoryPage> {
                   itemCount: orders.length,
                   itemBuilder: (context, index) {
                     return Card(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)),
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(15))),
                       elevation: 3,
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),

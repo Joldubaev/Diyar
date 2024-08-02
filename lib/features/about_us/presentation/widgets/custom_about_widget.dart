@@ -41,10 +41,12 @@ class CustomAboutWidgetState extends State<CustomAboutWidget> {
                         margin: const EdgeInsets.symmetric(horizontal: 5.0),
                         decoration: BoxDecoration(
                           color: theme.colorScheme.surface,
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(12)),
                         ),
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(12)),
                           child: CachedNetworkImage(
                             imageUrl: widget.model.photoLinks![index],
                             fit: BoxFit.cover,

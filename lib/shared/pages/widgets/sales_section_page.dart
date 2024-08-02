@@ -45,7 +45,7 @@ class SalesSectionState extends State<SalesSection> {
                     ),
                   ),
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: const BorderRadius.all(Radius.circular(20)),
                     child: CarouselSlider.builder(
                       options: CarouselOptions(
                         height: 200,

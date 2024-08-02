@@ -14,9 +14,9 @@ class MenuCategoryNameListWidget extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(16, 2, 16, 2),
         itemBuilder: (context, index) => Container(
           padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: AppColors.primary,
-            borderRadius: BorderRadius.circular(30),
+            borderRadius: BorderRadius.all(Radius.circular(30)),
           ),
           child: Center(
             child: Text(

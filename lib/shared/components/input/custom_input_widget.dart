@@ -68,7 +68,7 @@ class _CustomInputWidgetState extends State<CustomInputWidget> {
           ListTile(
             dense: true,
             contentPadding:
-                const EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
+                const EdgeInsets.all(0), // remove the default padding
             visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
             title: Text(
               widget.title!,
@@ -95,12 +95,12 @@ class _CustomInputWidgetState extends State<CustomInputWidget> {
             prefixIcon: widget.leading,
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey.withOpacity(.3)),
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
             ),
             focusedBorder: OutlineInputBorder(
               borderSide:
                   BorderSide(color: Theme.of(context).colorScheme.primary),
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
             ),
             errorBorder: const OutlineInputBorder(
               borderSide: BorderSide(color: Colors.red, width: 1),
@@ -117,7 +117,7 @@ class _CustomInputWidgetState extends State<CustomInputWidget> {
               fontWeight: FontWeight.w400,
               fontSize: 16,
             ),
-            contentPadding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
+            contentPadding: const EdgeInsets.all(16),
             suffixIcon: widget.onTap == null
                 ? widget.isPasswordField == true
                     ? GestureDetector(

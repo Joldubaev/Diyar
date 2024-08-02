@@ -18,8 +18,8 @@ class HallCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(40),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(40)),
       ),
       child: Stack(
         children: [
@@ -42,7 +42,9 @@ class HallCardWidget extends StatelessWidget {
                 children: [
                   Text(
                     hallName,
-                    style: Theme.of(context).textTheme.displayLarge!
+                    style: Theme.of(context)
+                        .textTheme
+                        .displayLarge!
                         .copyWith(color: Colors.white, fontSize: 18),
                   ),
                   Row(
@@ -53,7 +55,9 @@ class HallCardWidget extends StatelessWidget {
                         child: Text(
                           title,
                           maxLines: 3,
-                          style: Theme.of(context).textTheme.displayMedium!
+                          style: Theme.of(context)
+                              .textTheme
+                              .displayMedium!
                               .copyWith(color: Colors.white, fontSize: 14),
                         ),
                       ),

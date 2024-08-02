@@ -22,7 +22,7 @@ class NewsWidgets extends StatelessWidget {
       child: Stack(
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
             child: Image.asset(
               image,
               fit: BoxFit.cover,
@@ -33,8 +33,8 @@ class NewsWidgets extends StatelessWidget {
           Container(
             width: double.infinity,
             height: 200,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(20)),
             ),
           ),
           Positioned.fill(

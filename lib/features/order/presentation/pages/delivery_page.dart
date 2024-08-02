@@ -145,8 +145,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
               body: Form(
                 key: _formKey,
                 child: ListView(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  padding: const EdgeInsets.all(20),
                   children: [
                     CustomInputWidget(
                         titleColor: theme.colorScheme.onSurface,
@@ -343,7 +342,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                 height: MediaQuery.of(context).size.height * 0.35,
                 child: ListView(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                      const EdgeInsets.all(20),
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

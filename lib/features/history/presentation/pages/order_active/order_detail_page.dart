@@ -135,7 +135,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     final theme = Theme.of(context);
     return Card(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
         side: BorderSide(
           color: theme.colorScheme.onSurface.withOpacity(0.1),
         ),

@@ -34,7 +34,7 @@ showMapSearchBottom(
           expand: false,
           maxChildSize: 0.8,
           builder: (context, scrollController) => Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+            padding: const EdgeInsets.all(16),
             child: Column(
               children: [
                 SizedBox(
@@ -83,7 +83,8 @@ showMapSearchBottom(
                       ),
                       const SizedBox(width: 10),
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(8)),
                         child: ColoredBox(
                           color: theme.colorScheme.primary,
                           child: IconButton(
@@ -109,7 +110,7 @@ showMapSearchBottom(
                               context.maybePop();
                             },
                             child: Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 6, 0, 6),
+                              padding: const EdgeInsets.symmetric(vertical: 6),
                               child: Text(suggests[index].displayText),
                             ),
                           ),

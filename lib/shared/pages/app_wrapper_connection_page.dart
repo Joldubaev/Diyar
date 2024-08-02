@@ -39,9 +39,9 @@ class _AppWrapperConnectionPageState extends State<AppWrapperConnectionPage> {
               return Container(
                 margin: const EdgeInsets.all(10),
                 width: double.infinity,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: AppColors.white,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.all(Radius.circular(12)),
                 ),
                 child: const PopScope(
                   canPop: false,

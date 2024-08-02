@@ -109,14 +109,14 @@ class _ProfileInfoPageState extends State<ProfileInfoPage> {
                 ),
                 const SizedBox(height: 40),
                 Container(
-                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.surface,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: const BorderRadius.all(Radius.circular(12)),
                   ),
                   child: SettingsTile(
                     leading: SvgPicture.asset(
-                      'assets/icons/logout.svg',
+                      'assets/icons/delete_a.svg',
                       height: 40,
                     ),
                     text: 'Удалить аккаунт',
@@ -129,9 +129,8 @@ class _ProfileInfoPageState extends State<ProfileInfoPage> {
                         cancelText: context.l10n.no,
                         confirmText: context.l10n.yes,
                         cancelPressed: () => Navigator.pop(context),
-                        confirmPressed: () {
-                           context.read<ProfileCubit>().deleteUser();
-                        },
+                        confirmPressed: () =>
+                            context.read<ProfileCubit>().deleteUser(),
                       );
                     },
                     color: Theme.of(context).colorScheme.error,

@@ -1,3 +1,4 @@
+import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/features/auth/presentation/presentation.dart';
@@ -23,8 +24,13 @@ class _SignInPageState extends State<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: SafeArea(
+    return Scaffold(
+      appBar: AppBar(
+          title: Text(context.l10n.authorize),
+          leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios),
+              onPressed: () => context.maybePop())),
+      body: const SafeArea(
         child: LoginForm(),
       ),
     );

@@ -77,7 +77,7 @@ class _HomePageState extends State<HomePage> {
           },
           builder: (context, state) {
             return SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -139,10 +139,10 @@ class _HomePageState extends State<HomePage> {
                   ),
                   const SizedBox(height: 20),
                   Container(
-                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     decoration: BoxDecoration(
                       color: theme.colorScheme.surface,
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: const BorderRadius.all(Radius.circular(12)),
                     ),
                     child: SettingsTile(
                       leading: const Icon(Icons.phone),

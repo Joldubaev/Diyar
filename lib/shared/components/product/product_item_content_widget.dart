@@ -36,9 +36,6 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
   @override
   void initState() {
     _controller.text = widget.quantity.toString();
-    // if (widget.quantity == 0) {
-    //   context.read<CartCubit>().removeFromCart(widget.food.id!);
-    // }
     super.initState();
   }
 
@@ -54,7 +51,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
     if (oldWidget.quantity != widget.quantity) {
       _controller.text = widget.quantity.toString();
       isChangedCounter = true;
-      Future.delayed(const Duration(milliseconds: 200), () {
+      Future.delayed(const Duration(milliseconds: 400), () {
         if (mounted) {
           setState(() {
             isChangedCounter = false;
@@ -70,7 +67,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
     return DecoratedBox(
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
         boxShadow: widget.isShadowVisible!
             ? [
                 BoxShadow(
@@ -92,7 +89,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
               child: DecoratedBox(
                 decoration: BoxDecoration(
                   color: theme.colorScheme.surface,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
                   boxShadow: [
                     BoxShadow(
                       color: theme.colorScheme.onSurface.withOpacity(0.1),
@@ -115,7 +112,6 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                       height: 110,
                       memCacheWidth:
                           (MediaQuery.of(context).size.width * 0.5).toInt(),
-                      // memCacheHeight: 110,
                       placeholder: (context, url) => const Center(
                         child: SizedBox(
                           width: 50,
@@ -132,19 +128,22 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                         left: 0,
                         bottom: 0,
                         child: AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 200),
+                          duration: const Duration(milliseconds: 400),
                           transitionBuilder:
                               (Widget child, Animation<double> animation) {
-                            return ScaleTransition(
-                              scale: animation,
+                            return FadeTransition(
+                              alwaysIncludeSemantics: true,
+                              opacity: animation,
                               child: child,
                             );
                           },
                           child: DecoratedBox(
+                            key: ValueKey<int>(widget.quantity),
                             decoration: BoxDecoration(
                               color:
                                   theme.colorScheme.onSurface.withOpacity(0.5),
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(10)),
                             ),
                             child: Center(
                               child: Text(
@@ -169,7 +168,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(6, 0, 6, 0),
+            padding: const EdgeInsets.symmetric(horizontal: 6),
             child: Text(
               '${widget.food.name}',
               style: Theme.of(context).textTheme.bodyLarge,
@@ -178,11 +177,9 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(6, 0, 6, 0),
-            child: RichText(
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              text: TextSpan(
+            padding: const EdgeInsets.symmetric(horizontal: 6),
+            child: Text.rich(
+              TextSpan(
                 text: '${widget.food.weight}',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: theme.colorScheme.onSurface.withOpacity(0.5),
@@ -197,6 +194,8 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                   ),
                 ],
               ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
           const SizedBox(height: 10),
@@ -206,7 +205,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
               height: 35,
               margin: const EdgeInsets.symmetric(horizontal: 10),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
+                borderRadius: const BorderRadius.all(Radius.circular(30)),
                 border: Border.all(
                   color: theme.colorScheme.onSurface.withOpacity(0.1),
                 ),
@@ -233,7 +232,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                       }
                     },
                     icon: const Padding(
-                      padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+                      padding: EdgeInsets.symmetric(horizontal: 8),
                       child: Icon(Icons.remove),
                     ),
                   ),
@@ -286,7 +285,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                       }
                     },
                     icon: const Padding(
-                      padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+                      padding: EdgeInsets.symmetric(horizontal: 8),
                       child: Icon(Icons.add),
                     ),
                   ),
