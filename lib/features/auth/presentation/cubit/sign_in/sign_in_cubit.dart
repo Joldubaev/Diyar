@@ -33,8 +33,7 @@ class SignInCubit extends Cubit<SignInState> {
   void sendCodeToPhone(String phone) async {
     emit(SignInLoading());
     try {
-      String unformattedPhone = unformatPhoneNumber(phone);
-      await authRepository.sendForgotPasswordCodeToPhone(unformattedPhone);
+      await authRepository.sendForgotPasswordCodeToPhone(phone);
       emit(FogotPasswordSuccess());
     } catch (e) {
       emit(SignInFailure(e.toString()));
