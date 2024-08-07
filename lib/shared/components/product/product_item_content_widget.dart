@@ -1,6 +1,9 @@
 import 'dart:ui';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:diyar/core/router/routes.gr.dart';
+import 'package:diyar/core/utils/helper/user_helper.dart';
 import 'package:diyar/features/cart/data/models/cart_item_model.dart';
 import 'package:diyar/features/cart/presentation/cubit/cart_cubit.dart';
 import 'package:diyar/features/features.dart';
@@ -222,13 +225,25 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                     iconSize: 20,
                     onPressed: () {
                       if (widget.quantity > 1) {
-                        context
-                            .read<CartCubit>()
-                            .decrementCart(widget.food.id!);
+                        if (UserHelper.isAuth()) {
+                          context
+                              .read<CartCubit>()
+                              .decrementCart(widget.food.id!);
+                        } else {
+                          context.pushRoute(const SignInRoute()).then((value) {
+                            context.read<SignInCubit>().logout();
+                          });
+                        }
                       } else {
-                        context
-                            .read<CartCubit>()
-                            .removeFromCart(widget.food.id!);
+                        if (UserHelper.isAuth()) {
+                          context
+                              .read<CartCubit>()
+                              .removeFromCart(widget.food.id!);
+                        } else {
+                          context.pushRoute(const SignInRoute()).then((value) {
+                            context.read<SignInCubit>().logout();
+                          });
+                        }
                       }
                     },
                     icon: const Padding(
@@ -255,16 +270,32 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                           int valInt = int.parse(val.isEmpty ? '0' : val);
                           _controller.text = valInt.toString();
                           if (valInt > 0) {
-                            context.read<CartCubit>().setCartItemCount(
-                                  CartItemModel(
-                                    food: widget.food,
-                                    quantity: int.parse(val),
-                                  ),
-                                );
+                            if (UserHelper.isAuth()) {
+                              context.read<CartCubit>().setCartItemCount(
+                                    CartItemModel(
+                                      food: widget.food,
+                                      quantity: int.parse(val),
+                                    ),
+                                  );
+                            } else {
+                              context
+                                  .pushRoute(const SignInRoute())
+                                  .then((value) {
+                                context.read<SignInCubit>().logout();
+                              });
+                            }
                           } else {
-                            context
-                                .read<CartCubit>()
-                                .removeFromCart(widget.food.id!);
+                            if (UserHelper.isAuth()) {
+                              context
+                                  .read<CartCubit>()
+                                  .removeFromCart(widget.food.id!);
+                            } else {
+                              context
+                                  .pushRoute(const SignInRoute())
+                                  .then((value) {
+                                context.read<SignInCubit>().logout();
+                              });
+                            }
                           }
                         },
                       ),
@@ -275,13 +306,25 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                     iconSize: 20,
                     onPressed: () {
                       if (widget.quantity == 0) {
-                        context.read<CartCubit>().addToCart(
-                              CartItemModel(food: widget.food, quantity: 1),
-                            );
+                        if (UserHelper.isAuth()) {
+                          context.read<CartCubit>().addToCart(
+                                CartItemModel(food: widget.food, quantity: 1),
+                              );
+                        } else {
+                          context.pushRoute(const SignInRoute()).then((value) {
+                            context.read<SignInCubit>().logout();
+                          });
+                        }
                       } else {
-                        context
-                            .read<CartCubit>()
-                            .incrementCart(widget.food.id!);
+                        if (UserHelper.isAuth()) {
+                          context
+                              .read<CartCubit>()
+                              .incrementCart(widget.food.id!);
+                        } else {
+                          context.pushRoute(const SignInRoute()).then((value) {
+                            context.read<SignInCubit>().logout();
+                          });
+                        }
                       }
                     },
                     icon: const Padding(

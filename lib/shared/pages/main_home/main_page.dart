@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/router/routes.gr.dart';
+import 'package:diyar/core/utils/helper/user_helper.dart';
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
@@ -43,8 +44,7 @@ class _MainPageState extends State<MainPage> {
       shouldPopScope: () => true,
       onUpdate: () {
         if (Platform.isIOS) {
-          launchUrl(
-              Uri.parse("https://apps.apple.com/app/id6503710331"));
+          launchUrl(Uri.parse("https://apps.apple.com/app/id6503710331"));
         } else {
           launchUrl(Uri.parse(
               "https://play.google.com/store/apps/details?id=kg.cdt.diyar_guest"));
@@ -122,6 +122,10 @@ class _MainPageState extends State<MainPage> {
                 elevation: 45,
                 enableFeedback: false,
                 onTap: (value) {
+                  if (value == 3 && !UserHelper.isAuth()) {
+                    context.pushRoute(const SignInRoute());
+                    return;
+                  }
                   tabsRouter.setActiveIndex(value);
                   setState(() {
                     _currentIndex = value;

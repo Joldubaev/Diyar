@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:diyar/core/utils/helper/user_helper.dart';
 import 'package:diyar/features/auth/data/models/user_model.dart';
 import 'package:diyar/features/profile/data/data.dart';
 import 'package:equatable/equatable.dart';
@@ -12,6 +13,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   UserModel? user;
 
   Future getUser() async {
+    if (!UserHelper.isAuth()) return;
     emit(ProfileGetLoading());
     try {
       user = await _userRepository.getUser();

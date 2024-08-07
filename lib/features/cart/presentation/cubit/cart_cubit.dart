@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:diyar/core/utils/helper/user_helper.dart';
 import 'package:diyar/features/cart/data/data.dart';
 import 'package:diyar/features/cart/data/repository/cart_repository.dart';
 import 'package:equatable/equatable.dart';
@@ -17,7 +18,9 @@ class CartCubit extends Cubit<CartState> {
   Future<void> getCartItems() async {
     emit(GetAllCartLoading());
     try {
-      cart = _cartRepository.getAllCartItems();
+      cart = !UserHelper.isAuth()
+          ? const Stream.empty()
+          : _cartRepository.getAllCartItems();
       emit(GetAllCartLoaded(items: cart));
     } catch (e) {
       emit(GetAllCartError());
@@ -38,7 +41,7 @@ class CartCubit extends Cubit<CartState> {
     try {
       await _cartRepository.removeFromCart(id);
       emit(RemoveFromCartSuccess());
-      getCartItems(); 
+      getCartItems();
     } catch (e) {
       emit(RemoveFromCartError());
     }
