@@ -1,4 +1,6 @@
 import 'package:dio/dio.dart';
+import 'package:diyar/core/remote_config/diyar_remote_config.dart';
+import 'package:diyar/features/app/cubit/remote_config_cubit.dart';
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/curier/curier.dart';
 import 'package:diyar/features/features.dart';
@@ -6,7 +8,9 @@ import 'package:diyar/features/profile/data/data.dart';
 import 'package:diyar/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:diyar/shared/cubit/bloc/internet_bloc.dart';
 import 'package:diyar/shared/cubit/popular_cubit.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'core/network/network_info.dart';
 import 'package:get_it/get_it.dart';
@@ -16,6 +20,8 @@ import 'features/cart/data/repository/cart_repository.dart';
 final sl = GetIt.instance;
 
 Future<void> init() async {
+  final packageInfo = await PackageInfo.fromPlatform();
+
 // cubit or bloc
   sl.registerFactory(() => SignUpCubit(sl(), sl()));
   sl.registerFactory(() => SignInCubit(sl()));
@@ -29,6 +35,8 @@ Future<void> init() async {
   sl.registerFactory(() => HistoryCubit(sl()));
   sl.registerFactory(() => CurierCubit(sl()));
   sl.registerFactory(() => InternetBloc());
+  sl.registerFactory(
+      () => RemoteConfigCubit(packageInfo: sl(), remoteConfig: sl()));
 
   // AUTH
   sl.registerLazySingleton<AuthRepository>(
@@ -92,6 +100,21 @@ Future<void> init() async {
 
   //! External
   sl.registerLazySingleton(() => InternetConnection());
+  sl.registerSingleton<PackageInfo>(packageInfo);
+
+  // Initialize FirebaseRemoteConfig
+  final remoteConfig = FirebaseRemoteConfig.instance;
+
+  // Initialize and register DiyarRemoteConfig
+  final diyarRemoteConfig = DiyarRemoteConfig(
+    remoteConfig: remoteConfig,
+    buildNumber: packageInfo.buildNumber,
+  );
+
+  // Initialize DiyarRemoteConfig
+  await diyarRemoteConfig.initialise();
+
+  sl.registerSingleton<DiyarRemoteConfig>(diyarRemoteConfig);
 
   final sharedPrefences = await SharedPreferences.getInstance();
   sl.registerLazySingleton(() => sharedPrefences);
