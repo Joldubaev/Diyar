@@ -45,6 +45,7 @@ class ApiConst {
       {'Authorization': 'Bearer $token'};
   static const updateUserName = "$baseUrl/user/update-username";
   static const updateUserPhone = "$baseUrl/user/update-user-phone";
+  static const getDeliveryPrice = "$baseUrl/districts/find-district-price";
 
   // about us
   static String getAboutUs({required String type}) =>

@@ -1,12 +1,19 @@
+import 'package:dio/dio.dart';
+import 'package:diyar/injection_container.dart';
+import 'package:diyar/shared/constants/constant.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class AppLocation {
   Future<AppLatLong> getCurrentLocation();
   Future<bool> requestPermission();
   Future<bool> checkPermission();
+  Future<int> getDeliveryPrice(double latitude, double longitude);
 }
 
 class LocationService implements AppLocation {
+  final Dio dio = sl<Dio>();
+  final prefs = sl<SharedPreferences>();
   final defaultLocation = BiskekLocation();
 
   @override
@@ -37,6 +44,22 @@ class LocationService implements AppLocation {
             value == LocationPermission.always ||
             value == LocationPermission.whileInUse)
         .catchError((e) => false);
+  }
+
+  @override
+  Future<int> getDeliveryPrice(double latitude, double longitude) async {
+    var token = prefs.getString(AppConst.accessToken) ?? '';
+    return await dio
+        .post(
+      ApiConst.getDeliveryPrice,
+      data: {'latitude': latitude, 'longitude': longitude},
+      options: Options(headers: ApiConst.authMap(token)),
+    )
+        .then((value) {
+      if (value.data['districtPrice'] == null) return 500;
+      if (value.statusCode != 200) return 500;
+      return value.data['districtPrice'];
+    }).catchError((e) => 500);
   }
 }
 
