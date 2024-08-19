@@ -3,8 +3,8 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 3.3.1+45 # This is andriod the version of the app.
-# version: 3.3.0+45 # This is  ios the version of the app.
+# version: 3.3.1+45 # This is andriod the version of the app.
+version: 3.3.2+46 # This is  ios the version of the app.
 
 environment:
   sdk: ">=3.3.3 <4.0.0"
