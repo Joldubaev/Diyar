@@ -142,9 +142,9 @@ class _OrderMapWidgetState extends State<OrderMapWidget> {
                       context.read<OrderCubit>().changeAddress(address ?? '');
                       context.read<OrderCubit>().changeAddressSearch(false);
 
-                      context.read<OrderCubit>().selectDeliveryPrice(
-                            deliveryPrice,
-                          );
+                      context
+                          .read<OrderCubit>()
+                          .selectDeliveryPrice(deliveryPrice);
                       context.router.push(DeliveryFormRoute(
                           totalPrice: widget.totalPrice,
                           cart: widget.cart,
@@ -318,6 +318,11 @@ class _OrderMapWidgetState extends State<OrderMapWidget> {
           setState(() {
             address = formattedAddress;
           });
+          if (mounted) {
+            context
+                .read<UserMapCubit>()
+                .getDeliveryPrice(point.latitude, point.longitude);
+          }
         } else {
           setState(() {
             address = context.l10n.addressIsNotFounded;
