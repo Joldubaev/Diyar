@@ -3,7 +3,6 @@ import 'package:diyar/core/core.dart';
 import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/features/auth/auth.dart';
 import 'package:diyar/features/profile/presentation/presentation.dart';
-import 'package:diyar/features/profile/presentation/widgets/webview_page.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/cubit/theme/cubit/theme_cubit.dart';
 import 'package:diyar/shared/shared.dart';
@@ -151,47 +150,6 @@ class _ProfilePageState extends State<ProfilePage> {
                         onPressed: () => AppLaunch.launchURL(AppConst.terms),
                       ),
                     ],
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
-                    borderRadius: const BorderRadius.all(Radius.circular(12)),
-                  ),
-                  child: SettingsTile(
-                    leading: SvgPicture.asset(
-                      'assets/icons/del.svg',
-                      height: 40,
-                    ),
-                    text: 'Предоставит согласия',
-                    onPressed: () {
-                      AppAlert.showConfirmDialog(
-                        context: context,
-                        title: 'Открыть',
-                        content: const Text(
-                            'Вы уверены что хотите предоставить согласия?'),
-                        cancelText: context.l10n.no,
-                        confirmText: context.l10n.yes,
-                        cancelPressed: () => Navigator.pop(context),
-                        confirmPressed: () {
-                          // Navigate to WebViewPage
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const INNInputPage(), // Navigate to INNInputPage
-                            ),
-                          ).then((value) {
-                            if (context.mounted) {
-                              Navigator.pop(context);
-                            }
-                          });
-                        },
-                      );
-                    },
-                    color: Theme.of(context).colorScheme.error,
                   ),
                 ),
                 const SizedBox(height: 15),
