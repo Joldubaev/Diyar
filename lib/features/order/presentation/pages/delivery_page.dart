@@ -406,8 +406,10 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                                       .toList(),
                                 ))
                                 .then((value) {
-                              context.read<CartCubit>().clearCart();
-                              context.read<CartCubit>().dishCount = 0;
+                              if (context.mounted) {
+                                context.read<CartCubit>().clearCart();
+                                context.read<CartCubit>().dishCount = 0;
+                              }
                             });
                           },
                         );

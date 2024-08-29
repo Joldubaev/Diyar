@@ -51,12 +51,13 @@ dependencies:
   keyboard_dismisser: ^3.0.0
   flutter_datetime_picker_plus: ^2.2.0
   package_info_plus: ^8.0.0
-  carousel_slider: ^4.2.1
+  carousel_slider: ^5.0.0
   pinput: ^5.0.0
   xml: ^6.5.0
   firebase_remote_config: ^4.4.7
   firebase_crashlytics: ^3.5.7
   firebase_analytics: ^10.10.7
+  flutter_inappwebview: ^6.0.0
 
 
 dev_dependencies:

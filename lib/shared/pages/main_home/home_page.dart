@@ -28,7 +28,9 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     context.read<PopularCubit>().getPopularProducts().then((_) {
-      context.read<CartCubit>().getCartItems().then((_) {});
+      if (mounted) {
+        context.read<CartCubit>().getCartItems().then((_) {});
+      }
     });
     context.read<ProfileCubit>().getUser();
     context.read<HomeFeaturesCubit>().getSales();
