@@ -78,10 +78,12 @@ class _ProfilePageState extends State<ProfilePage> {
         listener: (context, state) {
           if (state is ProfileGetError || state is ProfileDeleteLoaded) {
             context.read<SignInCubit>().logout().then((value) {
-              context.router.pushAndPopUntil(
-                const SignInRoute(),
-                predicate: (_) => false,
-              );
+              if (context.mounted) {
+                context.router.pushAndPopUntil(
+                  const SignInRoute(),
+                  predicate: (_) => false,
+                );
+              }
             });
           }
         },
@@ -171,10 +173,12 @@ class _ProfilePageState extends State<ProfilePage> {
                         cancelPressed: () => Navigator.pop(context),
                         confirmPressed: () {
                           context.read<SignInCubit>().logout().then((value) {
-                            context.router.pushAndPopUntil(
-                              const SignInRoute(),
-                              predicate: (_) => false,
-                            );
+                            if (context.mounted) {
+                              context.router.pushAndPopUntil(
+                                const SignInRoute(),
+                                predicate: (_) => false,
+                              );
+                            }
                           });
                         },
                       );

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/router/routes.gr.dart';
@@ -29,7 +31,9 @@ class _CurierPageState extends State<CurierPage> {
   void initState() {
     context.read<CurierCubit>().getUser().then(
       (value) {
-        context.read<CurierCubit>().getCurierOrders();
+        if (mounted) {
+          context.read<CurierCubit>().getCurierOrders();
+        }
       },
     );
     super.initState();
@@ -73,10 +77,12 @@ class _CurierPageState extends State<CurierPage> {
                 cancelPressed: () => Navigator.pop(context),
                 confirmPressed: () {
                   context.read<SignInCubit>().logout().then((value) {
-                    context.router.pushAndPopUntil(
-                      const SignInRoute(),
-                      predicate: (_) => false,
-                    );
+                    if (context.mounted) {
+                      context.router.pushAndPopUntil(
+                        const MainRoute(),
+                        predicate: (_) => false,
+                      );
+                    }
                   });
                 },
               );
@@ -94,11 +100,18 @@ class _CurierPageState extends State<CurierPage> {
       body: BlocConsumer<CurierCubit, CurierState>(
         listener: (context, state) {
           if (state is GetUserError) {
-            context.read<SignInCubit>().logout().then((value) {
-              context.router.pushAndPopUntil(
-                const MainRoute(),
-                predicate: (_) => false,
-              );
+            // Use a local variable to store the context before the async operation
+            final cubit = context.read<SignInCubit>();
+
+            // Use the cubit to handle the logout process
+            cubit.logout().then((value) {
+              // Check if the widget is still mounted before navigating
+              if (context.mounted) {
+                context.router.pushAndPopUntil(
+                  const MainRoute(),
+                  predicate: (_) => false,
+                );
+              }
             });
           }
         },
@@ -126,8 +139,7 @@ class _CurierPageState extends State<CurierPage> {
                       return Card(
                         margin: const EdgeInsets.all(0),
                         shape: const RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(10)),
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
                         ),
                         elevation: 4,
                         child: ExpansionTile(
@@ -296,18 +308,35 @@ class _CurierPageState extends State<CurierPage> {
     );
   }
 
-  Future _finishOrder(int orderNumber) async {
-    context.read<CurierCubit>().getFinishOrder(orderNumber).then((value) {
-      ScaffoldMessenger.of(context).showSnackBar(
+ Future<void> _finishOrder(int orderNumber) async {
+  // Capture the context and the current state
+  final cubit = context.read<CurierCubit>();
+  final snackBar = ScaffoldMessenger.of(context);
+
+  try {
+    await cubit.getFinishOrder(orderNumber);
+
+    // Check if the widget is still mounted before showing the SnackBar
+    if (context.mounted) {
+      snackBar.showSnackBar(
         SnackBar(content: Text(context.l10n.orderCompleted)),
       );
-      context.read<CurierCubit>().getCurierOrders();
-    }).catchError((error) {
-      ScaffoldMessenger.of(context).showSnackBar(
+    }
+
+    // Refresh the orders only if the widget is still mounted
+    if (context.mounted) {
+      cubit.getCurierOrders();
+    }
+  } catch (error) {
+    // Check if the widget is still mounted before showing the SnackBar
+    if (context.mounted) {
+      snackBar.showSnackBar(
         SnackBar(content: Text(context.l10n.errorCompletingOrder)),
       );
-    });
+    }
   }
+}
+
 
   void _openAddressIn2GIS(String address) async {
     final encodedAddress = Uri.encodeComponent(address);
@@ -315,7 +344,6 @@ class _CurierPageState extends State<CurierPage> {
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url));
     } else {
-      // ignore: use_build_context_synchronously
       throw '${context.l10n.couldNotLaunch}$url';
     }
   }

@@ -3,9 +3,9 @@ import 'dart:developer';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/router/routes.gr.dart';
+import 'package:diyar/core/utils/helper/helper.dart';
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/map/data/repositories/yandex_service.dart';
-import 'package:diyar/features/map/presentation/cubit/user_map_cubit.dart';
 import 'package:diyar/features/map/presentation/widgets/coordinats.dart';
 import 'package:diyar/features/map/presentation/widgets/widgets.dart';
 import 'package:diyar/features/order/order.dart';
@@ -17,17 +17,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 import 'package:geolocator/geolocator.dart';
 
-class OrderMapWidget extends StatefulWidget {
+@RoutePage()
+class OrderMapPage extends StatefulWidget {
   final int totalPrice;
   final List<CartItemModel> cart;
-  const OrderMapWidget(
-      {super.key, required this.cart, required this.totalPrice});
+  const OrderMapPage({super.key, required this.cart, required this.totalPrice});
 
   @override
-  State<OrderMapWidget> createState() => _OrderMapWidgetState();
+  State<OrderMapPage> createState() => _OrderMapPageState();
 }
 
-class _OrderMapWidgetState extends State<OrderMapWidget> {
+class _OrderMapPageState extends State<OrderMapPage> {
   final mapControllerCompleter = Completer<YandexMapController>();
   final TextEditingController textController = TextEditingController();
   final texControler = TextEditingController();
@@ -57,11 +57,8 @@ class _OrderMapWidgetState extends State<OrderMapWidget> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          context.l10n.chooseAddress,
-          style: theme.textTheme.titleSmall,
-        ),
-      ),
+          title: Text(context.l10n.chooseAddress,
+              style: theme.textTheme.titleSmall)),
       body: Stack(
         children: [
           SizedBox(
@@ -93,69 +90,59 @@ class _OrderMapWidgetState extends State<OrderMapWidget> {
                   size: 30, color: theme.colorScheme.error)),
         ],
       ),
-      bottomSheet: BlocListener<UserMapCubit, UserMapState>(
-        listener: (context, state) {
-          if (state is GetDelPriceLoaded) {
-            setState(() {
-              deliveryPrice = state.price.toDouble();
-            });
-          }
-        },
-        child: BottomSheet(
-          showDragHandle: true,
-          backgroundColor: theme.colorScheme.surface,
-          constraints: const BoxConstraints(maxHeight: 300, minHeight: 300),
-          onClosing: () {},
-          builder: (context) {
-            return ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              children: [
-                Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10)),
-                        color: theme.colorScheme.error,
-                        border: Border.all(color: theme.colorScheme.onSurface)),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                            '${context.l10n.deliveryPrice}: $deliveryPrice сом',
-                            style: theme.textTheme.bodyLarge
-                                ?.copyWith(color: theme.colorScheme.surface)),
-                      ],
-                    )),
-                const SizedBox(height: 10),
-                Card(
-                  color: theme.colorScheme.primary,
-                  child: ListTile(
-                    title: Text(address ?? context.l10n.addressIsNotFounded,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                            color: theme.colorScheme.onTertiaryFixed,
-                            fontWeight: FontWeight.w500)),
-                    trailing: Icon(Icons.arrow_forward_ios,
-                        color: theme.colorScheme.onTertiaryFixed),
-                    onTap: () {
-                      if (address == null ||
-                          address == context.l10n.addressIsNotFounded) return;
-                      context.read<OrderCubit>().changeAddress(address ?? '');
-                      context.read<OrderCubit>().changeAddressSearch(false);
+      bottomSheet: BottomSheet(
+        showDragHandle: true,
+        backgroundColor: theme.colorScheme.surface,
+        constraints: const BoxConstraints(maxHeight: 300, minHeight: 300),
+        onClosing: () {},
+        builder: (context) {
+          return ListView(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            children: [
+              Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      color: theme.colorScheme.error,
+                      border: Border.all(color: theme.colorScheme.onSurface)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                          '${context.l10n.deliveryPrice}: ${MapHelper.isCoordinateInsidePolygons(lat, long, polygons: Polygons.getPolygons())} сом',
+                          style: theme.textTheme.bodyLarge
+                              ?.copyWith(color: theme.colorScheme.surface)),
+                    ],
+                  )),
+              const SizedBox(height: 10),
+              Card(
+                color: theme.colorScheme.primary,
+                child: ListTile(
+                  title: Text(address ?? context.l10n.addressIsNotFounded,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.onTertiaryFixed,
+                          fontWeight: FontWeight.w500)),
+                  trailing: Icon(Icons.arrow_forward_ios,
+                      color: theme.colorScheme.onTertiaryFixed),
+                  onTap: () {
+                    if (address == null ||
+                        address == context.l10n.addressIsNotFounded) return;
+                    context.read<OrderCubit>().changeAddress(address ?? '');
+                    context.read<OrderCubit>().changeAddressSearch(false);
 
-                      context
-                          .read<OrderCubit>()
-                          .selectDeliveryPrice(deliveryPrice);
-                      context.router.push(DeliveryFormRoute(
-                          totalPrice: widget.totalPrice,
-                          cart: widget.cart,
-                          dishCount: context.read<CartCubit>().dishCount));
-                    },
-                  ),
+                    context.read<OrderCubit>().selectDeliveryPrice(
+                        MapHelper.isCoordinateInsidePolygons(lat, long,
+                            polygons: Polygons.getPolygons()));
+                    context.router.push(DeliveryFormRoute(
+                        totalPrice: widget.totalPrice,
+                        cart: widget.cart,
+                        dishCount: context.read<CartCubit>().dishCount));
+                  },
                 ),
-              ],
-            );
-          },
-        ),
+              ),
+            ],
+          );
+        },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
       floatingActionButton: Align(
@@ -288,10 +275,6 @@ class _OrderMapWidgetState extends State<OrderMapWidget> {
 
     if (!_isPointInKyrgyzstan(latitude, longitude)) {
       showToast('Адрес находится за пределами Кыргызстана', isError: true);
-    } else {
-      if (mounted) {
-        context.read<UserMapCubit>().getDeliveryPrice(latitude, longitude);
-      }
     }
   }
 
@@ -318,11 +301,6 @@ class _OrderMapWidgetState extends State<OrderMapWidget> {
           setState(() {
             address = formattedAddress;
           });
-          if (mounted) {
-            context
-                .read<UserMapCubit>()
-                .getDeliveryPrice(point.latitude, point.longitude);
-          }
         } else {
           setState(() {
             address = context.l10n.addressIsNotFounded;

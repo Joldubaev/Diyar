@@ -87,10 +87,12 @@ class CustomDrawer extends StatelessWidget {
                 cancelPressed: () => Navigator.pop(context),
                 confirmPressed: () {
                   context.read<SignInCubit>().logout().then((value) {
-                    context.router.pushAndPopUntil(
+                    if (context.mounted){
+                      context.router.pushAndPopUntil(
                       const SignInRoute(),
                       predicate: (_) => false,
                     );
+                    }
                   });
                 },
               );

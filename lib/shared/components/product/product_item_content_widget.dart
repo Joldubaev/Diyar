@@ -231,7 +231,9 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                               .decrementCart(widget.food.id!);
                         } else {
                           context.pushRoute(const SignInRoute()).then((value) {
-                            context.read<SignInCubit>().logout();
+                           if(context.mounted){
+                             context.read<SignInCubit>().logout();
+                           }
                           });
                         }
                       } else {
@@ -241,7 +243,9 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                               .removeFromCart(widget.food.id!);
                         } else {
                           context.pushRoute(const SignInRoute()).then((value) {
-                            context.read<SignInCubit>().logout();
+                            if(context.mounted){
+                             context.read<SignInCubit>().logout();
+                            }
                           });
                         }
                       }
@@ -281,7 +285,9 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                               context
                                   .pushRoute(const SignInRoute())
                                   .then((value) {
-                                context.read<SignInCubit>().logout();
+                               if(context.mounted){
+                                  context.read<SignInCubit>().logout();
+                               }
                               });
                             }
                           } else {
@@ -293,7 +299,9 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                               context
                                   .pushRoute(const SignInRoute())
                                   .then((value) {
+                              if(context.mounted){
                                 context.read<SignInCubit>().logout();
+                              }
                               });
                             }
                           }
@@ -312,7 +320,9 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                               );
                         } else {
                           context.pushRoute(const SignInRoute()).then((value) {
-                            context.read<SignInCubit>().logout();
+                            if(context.mounted){
+                              context.read<SignInCubit>().logout();
+                            }
                           });
                         }
                       } else {
@@ -322,7 +332,9 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                               .incrementCart(widget.food.id!);
                         } else {
                           context.pushRoute(const SignInRoute()).then((value) {
-                            context.read<SignInCubit>().logout();
+                            if(context.mounted){
+                              context.read<SignInCubit>().logout();
+                            }
                           });
                         }
                       }

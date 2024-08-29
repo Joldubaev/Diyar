@@ -14,7 +14,7 @@ class CustomAboutWidget extends StatefulWidget {
 }
 
 class CustomAboutWidgetState extends State<CustomAboutWidget> {
-  final CarouselController _controller = CarouselController();
+ final CarouselSliderController _controller = CarouselSliderController();
   int _current = 0;
 
   @override

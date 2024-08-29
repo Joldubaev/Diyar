@@ -156,7 +156,11 @@ class _PickupFormPageState extends State<PickupFormPage> {
                     ))
                 .toList()))
         .then(
-          (value) => context.read<CartCubit>().clearCart(),
+          (value) {
+            if (mounted) {
+              context.read<CartCubit>().clearCart();
+            }
+          }
         );
     context.read<CartCubit>().dishCount = 0;
     context.maybePop();

@@ -3,8 +3,7 @@ description: "A new Flutter project."
 
 publish_to: "none"
 
-version: 3.3.1+45 # This is andriod the version of the app.
-# version: 3.3.0+45 # This is  ios the version of the app.
+version: 3.3.2+46 
 
 environment:
   sdk: ">=3.3.3 <4.0.0"
@@ -51,7 +50,7 @@ dependencies:
   keyboard_dismisser: ^3.0.0
   flutter_datetime_picker_plus: ^2.2.0
   package_info_plus: ^8.0.0
-  carousel_slider: ^4.2.1
+  carousel_slider: ^5.0.0
   pinput: ^5.0.0
   xml: ^6.5.0
   firebase_remote_config: ^4.4.7

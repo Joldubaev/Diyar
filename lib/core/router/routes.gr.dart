@@ -55,7 +55,7 @@ import 'package:diyar/features/history/presentation/pages/pickup_history/user_pi
     as _i31;
 import 'package:diyar/features/history/presentation/pages/pickup_history/user_pickup_history_page.dart'
     as _i32;
-import 'package:diyar/features/map/presentation/user_map/order_map.dart'
+import 'package:diyar/features/map/presentation/user_map/order_map_page.dart'
     as _i16;
 import 'package:diyar/features/menu/presentation/pages/menu_page.dart' as _i12;
 import 'package:diyar/features/menu/presentation/pages/search_menu_page.dart'
