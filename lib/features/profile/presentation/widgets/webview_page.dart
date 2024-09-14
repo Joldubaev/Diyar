@@ -1,59 +1,7 @@
+// import 'dart:convert'; // For base64 encoding
+// import 'dart:typed_data';
 // import 'package:flutter/material.dart';
 // import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-
-// class INNInputPage extends StatefulWidget {
-//   const INNInputPage({super.key});
-
-//   @override
-//   INNInputPageState createState() => INNInputPageState();
-// }
-
-// class INNInputPageState extends State<INNInputPage> {
-//   final _innController = TextEditingController();
-
-//   void _openWebView() {
-//     final inn = _innController.text.trim();
-//     if (inn.isNotEmpty) {
-//       final url = 'https://widget.mydatacoin.io?inn=$inn';
-//       Navigator.push(
-//         context,
-//         MaterialPageRoute(
-//           builder: (context) => WebViewPage(url: url),
-//         ),
-//       );
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Пожалуйста, введите ИНН'),
-//         backgroundColor: Theme.of(context).colorScheme.primary,
-//       ),
-//       body: Padding(
-//         padding: const EdgeInsets.all(16.0),
-//         child: Column(
-//           children: [
-//             TextField(
-//               controller: _innController,
-//               decoration: const InputDecoration(
-//                 labelText: 'ИНН',
-//                 border: OutlineInputBorder(),
-//               ),
-//               keyboardType: TextInputType.number,
-//             ),
-//             const SizedBox(height: 20),
-//             ElevatedButton(
-//               onPressed: _openWebView,
-//               child: const Text('Отправить'),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
 
 // class WebViewPage extends StatefulWidget {
 //   final String url;
@@ -76,11 +24,23 @@
 //       ),
 //       body: InAppWebView(
 //         initialUrlRequest: URLRequest(
-//           url: WebUri(widget.url), // Ensure WebUri is used correctly
+//           url: WebUri(widget.url),
+//           method: 'POST', // Specify POST method
+//           body: Uint8List.fromList(utf8.encode(jsonEncode({
+//             "orderNumber": "898321wwww1228",
+//             "amount": 500.00,
+//             "currency": "KGS",
+//             "payment_success_url": "https://example.com/success/898321246",
+//             "payment_failure_url": "https://example.com/failure/898321246",
+//             "callbackUrl": "https://example.com/callback/898321246"
+//           }))),
+//           headers: {
+//             'Content-Type': 'application/json',
+//             'Authorization': 'Basic ${base64Encode(utf8.encode('your_username:your_password'))}', // Basic auth header
+//           },
 //         ),
 //         initialSettings: InAppWebViewSettings(
 //           mediaPlaybackRequiresUserGesture: false,
-//           transparentBackground: true,
 //           clearCache: true,
 //           allowsBackForwardNavigationGestures: false,
 //           allowsInlineMediaPlayback: true,
@@ -92,3 +52,47 @@
 //     );
 //   }
 // }
+
+ // const SizedBox(height: 10),
+                // Container(
+                //   padding: const EdgeInsets.symmetric(horizontal: 10),
+                //   decoration: BoxDecoration(
+                //     color: Theme.of(context).colorScheme.surface,
+                //     borderRadius: const BorderRadius.all(Radius.circular(12)),
+                //   ),
+                //   child: SettingsTile(
+                //     leading: SvgPicture.asset(
+                //       'assets/icons/del.svg',
+                //       height: 40,
+                //     ),
+                //     text: 'Предоставит согласия',
+                //     onPressed: () {
+                //       AppAlert.showConfirmDialog(
+                //         context: context,
+                //         title: 'Открыть',
+                //         content: const Text(
+                //             'Вы уверены что хотите предоставить согласия?'),
+                //         cancelText: context.l10n.no,
+                //         confirmText: context.l10n.yes,
+                //         cancelPressed: () => Navigator.pop(context),
+                //         confirmPressed: () {
+                //           // Navigate to WebViewPage
+                //           Navigator.push(
+                //             context,
+                //             MaterialPageRoute(
+                //               builder: (context) => const WebViewPage(
+                //                 url:
+                //                     'https://test.finipay.kg/api/v1.1.0/payForm/bank',
+                //               ), // Navigate to INNInputPage
+                //             ),
+                //           ).then((value) {
+                //             if (context.mounted) {
+                //               Navigator.pop(context);
+                //             }
+                //           });
+                //         },
+                //       );
+                //     },
+                //     color: Theme.of(context).colorScheme.error,
+                //   ),
+                // ),
