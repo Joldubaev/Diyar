@@ -7,6 +7,7 @@ String foodModelToJson(FoodModel data) => json.encode(data.toJson());
 class FoodModel {
   String? id;
   String? name;
+  String? description;
   String? categoryId;
   int? price;
   String? weight;
@@ -21,6 +22,7 @@ class FoodModel {
   FoodModel({
     this.id,
     this.name,
+    this.description,
     this.categoryId,
     this.price,
     this.weight,
@@ -36,6 +38,7 @@ class FoodModel {
   FoodModel copyWith({
     String? id,
     String? name,
+    String? description,
     String? categoryId,
     int? price,
     String? weight,
@@ -50,6 +53,7 @@ class FoodModel {
       FoodModel(
         id: id ?? this.id,
         name: name ?? this.name,
+        description:description ?? description,
         categoryId: categoryId ?? this.categoryId,
         price: price ?? this.price,
         weight: weight ?? this.weight,
@@ -65,6 +69,7 @@ class FoodModel {
   factory FoodModel.fromJson(Map<String, dynamic> json) => FoodModel(
         id: json["id"],
         name: json["name"],
+        description:json["description"],
         categoryId: json["categoryId"],
         price: json["price"],
         weight: json["weight"],
@@ -80,6 +85,7 @@ class FoodModel {
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
+        "description":description,
         "categoryId": categoryId,
         "price": price,
         "weight": weight,

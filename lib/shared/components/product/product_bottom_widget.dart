@@ -98,6 +98,19 @@ class ProductBottomWidget extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 6),
+                child: Text(
+                  '${food.description}',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium!
+                      .copyWith(fontWeight: FontWeight.bold),
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  maxLines: 3,
+                ),
+              ),
             ],
           ),
         ),
