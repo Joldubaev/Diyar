@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/core/utils/helper/helper.dart';
@@ -13,43 +12,48 @@ import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 import 'package:geolocator/geolocator.dart';
+import 'order_map.dart';
 
 @RoutePage()
 class OrderMapPage extends StatefulWidget {
   final int totalPrice;
   final List<CartItemModel> cart;
-  const OrderMapPage({super.key, required this.cart, required this.totalPrice});
+  const OrderMapPage({Key? key, required this.cart, required this.totalPrice})
+      : super(key: key);
 
   @override
   State<OrderMapPage> createState() => _OrderMapPageState();
 }
 
 class _OrderMapPageState extends State<OrderMapPage> {
-  final mapControllerCompleter = Completer<YandexMapController>();
-  final TextEditingController textController = TextEditingController();
-  final texControler = TextEditingController();
-  String? address;
+  final _mapControllerCompleter = Completer<YandexMapController>();
+  final _textController = TextEditingController();
+  String? _address;
   Position? userLocation;
-  double deliveryPrice = 0.0;
-  double maxDeliveryPrice = 500;
-  final double pricePerKm = 100;
-  bool firstLaunch = true;
+  late List<MapObject> _mapObjects;
+  final List<PolygonMapObject> _polygons = [];
+  double _lat = 0;
+  double _long = 0;
+  bool _firstLaunch = true;
 
-  late final List<MapObject> mapObjects = _getPolygonMapObject(context);
-  final MapObjectId mapObjectId = const MapObjectId('polygon');
-  List<PolygonMapObject> polygons = [];
-  List<String> suggestions = [];
-
-  double lat = 0;
-  double long = 0;
+  static const _kyrgyzstanBounds = BoundingBox(
+    northEast: Point(latitude: 43.0019, longitude: 80.2754),
+    southWest: Point(latitude: 39.1921, longitude: 69.2638),
+  );
 
   @override
   void initState() {
     super.initState();
     _initPermission();
+    _mapObjects = _getPolygonMapObjects();
+  }
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
   }
 
   @override
@@ -57,131 +61,61 @@ class _OrderMapPageState extends State<OrderMapPage> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-          title: Text(context.l10n.chooseAddress,
-              style: theme.textTheme.titleSmall)),
+        title:
+            Text(context.l10n.chooseAddress, style: theme.textTheme.titleSmall),
+      ),
       body: Stack(
         children: [
-          SizedBox(
-            height: MediaQuery.of(context).size.height - 350,
-            child: YandexMap(
-              mapObjects: mapObjects,
-              onCameraPositionChanged: (cameraPosition, reason, finished) {
-                if (finished) {
-                  updateAddressDetails(AppLatLong(
-                    latitude: cameraPosition.target.latitude,
-                    longitude: cameraPosition.target.longitude,
-                  ));
-                  lat = cameraPosition.target.latitude;
-                  long = cameraPosition.target.longitude;
-                }
-              },
-              onMapCreated: (controller) {
-                mapControllerCompleter.complete(controller);
-                _fetchCurrentLocation();
-              },
-            ),
+          MapWidget(
+            mapObjects: _mapObjects,
+            onCameraPositionChanged: _onCameraPositionChanged,
+            onMapCreated: (controller) {
+              _mapControllerCompleter.complete(controller);
+              _fetchCurrentLocation();
+            },
           ),
-          Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: Icon(Icons.location_on,
-                  size: 30, color: theme.colorScheme.error)),
+          const Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: Icon(Icons.location_on, size: 30, color: Colors.red),
+          ),
         ],
       ),
-      bottomSheet: BottomSheet(
-        showDragHandle: true,
-        backgroundColor: theme.colorScheme.surface,
-        constraints: const BoxConstraints(maxHeight: 300, minHeight: 300),
-        onClosing: () {},
-        builder: (context) {
-          return ListView(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            children: [
-              Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      color: theme.colorScheme.error,
-                      border: Border.all(color: theme.colorScheme.onSurface)),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                          '${context.l10n.deliveryPrice}: ${MapHelper.isCoordinateInsidePolygons(lat, long, polygons: Polygons.getPolygons())} сом',
-                          style: theme.textTheme.bodyLarge
-                              ?.copyWith(color: theme.colorScheme.surface)),
-                    ],
-                  )),
-              const SizedBox(height: 10),
-              Card(
-                color: theme.colorScheme.primary,
-                child: ListTile(
-                  title: Text(address ?? context.l10n.addressIsNotFounded,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onTertiaryFixed,
-                          fontWeight: FontWeight.w500)),
-                  trailing: Icon(Icons.arrow_forward_ios,
-                      color: theme.colorScheme.onTertiaryFixed),
-                  onTap: () {
-                    if (address == null ||
-                        address == context.l10n.addressIsNotFounded) return;
-                    context.read<OrderCubit>().changeAddress(address ?? '');
-                    context.read<OrderCubit>().changeAddressSearch(false);
-
-                    context.read<OrderCubit>().selectDeliveryPrice(
-                        MapHelper.isCoordinateInsidePolygons(lat, long,
-                            polygons: Polygons.getPolygons()));
-                    context.router.push(DeliveryFormRoute(
-                        totalPrice: widget.totalPrice,
-                        cart: widget.cart,
-                        dishCount: context.read<CartCubit>().dishCount));
-                  },
-                ),
-              ),
-            ],
-          );
-        },
+      bottomSheet: BottomSheetWidget(
+        theme: theme,
+        address: _address,
+        deliveryPrice: _calculateDeliveryPrice(),
+        onAddressCardTap: _onAddressCardTap,
+      ),
+      floatingActionButton: FloatingActionButtonsWidget(
+        theme: theme,
+        onNavigationPressed: _fetchCurrentLocation,
+        onSearchPressed: () =>
+            showMapSearchBottom(context, onSearch: _searchMap),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
-      floatingActionButton: Align(
-        alignment: Alignment.centerRight,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            FloatingActionButton(
-              heroTag: 1,
-              onPressed: _fetchCurrentLocation,
-              child: const Icon(Icons.navigation),
-            ),
-            const SizedBox(height: 10),
-            FloatingActionButton(
-              heroTag: 2,
-              backgroundColor: theme.colorScheme.onTertiaryFixed,
-              onPressed: () async {
-                showMapSearchBottom(context, onSearch: _searchMap);
-              },
-              child: Icon(Icons.search,
-                  color: theme.colorScheme.onSurface, size: 40),
-            ),
-            const SizedBox(height: 230),
-          ],
-        ),
-      ),
     );
   }
 
-  _searchMap(String searchText) async {
+  void _onCameraPositionChanged(
+      CameraPosition cameraPosition, CameraUpdateReason reason, bool finished) {
+    if (finished) {
+      _updateAddressDetails(AppLatLong(
+        latitude: cameraPosition.target.latitude,
+        longitude: cameraPosition.target.longitude,
+      ));
+      _lat = cameraPosition.target.latitude;
+      _long = cameraPosition.target.longitude;
+    }
+  }
+
+  Future<void> _searchMap(String searchText) async {
     final searchResult = await YandexSearch.searchByText(
       searchText: searchText,
       searchOptions: const SearchOptions(),
-      geometry: Geometry.fromBoundingBox(
-        const BoundingBox(
-          northEast: Point(latitude: 43.0019, longitude: 80.2754),
-          southWest: Point(latitude: 39.1921, longitude: 69.2638),
-        ),
-      ),
+      geometry: Geometry.fromBoundingBox(_kyrgyzstanBounds),
     );
 
     final result = await searchResult.$2;
@@ -190,16 +124,13 @@ class _OrderMapPageState extends State<OrderMapPage> {
       showToast(context.l10n.addressIsNotFounded, isError: true);
       return;
     }
+
     final point = result.items!.first.geometry.first.point;
     if (point != null) {
       if (_isPointInKyrgyzstan(point.latitude, point.longitude)) {
-        log(point.toString());
         _moveToCurrentLocation(point.latitude, point.longitude);
       } else {
-        setState(() {
-          address = context.l10n.addressIsNotFounded;
-        });
-
+        setState(() => _address = context.l10n.addressIsNotFounded);
         showToast('Адрес находится за пределами Кыргызстана', isError: true);
       }
     } else {
@@ -207,24 +138,25 @@ class _OrderMapPageState extends State<OrderMapPage> {
     }
   }
 
-  List<PolygonMapObject> _getPolygonMapObject(BuildContext context) {
+  List<PolygonMapObject> _getPolygonMapObjects() {
     return Polygons.getPolygons().map((polygon) {
       return PolygonMapObject(
-        mapId: MapObjectId('polygon map object ${polygon.id}'),
+        mapId: MapObjectId('polygon_${polygon.id}'),
         polygon: Polygon(
           outerRing: LinearRing(
-              points: polygon.coordinates
-                  .map((e) =>
-                      Point(latitude: e.latitude, longitude: e.longitude))
-                  .toList()),
-          innerRings: polygons.isEmpty
+            points: polygon.coordinates
+                .map((e) => Point(latitude: e.latitude, longitude: e.longitude))
+                .toList(),
+          ),
+          innerRings: _polygons.isEmpty
               ? []
-              : polygons
+              : _polygons
                   .map((e) => LinearRing(
-                      points: polygon.coordinates
-                          .map((e) => Point(
-                              latitude: e.latitude, longitude: e.longitude))
-                          .toList()))
+                        points: polygon.coordinates
+                            .map((e) => Point(
+                                latitude: e.latitude, longitude: e.longitude))
+                            .toList(),
+                      ))
                   .toList(),
         ),
         strokeColor: Colors.transparent,
@@ -241,34 +173,28 @@ class _OrderMapPageState extends State<OrderMapPage> {
 
   Future<void> _fetchCurrentLocation() async {
     try {
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
+      final position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
       setState(() {
         userLocation = position;
-        lat = position.latitude;
-        long = position.longitude;
+        _lat = position.latitude;
+        _long = position.longitude;
       });
-
-      log("User location: ($lat, $long)");
-      await _moveToCurrentLocation(lat, long);
+      await _moveToCurrentLocation(_lat, _long);
     } catch (e) {
       log("Error getting location: $e");
     }
   }
 
   Future<void> _moveToCurrentLocation(double latitude, double longitude) async {
-    final controller = await mapControllerCompleter.future;
-    const tilt = 0.0;
-    const zoom = 16.0;
-    const azimuth = 0.0;
+    final controller = await _mapControllerCompleter.future;
     controller.moveCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
           target: Point(latitude: latitude, longitude: longitude),
-          zoom: zoom,
-          azimuth: azimuth,
-          tilt: tilt,
+          zoom: 16.0,
+          azimuth: 0.0,
+          tilt: 0.0,
         ),
       ),
     );
@@ -278,10 +204,8 @@ class _OrderMapPageState extends State<OrderMapPage> {
     }
   }
 
-  Future<void> updateAddressDetails(AppLatLong latLong) async {
-    setState(() {
-      address = 'Поиск местоположения';
-    });
+  Future<void> _updateAddressDetails(AppLatLong latLong) async {
+    setState(() => _address = 'Поиск местоположения');
 
     try {
       final searchSessionData = await YandexSearch.searchByPoint(
@@ -298,45 +222,50 @@ class _OrderMapPageState extends State<OrderMapPage> {
 
         if (point != null &&
             _isPointInKyrgyzstan(point.latitude, point.longitude)) {
-          setState(() {
-            address = formattedAddress;
-          });
+          setState(() => _address = formattedAddress);
         } else {
-          setState(() {
-            address = context.l10n.addressIsNotFounded;
-          });
-          if (!firstLaunch) {
-            showToast(
-              'Адрес находится за пределами Кыргызстана',
-              isError: true,
-            );
+          setState(() => _address = context.l10n.addressIsNotFounded);
+          if (!_firstLaunch) {
+            showToast('Адрес находится за пределами Кыргызстана',
+                isError: true);
           }
         }
       } else {
-        setState(() {
-          address = context.l10n.addressIsNotFounded;
-        });
+        setState(() => _address = context.l10n.addressIsNotFounded);
       }
-      firstLaunch = false;
+      _firstLaunch = false;
     } catch (error) {
       log(error.toString());
-      setState(() {
-        address = context.l10n.addressIsNotFounded;
-      });
+      setState(() => _address = context.l10n.addressIsNotFounded);
     }
   }
 
   bool _isPointInKyrgyzstan(double latitude, double longitude) {
-    return latitude >= 39.1921 &&
-        latitude <= 43.0019 &&
-        longitude >= 69.2638 &&
-        longitude <= 80.2754;
+    return latitude >= _kyrgyzstanBounds.southWest.latitude &&
+        latitude <= _kyrgyzstanBounds.northEast.latitude &&
+        longitude >= _kyrgyzstanBounds.southWest.longitude &&
+        longitude <= _kyrgyzstanBounds.northEast.longitude;
   }
 
-  @override
-  void dispose() {
-    textController.dispose();
-    texControler.dispose();
-    super.dispose();
+  void _onAddressCardTap() {
+    if (_address == null || _address == context.l10n.addressIsNotFounded) {
+      return;
+    }
+
+    context.read<OrderCubit>()
+      ..changeAddress(_address!)
+      ..changeAddressSearch(false)
+      ..selectDeliveryPrice(_calculateDeliveryPrice());
+
+    context.router.push(DeliveryFormRoute(
+      totalPrice: widget.totalPrice,
+      cart: widget.cart,
+      dishCount: context.read<CartCubit>().dishCount,
+    ));
+  }
+
+  double _calculateDeliveryPrice() {
+    return MapHelper.isCoordinateInsidePolygons(_lat, _long,
+        polygons: Polygons.getPolygons());
   }
 }

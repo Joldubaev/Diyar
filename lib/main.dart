@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'package:diyar/config/config.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/core/router/routes.dart';
 import 'package:diyar/features/app/cubit/remote_config_cubit.dart';
@@ -24,15 +23,17 @@ import 'features/app/view/app_listener.dart';
 import 'shared/cubit/theme/cubit/theme_cubit.dart';
 import 'shared/pages/app_wrapper_connection_page.dart';
 
-Future<void> main({AppConfig appConfig = const AppConfig()}) async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   FlutterError.onError = (details) {
     log(details.exceptionAsString(), stackTrace: details.stack);
   };
   Bloc.observer = const AppBlocObserver(onLog: log);
 
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await di.init();
+  await Future.wait([
+    Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform),
+    di.init(),
+  ]);
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
