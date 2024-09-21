@@ -1,13 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/router/routes.gr.dart';
-// import 'package:diyar/features/auth/auth.dart';
-// import 'package:diyar/injection_container.dart';
-// import 'package:diyar/shared/constants/constant.dart';
 import 'package:diyar/shared/theme/theme.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:jwt_decoder/jwt_decoder.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
 
 @RoutePage()
 class SplashScreen extends StatefulWidget {

@@ -51,8 +51,8 @@ class ProductBottomWidget extends StatelessWidget {
                     color: theme.colorScheme.onSurface.withOpacity(0.1)),
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height * 0.3,
-                memCacheWidth: 710,
-                memCacheHeight: 710,
+                // memCacheWidth: 410,
+                // memCacheHeight: 410,
                 fit: BoxFit.cover,
                 placeholder: (context, url) => const Center(
                   child: SizedBox(

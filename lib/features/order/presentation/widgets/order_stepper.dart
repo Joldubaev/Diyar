@@ -70,7 +70,7 @@ class _OrderStepperState extends State<OrderStepper> {
                 steps: [
                   EasyStep(
                     icon: const Icon(Icons.timer),
-                    title: context.l10n.awaiting,
+                    title: 'awaiting',
                     lineText: context.l10n.confirmOrder,
                     enabled: _allowTabStepping(0, StepEnabling.sequential),
                   ),

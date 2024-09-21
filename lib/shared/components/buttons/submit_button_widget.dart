@@ -7,7 +7,7 @@ class SubmitButtonWidget extends StatelessWidget {
     this.onTap,
     required this.title,
     required this.bgColor,
-    required this.textStyle,
+     this.textStyle,
     this.isLoading = false,
     this.height,
     this.width,
@@ -17,7 +17,7 @@ class SubmitButtonWidget extends StatelessWidget {
   final VoidCallback? onTap;
   final String title;
   final Color bgColor;
-  final TextStyle textStyle;
+  final TextStyle? textStyle;
   final bool? isLoading;
   final double? height;
   final double? width;

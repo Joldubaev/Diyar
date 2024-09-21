@@ -113,8 +113,8 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                           color: theme.colorScheme.onSurface.withOpacity(0.1)),
                       width: double.infinity,
                       height: 110,
-                      memCacheWidth:
-                          (MediaQuery.of(context).size.width * 0.5).toInt(),
+                      // memCacheWidth:
+                      //     (MediaQuery.of(context).size.width * 0.5).toInt(),
                       placeholder: (context, url) => const Center(
                         child: SizedBox(
                           width: 50,
@@ -231,9 +231,9 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                               .decrementCart(widget.food.id!);
                         } else {
                           context.pushRoute(const SignInRoute()).then((value) {
-                           if(context.mounted){
-                             context.read<SignInCubit>().logout();
-                           }
+                            if (context.mounted) {
+                              context.read<SignInCubit>().logout();
+                            }
                           });
                         }
                       } else {
@@ -243,8 +243,8 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                               .removeFromCart(widget.food.id!);
                         } else {
                           context.pushRoute(const SignInRoute()).then((value) {
-                            if(context.mounted){
-                             context.read<SignInCubit>().logout();
+                            if (context.mounted) {
+                              context.read<SignInCubit>().logout();
                             }
                           });
                         }
@@ -285,9 +285,9 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                               context
                                   .pushRoute(const SignInRoute())
                                   .then((value) {
-                               if(context.mounted){
+                                if (context.mounted) {
                                   context.read<SignInCubit>().logout();
-                               }
+                                }
                               });
                             }
                           } else {
@@ -299,9 +299,9 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                               context
                                   .pushRoute(const SignInRoute())
                                   .then((value) {
-                              if(context.mounted){
-                                context.read<SignInCubit>().logout();
-                              }
+                                if (context.mounted) {
+                                  context.read<SignInCubit>().logout();
+                                }
                               });
                             }
                           }
@@ -320,7 +320,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                               );
                         } else {
                           context.pushRoute(const SignInRoute()).then((value) {
-                            if(context.mounted){
+                            if (context.mounted) {
                               context.read<SignInCubit>().logout();
                             }
                           });
@@ -332,7 +332,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                               .incrementCart(widget.food.id!);
                         } else {
                           context.pushRoute(const SignInRoute()).then((value) {
-                            if(context.mounted){
+                            if (context.mounted) {
                               context.read<SignInCubit>().logout();
                             }
                           });
