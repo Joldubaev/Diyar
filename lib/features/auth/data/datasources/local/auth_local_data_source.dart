@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:diyar/shared/models/token_model.dart';
 import 'package:diyar/shared/constants/constant.dart';
@@ -57,7 +58,9 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
       if (refresh != null) {
         await prefs.setString(AppConst.refreshToken, refresh);
       }
+
       await prefs.setString(AppConst.accessToken, access);
+      log("setTokenToCache: ${AppConst.accessToken}");
       if (phone != null) await prefs.setString(AppConst.phone, phone);
       await prefs.setString(
           AppConst.userId, JwtDecoder.decode(access)['userID']);

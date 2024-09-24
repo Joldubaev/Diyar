@@ -30,10 +30,9 @@ Future<void> main() async {
   };
   Bloc.observer = const AppBlocObserver(onLog: log);
 
-  await Future.wait([
-    Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform),
-    di.init(),
-  ]);
+  Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp();
+  await init();
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

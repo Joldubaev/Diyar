@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:diyar/core/network/network_info.dart';
 import 'package:diyar/core/remote_config/diyar_remote_config.dart';
 import 'package:diyar/features/app/cubit/remote_config_cubit.dart';
 import 'package:diyar/features/cart/cart.dart';
@@ -12,7 +13,6 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'core/network/network_info.dart';
 import 'package:get_it/get_it.dart';
 
 import 'features/cart/data/repository/cart_repository.dart';
@@ -20,9 +20,10 @@ import 'features/cart/data/repository/cart_repository.dart';
 final sl = GetIt.instance;
 
 Future<void> init() async {
+  // Initialize PackageInfo
   final packageInfo = await PackageInfo.fromPlatform();
 
-// cubit or bloc
+  // Register cubits/blocs
   sl.registerFactory(() => SignUpCubit(sl(), sl()));
   sl.registerFactory(() => SignInCubit(sl()));
   sl.registerFactory(() => ProfileCubit(sl()));
@@ -35,65 +36,39 @@ Future<void> init() async {
   sl.registerFactory(() => HistoryCubit(sl()));
   sl.registerFactory(() => CurierCubit(sl()));
   sl.registerFactory(() => InternetBloc());
-  sl.registerFactory(
-      () => RemoteConfigCubit(packageInfo: sl(), remoteConfig: sl()));
+  sl.registerFactory(() => RemoteConfigCubit(packageInfo: sl(), remoteConfig: sl<DiyarRemoteConfig>()));
 
-  // AUTH
-  sl.registerLazySingleton<AuthRepository>(
-      () => AuthRepositoryImpl(sl(), sl()));
-  sl.registerLazySingleton<AuthRemoteDataSource>(
-      () => AuthRemoteDataSourceImpl(sl(), sl(), sl()));
-  sl.registerLazySingleton<AuthLocalDataSource>(
-      () => AuthLocalDataSourceImpl(sl()));
+  // Register repositories and data sources
+  sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl(), sl()));
+  sl.registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSourceImpl(sl(), sl(), sl()));
+  sl.registerLazySingleton<AuthLocalDataSource>(() => AuthLocalDataSourceImpl(sl()));
 
-  // about us
-  sl.registerLazySingleton<AboutUsRepository>(
-      () => AboutUsRepositoryImpl(sl()));
-  sl.registerLazySingleton<AboutUsRemoteDataSource>(
-      () => AboutUsRemoteDataSourceImpl(sl(), sl()));
+  sl.registerLazySingleton<AboutUsRepository>(() => AboutUsRepositoryImpl(sl()));
+  sl.registerLazySingleton<AboutUsRemoteDataSource>(() => AboutUsRemoteDataSourceImpl(sl(), sl()));
 
-  // Profile
   sl.registerLazySingleton<UserRepository>(() => UserRepositoryImpl(sl()));
-  sl.registerLazySingleton<UserRemoteDataSource>(
-      () => UserRemoteDataSourceImpl(sl(), sl()));
+  sl.registerLazySingleton<UserRemoteDataSource>(() => UserRemoteDataSourceImpl(sl(), sl()));
 
-  // sl.registerLazySingleton<UserRepositoryImpl>(() => UserRepositoryImpl(sl()));
-  // sl.registerLazySingleton<UserRemoteDataSource>(() => UserRemoteDataSourceImpl(sl(), sl()));
-
-  // Menu
   sl.registerLazySingleton<MenuRepository>(() => MenuRepositoryImpl(sl()));
-  sl.registerLazySingleton<MenuRemoteDataSource>(
-      () => MenuRemoteDataSourceImpl(sl(), sl()));
+  sl.registerLazySingleton<MenuRemoteDataSource>(() => MenuRemoteDataSourceImpl(sl(), sl()));
 
-  // HomeFeatures
-  sl.registerLazySingleton<HomeRemoteDataSource>(
-      () => HomeFeaturesRepositoryImpl(sl()));
+  sl.registerLazySingleton<HomeRemoteDataSource>(() => HomeFeaturesRepositoryImpl(sl()));
   sl.registerLazySingleton<HomeRepository>(() => HomeFeaturesRepoImpl(sl()));
 
-  // Cart
   sl.registerLazySingleton<CartRepository>(() => CartRepositoryImpl(sl()));
-  sl.registerLazySingleton<CartRemoteDataSource>(
-      () => CartRemoteDataSourceImpl(sl()));
+  sl.registerLazySingleton<CartRemoteDataSource>(() => CartRemoteDataSourceImpl(sl()));
 
-// Curier
   sl.registerLazySingleton<CurierRepository>(() => CurierRepositoryImpl(sl()));
-  sl.registerLazySingleton<CurierDataSource>(
-      () => CurierDataSourceImpl(sl(), sl()));
-  // Order
+  sl.registerLazySingleton<CurierDataSource>(() => CurierDataSourceImpl(sl(), sl()));
+
   sl.registerLazySingleton<OrderRepository>(() => OrderRepositoryImpl(sl()));
-  sl.registerLazySingleton<OrderRemoteDataSource>(
-      () => OrderRemoteDataSourceImpl(sl(), sl()));
+  sl.registerLazySingleton<OrderRemoteDataSource>(() => OrderRemoteDataSourceImpl(sl(), sl()));
 
-  // history
-  sl.registerLazySingleton<HistoryRepository>(
-      () => HistoryRepositoryImpl(sl()));
-  sl.registerLazySingleton<HistoryReDatasource>(
-      () => HistoryReDatasourceImpl(sl(), sl()));
+  sl.registerLazySingleton<HistoryRepository>(() => HistoryRepositoryImpl(sl()));
+  sl.registerLazySingleton<HistoryReDatasource>(() => HistoryReDatasourceImpl(sl(), sl()));
 
-  // SMS Repository
   sl.registerLazySingleton<SmsRepository>(() => SmsRepositoryImpl(sl()));
-  sl.registerLazySingleton<SmsRemoteDataSource>(
-      () => SmsRemoteDataSourceImpl(dio: sl()));
+  sl.registerLazySingleton<SmsRemoteDataSource>(() => SmsRemoteDataSourceImpl(dio: sl()));
 
   //! Core
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
@@ -113,9 +88,10 @@ Future<void> init() async {
 
   // Initialize DiyarRemoteConfig
   await diyarRemoteConfig.initialise();
-
+  
   sl.registerSingleton<DiyarRemoteConfig>(diyarRemoteConfig);
 
+  // Register external dependencies
   final sharedPrefences = await SharedPreferences.getInstance();
   sl.registerLazySingleton(() => sharedPrefences);
   sl.registerLazySingleton(() => Dio());

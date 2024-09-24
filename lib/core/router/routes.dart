@@ -58,11 +58,9 @@ class AuthGuard extends AutoRouteGuard {
     final role = prefs.getString(AppConst.userRole);
 
     if (token == null || JwtDecoder.isExpired(token)) {
-      // Если токен отсутствует или истек, перенаправляем на экран входа
       router.push(const SignInRoute());
     } else if (resolver.route.name == 'ProfileRoute' ||
         resolver.route.name == 'CartRoute') {
-      // Проверяем роль для защищенных маршрутов
       if (role == null) {
         router.push(const SignInRoute());
       } else {

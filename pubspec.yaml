@@ -55,6 +55,7 @@ dependencies:
   firebase_remote_config: ^4.4.7
   firebase_crashlytics: ^3.5.7
   firebase_analytics: ^10.10.7
+  flutter_image_compress: ^2.3.0
 
 
 dev_dependencies:
