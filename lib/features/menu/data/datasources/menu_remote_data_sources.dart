@@ -11,6 +11,7 @@ abstract class MenuRemoteDataSource {
   Future<List<CategoryModel>> getProductsWithMenu({String? query});
   Future<List<FoodModel>> getPopulartFoods();
   Future<List<FoodModel>> searchFoods({String? name});
+  Future<int?> getImageFileSize(String imageUrl);
 }
 
 class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
@@ -111,6 +112,40 @@ class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
     } catch (e) {
       log("Error: $e");
       throw ServerException();
+    }
+  }
+
+  @override
+  Future<int?> getImageFileSize(String imageUrl) async {
+    try {
+      var response = await _dio.head(
+        imageUrl,
+        options: Options(
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 500;
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        String? contentLength = response.headers.value('content-length');
+        if (contentLength != null) {
+          return int.parse(contentLength);
+        }
+      } else if (response.statusCode == 302) {
+        // Handle redirect
+        String? redirectUrl = response.headers.value('location');
+        if (redirectUrl != null) {
+          return getImageFileSize(redirectUrl);
+        }
+      }
+
+      log('Failed to get image size. Status code: ${response.statusCode}');
+      return null;
+    } catch (e) {
+      log('Error getting image size: $e');
+      return null;
     }
   }
 }

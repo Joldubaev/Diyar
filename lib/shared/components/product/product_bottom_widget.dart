@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:diyar/features/features.dart';
 
-class ProductBottomWidget extends StatelessWidget {
+class ProductBottomWidget extends StatefulWidget {
   final VoidCallback? onTap;
   final bool? isCounter;
   final bool? isShadowVisible;
   final int quantity;
   final FoodModel food;
+  final MenuRemoteDataSource dataSource;
 
   const ProductBottomWidget({
     Key? key,
@@ -17,7 +18,22 @@ class ProductBottomWidget extends StatelessWidget {
     required this.food,
     required this.quantity,
     this.isCounter = true,
+    required this.dataSource,
   }) : super(key: key);
+
+  @override
+  _ProductBottomWidgetState createState() => _ProductBottomWidgetState();
+}
+
+class _ProductBottomWidgetState extends State<ProductBottomWidget> {
+  Future<int?>? _imageSizeFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _imageSizeFuture = widget.dataSource.getImageFileSize(
+        widget.food.urlPhoto ?? 'https://i.ibb.co/GkL25DB/ALE-1357-7.png');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +42,7 @@ class ProductBottomWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
-        boxShadow: isShadowVisible!
+        boxShadow: widget.isShadowVisible!
             ? [
                 BoxShadow(
                   color: theme.colorScheme.onSurface.withOpacity(0.1),
@@ -38,14 +54,14 @@ class ProductBottomWidget extends StatelessWidget {
             : null,
       ),
       child: GestureDetector(
-        onTap: onTap,
+        onTap: widget.onTap,
         child: Padding(
           padding: const EdgeInsets.all(10),
           child: Column(
             children: [
               CachedNetworkImage(
-                imageUrl:
-                    food.urlPhoto ?? 'https://i.ibb.co/GkL25DB/ALE-1357-7.png',
+                imageUrl: widget.food.urlPhoto ??
+                    'https://i.ibb.co/GkL25DB/ALE-1357-7.png',
                 errorWidget: (context, url, error) => Image.asset(
                     'assets/images/app_logo.png',
                     color: theme.colorScheme.onSurface.withOpacity(0.1)),
@@ -66,7 +82,7 @@ class ProductBottomWidget extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 6),
                 child: Text(
-                  '${food.name}',
+                  '${widget.food.name}',
                   style: Theme.of(context)
                       .textTheme
                       .bodyLarge!
@@ -80,14 +96,14 @@ class ProductBottomWidget extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 6),
                 child: Text.rich(
                   TextSpan(
-                    text: '${food.weight}',
+                    text: '${widget.food.weight}',
                     style: Theme.of(context)
                         .textTheme
                         .titleSmall
                         ?.copyWith(color: theme.colorScheme.onSurface),
                     children: [
                       TextSpan(
-                        text: ' - ${food.price} сом',
+                        text: ' - ${widget.food.price} сом',
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
                             color: AppColors.green,
                             fontWeight: FontWeight.w400),
@@ -101,7 +117,7 @@ class ProductBottomWidget extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 6),
                 child: Text(
-                  '${food.description}',
+                  '${widget.food.description}',
                   style: Theme.of(context)
                       .textTheme
                       .bodyMedium!
@@ -110,6 +126,21 @@ class ProductBottomWidget extends StatelessWidget {
                   textAlign: TextAlign.center,
                   maxLines: 3,
                 ),
+              ),
+              FutureBuilder<int?>(
+                future: _imageSizeFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasData) {
+                    return Text(
+                      'Image size: ${(snapshot.data! / 1024).toStringAsFixed(2)} KB',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    );
+                  } else {
+                    return const Text('Image size unavailable');
+                  }
+                },
               ),
             ],
           ),

@@ -26,11 +26,7 @@ class _SignInPageState extends State<SignInPage> {
           icon: Icon(Icons.arrow_back_ios,
               color: Theme.of(context).colorScheme.onPrimary),
           onPressed: () {
-            if (AutoRouter.of(context).canPop()) {
-              AutoRouter.of(context).maybePop();
-            } else {
-              AutoRouter.of(context).replace(const MainRoute());
-            }
+            AutoRouter.of(context).replace(const MainRoute());
           },
         ),
       ),
