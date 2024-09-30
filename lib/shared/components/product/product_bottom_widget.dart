@@ -22,18 +22,18 @@ class ProductBottomWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _ProductBottomWidgetState createState() => _ProductBottomWidgetState();
+  ProductBottomWidgetState createState() => ProductBottomWidgetState();
 }
 
-class _ProductBottomWidgetState extends State<ProductBottomWidget> {
-  Future<int?>? _imageSizeFuture;
+class ProductBottomWidgetState extends State<ProductBottomWidget> {
+  // Future<int?>? _imageSizeFuture;
 
-  @override
-  void initState() {
-    super.initState();
-    _imageSizeFuture = widget.dataSource.getImageFileSize(
-        widget.food.urlPhoto ?? 'https://i.ibb.co/GkL25DB/ALE-1357-7.png');
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _imageSizeFuture = widget.dataSource.getImageFileSize(
+  //       widget.food.urlPhoto ?? 'https://i.ibb.co/GkL25DB/ALE-1357-7.png');
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -67,8 +67,8 @@ class _ProductBottomWidgetState extends State<ProductBottomWidget> {
                     color: theme.colorScheme.onSurface.withOpacity(0.1)),
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height * 0.3,
-                // memCacheWidth: 410,
-                // memCacheHeight: 410,
+                memCacheWidth: 410,
+                memCacheHeight: 410,
                 fit: BoxFit.cover,
                 placeholder: (context, url) => const Center(
                   child: SizedBox(
@@ -127,21 +127,21 @@ class _ProductBottomWidgetState extends State<ProductBottomWidget> {
                   maxLines: 3,
                 ),
               ),
-              FutureBuilder<int?>(
-                future: _imageSizeFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
-                  } else if (snapshot.hasData) {
-                    return Text(
-                      'Image size: ${(snapshot.data! / 1024).toStringAsFixed(2)} KB',
-                      style: Theme.of(context).textTheme.bodySmall,
-                    );
-                  } else {
-                    return const Text('Image size unavailable');
-                  }
-                },
-              ),
+              // FutureBuilder<int?>(
+              //   future: _imageSizeFuture,
+              //   builder: (context, snapshot) {
+              //     if (snapshot.connectionState == ConnectionState.waiting) {
+              //       return const CircularProgressIndicator();
+              //     } else if (snapshot.hasData) {
+              //       return Text(
+              //         'Image size: ${(snapshot.data! / 1024).toStringAsFixed(2)} KB',
+              //         style: Theme.of(context).textTheme.bodySmall,
+              //       );
+              //     } else {
+              //       return const Text('Image size unavailable');
+              //     }
+              //   },
+              // ),
             ],
           ),
         ),

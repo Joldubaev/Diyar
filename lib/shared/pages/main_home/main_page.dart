@@ -1,13 +1,14 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:diyar/core/custom_dialog/custom_dialog.dart';
 import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/core/utils/helper/user_helper.dart';
 import 'package:diyar/features/app/cubit/remote_config_cubit.dart';
 import 'package:diyar/features/cart/cart.dart';
-import 'package:diyar/shared/pages/pages.dart';
+import 'package:diyar/shared/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 @RoutePage()
 class MainPage extends StatefulWidget {
@@ -34,6 +35,18 @@ class _MainPageState extends State<MainPage> {
     });
   }
 
+  void _onTabTapped(int index) async {
+    if (index == 3 && !UserHelper.isAuth()) {
+      await _showRegisterDialog(context);
+      if (!UserHelper.isAuth()) {
+        return;
+      }
+    }
+    setState(() {
+      currentIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -48,68 +61,97 @@ class _MainPageState extends State<MainPage> {
         final tabsRouter = AutoTabsRouter.of(context);
         return Scaffold(
           body: child,
-          floatingActionButton: StreamBuilder<List<CartItemModel>>(
-            stream: cartItems,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                cart = snapshot.data!;
-              }
-              final cartCount = (cart.isNotEmpty
-                  ? cart
-                      .map((e) => e.quantity)
-                      .reduce((vl, el) => (vl ?? 0) + (el ?? 0))
-                  : 0);
-              return SizedBox(
-                child: Stack(
-                  children: [
-                    FloatingActionButton(
-                      onPressed: () {
-                        context.router.push(const CartRoute());
-                      },
-                      child: SvgPicture.asset(
-                        "assets/icons/cart_icon.svg",
-                        height: 40,
-                        colorFilter: ColorFilter.mode(
-                          theme.colorScheme.onTertiaryFixed,
-                          BlendMode.srcIn,
-                        ),
-                      ),
-                    ),
-                    if (cart.isNotEmpty)
-                      Positioned(
-                        right: 0,
-                        top: 0,
-                        child: Badge(
-                          largeSize: 20,
-                          label: Text(
-                            "${(cartCount ?? 0) > 99 ? "99+" : cartCount}",
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: theme.colorScheme.onTertiary,
-                              height: 1,
-                            ),
-                          ),
-                          isLabelVisible: cart.isNotEmpty,
-                        ),
-                      ),
-                  ],
-                ),
-              );
-            },
-          ),
+          floatingActionButton: _buildFloatingActionButton(context, theme),
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
           bottomNavigationBar: CustomBottomNavigationBar(
             currentIndex: tabsRouter.activeIndex,
             onTap: (index) {
-              if (index == 3 && !UserHelper.isAuth()) {
-                context.pushRoute(const SignInRoute());
-                return;
-              }
+              _onTabTapped(index);
               tabsRouter.setActiveIndex(index);
-              setState(() {
-                currentIndex = index;
-              });
             },
           ),
+        );
+      },
+    );
+  }
+
+  Widget _buildFloatingActionButton(BuildContext context, ThemeData theme) {
+    return StreamBuilder<List<CartItemModel>>(
+      stream: cartItems,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          cart = snapshot.data!;
+        }
+        final cartCount =
+            cart.fold(0, (sum, item) => sum + (item.quantity ?? 0));
+
+        return Stack(
+          children: [
+            FloatingActionButton(
+              onPressed: () {
+                if (!UserHelper.isAuth()) {
+                  _showRegisterDialog(context);
+                } else {
+                  context.router.push(const CartRoute());
+                }
+              },
+              child: SvgPicture.asset(
+                "assets/icons/cart_icon.svg",
+                height: 40,
+                colorFilter: ColorFilter.mode(
+                  theme.colorScheme.onTertiaryFixed,
+                  BlendMode.srcIn,
+                ),
+              ),
+            ),
+            if (cart.isNotEmpty)
+              Positioned(
+                right: 0,
+                top: 0,
+                child: _buildBadge(theme, cartCount),
+              ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildBadge(ThemeData theme, int cartCount) {
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.onPrimary,
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+      ),
+      constraints: const BoxConstraints(
+        minWidth: 20,
+        minHeight: 20,
+      ),
+      child: Text(
+        "${cartCount > 99 ? "99+" : cartCount}",
+        style: theme.textTheme.bodyMedium?.copyWith(
+          color: AppColors.red,
+          fontSize: 12,
+        ),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+  Future<void> _showRegisterDialog(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return RegistrationAlertDialog(
+          onRegister: () async {
+            await context.router.push(const SignInRoute());
+          },
+          onCancel: () {
+            context.router.pushAndPopUntil(
+              const MainRoute(),
+              predicate: (route) => false,
+            );
+          },
         );
       },
     );
@@ -128,50 +170,43 @@ class CustomBottomNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.07),
-            offset: const Offset(0, -1),
-            blurRadius: 20.0,
-            spreadRadius: .5,
-          ),
-        ],
-      ),
-      child: SizedBox(
-        height: 80,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 10),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              NavIcon(
-                iconPath: "assets/icons/home_icon.svg",
-                isActive: currentIndex == 0,
-                onTap: () => onTap(0),
-              ),
-              NavIcon(
-                iconPath: "assets/icons/menu_icon.svg",
-                isActive: currentIndex == 1,
-                onTap: () => onTap(1),
-              ),
-              NavIcon(
-                iconPath: "assets/icons/orders_icon.svg",
-                isActive: currentIndex == 2,
-                onTap: () => onTap(2),
-              ),
-              NavIcon(
-                iconPath: "assets/icons/profile_icon.svg",
-                isActive: currentIndex == 3,
-                onTap: () => onTap(3),
-              ),
-            ],
-          ),
+    final theme = Theme.of(context);
+    final unselectedColor = Theme.of(context).brightness == Brightness.dark
+        ? Colors.white.withOpacity(0.7)
+        : Colors.grey;
+
+    return BottomNavigationBar(
+      currentIndex: currentIndex,
+      onTap: onTap,
+      backgroundColor: theme.colorScheme.surface,
+      type: BottomNavigationBarType.fixed,
+      selectedItemColor: theme.colorScheme.primary,
+      unselectedItemColor: unselectedColor,
+      items: [
+        _buildBottomNavItem(context, "assets/icons/home_icon.svg", "Главная"),
+        _buildBottomNavItem(context, "assets/icons/menu_icon.svg", "Меню"),
+        _buildBottomNavItem(context, "assets/icons/orders_icon.svg", "История"),
+        _buildBottomNavItem(
+            context, "assets/icons/profile_icon.svg", "Профиль"),
+      ],
+    );
+  }
+
+  BottomNavigationBarItem _buildBottomNavItem(
+    BuildContext context,
+    String iconPath,
+    String label,
+  ) {
+    return BottomNavigationBarItem(
+      icon: SvgPicture.asset(
+        iconPath,
+        height: 24,
+        colorFilter: ColorFilter.mode(
+          Theme.of(context).colorScheme.onSurface,
+          BlendMode.srcIn,
         ),
       ),
+      label: label,
     );
   }
 }

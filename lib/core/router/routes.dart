@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/shared/constants/app_const/app_const.dart';
 import 'package:diyar/injection_container.dart';
+import 'package:diyar/shared/utils/utils.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -27,7 +28,6 @@ class AppRouter extends $AppRouter {
         AutoRoute(page: SignUpRoute.page),
         AutoRoute(page: PickupFormRoute.page),
         AutoRoute(page: SignUpSucces.page),
-        AutoRoute(page: ContactRoute.page),
         AutoRoute(page: AboutUsRoute.page),
         AutoRoute(page: OrderMapRoute.page),
         AutoRoute(page: DeliveryFormRoute.page),
@@ -58,16 +58,14 @@ class AuthGuard extends AutoRouteGuard {
     final role = prefs.getString(AppConst.userRole);
 
     if (token == null || JwtDecoder.isExpired(token)) {
+      showToast('Сессия истекла, войдите заново', isError: true);
       router.push(const SignInRoute());
-    } else if (resolver.route.name == 'ProfileRoute' ||
-        resolver.route.name == 'CartRoute') {
-      if (role == null) {
-        router.push(const SignInRoute());
+    } else {
+      if (role != null && role == 'Curier') {
+        router.push(const CurierRoute());
       } else {
         resolver.next(true);
       }
-    } else {
-      resolver.next(true);
     }
   }
 }

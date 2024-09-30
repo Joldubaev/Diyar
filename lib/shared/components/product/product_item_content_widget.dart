@@ -1,15 +1,14 @@
-import 'dart:ui';
-
-import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:diyar/core/custom_dialog/custom_dialog.dart';
+import 'package:diyar/features/menu/data/models/food_model.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/core/utils/helper/user_helper.dart';
 import 'package:diyar/features/cart/data/models/cart_item_model.dart';
 import 'package:diyar/features/cart/presentation/cubit/cart_cubit.dart';
-import 'package:diyar/features/features.dart';
 import 'package:diyar/shared/theme/theme.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProductItemContentWidget extends StatefulWidget {
   final VoidCallback? onTap;
@@ -105,23 +104,14 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                 child: Stack(
                   children: [
                     CachedNetworkImage(
-                      fadeInCurve: Curves.easeIn,
-                      fadeOutCurve: Curves.easeOut,
                       imageUrl: widget.food.urlPhoto ?? '',
-                      errorWidget: (context, url, error) => Image.asset(
-                          'assets/images/app_logo.png',
-                          color: theme.colorScheme.onSurface.withOpacity(0.1)),
+                      placeholder: (context, url) => const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      errorWidget: (context, url, error) =>
+                          Image.asset('assets/images/app_logo.png'),
                       width: double.infinity,
                       height: 110,
-                      // memCacheWidth:
-                      //     (MediaQuery.of(context).size.width * 0.5).toInt(),
-                      placeholder: (context, url) => const Center(
-                        child: SizedBox(
-                          width: 50,
-                          height: 50,
-                          child: CircularProgressIndicator(),
-                        ),
-                      ),
                       fit: BoxFit.contain,
                     ),
                     if (isChangedCounter)
@@ -132,14 +122,6 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                         bottom: 0,
                         child: AnimatedSwitcher(
                           duration: const Duration(milliseconds: 400),
-                          transitionBuilder:
-                              (Widget child, Animation<double> animation) {
-                            return FadeTransition(
-                              alwaysIncludeSemantics: true,
-                              opacity: animation,
-                              child: child,
-                            );
-                          },
                           child: DecoratedBox(
                             key: ValueKey<int>(widget.quantity),
                             decoration: BoxDecoration(
@@ -152,14 +134,11 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                               child: Text(
                                 '${widget.quantity}',
                                 key: ValueKey<int>(widget.quantity),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium
-                                    ?.copyWith(
-                                      color: theme.colorScheme.surface,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 60,
-                                    ),
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  color: theme.colorScheme.surface,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 60,
+                                ),
                               ),
                             ),
                           ),
@@ -174,7 +153,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
             padding: const EdgeInsets.symmetric(horizontal: 6),
             child: Text(
               '${widget.food.name}',
-              style: Theme.of(context).textTheme.bodyLarge,
+              style: theme.textTheme.bodyLarge,
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
             ),
@@ -184,16 +163,16 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
             child: Text.rich(
               TextSpan(
                 text: '${widget.food.weight}',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.5),
-                    ),
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurface.withOpacity(0.5),
+                ),
                 children: [
                   TextSpan(
                     text: ' - ${widget.food.price} сом',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: AppColors.green,
-                          fontWeight: FontWeight.w400,
-                        ),
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: AppColors.green,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                 ],
               ),
@@ -214,11 +193,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                 ),
               ),
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                mainAxisSize: widget.isShadowVisible!
-                    ? MainAxisSize.max
-                    : MainAxisSize.min,
                 children: [
                   IconButton(
                     splashRadius: 20,
@@ -230,11 +205,8 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                               .read<CartCubit>()
                               .decrementCart(widget.food.id!);
                         } else {
-                          context.pushRoute(const SignInRoute()).then((value) {
-                            if (context.mounted) {
-                              context.read<SignInCubit>().logout();
-                            }
-                          });
+                          _showRegisterDialog(
+                              context); // Показ диалога регистрации
                         }
                       } else {
                         if (UserHelper.isAuth()) {
@@ -242,71 +214,49 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                               .read<CartCubit>()
                               .removeFromCart(widget.food.id!);
                         } else {
-                          context.pushRoute(const SignInRoute()).then((value) {
-                            if (context.mounted) {
-                              context.read<SignInCubit>().logout();
-                            }
-                          });
+                          _showRegisterDialog(
+                              context); // Показ диалога регистрации
                         }
                       }
                     },
-                    icon: const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8),
-                      child: Icon(Icons.remove),
-                    ),
+                    icon: const Icon(Icons.remove),
                   ),
                   Expanded(
-                    child: Center(
-                      child: TextFormField(
-                        textAlignVertical: TextAlignVertical.center,
-                        controller: _controller,
-                        textAlign: TextAlign.center,
-                        showCursor: false,
-                        cursorColor: AppColors.transparent,
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.zero,
-                          isCollapsed: true,
-                        ),
-                        keyboardType: TextInputType.number,
-                        selectionHeightStyle: BoxHeightStyle.max,
-                        onChanged: (val) {
-                          int valInt = int.parse(val.isEmpty ? '0' : val);
-                          _controller.text = valInt.toString();
-                          if (valInt > 0) {
-                            if (UserHelper.isAuth()) {
-                              context.read<CartCubit>().setCartItemCount(
-                                    CartItemModel(
-                                      food: widget.food,
-                                      quantity: int.parse(val),
-                                    ),
-                                  );
-                            } else {
-                              context
-                                  .pushRoute(const SignInRoute())
-                                  .then((value) {
-                                if (context.mounted) {
-                                  context.read<SignInCubit>().logout();
-                                }
-                              });
-                            }
-                          } else {
-                            if (UserHelper.isAuth()) {
-                              context
-                                  .read<CartCubit>()
-                                  .removeFromCart(widget.food.id!);
-                            } else {
-                              context
-                                  .pushRoute(const SignInRoute())
-                                  .then((value) {
-                                if (context.mounted) {
-                                  context.read<SignInCubit>().logout();
-                                }
-                              });
-                            }
-                          }
-                        },
+                    child: TextFormField(
+                      cursorColor: AppColors.transparent,
+                      textAlign: TextAlign.center,
+                      controller: _controller,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.zero,
+                        isCollapsed: true,
                       ),
+                      keyboardType: TextInputType.number,
+                      onChanged: (val) {
+                        int valInt = int.parse(val.isEmpty ? '0' : val);
+                        if (valInt > 0) {
+                          if (UserHelper.isAuth()) {
+                            context.read<CartCubit>().setCartItemCount(
+                                  CartItemModel(
+                                    food: widget.food,
+                                    quantity: valInt,
+                                  ),
+                                );
+                          } else {
+                            _showRegisterDialog(
+                                context); // Показ диалога регистрации
+                          }
+                        } else {
+                          if (UserHelper.isAuth()) {
+                            context
+                                .read<CartCubit>()
+                                .removeFromCart(widget.food.id!);
+                          } else {
+                            _showRegisterDialog(
+                                context); // Показ диалога регистрации
+                          }
+                        }
+                      },
                     ),
                   ),
                   IconButton(
@@ -319,11 +269,8 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                                 CartItemModel(food: widget.food, quantity: 1),
                               );
                         } else {
-                          context.pushRoute(const SignInRoute()).then((value) {
-                            if (context.mounted) {
-                              context.read<SignInCubit>().logout();
-                            }
-                          });
+                          _showRegisterDialog(
+                              context); // Показ диалога регистрации
                         }
                       } else {
                         if (UserHelper.isAuth()) {
@@ -331,24 +278,37 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                               .read<CartCubit>()
                               .incrementCart(widget.food.id!);
                         } else {
-                          context.pushRoute(const SignInRoute()).then((value) {
-                            if (context.mounted) {
-                              context.read<SignInCubit>().logout();
-                            }
-                          });
+                          _showRegisterDialog(
+                              context); // Показ диалога регистрации
                         }
                       }
                     },
-                    icon: const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8),
-                      child: Icon(Icons.add),
-                    ),
+                    icon: const Icon(Icons.add),
                   ),
                 ],
               ),
             ),
         ],
       ),
+    );
+  }
+
+  // Функция для показа диалога регистрации
+  void _showRegisterDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return RegistrationAlertDialog(
+          onRegister: () {
+            Navigator.of(context).pop();
+            context.router
+                .push(const SignInRoute()); // Переход на экран регистрации
+          },
+          onCancel: () {
+            Navigator.of(context).pop(); // Закрытие диалога
+          },
+        );
+      },
     );
   }
 }
