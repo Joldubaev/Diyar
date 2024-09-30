@@ -35,13 +35,17 @@ class _MainPageState extends State<MainPage> {
     });
   }
 
+  // Check authentication and handle tab changes
   void _onTabTapped(int index) async {
     if (index == 3 && !UserHelper.isAuth()) {
+      // If the user tries to access Profile (index 3), show registration dialog if not authenticated
       await _showRegisterDialog(context);
       if (!UserHelper.isAuth()) {
+        // User is still not authenticated, prevent accessing Profile
         return;
       }
     }
+    // If the user is authenticated or it's not the Profile tab, update the current index
     setState(() {
       currentIndex = index;
     });
@@ -67,7 +71,10 @@ class _MainPageState extends State<MainPage> {
             currentIndex: tabsRouter.activeIndex,
             onTap: (index) {
               _onTabTapped(index);
-              tabsRouter.setActiveIndex(index);
+              // Set active tab index only if the user is authenticated or trying to access non-restricted tabs
+              if (index != 3 || UserHelper.isAuth()) {
+                tabsRouter.setActiveIndex(index);
+              }
             },
           ),
         );
@@ -75,6 +82,7 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
+  // Build Floating Action Button for the cart with authentication check
   Widget _buildFloatingActionButton(BuildContext context, ThemeData theme) {
     return StreamBuilder<List<CartItemModel>>(
       stream: cartItems,
@@ -89,6 +97,7 @@ class _MainPageState extends State<MainPage> {
           children: [
             FloatingActionButton(
               onPressed: () {
+                // Check if the user is authenticated before opening the cart
                 if (!UserHelper.isAuth()) {
                   _showRegisterDialog(context);
                 } else {
@@ -116,6 +125,7 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
+  // Helper method to build badge for cart item count
   Widget _buildBadge(ThemeData theme, int cartCount) {
     return Container(
       padding: const EdgeInsets.all(4),
@@ -138,6 +148,7 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
+  // Dialog to show registration prompt if user is not authenticated
   Future<void> _showRegisterDialog(BuildContext context) async {
     await showDialog(
       context: context,
@@ -158,6 +169,7 @@ class _MainPageState extends State<MainPage> {
   }
 }
 
+// Custom Bottom Navigation Bar with selected and unselected states
 class CustomBottomNavigationBar extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTap;

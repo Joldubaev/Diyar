@@ -9,6 +9,7 @@ import 'package:diyar/core/utils/helper/user_helper.dart';
 import 'package:diyar/features/cart/data/models/cart_item_model.dart';
 import 'package:diyar/features/cart/presentation/cubit/cart_cubit.dart';
 import 'package:diyar/shared/theme/theme.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class ProductItemContentWidget extends StatefulWidget {
   final VoidCallback? onTap;
@@ -112,6 +113,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                           Image.asset('assets/images/app_logo.png'),
                       width: double.infinity,
                       height: 110,
+                      cacheManager: customCacheManager,
                       fit: BoxFit.contain,
                     ),
                     if (isChangedCounter)
@@ -311,4 +313,14 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
       },
     );
   }
+
+  final customCacheManager = CacheManager(
+    Config(
+      'customCacheKey',
+      stalePeriod: const Duration(days: 5),
+      maxNrOfCacheObjects: 100,
+      repo: JsonCacheInfoRepository(databaseName: 'customCache'),
+      fileService: HttpFileService(),
+    ),
+  );
 }
