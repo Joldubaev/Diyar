@@ -20,7 +20,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  late UserModel user;
+  UserModel? user; // Изменяем переменную на nullable
   String version = '';
 
   @override
@@ -93,18 +93,25 @@ class _ProfilePageState extends State<ProfilePage> {
           } else if (state is ProfileGetError) {
             return Center(child: Text(context.l10n.loadedWrongData));
           } else if (state is ProfileGetLoaded) {
-            user = state.userModel;
+            user = state.userModel; // Инициализируем переменную user
           }
+
+          // Проверяем, что переменная user не равна null
+          if (user == null) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
           return SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 GestureDetector(
-                  onTap: () => context.pushRoute(ProfileInfoRoute(user: user)),
+                  onTap: () => context.pushRoute(ProfileInfoRoute(user: user!)),
                   child: ProfileTile(
                     imgPath: 'assets/icons/profile_icon.svg',
-                    text: '${user.name}',
+                    text:
+                        user!.name ?? '', // Используем безопасный доступ к user
                     isSvg: true,
                   ),
                 ),

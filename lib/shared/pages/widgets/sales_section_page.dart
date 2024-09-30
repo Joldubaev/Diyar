@@ -1,26 +1,17 @@
+// ignore_for_file: avoid-returning-widgets
+
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/features/features.dart';
-import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SalesSection extends StatefulWidget {
+class SalesSection extends StatelessWidget {
   const SalesSection({super.key});
 
   @override
-  SalesSectionState createState() => SalesSectionState();
-}
-
-class SalesSectionState extends State<SalesSection> {
-  int _currentIndex = 0;
-  List<SaleModel> sales = [];
-
-  @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return BlocBuilder<HomeFeaturesCubit, HomeFeaturesState>(
       builder: (context, state) {
         if (state is GetSalesLoading) {
@@ -28,181 +19,126 @@ class SalesSectionState extends State<SalesSection> {
         } else if (state is GetSalesError) {
           return Center(child: Text(state.message));
         } else if (state is GetSalesLoaded) {
-          sales = state.sales;
+          final sales = state.sales;
+          return sales.isEmpty
+              ? const SizedBox()
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 10),
+                    _buildSalesCarousel(sales, context),
+                    const SizedBox(height: 20),
+                  ],
+                );
         }
-        return sales.isEmpty
-            ? const SizedBox()
-            : Column(
-                children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      context.l10n.sales,
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleSmall
-                          ?.copyWith(color: theme.colorScheme.onSurface),
-                    ),
-                  ),
-                  ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(20)),
-                    child: CarouselSlider.builder(
-                      options: CarouselOptions(
-                        height: 200,
-                        autoPlay: true,
-                        enlargeCenterPage: true,
-                        viewportFraction: 1.0,
-                        onPageChanged: (index, reason) {
-                          setState(() {
-                            _currentIndex = index;
-                          });
-                        },
-                      ),
-                      itemCount: sales.length,
-                      itemBuilder: (context, index, realIndex) {
-                        return GestureDetector(
-                          onTap: () {
-                            context.pushRoute(SaleRoute(sale: sales[index]));
-                          },
-                          child: Stack(
-                            children: [
-                              CachedNetworkImage(
-                                imageUrl: sales[index].photoLink ?? '',
-                                fit: BoxFit.cover,
-                                width: double.infinity,
-                                height: 200,
-                                errorWidget: (context, url, error) {
-                                  return Image.asset(
-                                    "assets/images/app_icon.png",
-                                    fit: BoxFit.cover,
-                                  );
-                                },
-                                placeholder: (context, url) => const Center(
-                                  child: SizedBox(
-                                    width: 50,
-                                    height: 50,
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                bottom: 10,
-                                left: 10,
-                                right: 10,
-                                child: Container(
-                                  color: theme.colorScheme.onSurface
-                                      .withOpacity(0.5),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4,
-                                  ),
-                                  child: Text(
-                                    '${sales[index].name} - ${sales[index].discount}%',
-                                    style: TextStyle(
-                                      color: theme.colorScheme.onPrimary,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: sales.asMap().entries.map((entry) {
-                      return GestureDetector(
-                        onTap: () => CarouselSlider.builder(
-                          options: CarouselOptions(
-                            initialPage: entry.key,
-                            aspectRatio: 16 / 9,
-                            height: 200,
-                            autoPlay: true,
-                            enlargeCenterPage: true,
-                            viewportFraction: 1.0,
-                            onPageChanged: (index, reason) {
-                              setState(() {
-                                _currentIndex = index;
-                              });
-                            },
-                          ),
-                          itemCount: sales.length,
-                          itemBuilder: (context, index, realIndex) {
-                            return GestureDetector(
-                              onTap: () {
-                                context
-                                    .pushRoute(SaleRoute(sale: sales[index]));
-                              },
-                              child: Stack(
-                                children: [
-                                  CachedNetworkImage(
-                                    imageUrl: sales[index].photoLink ?? '',
-                                    fit: BoxFit.cover,
-                                    width: double.infinity,
-                                    height: 200,
-                                    errorWidget: (context, url, error) {
-                                      return Image.asset(
-                                        "assets/images/app_icon.png",
-                                        fit: BoxFit.cover,
-                                      );
-                                    },
-                                    placeholder: (context, url) => const Center(
-                                      child: SizedBox(
-                                        width: 50,
-                                        height: 50,
-                                        child: CircularProgressIndicator(),
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    bottom: 10,
-                                    left: 10,
-                                    right: 10,
-                                    child: Container(
-                                      color: theme.colorScheme.onSurface
-                                          .withOpacity(0.5),
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                        vertical: 4,
-                                      ),
-                                      child: Text(
-                                        '${sales[index].name} - ${sales[index].discount}%',
-                                        style: TextStyle(
-                                          color: theme.colorScheme.onPrimary,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                        child: Container(
-                          width: 8.0,
-                          height: 8.0,
-                          margin: const EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 2.0),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color:
-                                (Theme.of(context).brightness == Brightness.dark
-                                        ? theme.colorScheme.onSurface
-                                        : theme.colorScheme.onSurface)
-                                    .withOpacity(
-                                        _currentIndex == entry.key ? 0.9 : 0.4),
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ],
-              );
+        return const SizedBox();
       },
+    );
+  }
+
+  Widget _buildSalesCarousel(List<SaleModel> sales, BuildContext context) {
+    return ClipRRect(
+      borderRadius: const BorderRadius.all(Radius.circular(20)),
+      child: SizedBox(
+        height: 250,
+        child: PageView.builder(
+          itemCount: sales.length,
+          itemBuilder: (context, index) {
+            final sale = sales[index];
+            return SaleCard(sale: sale);
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class SaleCard extends StatelessWidget {
+  final SaleModel sale;
+
+  const SaleCard({super.key, required this.sale});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Stack(
+      children: [
+        _buildImage(sale.photoLink),
+        _buildTextOverlay(context, sale, theme),
+      ],
+    );
+  }
+
+  Widget _buildImage(String? photoLink) {
+    return CachedNetworkImage(
+      imageUrl: photoLink ?? '',
+      fit: BoxFit.cover,
+      width: double.infinity,
+      height: 250,
+      errorWidget: (context, url, error) => Image.asset(
+        "assets/images/app_icon.png",
+        fit: BoxFit.cover,
+      ),
+      placeholder: (context, url) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+
+  Widget _buildTextOverlay(
+      BuildContext context, SaleModel sale, ThemeData theme) {
+    return Positioned(
+      bottom: 20,
+      left: 20,
+      right: 20,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.onPrimary.withOpacity(0.8),
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              sale.name ?? '',
+              style: theme.textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: theme.colorScheme.primary,
+              ),
+            ),
+            const SizedBox(height: 5),
+            Text(
+              '${sale.discount}% скидка',
+              style: theme.textTheme.bodyLarge?.copyWith(
+                color: theme.colorScheme.onSurface,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Align(
+              alignment: Alignment.centerRight,
+              child: ElevatedButton(
+                onPressed: () {
+                  context.router.push(SaleRoute(sale: sale));
+                },
+                style: ElevatedButton.styleFrom(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                  ),
+                ),
+                child: Text(
+                  'Подробнее',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.primary,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
