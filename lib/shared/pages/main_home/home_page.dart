@@ -27,50 +27,34 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    context.read<PopularCubit>().getPopularProducts().then((_) {
-      if (mounted) {
-        context.read<CartCubit>().getCartItems().then((_) {});
-      }
-    });
-    context.read<ProfileCubit>().getUser();
-    context.read<HomeFeaturesCubit>().getSales();
+    _initializeData();
+  }
+
+  Future<void> _initializeData() async {
+    final popularCubit = context.read<PopularCubit>();
+    final cartCubit = context.read<CartCubit>();
+    final profileCubit = context.read<ProfileCubit>();
+    final homeFeaturesCubit = context.read<HomeFeaturesCubit>();
+
+    await popularCubit.getPopularProducts();
+
+    if (mounted) {
+      await cartCubit.getCartItems();
+    }
+
+    profileCubit.getUser();
+    homeFeaturesCubit.getSales();
   }
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    final theme = Theme.of(context);
-
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        title: BlocBuilder<ProfileCubit, ProfileState>(
-          builder: (context, state) {
-            return Align(
-              alignment: Alignment.centerLeft,
-              child: FittedBox(
-                child: Text(
-                  '${l10n.welcome},${context.read<ProfileCubit>().user?.name ?? 'в Дияр Экспресс'}!',
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleSmall
-                      ?.copyWith(color: AppColors.white),
-                ),
-              ),
-            );
-          },
-        ),
-      ),
+      appBar: const _HomeAppBar(),
       body: SafeArea(
         child: BlocConsumer<PopularCubit, PopularState>(
           listener: (context, state) {
             if (state is PopularError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                    content: Text(state.message),
-                    backgroundColor: theme.colorScheme.primary),
-              );
+              _showErrorSnackbar(context, state.message);
             } else if (state is PopularLoaded) {
               setState(() {
                 menu = state.products;
@@ -85,79 +69,167 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   const SalesSection(),
                   const SizedBox(height: 10),
-                  if (menu.isNotEmpty) ...[
-                    Text(
-                      l10n.popularFood,
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleSmall
-                          ?.copyWith(color: theme.colorScheme.onSurface),
-                    ),
-                    const SizedBox(height: 10),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 220,
-                      child: StreamBuilder<List<CartItemModel>>(
-                        stream: context.read<CartCubit>().cart,
-                        builder: (context, snapshot) {
-                          final cart = snapshot.data ?? [];
-                          return ListView.separated(
-                            scrollDirection: Axis.horizontal,
-                            separatorBuilder: (context, index) =>
-                                const SizedBox(width: 10),
-                            itemCount: menu.length,
-                            controller: PageController(viewportFraction: 0.6),
-                            itemBuilder: (context, index) {
-                              final food = menu[index];
-                              final cartItem = cart.firstWhere(
-                                (element) => element.food?.id == food.id,
-                                orElse: () =>
-                                    CartItemModel(food: food, quantity: 0),
-                              );
-                              return SizedBox(
-                                width: 200,
-                                child: ProductItemWidget(
-                                  food: food,
-                                  quantity: cartItem.quantity ?? 0,
-                                ),
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                  const SizedBox(height: 10),
-                  AboutUsWidget(
-                    image: 'assets/images/about.png',
-                    onTap: () => context.router.push(const AboutUsRoute()),
-                  ),
-                  const SizedBox(height: 10),
-                  NewsWidgets(
-                    subtitle: l10n.news,
-                    title: 'Дияр',
-                    image: 'assets/images/news_da.png',
-                    onTap: () => context.router.push(const NewsRoute()),
-                  ),
+                  if (menu.isNotEmpty) _PopularSection(menu: menu),
                   const SizedBox(height: 20),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.surface,
-                      borderRadius: const BorderRadius.all(Radius.circular(12)),
-                    ),
-                    child: SettingsTile(
-                      leading: const Icon(Icons.phone),
-                      text: l10n.contact,
-                      onPressed: () =>
-                          context.router.push(const ContactRoute()),
-                    ),
-                  ),
+                  const _AboutUsSection(),
+                  const SizedBox(height: 10),
+                  const _NewsSection(),
+                  const SizedBox(height: 20),
+                  const _ContactTile(),
                 ],
               ),
             );
           },
         ),
+      ),
+    );
+  }
+
+  void _showErrorSnackbar(BuildContext context, String message) {
+    final theme = Theme.of(context);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: theme.colorScheme.primary,
+      ),
+    );
+  }
+}
+
+class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const _HomeAppBar({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+
+    return AppBar(
+      automaticallyImplyLeading: false,
+      backgroundColor: theme.colorScheme.primary,
+      title: BlocBuilder<ProfileCubit, ProfileState>(
+        builder: (context, state) {
+          final userName =
+              context.read<ProfileCubit>().user?.name ?? 'в Дияр Экспресс';
+          return Align(
+            alignment: Alignment.centerLeft,
+            child: FittedBox(
+              child: Text(
+                '${l10n.welcome}, $userName!',
+                style: theme.textTheme.titleSmall
+                    ?.copyWith(color: AppColors.white),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}
+
+class _PopularSection extends StatelessWidget {
+  final List<FoodModel> menu;
+
+  const _PopularSection({Key? key, required this.menu}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final theme = Theme.of(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l10n.popularFood,
+          style: theme.textTheme.titleSmall
+              ?.copyWith(color: theme.colorScheme.onSurface),
+        ),
+        const SizedBox(height: 10),
+        SizedBox(
+          width: double.infinity,
+          height: 220,
+          child: StreamBuilder<List<CartItemModel>>(
+            stream: context.read<CartCubit>().cart,
+            builder: (context, snapshot) {
+              final cart = snapshot.data ?? [];
+              return ListView.separated(
+                scrollDirection: Axis.horizontal,
+                separatorBuilder: (context, index) => const SizedBox(width: 10),
+                itemCount: menu.length,
+                controller: PageController(viewportFraction: 0.6),
+                itemBuilder: (context, index) {
+                  final food = menu[index];
+                  final cartItem = cart.firstWhere(
+                    (element) => element.food?.id == food.id,
+                    orElse: () => CartItemModel(food: food, quantity: 0),
+                  );
+                  return SizedBox(
+                    width: 200,
+                    child: ProductItemWidget(
+                      food: food,
+                      quantity: cartItem.quantity ?? 0,
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _AboutUsSection extends StatelessWidget {
+  const _AboutUsSection({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AboutUsWidget(
+      image: 'assets/images/about.png',
+      onTap: () => context.router.push(const AboutUsRoute()),
+    );
+  }
+}
+
+class _NewsSection extends StatelessWidget {
+  const _NewsSection({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+
+    return NewsWidgets(
+      subtitle: l10n.news,
+      title: 'Дияр',
+      image: 'assets/images/news_da.png',
+      onTap: () => context.router.push(const NewsRoute()),
+    );
+  }
+}
+
+class _ContactTile extends StatelessWidget {
+  const _ContactTile({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = context.l10n;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: const BorderRadius.all(Radius.circular(12)),
+      ),
+      child: SettingsTile(
+        leading: const Icon(Icons.phone),
+        text: l10n.contact,
+        onPressed: () => context.router.push(const ContactRoute()),
       ),
     );
   }
