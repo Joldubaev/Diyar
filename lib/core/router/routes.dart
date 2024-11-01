@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/shared/constants/app_const/app_const.dart';
@@ -13,14 +15,14 @@ class AppRouter extends $AppRouter {
         AutoRoute(
           page: MainRoute.page,
           children: [
-            AutoRoute(page: HomeRoute.page, initial: true),
+            AutoRoute(page: HomeRoute.page),
             AutoRoute(page: MenuRoute.page),
             AutoRoute(page: OrderHistoryRoute.page),
             AutoRoute(page: ProfileRoute.page, guards: [AuthGuard()]),
           ],
         ),
         AutoRoute(page: SplashRoute.page, initial: true),
-        AutoRoute(page: CartRoute.page, guards: [AuthGuard()]),
+        AutoRoute(page: CartRoute.page),
         AutoRoute(page: SearchMenuRoute.page),
         AutoRoute(page: ProfileInfoRoute.page, guards: [AuthGuard()]),
         AutoRoute(page: ContactRoute.page),
@@ -45,7 +47,8 @@ class AppRouter extends $AppRouter {
         AutoRoute(page: ActiveOrderRoute.page),
         AutoRoute(page: UserOrderHistoryRoute.page),
         AutoRoute(page: UserPickupHistoryRoute.page),
-        AutoRoute(page: UserPickupDetailRoute.page)
+        AutoRoute(page: UserPickupDetailRoute.page),
+        AutoRoute(page: ProductDetailRoute.page),
       ];
 }
 
@@ -57,13 +60,22 @@ class AuthGuard extends AutoRouteGuard {
     final token = prefs.getString(AppConst.accessToken);
     final role = prefs.getString(AppConst.userRole);
 
+    log('AuthGuard: Checking token and role');
+    log('AuthGuard: Token - $token');
+    log('AuthGuard: Role - $role');
+
     if (token == null || JwtDecoder.isExpired(token)) {
+      log('AuthGuard: Session expired or token not found');
       showToast('Сессия истекла, войдите заново', isError: true);
+      resolver.next(false);
       router.push(const SignInRoute());
     } else {
-      if (role != null && role == 'Curier') {
+      if (role == 'Courier') {
+        log('AuthGuard: Redirecting to CurierRoute');
+        resolver.next(false);
         router.push(const CurierRoute());
       } else {
+        log('AuthGuard: Proceeding to the requested route');
         resolver.next(true);
       }
     }

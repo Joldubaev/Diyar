@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:diyar/features/curier/curier.dart';
 import 'package:meta/meta.dart';
@@ -8,16 +10,19 @@ class CurierCubit extends Cubit<CurierState> {
   CurierCubit(this.curierRepository) : super(CurierInitial());
 
   final CurierRepository curierRepository;
-
   GetUserModel? user;
 
   Future getUser() async {
     emit(GetUserLoading());
     try {
       user = await curierRepository.getUser();
-      emit(GetUserLoaded(user!));
+      if (user != null) {
+        emit(GetUserLoaded(user!));
+      } else {
+        emit(GetUserError('User data is null'));
+      }
     } catch (e) {
-      emit(GetUserError('Error'));
+      emit(GetUserError(e.toString()));
     }
   }
 
@@ -25,9 +30,11 @@ class CurierCubit extends Cubit<CurierState> {
     emit(GetCourierOrdersLoading());
     try {
       final curiers = await curierRepository.getCurierOrders();
+      log('Orders fetched successfully');
       emit(GetCourierOrdersLoaded(curiers));
     } catch (e) {
-      emit(GetCourierOrdersError('Error'));
+      log('Error fetching orders: ${e.toString()}');
+      emit(GetCourierOrdersError(e.toString()));
     }
   }
 
@@ -38,6 +45,7 @@ class CurierCubit extends Cubit<CurierState> {
       emit(GetFinishedOrdersLoaded());
     } catch (e) {
       emit(GetFinishedOrdersError());
+      log('Error finishing order: ${e.toString()}');
     }
   }
 
@@ -47,7 +55,7 @@ class CurierCubit extends Cubit<CurierState> {
       final curiers = await curierRepository.getCurierHistory();
       emit(GetCurierHistoryLoaded(curiers));
     } catch (e) {
-      emit(GetCurierHistoryError('Error'));
+      emit(GetCurierHistoryError(e.toString()));
     }
   }
 }
