@@ -14,7 +14,7 @@ class CustomDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    GetUserModel user = context.read<CurierCubit>().user!;
+    GetUserModel user = context.read<CurierCubit>().user ?? GetUserModel();
     return Drawer(
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
@@ -87,11 +87,11 @@ class CustomDrawer extends StatelessWidget {
                 cancelPressed: () => Navigator.pop(context),
                 confirmPressed: () {
                   context.read<SignInCubit>().logout().then((value) {
-                    if (context.mounted){
+                    if (context.mounted) {
                       context.router.pushAndPopUntil(
-                      const SignInRoute(),
-                      predicate: (_) => false,
-                    );
+                        const SignInRoute(),
+                        predicate: (_) => false,
+                      );
                     }
                   });
                 },
