@@ -14,8 +14,10 @@ class ProductItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ProductItemContentWidget(
-        food: food,
-        quantity: quantity,
-        onTap: () => context.pushRoute(ProductDetailRoute(food: food)));
+      food: food,
+      quantity: quantity,
+      onTap: () =>
+          context.pushRoute(ProductDetailRoute(food: food, quantity: quantity)),
+    );
   }
 }

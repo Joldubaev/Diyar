@@ -59,6 +59,8 @@ import 'package:diyar/features/history/presentation/pages/pickup_history/user_pi
 import 'package:diyar/features/map/presentation/user_map/order_map_page.dart'
     as _i16;
 import 'package:diyar/features/menu/presentation/pages/menu_page.dart' as _i12;
+import 'package:diyar/features/menu/presentation/pages/product_detail_page.dart'
+    as _i18;
 import 'package:diyar/features/menu/presentation/pages/search_menu_page.dart'
     as _i24;
 import 'package:diyar/features/order/presentation/pages/delivery_page.dart'
@@ -76,8 +78,6 @@ import 'package:diyar/features/sale_news/presentation/pages/sale/sale_page.dart'
     as _i23;
 import 'package:diyar/features/templates/presentation/pages/templates_page.dart'
     as _i30;
-import 'package:diyar/features/menu/presentation/pages/product_detail_page.dart'
-    as _i18;
 import 'package:diyar/shared/pages/main_home/home_page.dart' as _i10;
 import 'package:diyar/shared/pages/main_home/main_page.dart' as _i11;
 import 'package:flutter/cupertino.dart' as _i38;
@@ -216,12 +216,8 @@ abstract class $AppRouter extends _i35.RootStackRouter {
         routeData: routeData,
         child: _i18.ProductDetailPage(
           key: args.key,
-          onTap: args.onTap,
-          isShadowVisible: args.isShadowVisible,
           food: args.food,
           quantity: args.quantity,
-          isCounter: args.isCounter,
-          dataSource: args.dataSource,
         ),
       );
     },
@@ -700,23 +696,15 @@ class PickupFormRouteArgs {
 class ProductDetailRoute extends _i35.PageRouteInfo<ProductDetailRouteArgs> {
   ProductDetailRoute({
     _i36.Key? key,
-    void Function()? onTap,
-    bool isShadowVisible = true,
     required _i40.FoodModel food,
-    int quantity = 1,
-    bool isCounter = true,
-    _i40.MenuRemoteDataSource? dataSource,
+    int? quantity,
     List<_i35.PageRouteInfo>? children,
   }) : super(
           ProductDetailRoute.name,
           args: ProductDetailRouteArgs(
             key: key,
-            onTap: onTap,
-            isShadowVisible: isShadowVisible,
             food: food,
             quantity: quantity,
-            isCounter: isCounter,
-            dataSource: dataSource,
           ),
           initialChildren: children,
         );
@@ -730,31 +718,19 @@ class ProductDetailRoute extends _i35.PageRouteInfo<ProductDetailRouteArgs> {
 class ProductDetailRouteArgs {
   const ProductDetailRouteArgs({
     this.key,
-    this.onTap,
-    this.isShadowVisible = true,
     required this.food,
-    this.quantity = 1,
-    this.isCounter = true,
-    this.dataSource,
+    this.quantity,
   });
 
   final _i36.Key? key;
 
-  final void Function()? onTap;
-
-  final bool isShadowVisible;
-
   final _i40.FoodModel food;
 
-  final int quantity;
-
-  final bool isCounter;
-
-  final _i40.MenuRemoteDataSource? dataSource;
+  final int? quantity;
 
   @override
   String toString() {
-    return 'ProductDetailRouteArgs{key: $key, onTap: $onTap, isShadowVisible: $isShadowVisible, food: $food, quantity: $quantity, isCounter: $isCounter, dataSource: $dataSource}';
+    return 'ProductDetailRouteArgs{key: $key, food: $food, quantity: $quantity}';
   }
 }
 

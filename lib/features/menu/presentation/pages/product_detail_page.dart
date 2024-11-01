@@ -1,27 +1,25 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:diyar/core/custom_dialog/custom_dialog.dart';
+import 'package:diyar/core/router/routes.gr.dart';
+import 'package:diyar/core/utils/helper/user_helper.dart';
+import 'package:diyar/features/cart/data/models/cart_item_model.dart';
+import 'package:diyar/features/cart/presentation/cubit/cart_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:diyar/shared/theme/app_colors.dart';
 import 'package:diyar/features/features.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 @RoutePage()
 class ProductDetailPage extends StatelessWidget {
-  final VoidCallback? onTap;
-  final bool isCounter;
-  final bool isShadowVisible;
-  final int quantity;
+  final int? quantity;
   final FoodModel food;
-  final MenuRemoteDataSource? dataSource;
 
   const ProductDetailPage({
-    Key? key,
-    this.onTap,
-    this.isShadowVisible = true,
+    super.key,
     required this.food,
-    this.quantity = 1,
-    this.isCounter = true,
-    this.dataSource,
-  }) : super(key: key);
+    this.quantity,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -47,12 +45,75 @@ class ProductDetailPage extends StatelessWidget {
       backgroundColor: theme.colorScheme.surface,
       body: SafeArea(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ProductImage(food: food),
             const SizedBox(height: 10),
             ProductName(food: food),
             ProductWeightAndPrice(food: food),
             ProductDescription(food: food),
+            StreamBuilder<List<CartItemModel>>(
+              stream: context.read<CartCubit>().cart,
+              builder: (context, snapshot) {
+                List cart = [];
+                if (snapshot.hasData) {
+                  cart = snapshot.data ?? [];
+                }
+
+                final cartItem = cart.firstWhere(
+                  (element) => element.food?.id == food.id,
+                  orElse: () => CartItemModel(food: food, quantity: 0),
+                );
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.remove),
+                      onPressed: () {
+                        if (quantity! > 1) {
+                          if (UserHelper.isAuth()) {
+                            context.read<CartCubit>().decrementCart(food.id!);
+                          } else {
+                            _showRegisterDialog(context);
+                          }
+                        } else {
+                          if (UserHelper.isAuth()) {
+                            context.read<CartCubit>().removeFromCart(food.id!);
+                          } else {
+                            _showRegisterDialog(context);
+                          }
+                        }
+                      },
+                    ),
+                    Text(
+                      "${cartItem.quantity}",
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.add),
+                      onPressed: () {
+                        if (quantity == 0) {
+                          if (UserHelper.isAuth()) {
+                            context.read<CartCubit>().addToCart(
+                                  CartItemModel(food: food, quantity: 1),
+                                );
+                          } else {
+                            _showRegisterDialog(context);
+                          }
+                        } else {
+                          if (UserHelper.isAuth()) {
+                            context.read<CartCubit>().incrementCart(food.id!);
+                          } else {
+                            _showRegisterDialog(context);
+                          }
+                        }
+                      },
+                    ),
+                  ],
+                );
+              },
+            ),
           ],
         ),
       ),
@@ -161,4 +222,21 @@ class ProductDescription extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showRegisterDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return RegistrationAlertDialog(
+        onRegister: () {
+          Navigator.of(context).pop();
+          context.router.push(const SignInRoute());
+        },
+        onCancel: () {
+          Navigator.of(context).pop();
+        },
+      );
+    },
+  );
 }
