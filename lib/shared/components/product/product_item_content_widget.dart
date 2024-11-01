@@ -207,8 +207,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                               .read<CartCubit>()
                               .decrementCart(widget.food.id!);
                         } else {
-                          _showRegisterDialog(
-                              context); // Показ диалога регистрации
+                          _showRegisterDialog(context);
                         }
                       } else {
                         if (UserHelper.isAuth()) {
@@ -216,8 +215,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                               .read<CartCubit>()
                               .removeFromCart(widget.food.id!);
                         } else {
-                          _showRegisterDialog(
-                              context); // Показ диалога регистрации
+                          _showRegisterDialog(context);
                         }
                       }
                     },
@@ -245,8 +243,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                                   ),
                                 );
                           } else {
-                            _showRegisterDialog(
-                                context); // Показ диалога регистрации
+                            _showRegisterDialog(context);
                           }
                         } else {
                           if (UserHelper.isAuth()) {
@@ -254,8 +251,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                                 .read<CartCubit>()
                                 .removeFromCart(widget.food.id!);
                           } else {
-                            _showRegisterDialog(
-                                context); // Показ диалога регистрации
+                            _showRegisterDialog(context);
                           }
                         }
                       },
@@ -271,8 +267,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                                 CartItemModel(food: widget.food, quantity: 1),
                               );
                         } else {
-                          _showRegisterDialog(
-                              context); // Показ диалога регистрации
+                          _showRegisterDialog(context);
                         }
                       } else {
                         if (UserHelper.isAuth()) {
@@ -280,8 +275,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                               .read<CartCubit>()
                               .incrementCart(widget.food.id!);
                         } else {
-                          _showRegisterDialog(
-                              context); // Показ диалога регистрации
+                          _showRegisterDialog(context);
                         }
                       }
                     },
@@ -295,7 +289,6 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
     );
   }
 
-  // Функция для показа диалога регистрации
   void _showRegisterDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -303,11 +296,10 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
         return RegistrationAlertDialog(
           onRegister: () {
             Navigator.of(context).pop();
-            context.router
-                .push(const SignInRoute()); // Переход на экран регистрации
+            context.router.push(const SignInRoute());
           },
           onCancel: () {
-            Navigator.of(context).pop(); // Закрытие диалога
+            Navigator.of(context).pop();
           },
         );
       },
