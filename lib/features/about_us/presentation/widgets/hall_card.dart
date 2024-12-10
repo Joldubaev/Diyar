@@ -23,7 +23,12 @@ class HallCardWidget extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          Image.asset(imagePath, fit: BoxFit.cover),
+          Image.asset(
+            imagePath,
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: 200,
+          ),
           Positioned(
             bottom: 0,
             left: 0,

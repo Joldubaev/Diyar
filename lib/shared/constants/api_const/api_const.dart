@@ -71,4 +71,8 @@ class ApiConst {
       "$baseUrl/courier/get-actual-orders-by-courier";
   static const getCuriereOrderHistory =
       "$baseUrl/courier/get-closed-orders-by-courier";
+
+
+  // DISTRICTS
+  static const getDistricts = "$baseUrl/districts/get-all-districts";
 }

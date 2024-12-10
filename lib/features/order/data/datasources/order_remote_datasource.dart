@@ -1,8 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:diyar/core/error/failure.dart';
 import 'package:diyar/features/order/data/data.dart';
+import 'package:diyar/features/order/data/models/distric_model.dart';
 import 'package:diyar/shared/constants/constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,6 +15,7 @@ abstract class OrderRemoteDataSource {
   Future<List<String>> getOrderHistory();
   Future<void> createOrder(CreateOrderModel order);
   Future<void> getPickupOrder(PickupOrderModel order);
+  Future<Either<Failure, List<DistricModel>>> getDistricts();
   Future<LocationModel> getGeoSuggestions({required String query});
 }
 
@@ -107,6 +111,41 @@ class OrderRemoteDataSourceImpl extends OrderRemoteDataSource {
       }
     } catch (e) {
       throw Exception(e);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<DistricModel>>> getDistricts() async {
+    try {
+      final res = await _dio.get(
+        ApiConst.getDistricts,
+        options: Options(
+          headers: ApiConst.authMap(
+            _prefs.getString(AppConst.accessToken) ?? '',
+          ),
+        ),
+      );
+
+      if (res.statusCode == 200) {
+        log('Response: ${res.data}');
+
+        if (res.data is List) {
+          final districts = List<DistricModel>.from(
+            res.data.map((x) => DistricModel.fromJson(x)),
+          );
+          return Right(districts);
+        } else {
+          log('Unexpected data format: ${res.data}');
+          return const Left(ServerFailure('Unexpected data format'));
+        }
+      } else {
+        log('Error Message: ${res.data['message']}');
+        return Left(ServerFailure(res.data['message'] ?? 'Unknown error'));
+      }
+    } catch (e, stacktrace) {
+      log('Exception: $e');
+      log('Stacktrace: $stacktrace');
+      return const Left(ServerFailure('Failed to fetch districts'));
     }
   }
 }

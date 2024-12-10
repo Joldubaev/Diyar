@@ -26,6 +26,7 @@ class CreateOrderModel {
   String? userPhone;
   int? deliveryPrice;
   int? sdacha;
+  String ? region;
 
   CreateOrderModel({
     this.address,
@@ -43,6 +44,7 @@ class CreateOrderModel {
     this.userPhone,
     this.deliveryPrice,
     this.sdacha,
+    this.region
   });
 
   factory CreateOrderModel.fromJson(Map<String, dynamic> json) =>
@@ -65,6 +67,7 @@ class CreateOrderModel {
         userPhone: json["userPhone"],
         deliveryPrice: json["deliveryPrice"],
         sdacha: json["sdacha"],
+        region: json["region"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -85,6 +88,7 @@ class CreateOrderModel {
         "userPhone": userPhone,
         "deliveryPrice": deliveryPrice,
         "sdacha": sdacha,
+        "region": region
       };
 }
 

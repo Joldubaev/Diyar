@@ -1,7 +1,6 @@
-import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
 import 'package:diyar/features/features.dart';
+import 'package:diyar/features/order/data/models/distric_model.dart';
 import 'package:equatable/equatable.dart';
 
 part 'order_state.dart';
@@ -32,6 +31,23 @@ class OrderCubit extends Cubit<OrderState> {
     emit(SelectDeliveryPriceLoaded(deliveryPrice: price));
   }
 
+  Future getDistricts() async {
+    emit(DistricLoading());
+    try {
+      final result = await _orderRepository.getDistricts();
+      result.fold(
+        (error) => emit(DistricError(
+          message: error.message,
+        )),
+        (districts) => emit(DistricLoaded(districts)),
+      );
+    } catch (e) {
+      emit(DistricError(
+        message: e.toString(),
+      ));
+    }
+  }
+
   Future createOrder(CreateOrderModel order) async {
     emit(CreateOrderLoading());
     try {
@@ -46,7 +62,6 @@ class OrderCubit extends Cubit<OrderState> {
     emit(CreateOrderLoading());
     try {
       await _orderRepository.getPickupOrder(order);
-      log('getPickupOrder success $_orderRepository');
       emit(CreateOrderLoaded());
     } catch (e) {
       emit(CreateOrderError());

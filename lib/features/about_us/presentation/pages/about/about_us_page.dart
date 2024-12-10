@@ -94,6 +94,8 @@ class _AboutUsBodyState extends State<AboutUsBody> {
                   context.router.push(const RestorantRoute());
                 } else if (type == AboutUsType.vip) {
                   context.router.push(const VipRoute());
+                } else if (type == AboutUsType.terasa) {
+                  context.router.push(const TerasaRoute());
                 }
               },
             );
