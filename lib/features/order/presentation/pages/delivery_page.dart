@@ -1,28 +1,31 @@
 import 'dart:developer';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/features.dart';
-import 'package:diyar/features/order/presentation/widgets/custom_dialog_widget.dart';
+import 'package:diyar/features/order/data/models/distric_model.dart';
 import 'package:diyar/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 @RoutePage()
 class DeliveryFormPage extends StatefulWidget {
   final List<CartItemModel> cart;
   final int totalPrice;
   final int dishCount;
-  const DeliveryFormPage(
-      {super.key,
-      required this.cart,
-      required this.dishCount,
-      required this.totalPrice});
+  final DistricModel? distric;
+  final String? address;
 
+  const DeliveryFormPage({
+    super.key,
+    this.distric,
+    this.address,
+    required this.cart,
+    required this.dishCount,
+    required this.totalPrice,
+  });
   @override
   State<DeliveryFormPage> createState() => _DeliveryFormPageState();
 }
@@ -45,6 +48,8 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
 
   @override
   void initState() {
+    _addressController.text = widget.address ?? '';
+    log('Address: ${widget.address}');
     context.read<ProfileCubit>().getUser();
     super.initState();
   }
@@ -117,11 +122,16 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
           },
           builder: (context, state) {
             var deliveryPrice = context.read<OrderCubit>().deliveryPrice;
-            final totalOrderCost = widget.totalPrice + deliveryPrice;
+
+            final totalOrderCost = widget.distric != null
+                ? widget.distric!.price! + widget.totalPrice
+                : widget.totalPrice + deliveryPrice;
             if (deliveryPrice == 0) {
               deliveryPrice = 550;
             }
-            if (!context.read<OrderCubit>().isAddressSearch) {
+            if (widget.address != null) {
+              _addressController.text = widget.address!;
+            } else if (!context.read<OrderCubit>().isAddressSearch) {
               _addressController.text = context.read<OrderCubit>().address;
             }
             log(_addressController.text);
@@ -142,157 +152,21 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                   },
                 ),
               ),
-              body: Form(
-                key: _formKey,
-                child: ListView(
-                  padding: const EdgeInsets.all(20),
-                  children: [
-                    CustomInputWidget(
-                        titleColor: theme.colorScheme.onSurface,
-                        filledColor: theme.colorScheme.surface,
-                        controller: _userName,
-                        hintText: context.l10n.yourName,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return context.l10n.pleaseEnterName;
-                          } else if (value.length < 3) {
-                            return context.l10n.pleaseEnterCorrectName;
-                          }
-                          return null;
-                        }),
-                    const SizedBox(height: 10),
-                    PhoneNumberMask(
-                      hintText: '+996 (___) __-__-__',
-                      textController: _phoneController,
-                      hint: context.l10n.phone,
-                      formatter:
-                          MaskTextInputFormatter(mask: "+996 (###) ##-##-##"),
-                      textInputType: TextInputType.phone,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return context.l10n.pleaseEnterPhone;
-                        } else if (value.length < 10) {
-                          return context.l10n.pleaseEnterCorrectPhone;
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    CustomInputWidget(
-                      titleColor: theme.colorScheme.onSurface,
-                      filledColor: theme.colorScheme.surface,
-                      inputType: TextInputType.text,
-                      hintText: context.l10n.adress,
-                      controller: _addressController,
-                      isReadOnly: true,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return context.l10n.pleaseEnterAddress;
-                        } else if (value.length < 3) {
-                          return context.l10n.pleaseEnterCorrectAddress;
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    CustomInputWidget(
-                        titleColor: theme.colorScheme.onSurface,
-                        filledColor: theme.colorScheme.surface,
-                        inputType: TextInputType.text,
-                        controller: _houseController,
-                        hintText: context.l10n.houseNumber,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return context.l10n.pleaseEnterHouseNumber;
-                          }
-                          return null;
-                        }),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: CustomInputWidget(
-                            titleColor: theme.colorScheme.onSurface,
-                            filledColor: theme.colorScheme.surface,
-                            inputType: TextInputType.text,
-                            controller: _entranceController,
-                            hintText: 'Подъезд',
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: CustomInputWidget(
-                            titleColor: theme.colorScheme.onSurface,
-                            filledColor: theme.colorScheme.surface,
-                            inputType: TextInputType.text,
-                            controller: _floorController,
-                            hintText: context.l10n.floor,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: CustomInputWidget(
-                            titleColor: theme.colorScheme.onSurface,
-                            filledColor: theme.colorScheme.surface,
-                            inputType: TextInputType.text,
-                            controller: _apartmentController,
-                            hintText: context.l10n.ofice,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: CustomInputWidget(
-                            titleColor: theme.colorScheme.onSurface,
-                            filledColor: theme.colorScheme.surface,
-                            inputType: TextInputType.text,
-                            controller: _intercomController,
-                            hintText: context.l10n.codeIntercom,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    CustomInputWidget(
-                      titleColor: theme.colorScheme.onSurface,
-                      filledColor: theme.colorScheme.surface,
-                      inputType: TextInputType.number,
-                      controller: _sdachaController,
-                      hintText: context.l10n.change,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return context.l10n.confirmOrder;
-                        } else if (value.length < 2) {
-                          return context.l10n.confirmOrder;
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    CustomInputWidget(
-                        titleColor: theme.colorScheme.onSurface,
-                        filledColor: theme.colorScheme.surface,
-                        controller: _commentController,
-                        hintText: context.l10n.comment,
-                        validator: (val) => null,
-                        maxLines: 3),
-                    const SizedBox(height: 20),
-                    Card(
-                      color: theme.colorScheme.primary,
-                      child: ListTile(
-                          title: Text('Сумма заказа $totalOrderCost сом',
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: theme.colorScheme.onTertiaryFixed,
-                                  fontWeight: FontWeight.w500)),
-                          trailing: Icon(Icons.arrow_forward_ios,
-                              color: theme.colorScheme.onTertiaryFixed),
-                          onTap: _onSubmit),
-                    ),
-                  ],
-                ),
+              body: DeliveryFormWidget(
+                formKey: _formKey,
+                theme: theme,
+                userName: _userName,
+                phoneController: _phoneController,
+                addressController: _addressController,
+                houseController: _houseController,
+                entranceController: _entranceController,
+                floorController: _floorController,
+                apartmentController: _apartmentController,
+                intercomController: _intercomController,
+                sdachaController: _sdachaController,
+                commentController: _commentController,
+                totalOrderCost: totalOrderCost,
+                onConfirm: () => _onSubmit(),
               ),
             );
           },
@@ -311,7 +185,9 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
         deliveryPrice = 550;
       }
 
-      final totalOrderCost = widget.totalPrice + deliveryPrice;
+      final totalOrderCost = widget.distric != null
+          ? widget.distric!.price! + widget.totalPrice
+          : widget.totalPrice + deliveryPrice;
       final sdacha = int.tryParse(_sdachaController.text) ?? 0;
 
       if (sdacha < totalOrderCost) {
@@ -332,93 +208,23 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
         useSafeArea: true,
         isScrollControlled: true,
         builder: (context) {
-          return DraggableScrollableSheet(
-            initialChildSize: 0.35,
-            minChildSize: 0.35,
-            expand: false,
-            maxChildSize: 0.35,
-            builder: (BuildContext context, scrollController) {
-              return SizedBox(
-                height: MediaQuery.of(context).size.height * 0.35,
-                child: ListView(
-                  padding: const EdgeInsets.all(20),
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          context.l10n.orderConfirmation,
-                          style: theme.textTheme.bodyLarge!
-                              .copyWith(color: theme.colorScheme.onSurface),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.close),
-                          onPressed: () => context.maybePop(),
-                        ),
-                      ],
-                    ),
-                    CustomDialogWidget(
-                      title: context.l10n.orderAmount,
-                      description: '${widget.totalPrice} сом',
-                    ),
-                    CustomDialogWidget(
-                      title: context.l10n.deliveryCost,
-                      description: '$deliveryPrice сом',
-                    ),
-                    const Divider(),
-                    CustomDialogWidget(
-                      title: context.l10n.total,
-                      description: '$totalOrderCost сом',
-                    ),
-                    const SizedBox(height: 15),
-                    BlocBuilder<OrderCubit, OrderState>(
-                      builder: (context, state) {
-                        return SubmitButtonWidget(
-                          textStyle: theme.textTheme.bodyMedium!
-                              .copyWith(color: theme.colorScheme.onPrimary),
-                          title: context.l10n.confirm,
-                          bgColor: AppColors.green,
-                          isLoading: state is CreateOrderLoading,
-                          onTap: () {
-                            context
-                                .read<OrderCubit>()
-                                .createOrder(CreateOrderModel(
-                                  userPhone: _phoneController.text,
-                                  userName: _userName.text,
-                                  address: _addressController.text,
-                                  comment: _commentController.text,
-                                  price: widget.totalPrice,
-                                  deliveryPrice: deliveryPrice,
-                                  houseNumber: _houseController.text,
-                                  kvOffice: _apartmentController.text,
-                                  intercom: _intercomController.text,
-                                  floor: _floorController.text,
-                                  entrance: _entranceController.text,
-                                  paymentMethod: _paymentType.name,
-                                  dishesCount: widget.dishCount,
-                                  sdacha: sdacha,
-                                  foods: widget.cart
-                                      .map((e) => OrderFoodItem(
-                                            name: e.food?.name ?? '',
-                                            price: e.food?.price ?? 0,
-                                            quantity: e.quantity ?? 1,
-                                          ))
-                                      .toList(),
-                                ))
-                                .then((value) {
-                              if (context.mounted) {
-                                context.read<CartCubit>().clearCart();
-                                context.read<CartCubit>().dishCount = 0;
-                              }
-                            });
-                          },
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              );
-            },
+          return CustomBottomSheet(
+            region: widget.distric!.name ?? '',
+            theme: theme,
+            widget: widget,
+            deliveryPrice: deliveryPrice,
+            totalOrderCost: totalOrderCost,
+            phoneController: _phoneController,
+            userName: _userName,
+            addressController: _addressController,
+            commentController: _commentController,
+            houseController: _houseController,
+            apartmentController: _apartmentController,
+            intercomController: _intercomController,
+            floorController: _floorController,
+            entranceController: _entranceController,
+            paymentType: _paymentType,
+            sdacha: sdacha,
           );
         },
       );
@@ -432,5 +238,3 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
     }
   }
 }
-
-enum PaymentTypeDelivery { cash, card, online }

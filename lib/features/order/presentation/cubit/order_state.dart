@@ -38,3 +38,21 @@ class CreateOrderLoading extends OrderState {}
 class CreateOrderLoaded extends OrderState {}
 
 class CreateOrderError extends OrderState {}
+
+class DistricLoading extends OrderState {}
+
+class DistricLoaded extends OrderState {
+  final List<DistricModel> districts; // Теперь это список
+
+  const DistricLoaded(this.districts);
+
+  @override
+  List<Object> get props => [districts];
+}
+
+
+class DistricError extends OrderState {
+  final String message;
+
+  const DistricError({required this.message});
+}

@@ -19,10 +19,28 @@ class CartPage extends StatefulWidget {
 
 class CartPageState extends State<CartPage>
     with SingleTickerProviderStateMixin {
+  List<CartItemModel> carts = [];
+  int totalPrice = 0;
+  int dishCount = 0;
   @override
   void initState() {
     context.read<CartCubit>().getCartItems();
     super.initState();
+    _updateCartData();
+  }
+
+  void _updateCartData() {
+    context.read<CartCubit>().cart.listen((data) {
+      setState(() {
+        carts = data;
+        totalPrice = carts.fold(
+          0,
+          (prevValue, element) =>
+              prevValue + (element.food?.price ?? 0) * (element.quantity ?? 0),
+        );
+        dishCount = carts.length;
+      });
+    });
   }
 
   @override
@@ -30,14 +48,30 @@ class CartPageState extends State<CartPage>
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios, color: AppColors.white),
-            onPressed: () => context.maybePop(),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: AppColors.white),
+          onPressed: () => context.maybePop(),
+        ),
+        title: Text(
+          context.l10n.cart,
+          style: theme.textTheme.titleSmall?.copyWith(color: AppColors.white),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.delivery_dining,
+              size: 30,
+              color: AppColors.white,
+            ),
+            onPressed: carts.isNotEmpty
+                ? () {
+                    getDistricts(context, carts, totalPrice, dishCount);
+                  }
+                : null,
           ),
-          title: Text(context.l10n.cart,
-              style: theme.textTheme.titleSmall
-                  ?.copyWith(color: AppColors.white))),
+        ],
+      ),
       body: StreamBuilder<List<CartItemModel>>(
         stream: context.read<CartCubit>().cart,
         builder: (context, snapshot) {
@@ -62,6 +96,7 @@ class CartPageState extends State<CartPage>
                                     (element.quantity ?? 0)) *
                         0.9)
                     .toInt();
+
             return Padding(
               padding: const EdgeInsets.all(10.0),
               child: CustomScrollView(
@@ -129,6 +164,17 @@ class CartPageState extends State<CartPage>
             return const CartEmptyWidget();
           }
         },
+      ),
+    );
+  }
+
+  void getDistricts(BuildContext context, List<CartItemModel> carts,
+      int totalPrice, int dishCount) {
+    context.router.push(
+      SecondOrderRoute(
+        totalPrice: totalPrice,
+        cart: carts,
+        dishCount: dishCount,
       ),
     );
   }
