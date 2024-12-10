@@ -66,8 +66,8 @@ class _SecondOrderPageState extends State<SecondOrderPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Пожалуйста, выберите район и напишите адрес',
-                      style: theme.textTheme.titleLarge,
+                      'Выберите район и напишите адрес, чтобы мы знали, куда доставить ваш заказ.',
+                      style: theme.textTheme.titleMedium,
                     ),
                     const SizedBox(height: 24),
                     Text('Район', style: theme.textTheme.bodyLarge?.copyWith()),
@@ -76,15 +76,18 @@ class _SecondOrderPageState extends State<SecondOrderPage> {
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey[300]!),
                         color: Colors.grey[200],
                         borderRadius:
                             const BorderRadius.all(Radius.circular(8)),
                       ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<DistricModel>(
+                          style: theme.textTheme.bodyLarge,
                           isExpanded: true,
                           value: selectedDistrict,
-                          hint: const Text('Выберите район'),
+                          hint: Text('Выберите район',
+                              style: theme.textTheme.bodyLarge),
                           items: districts
                               .map(
                                 (district) => DropdownMenuItem<DistricModel>(
@@ -93,7 +96,8 @@ class _SecondOrderPageState extends State<SecondOrderPage> {
                                       '${district.name} (${district.price} сом)',
                                       style:
                                           theme.textTheme.bodyLarge!.copyWith(
-                                        fontWeight: FontWeight.w600,
+                                        color: theme.colorScheme.onSurface,
+                                        fontWeight: FontWeight.w500,
                                       )),
                                 ),
                               )
@@ -115,6 +119,8 @@ class _SecondOrderPageState extends State<SecondOrderPage> {
                     CustomInputWidget(
                       controller: addressController,
                       hintText: 'Введите адрес доставки',
+                      titleColor: theme.colorScheme.onSurface,
+                      filledColor: theme.colorScheme.surface,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'Пожалуйста, введите адрес доставки';
