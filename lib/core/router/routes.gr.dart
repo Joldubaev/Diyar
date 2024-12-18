@@ -88,280 +88,6 @@ import 'package:diyar/shared/pages/main_home/main_page.dart' as _i11;
 import 'package:flutter/cupertino.dart' as _i41;
 import 'package:flutter/material.dart' as _i38;
 
-abstract class $AppRouter extends _i37.RootStackRouter {
-  $AppRouter({super.navigatorKey});
-
-  @override
-  final Map<String, _i37.PageFactory> pagesMap = {
-    AboutUsRoute.name: (routeData) {
-      return _i37.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const _i1.AboutUsPage(),
-      );
-    },
-    ActiveOrderRoute.name: (routeData) {
-      return _i37.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const _i2.ActiveOrderPage(),
-      );
-    },
-    CartRoute.name: (routeData) {
-      return _i37.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const _i3.CartPage(),
-      );
-    },
-    CofeRoute.name: (routeData) {
-      return _i37.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const _i4.CofePage(),
-      );
-    },
-    ContactRoute.name: (routeData) {
-      return _i37.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const _i5.ContactPage(),
-      );
-    },
-    CurierRoute.name: (routeData) {
-      return _i37.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const _i6.CurierPage(),
-      );
-    },
-    DeliveryFormRoute.name: (routeData) {
-      final args = routeData.argsAs<DeliveryFormRouteArgs>();
-      return _i37.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: _i7.DeliveryFormPage(
-          key: args.key,
-          distric: args.distric,
-          address: args.address,
-          cart: args.cart,
-          dishCount: args.dishCount,
-          totalPrice: args.totalPrice,
-        ),
-      );
-    },
-    HallRoute.name: (routeData) {
-      return _i37.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const _i8.HallPage(),
-      );
-    },
-    HistoryRoute.name: (routeData) {
-      return _i37.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const _i9.HistoryPage(),
-      );
-    },
-    HomeRoute.name: (routeData) {
-      return _i37.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const _i10.HomePage(),
-      );
-    },
-    MainRoute.name: (routeData) {
-      return _i37.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const _i11.MainPage(),
-      );
-    },
-    MenuRoute.name: (routeData) {
-      return _i37.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const _i12.MenuPage(),
-      );
-    },
-    NewsRoute.name: (routeData) {
-      return _i37.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const _i13.NewsPage(),
-      );
-    },
-    OrderDetailRoute.name: (routeData) {
-      final args = routeData.argsAs<OrderDetailRouteArgs>();
-      return _i37.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: _i14.OrderDetailPage(
-          key: args.key,
-          orderNumber: args.orderNumber,
-        ),
-      );
-    },
-    OrderHistoryRoute.name: (routeData) {
-      return _i37.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const _i15.OrderHistoryPage(),
-      );
-    },
-    OrderMapRoute.name: (routeData) {
-      final args = routeData.argsAs<OrderMapRouteArgs>();
-      return _i37.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: _i16.OrderMapPage(
-          key: args.key,
-          cart: args.cart,
-          totalPrice: args.totalPrice,
-        ),
-      );
-    },
-    PickupFormRoute.name: (routeData) {
-      final args = routeData.argsAs<PickupFormRouteArgs>();
-      return _i37.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: _i17.PickupFormPage(
-          key: args.key,
-          cart: args.cart,
-          totalPrice: args.totalPrice,
-        ),
-      );
-    },
-    ProductDetailRoute.name: (routeData) {
-      final args = routeData.argsAs<ProductDetailRouteArgs>();
-      return _i37.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: _i18.ProductDetailPage(
-          key: args.key,
-          food: args.food,
-          quantity: args.quantity,
-        ),
-      );
-    },
-    ProfileInfoRoute.name: (routeData) {
-      final args = routeData.argsAs<ProfileInfoRouteArgs>();
-      return _i37.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: _i19.ProfileInfoPage(
-          key: args.key,
-          user: args.user,
-        ),
-      );
-    },
-    ProfileRoute.name: (routeData) {
-      return _i37.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const _i20.ProfilePage(),
-      );
-    },
-    RessetPasswordRoute.name: (routeData) {
-      return _i37.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const _i21.RessetPasswordPage(),
-      );
-    },
-    RestorantRoute.name: (routeData) {
-      return _i37.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const _i22.RestorantPage(),
-      );
-    },
-    SaleRoute.name: (routeData) {
-      final args =
-          routeData.argsAs<SaleRouteArgs>(orElse: () => const SaleRouteArgs());
-      return _i37.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: _i23.SalePage(
-          key: args.key,
-          sale: args.sale,
-        ),
-      );
-    },
-    SearchMenuRoute.name: (routeData) {
-      return _i37.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const _i24.SearchMenuPage(),
-      );
-    },
-    SecondOrderRoute.name: (routeData) {
-      final args = routeData.argsAs<SecondOrderRouteArgs>();
-      return _i37.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: _i25.SecondOrderPage(
-          key: args.key,
-          cart: args.cart,
-          dishCount: args.dishCount,
-          totalPrice: args.totalPrice,
-        ),
-      );
-    },
-    SignInRoute.name: (routeData) {
-      return _i37.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const _i26.SignInPage(),
-      );
-    },
-    SignUpOtpRoute.name: (routeData) {
-      final args = routeData.argsAs<SignUpOtpRouteArgs>();
-      return _i37.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: _i27.SignUpOtpPage(
-          key: args.key,
-          user: args.user,
-        ),
-      );
-    },
-    SignUpRoute.name: (routeData) {
-      return _i37.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const _i28.SignUpPage(),
-      );
-    },
-    SignUpSucces.name: (routeData) {
-      return _i37.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const _i29.SignUpSucces(),
-      );
-    },
-    SplashRoute.name: (routeData) {
-      return _i37.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const _i30.SplashScreen(),
-      );
-    },
-    TemplatesRoute.name: (routeData) {
-      return _i37.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const _i31.TemplatesPage(),
-      );
-    },
-    TerasaRoute.name: (routeData) {
-      return _i37.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const _i32.TerasaPage(),
-      );
-    },
-    UserOrderHistoryRoute.name: (routeData) {
-      return _i37.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const _i33.UserOrderHistoryPage(),
-      );
-    },
-    UserPickupDetailRoute.name: (routeData) {
-      final args = routeData.argsAs<UserPickupDetailRouteArgs>();
-      return _i37.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: _i34.UserPickupDetailPage(
-          key: args.key,
-          order: args.order,
-        ),
-      );
-    },
-    UserPickupHistoryRoute.name: (routeData) {
-      return _i37.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const _i35.UserPickupHistoryPage(),
-      );
-    },
-    VipRoute.name: (routeData) {
-      return _i37.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const _i36.VipPage(),
-      );
-    },
-  };
-}
-
 /// generated route for
 /// [_i1.AboutUsPage]
 class AboutUsRoute extends _i37.PageRouteInfo<void> {
@@ -373,7 +99,12 @@ class AboutUsRoute extends _i37.PageRouteInfo<void> {
 
   static const String name = 'AboutUsRoute';
 
-  static const _i37.PageInfo<void> page = _i37.PageInfo<void>(name);
+  static _i37.PageInfo page = _i37.PageInfo(
+    name,
+    builder: (data) {
+      return const _i1.AboutUsPage();
+    },
+  );
 }
 
 /// generated route for
@@ -387,7 +118,12 @@ class ActiveOrderRoute extends _i37.PageRouteInfo<void> {
 
   static const String name = 'ActiveOrderRoute';
 
-  static const _i37.PageInfo<void> page = _i37.PageInfo<void>(name);
+  static _i37.PageInfo page = _i37.PageInfo(
+    name,
+    builder: (data) {
+      return const _i2.ActiveOrderPage();
+    },
+  );
 }
 
 /// generated route for
@@ -401,7 +137,12 @@ class CartRoute extends _i37.PageRouteInfo<void> {
 
   static const String name = 'CartRoute';
 
-  static const _i37.PageInfo<void> page = _i37.PageInfo<void>(name);
+  static _i37.PageInfo page = _i37.PageInfo(
+    name,
+    builder: (data) {
+      return const _i3.CartPage();
+    },
+  );
 }
 
 /// generated route for
@@ -415,7 +156,12 @@ class CofeRoute extends _i37.PageRouteInfo<void> {
 
   static const String name = 'CofeRoute';
 
-  static const _i37.PageInfo<void> page = _i37.PageInfo<void>(name);
+  static _i37.PageInfo page = _i37.PageInfo(
+    name,
+    builder: (data) {
+      return const _i4.CofePage();
+    },
+  );
 }
 
 /// generated route for
@@ -429,7 +175,12 @@ class ContactRoute extends _i37.PageRouteInfo<void> {
 
   static const String name = 'ContactRoute';
 
-  static const _i37.PageInfo<void> page = _i37.PageInfo<void>(name);
+  static _i37.PageInfo page = _i37.PageInfo(
+    name,
+    builder: (data) {
+      return const _i5.ContactPage();
+    },
+  );
 }
 
 /// generated route for
@@ -443,7 +194,12 @@ class CurierRoute extends _i37.PageRouteInfo<void> {
 
   static const String name = 'CurierRoute';
 
-  static const _i37.PageInfo<void> page = _i37.PageInfo<void>(name);
+  static _i37.PageInfo page = _i37.PageInfo(
+    name,
+    builder: (data) {
+      return const _i6.CurierPage();
+    },
+  );
 }
 
 /// generated route for
@@ -472,8 +228,20 @@ class DeliveryFormRoute extends _i37.PageRouteInfo<DeliveryFormRouteArgs> {
 
   static const String name = 'DeliveryFormRoute';
 
-  static const _i37.PageInfo<DeliveryFormRouteArgs> page =
-      _i37.PageInfo<DeliveryFormRouteArgs>(name);
+  static _i37.PageInfo page = _i37.PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<DeliveryFormRouteArgs>();
+      return _i7.DeliveryFormPage(
+        key: args.key,
+        distric: args.distric,
+        address: args.address,
+        cart: args.cart,
+        dishCount: args.dishCount,
+        totalPrice: args.totalPrice,
+      );
+    },
+  );
 }
 
 class DeliveryFormRouteArgs {
@@ -515,7 +283,12 @@ class HallRoute extends _i37.PageRouteInfo<void> {
 
   static const String name = 'HallRoute';
 
-  static const _i37.PageInfo<void> page = _i37.PageInfo<void>(name);
+  static _i37.PageInfo page = _i37.PageInfo(
+    name,
+    builder: (data) {
+      return const _i8.HallPage();
+    },
+  );
 }
 
 /// generated route for
@@ -529,7 +302,12 @@ class HistoryRoute extends _i37.PageRouteInfo<void> {
 
   static const String name = 'HistoryRoute';
 
-  static const _i37.PageInfo<void> page = _i37.PageInfo<void>(name);
+  static _i37.PageInfo page = _i37.PageInfo(
+    name,
+    builder: (data) {
+      return const _i9.HistoryPage();
+    },
+  );
 }
 
 /// generated route for
@@ -543,7 +321,12 @@ class HomeRoute extends _i37.PageRouteInfo<void> {
 
   static const String name = 'HomeRoute';
 
-  static const _i37.PageInfo<void> page = _i37.PageInfo<void>(name);
+  static _i37.PageInfo page = _i37.PageInfo(
+    name,
+    builder: (data) {
+      return const _i10.HomePage();
+    },
+  );
 }
 
 /// generated route for
@@ -557,7 +340,12 @@ class MainRoute extends _i37.PageRouteInfo<void> {
 
   static const String name = 'MainRoute';
 
-  static const _i37.PageInfo<void> page = _i37.PageInfo<void>(name);
+  static _i37.PageInfo page = _i37.PageInfo(
+    name,
+    builder: (data) {
+      return const _i11.MainPage();
+    },
+  );
 }
 
 /// generated route for
@@ -571,7 +359,12 @@ class MenuRoute extends _i37.PageRouteInfo<void> {
 
   static const String name = 'MenuRoute';
 
-  static const _i37.PageInfo<void> page = _i37.PageInfo<void>(name);
+  static _i37.PageInfo page = _i37.PageInfo(
+    name,
+    builder: (data) {
+      return const _i12.MenuPage();
+    },
+  );
 }
 
 /// generated route for
@@ -585,7 +378,12 @@ class NewsRoute extends _i37.PageRouteInfo<void> {
 
   static const String name = 'NewsRoute';
 
-  static const _i37.PageInfo<void> page = _i37.PageInfo<void>(name);
+  static _i37.PageInfo page = _i37.PageInfo(
+    name,
+    builder: (data) {
+      return const _i13.NewsPage();
+    },
+  );
 }
 
 /// generated route for
@@ -606,8 +404,16 @@ class OrderDetailRoute extends _i37.PageRouteInfo<OrderDetailRouteArgs> {
 
   static const String name = 'OrderDetailRoute';
 
-  static const _i37.PageInfo<OrderDetailRouteArgs> page =
-      _i37.PageInfo<OrderDetailRouteArgs>(name);
+  static _i37.PageInfo page = _i37.PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<OrderDetailRouteArgs>();
+      return _i14.OrderDetailPage(
+        key: args.key,
+        orderNumber: args.orderNumber,
+      );
+    },
+  );
 }
 
 class OrderDetailRouteArgs {
@@ -637,7 +443,12 @@ class OrderHistoryRoute extends _i37.PageRouteInfo<void> {
 
   static const String name = 'OrderHistoryRoute';
 
-  static const _i37.PageInfo<void> page = _i37.PageInfo<void>(name);
+  static _i37.PageInfo page = _i37.PageInfo(
+    name,
+    builder: (data) {
+      return const _i15.OrderHistoryPage();
+    },
+  );
 }
 
 /// generated route for
@@ -660,8 +471,17 @@ class OrderMapRoute extends _i37.PageRouteInfo<OrderMapRouteArgs> {
 
   static const String name = 'OrderMapRoute';
 
-  static const _i37.PageInfo<OrderMapRouteArgs> page =
-      _i37.PageInfo<OrderMapRouteArgs>(name);
+  static _i37.PageInfo page = _i37.PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<OrderMapRouteArgs>();
+      return _i16.OrderMapPage(
+        key: args.key,
+        cart: args.cart,
+        totalPrice: args.totalPrice,
+      );
+    },
+  );
 }
 
 class OrderMapRouteArgs {
@@ -703,8 +523,17 @@ class PickupFormRoute extends _i37.PageRouteInfo<PickupFormRouteArgs> {
 
   static const String name = 'PickupFormRoute';
 
-  static const _i37.PageInfo<PickupFormRouteArgs> page =
-      _i37.PageInfo<PickupFormRouteArgs>(name);
+  static _i37.PageInfo page = _i37.PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<PickupFormRouteArgs>();
+      return _i17.PickupFormPage(
+        key: args.key,
+        cart: args.cart,
+        totalPrice: args.totalPrice,
+      );
+    },
+  );
 }
 
 class PickupFormRouteArgs {
@@ -746,8 +575,17 @@ class ProductDetailRoute extends _i37.PageRouteInfo<ProductDetailRouteArgs> {
 
   static const String name = 'ProductDetailRoute';
 
-  static const _i37.PageInfo<ProductDetailRouteArgs> page =
-      _i37.PageInfo<ProductDetailRouteArgs>(name);
+  static _i37.PageInfo page = _i37.PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<ProductDetailRouteArgs>();
+      return _i18.ProductDetailPage(
+        key: args.key,
+        food: args.food,
+        quantity: args.quantity,
+      );
+    },
+  );
 }
 
 class ProductDetailRouteArgs {
@@ -787,8 +625,16 @@ class ProfileInfoRoute extends _i37.PageRouteInfo<ProfileInfoRouteArgs> {
 
   static const String name = 'ProfileInfoRoute';
 
-  static const _i37.PageInfo<ProfileInfoRouteArgs> page =
-      _i37.PageInfo<ProfileInfoRouteArgs>(name);
+  static _i37.PageInfo page = _i37.PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<ProfileInfoRouteArgs>();
+      return _i19.ProfileInfoPage(
+        key: args.key,
+        user: args.user,
+      );
+    },
+  );
 }
 
 class ProfileInfoRouteArgs {
@@ -818,7 +664,12 @@ class ProfileRoute extends _i37.PageRouteInfo<void> {
 
   static const String name = 'ProfileRoute';
 
-  static const _i37.PageInfo<void> page = _i37.PageInfo<void>(name);
+  static _i37.PageInfo page = _i37.PageInfo(
+    name,
+    builder: (data) {
+      return const _i20.ProfilePage();
+    },
+  );
 }
 
 /// generated route for
@@ -832,7 +683,12 @@ class RessetPasswordRoute extends _i37.PageRouteInfo<void> {
 
   static const String name = 'RessetPasswordRoute';
 
-  static const _i37.PageInfo<void> page = _i37.PageInfo<void>(name);
+  static _i37.PageInfo page = _i37.PageInfo(
+    name,
+    builder: (data) {
+      return const _i21.RessetPasswordPage();
+    },
+  );
 }
 
 /// generated route for
@@ -846,7 +702,12 @@ class RestorantRoute extends _i37.PageRouteInfo<void> {
 
   static const String name = 'RestorantRoute';
 
-  static const _i37.PageInfo<void> page = _i37.PageInfo<void>(name);
+  static _i37.PageInfo page = _i37.PageInfo(
+    name,
+    builder: (data) {
+      return const _i22.RestorantPage();
+    },
+  );
 }
 
 /// generated route for
@@ -867,8 +728,17 @@ class SaleRoute extends _i37.PageRouteInfo<SaleRouteArgs> {
 
   static const String name = 'SaleRoute';
 
-  static const _i37.PageInfo<SaleRouteArgs> page =
-      _i37.PageInfo<SaleRouteArgs>(name);
+  static _i37.PageInfo page = _i37.PageInfo(
+    name,
+    builder: (data) {
+      final args =
+          data.argsAs<SaleRouteArgs>(orElse: () => const SaleRouteArgs());
+      return _i23.SalePage(
+        key: args.key,
+        sale: args.sale,
+      );
+    },
+  );
 }
 
 class SaleRouteArgs {
@@ -898,7 +768,12 @@ class SearchMenuRoute extends _i37.PageRouteInfo<void> {
 
   static const String name = 'SearchMenuRoute';
 
-  static const _i37.PageInfo<void> page = _i37.PageInfo<void>(name);
+  static _i37.PageInfo page = _i37.PageInfo(
+    name,
+    builder: (data) {
+      return const _i24.SearchMenuPage();
+    },
+  );
 }
 
 /// generated route for
@@ -923,8 +798,18 @@ class SecondOrderRoute extends _i37.PageRouteInfo<SecondOrderRouteArgs> {
 
   static const String name = 'SecondOrderRoute';
 
-  static const _i37.PageInfo<SecondOrderRouteArgs> page =
-      _i37.PageInfo<SecondOrderRouteArgs>(name);
+  static _i37.PageInfo page = _i37.PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<SecondOrderRouteArgs>();
+      return _i25.SecondOrderPage(
+        key: args.key,
+        cart: args.cart,
+        dishCount: args.dishCount,
+        totalPrice: args.totalPrice,
+      );
+    },
+  );
 }
 
 class SecondOrderRouteArgs {
@@ -960,7 +845,12 @@ class SignInRoute extends _i37.PageRouteInfo<void> {
 
   static const String name = 'SignInRoute';
 
-  static const _i37.PageInfo<void> page = _i37.PageInfo<void>(name);
+  static _i37.PageInfo page = _i37.PageInfo(
+    name,
+    builder: (data) {
+      return const _i26.SignInPage();
+    },
+  );
 }
 
 /// generated route for
@@ -981,8 +871,16 @@ class SignUpOtpRoute extends _i37.PageRouteInfo<SignUpOtpRouteArgs> {
 
   static const String name = 'SignUpOtpRoute';
 
-  static const _i37.PageInfo<SignUpOtpRouteArgs> page =
-      _i37.PageInfo<SignUpOtpRouteArgs>(name);
+  static _i37.PageInfo page = _i37.PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<SignUpOtpRouteArgs>();
+      return _i27.SignUpOtpPage(
+        key: args.key,
+        user: args.user,
+      );
+    },
+  );
 }
 
 class SignUpOtpRouteArgs {
@@ -1012,7 +910,12 @@ class SignUpRoute extends _i37.PageRouteInfo<void> {
 
   static const String name = 'SignUpRoute';
 
-  static const _i37.PageInfo<void> page = _i37.PageInfo<void>(name);
+  static _i37.PageInfo page = _i37.PageInfo(
+    name,
+    builder: (data) {
+      return const _i28.SignUpPage();
+    },
+  );
 }
 
 /// generated route for
@@ -1026,7 +929,12 @@ class SignUpSucces extends _i37.PageRouteInfo<void> {
 
   static const String name = 'SignUpSucces';
 
-  static const _i37.PageInfo<void> page = _i37.PageInfo<void>(name);
+  static _i37.PageInfo page = _i37.PageInfo(
+    name,
+    builder: (data) {
+      return const _i29.SignUpSucces();
+    },
+  );
 }
 
 /// generated route for
@@ -1040,7 +948,12 @@ class SplashRoute extends _i37.PageRouteInfo<void> {
 
   static const String name = 'SplashRoute';
 
-  static const _i37.PageInfo<void> page = _i37.PageInfo<void>(name);
+  static _i37.PageInfo page = _i37.PageInfo(
+    name,
+    builder: (data) {
+      return const _i30.SplashScreen();
+    },
+  );
 }
 
 /// generated route for
@@ -1054,7 +967,12 @@ class TemplatesRoute extends _i37.PageRouteInfo<void> {
 
   static const String name = 'TemplatesRoute';
 
-  static const _i37.PageInfo<void> page = _i37.PageInfo<void>(name);
+  static _i37.PageInfo page = _i37.PageInfo(
+    name,
+    builder: (data) {
+      return const _i31.TemplatesPage();
+    },
+  );
 }
 
 /// generated route for
@@ -1068,7 +986,12 @@ class TerasaRoute extends _i37.PageRouteInfo<void> {
 
   static const String name = 'TerasaRoute';
 
-  static const _i37.PageInfo<void> page = _i37.PageInfo<void>(name);
+  static _i37.PageInfo page = _i37.PageInfo(
+    name,
+    builder: (data) {
+      return const _i32.TerasaPage();
+    },
+  );
 }
 
 /// generated route for
@@ -1082,7 +1005,12 @@ class UserOrderHistoryRoute extends _i37.PageRouteInfo<void> {
 
   static const String name = 'UserOrderHistoryRoute';
 
-  static const _i37.PageInfo<void> page = _i37.PageInfo<void>(name);
+  static _i37.PageInfo page = _i37.PageInfo(
+    name,
+    builder: (data) {
+      return const _i33.UserOrderHistoryPage();
+    },
+  );
 }
 
 /// generated route for
@@ -1104,8 +1032,16 @@ class UserPickupDetailRoute
 
   static const String name = 'UserPickupDetailRoute';
 
-  static const _i37.PageInfo<UserPickupDetailRouteArgs> page =
-      _i37.PageInfo<UserPickupDetailRouteArgs>(name);
+  static _i37.PageInfo page = _i37.PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<UserPickupDetailRouteArgs>();
+      return _i34.UserPickupDetailPage(
+        key: args.key,
+        order: args.order,
+      );
+    },
+  );
 }
 
 class UserPickupDetailRouteArgs {
@@ -1135,7 +1071,12 @@ class UserPickupHistoryRoute extends _i37.PageRouteInfo<void> {
 
   static const String name = 'UserPickupHistoryRoute';
 
-  static const _i37.PageInfo<void> page = _i37.PageInfo<void>(name);
+  static _i37.PageInfo page = _i37.PageInfo(
+    name,
+    builder: (data) {
+      return const _i35.UserPickupHistoryPage();
+    },
+  );
 }
 
 /// generated route for
@@ -1149,5 +1090,10 @@ class VipRoute extends _i37.PageRouteInfo<void> {
 
   static const String name = 'VipRoute';
 
-  static const _i37.PageInfo<void> page = _i37.PageInfo<void>(name);
+  static _i37.PageInfo page = _i37.PageInfo(
+    name,
+    builder: (data) {
+      return const _i36.VipPage();
+    },
+  );
 }
