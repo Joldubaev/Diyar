@@ -17,14 +17,21 @@ class InternetBloc extends Bloc<InternetEvent, InternetState> {
 
   factory InternetBloc() => _instance;
 
-  StreamSubscription<ConnectivityResult>? _connectivitySubscription;
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
 
   void _observe(NetworkObserve event, Emitter<InternetState> emit) {
+    // Отменяем предыдущее подписывание, если оно существует
     _connectivitySubscription?.cancel();
+
+    // Подписываемся на изменения состояния сети
     _connectivitySubscription = Connectivity()
         .onConnectivityChanged
-        .listen((ConnectivityResult result) {
-      add(NetworkNotify(isConnected: result != ConnectivityResult.none));
+        .listen((List<ConnectivityResult> results) {
+      // Проверяем, если хоть одно подключение активно
+      final isConnected = results.any((result) => result != ConnectivityResult.none);
+
+      // Уведомляем Bloc об изменении состояния подключения
+      add(NetworkNotify(isConnected: isConnected));
     });
   }
 
@@ -35,6 +42,7 @@ class InternetBloc extends Bloc<InternetEvent, InternetState> {
   }
 
   void _notifyStatus(NetworkNotify event, Emitter<InternetState> emit) {
+    // Выдаём соответствующее состояние
     event.isConnected ? emit(NetworkSuccess()) : emit(NetworkFailure());
   }
 }
