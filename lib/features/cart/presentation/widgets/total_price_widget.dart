@@ -32,7 +32,7 @@ class _TotalPriceWidgetState extends State<TotalPriceWidget> {
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         boxShadow: [
           BoxShadow(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2),
               blurRadius: 5,
               offset: const Offset(0, 0))
         ],
@@ -54,7 +54,7 @@ class _TotalPriceWidgetState extends State<TotalPriceWidget> {
                   title: context.l10n.sale, trailing: '${widget.sale} %'),
               Divider(
                   color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.2)),
+                      Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2),),
               CustomTile(
                 title: context.l10n.total,
                 trailing: '${widget.totalPrice} ${context.l10n.som}',

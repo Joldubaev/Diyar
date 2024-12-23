@@ -23,8 +23,11 @@ class ContactCardWidget extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           height: 100,
           decoration: BoxDecoration(
-              border: Border.all(color: AppColors.grey.withOpacity(0.2)),
-              borderRadius: const BorderRadius.all(Radius.circular(20)),),
+            border: Border.all(
+              color: AppColors.grey.withValues(alpha: 0.2),
+            ),
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [

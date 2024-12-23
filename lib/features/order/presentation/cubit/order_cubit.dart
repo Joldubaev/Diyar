@@ -31,20 +31,23 @@ class OrderCubit extends Cubit<OrderState> {
     emit(SelectDeliveryPriceLoaded(deliveryPrice: price));
   }
 
-  Future getDistricts() async {
+  Future<List<DistricModel>?> getDistricts({String? search}) async {
     emit(DistricLoading());
     try {
-      final result = await _orderRepository.getDistricts();
-      result.fold(
-        (error) => emit(DistricError(
-          message: error.message,
-        )),
-        (districts) => emit(DistricLoaded(districts)),
+      final result = await _orderRepository.getDistricts(search: search);
+      return result.fold(
+        (error) {
+          emit(DistricError(message: error.message));
+          return null;
+        },
+        (districts) {
+          emit(DistricLoaded(districts));
+          return districts;
+        },
       );
     } catch (e) {
-      emit(DistricError(
-        message: e.toString(),
-      ));
+      emit(DistricError(message: e.toString()));
+      return null;
     }
   }
 

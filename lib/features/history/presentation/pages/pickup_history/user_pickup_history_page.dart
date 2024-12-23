@@ -68,7 +68,7 @@ class _UserPickupHistoryPageState extends State<UserPickupHistoryPage> {
                                     color: theme.colorScheme.onSurface)),
                             Divider(
                                 color: theme.colorScheme.onSurface
-                                    .withOpacity(0.5),
+                                    .withValues(alpha: 0.5),
                                 thickness: 1),
                             CustomTile(
                                 title: 'Стоимость заказа:',

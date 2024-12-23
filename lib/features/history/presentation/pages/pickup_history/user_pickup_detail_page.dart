@@ -87,7 +87,7 @@ class DetailCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         side: BorderSide(
-          color: theme.colorScheme.onSurface.withOpacity(0.1),
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
         ),
       ),
       child: Padding(

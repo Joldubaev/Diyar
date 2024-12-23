@@ -129,7 +129,7 @@ class _MenuPageState extends State<MenuPage>
                               color: index == _activeIndex
                                   ? theme.colorScheme.surface
                                   : theme.colorScheme.onSurface
-                                      .withOpacity(0.6),
+                                      .withValues(alpha: 0.6),
                             ),
                           ),
                         ),

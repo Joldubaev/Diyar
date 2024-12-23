@@ -282,7 +282,7 @@ class CartPageState extends State<CartPage>
                 width: double.infinity,
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.error.withOpacity(0.1),
+                  color: Theme.of(context).colorScheme.error.withValues(alpha: 0.1),
                   borderRadius: const BorderRadius.all(Radius.circular(10)),
                 ),
                 child: Text(

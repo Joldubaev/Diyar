@@ -37,7 +37,7 @@ class AboutUsWidget extends StatelessWidget {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: theme.colorScheme.onSurface.withOpacity(0.1),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),

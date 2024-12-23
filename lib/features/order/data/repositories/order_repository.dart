@@ -8,7 +8,7 @@ abstract class OrderRepository {
   // Future<List<String>> getOrderHistory();
   Future<void> createOrder(CreateOrderModel order);
   Future<void> getPickupOrder(PickupOrderModel order);
-  Future<Either<Failure, List<DistricModel>>> getDistricts();
+  Future<Either<Failure, List<DistricModel>>> getDistricts( {String? search});
   Future<LocationModel> getGeoSuggestions({required String query});
 }
 
@@ -33,8 +33,10 @@ class OrderRepositoryImpl extends OrderRepository {
   }
 
   @override
-  Future<Either<Failure, List<DistricModel>>> getDistricts() async {
-    return _orderDataSource.getDistricts();
+  Future<Either<Failure, List<DistricModel>>> getDistricts(
+      {String? search}
+  ) async {
+    return _orderDataSource.getDistricts( search: search);
   }
 
   @override

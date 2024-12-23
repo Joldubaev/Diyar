@@ -36,7 +36,7 @@ class HallCardWidget extends StatelessWidget {
                 vertical: 5,
               ),
               decoration: BoxDecoration(
-                color: AppColors.black1.withOpacity(0.4),
+                color: AppColors.black1.withValues(alpha: 0.4),
                 borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(40),
                   bottomRight: Radius.circular(40),

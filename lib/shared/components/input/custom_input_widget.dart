@@ -94,7 +94,9 @@ class _CustomInputWidgetState extends State<CustomInputWidget> {
             enabled: true,
             prefixIcon: widget.leading,
             enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey.withOpacity(.3)),
+              borderSide: BorderSide(
+                color: Colors.grey.withValues(alpha: 0.3),
+              ),
               borderRadius: const BorderRadius.all(Radius.circular(10)),
             ),
             focusedBorder: OutlineInputBorder(
@@ -129,7 +131,7 @@ class _CustomInputWidgetState extends State<CustomInputWidget> {
                           _obsecureText
                               ? Icons.visibility_off_outlined
                               : Icons.visibility_outlined,
-                          color: AppColors.black1.withOpacity(.6),
+                          color: AppColors.black1.withValues(alpha: 0.6),
                         ),
                       )
                     : null

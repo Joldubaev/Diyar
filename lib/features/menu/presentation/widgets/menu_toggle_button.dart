@@ -82,7 +82,7 @@ class MenuToggleButton extends StatelessWidget {
                                     Icon(
                                       Icons.arrow_forward_ios_sharp,
                                       color: theme.colorScheme.onSurface
-                                          .withOpacity(0.6),
+                                          .withValues(alpha: 0.6),
                                     ),
                                   ],
                                 ),
@@ -91,7 +91,8 @@ class MenuToggleButton extends StatelessWidget {
                           ),
                         ),
                         separatorBuilder: (context, index) => Divider(
-                          color: theme.colorScheme.onSurface.withOpacity(0.6),
+                          color: theme.colorScheme.onSurface
+                              .withValues(alpha: 0.6),
                         ),
                         itemCount: menu.length,
                       ),
