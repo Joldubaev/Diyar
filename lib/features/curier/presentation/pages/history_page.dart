@@ -64,11 +64,11 @@ class _HistoryPageState extends State<HistoryPage> {
                   color: theme.colorScheme.surface,
                   borderRadius: const BorderRadius.all(Radius.circular(10)),
                   border: Border.all(
-                    color: AppColors.black1.withOpacity(0.2),
+                    color: AppColors.black1.withValues(alpha: 0.2),
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: theme.colorScheme.onSurface.withOpacity(0.1),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
                       blurRadius: 10,
                       offset: const Offset(0, 2),
                     ),

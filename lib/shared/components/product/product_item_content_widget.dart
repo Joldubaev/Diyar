@@ -74,7 +74,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
         boxShadow: widget.isShadowVisible!
             ? [
                 BoxShadow(
-                  color: theme.colorScheme.onSurface.withOpacity(0.1),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
                   spreadRadius: 1,
                   blurRadius: 5,
                   offset: const Offset(0, 0),
@@ -95,7 +95,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                   borderRadius: const BorderRadius.all(Radius.circular(10)),
                   boxShadow: [
                     BoxShadow(
-                      color: theme.colorScheme.onSurface.withOpacity(0.1),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
                       spreadRadius: 1,
                       blurRadius: 5,
                       offset: const Offset(0, 0),
@@ -127,8 +127,8 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                           child: DecoratedBox(
                             key: ValueKey<int>(widget.quantity),
                             decoration: BoxDecoration(
-                              color:
-                                  theme.colorScheme.onSurface.withOpacity(0.5),
+                              color: theme.colorScheme.onSurface
+                                  .withValues(alpha: 0.5),
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(10)),
                             ),
@@ -166,7 +166,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
               TextSpan(
                 text: '${widget.food.weight}',
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSurface.withOpacity(0.5),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                 ),
                 children: [
                   TextSpan(
@@ -191,7 +191,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.all(Radius.circular(30)),
                 border: Border.all(
-                  color: theme.colorScheme.onSurface.withOpacity(0.1),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
                 ),
               ),
               child: Row(

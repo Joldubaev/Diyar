@@ -70,7 +70,7 @@ class _UserOrderHistoryPageState extends State<UserOrderHistoryPage> {
                                     color: theme.colorScheme.onSurface)),
                             Divider(
                                 color: theme.colorScheme.onSurface
-                                    .withOpacity(0.5),
+                                    .withValues(alpha: 0.5),
                                 thickness: 1),
                             CustomTile(
                                 title: '${context.l10n.costOfMeal}:',

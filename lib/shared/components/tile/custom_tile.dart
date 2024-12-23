@@ -18,15 +18,17 @@ class CustomTile extends StatelessWidget {
           Text(
             title,
             style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.6),
                 ),
           ),
           Text(
             trailing,
             style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                   color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
+                      Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
                 ),
           ),
         ],

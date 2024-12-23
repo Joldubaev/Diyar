@@ -25,7 +25,7 @@ class CustomBoxWidget extends StatelessWidget {
               borderRadius: const BorderRadius.all(Radius.circular(15)),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.grey.withOpacity(0.5),
+                  color: AppColors.grey.withValues(alpha: 0.5),
                   spreadRadius: 1,
                   blurRadius: 7,
                   offset: const Offset(0, 3),

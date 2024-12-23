@@ -87,7 +87,7 @@ class _CurierPageState extends State<CurierPage> {
           ),
         ],
       ),
-      drawerScrimColor: theme.colorScheme.onSurface.withOpacity(0.6),
+      drawerScrimColor: theme.colorScheme.onSurface.withValues(alpha: 0.6),
       drawer: Theme(
         data: Theme.of(context).copyWith(
           iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
@@ -192,7 +192,7 @@ class _CurierPageState extends State<CurierPage> {
                             ),
                             Divider(
                                 color: theme.colorScheme.onSurface
-                                    .withOpacity(0.6),
+                                    .withValues(alpha: 0.6),
                                 thickness: 1),
                             Row(
                               children: [
@@ -205,7 +205,7 @@ class _CurierPageState extends State<CurierPage> {
                                       boxShadow: [
                                         BoxShadow(
                                           color: theme.colorScheme.onSurface
-                                              .withOpacity(0.2),
+                                              .withValues(alpha: 0.2),
                                           blurRadius: 5,
                                           offset: const Offset(0, 2),
                                         ),
@@ -236,7 +236,7 @@ class _CurierPageState extends State<CurierPage> {
                                       boxShadow: [
                                         BoxShadow(
                                           color: theme.colorScheme.onSurface
-                                              .withOpacity(0.2),
+                                              .withValues(alpha: 0.2),
                                           blurRadius: 5,
                                           offset: const Offset(0, 2),
                                         ),
@@ -264,7 +264,7 @@ class _CurierPageState extends State<CurierPage> {
                                       boxShadow: [
                                         BoxShadow(
                                           color: theme.colorScheme.onSurface
-                                              .withOpacity(0.2),
+                                              .withValues(alpha: 0.2),
                                           blurRadius: 5,
                                           offset: const Offset(0, 2),
                                         ),

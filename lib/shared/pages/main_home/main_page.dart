@@ -184,7 +184,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final unselectedColor = Theme.of(context).brightness == Brightness.dark
-        ? Colors.white.withOpacity(0.7)
+        ? Colors.white.withValues(alpha: 0.8)
         : Colors.grey;
 
     return BottomNavigationBar(

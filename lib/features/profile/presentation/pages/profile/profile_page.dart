@@ -135,7 +135,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           color: Theme.of(context)
                               .colorScheme
                               .onSurface
-                              .withOpacity(0.2),
+                              .withValues(alpha: 0.2),
                           height: 1),
                       SettingsTile(
                         leading: SvgPicture.asset('assets/icons/phone.svg',
@@ -148,7 +148,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           color: Theme.of(context)
                               .colorScheme
                               .onSurface
-                              .withOpacity(0.2),
+                              .withValues(alpha: 0.2),
                           height: 1),
                       SettingsTile(
                         leading: SvgPicture.asset('assets/icons/document.svg',

@@ -27,13 +27,13 @@ class DetailItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Divider(
-                  color: theme.colorScheme.onSurface.withOpacity(0.1),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
                   thickness: 1,
                 ),
                 Text(
                   title,
                   style: theme.textTheme.titleSmall!.copyWith(
-                    color: theme.colorScheme.onSurface.withOpacity(0.6),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
                 ),
                 Text(
@@ -72,7 +72,7 @@ class DetailItem2 extends StatelessWidget {
             child: Text(
               title,
               style: theme.textTheme.bodyMedium!.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.6),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
               ),
             ),
           ),

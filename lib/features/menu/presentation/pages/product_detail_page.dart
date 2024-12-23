@@ -133,7 +133,7 @@ class ProductImage extends StatelessWidget {
       imageUrl: food.urlPhoto ?? 'https://i.ibb.co/GkL25DB/ALE-1357-7.png',
       errorWidget: (context, url, error) => Image.asset(
         'assets/images/app_logo.png',
-        color: theme.colorScheme.onSurface.withOpacity(0.1),
+        color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
       ),
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height * 0.3,

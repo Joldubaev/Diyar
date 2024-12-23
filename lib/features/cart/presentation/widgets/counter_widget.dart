@@ -19,7 +19,7 @@ class CounterWidget extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(30)),
             border: Border.all(
-              color: AppColors.grey.withOpacity(0.5),
+              color: AppColors.grey.withValues(alpha: 0.5),
             ),
           ),
           child: Row(

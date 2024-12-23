@@ -25,7 +25,7 @@ class CartEmptyWidget extends StatelessWidget {
                   color: Theme.of(context)
                       .colorScheme
                       .onSurface
-                      .withOpacity(0.6))),
+                      .withValues(alpha: 0.6),)),
         ],
       ),
     );

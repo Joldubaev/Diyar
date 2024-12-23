@@ -15,7 +15,7 @@ abstract class OrderRemoteDataSource {
   Future<List<String>> getOrderHistory();
   Future<void> createOrder(CreateOrderModel order);
   Future<void> getPickupOrder(PickupOrderModel order);
-  Future<Either<Failure, List<DistricModel>>> getDistricts();
+  Future<Either<Failure, List<DistricModel>>> getDistricts( {String? search});
   Future<LocationModel> getGeoSuggestions({required String query});
 }
 
@@ -115,10 +115,11 @@ class OrderRemoteDataSourceImpl extends OrderRemoteDataSource {
   }
 
   @override
-  Future<Either<Failure, List<DistricModel>>> getDistricts() async {
+  Future<Either<Failure, List<DistricModel>>> getDistricts({String? search}) async {
     try {
       final res = await _dio.get(
         ApiConst.getDistricts,
+        queryParameters: {if (search != null) 'foodName': search},
         options: Options(
           headers: ApiConst.authMap(
             _prefs.getString(AppConst.accessToken) ?? '',
