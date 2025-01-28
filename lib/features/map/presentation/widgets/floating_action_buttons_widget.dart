@@ -6,11 +6,11 @@ class FloatingActionButtonsWidget extends StatelessWidget {
   final VoidCallback onSearchPressed;
 
   const FloatingActionButtonsWidget({
-    Key? key,
+    super.key,
     required this.theme,
     required this.onNavigationPressed,
     required this.onSearchPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

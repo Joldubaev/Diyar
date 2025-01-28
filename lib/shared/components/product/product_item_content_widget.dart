@@ -113,7 +113,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                           Image.asset('assets/images/app_logo.png'),
                       width: double.infinity,
                       height: 110,
-                      cacheManager: customCacheManager,
+                      // cacheManager: customCacheManager,
                       fit: BoxFit.contain,
                     ),
                     if (isChangedCounter)
@@ -309,7 +309,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
   final customCacheManager = CacheManager(
     Config(
       'customCacheKey',
-      stalePeriod: const Duration(days: 5),
+      stalePeriod: const Duration(days: 1),
       maxNrOfCacheObjects: 100,
       repo: JsonCacheInfoRepository(databaseName: 'customCache'),
       fileService: HttpFileService(),

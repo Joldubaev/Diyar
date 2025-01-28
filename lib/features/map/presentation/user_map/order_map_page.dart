@@ -20,8 +20,7 @@ import 'order_map.dart';
 class OrderMapPage extends StatefulWidget {
   final int totalPrice;
   final List<CartItemModel> cart;
-  const OrderMapPage({Key? key, required this.cart, required this.totalPrice})
-      : super(key: key);
+  const OrderMapPage({super.key, required this.cart, required this.totalPrice});
 
   @override
   State<OrderMapPage> createState() => _OrderMapPageState();
@@ -171,10 +170,15 @@ class _OrderMapPageState extends State<OrderMapPage> {
     await _fetchCurrentLocation();
   }
 
+  final LocationSettings locationSettings = LocationSettings(
+    accuracy: LocationAccuracy.high,
+    distanceFilter: 100,
+  );
+
   Future<void> _fetchCurrentLocation() async {
     try {
       final position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
+          locationSettings: locationSettings);
       setState(() {
         userLocation = position;
         _lat = position.latitude;

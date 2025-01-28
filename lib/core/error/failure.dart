@@ -14,19 +14,19 @@ abstract class Failure extends Equatable {
 /// Represents a failure caused by a server error.
 class ServerFailure extends Failure {
   /// Constructs a [ServerFailure] with the given [message].
-  const ServerFailure(String message) : super(message);
+  const ServerFailure(super.message);
 }
 
 /// Represents a failure caused by a connection error.
 class ConnectionFailure extends Failure {
   /// Constructs a [ConnectionFailure] with the given [message].
-  const ConnectionFailure(String message) : super(message);
+  const ConnectionFailure(super.message);
 }
 
 /// Represents a failure caused by a database error.
 class DatabaseFailure extends Failure {
   /// Constructs a [DatabaseFailure] with the given [message].
-  const DatabaseFailure(String message) : super(message);
+  const DatabaseFailure(super.message);
 }
 
 // import 'package:equatable/equatable.dart';

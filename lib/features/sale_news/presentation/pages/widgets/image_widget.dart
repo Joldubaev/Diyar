@@ -5,10 +5,10 @@ class ImageWidget extends StatelessWidget {
   final String placeholderImage;
 
   const ImageWidget({
-    Key? key,
+    super.key,
     this.image,
     required this.placeholderImage,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

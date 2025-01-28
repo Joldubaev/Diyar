@@ -209,7 +209,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
         isScrollControlled: true,
         builder: (context) {
           return CustomBottomSheet(
-            region: widget.distric!.name ?? '',
+            region: widget.distric?.name ?? '',
             theme: theme,
             widget: widget,
             deliveryPrice: deliveryPrice,

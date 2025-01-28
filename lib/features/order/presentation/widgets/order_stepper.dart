@@ -1,17 +1,16 @@
-import 'dart:developer';
-
-import 'package:diyar/features/history/history.dart';
-import 'package:diyar/l10n/l10n.dart';
-import 'package:diyar/shared/constants/constant.dart';
-import 'package:diyar/shared/theme/theme.dart';
-import 'package:easy_stepper/easy_stepper.dart';
+import 'package:diyar/features/history/data/model/order_status_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:diyar/shared/constants/constant.dart';
+import 'package:diyar/shared/theme/theme.dart';
 
 class OrderStepper extends StatefulWidget {
   final OrderStatusModel orderStatus;
-  const OrderStepper({super.key, required this.orderStatus});
+
+  const OrderStepper({
+    super.key,
+    required this.orderStatus,
+  });
 
   @override
   State<OrderStepper> createState() => _OrderStepperState();
@@ -19,111 +18,103 @@ class OrderStepper extends StatefulWidget {
 
 class _OrderStepperState extends State<OrderStepper> {
   int activeStep = 0;
-  int reachedStep = 0;
-  int upperBound = 5;
-  double progress = 0.1;
-  Set<int> reachedSteps = <int>{0, 2, 4, 5};
 
-  void increaseProgress() {
-    if (progress < 1) {
-      setState(() => progress += 0.2);
-    } else {
-      setState(() => progress = 0);
+  @override
+  void initState() {
+    super.initState();
+    _updateStep();
+  }
+
+  @override
+  void didUpdateWidget(covariant OrderStepper oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.orderStatus != widget.orderStatus) {
+      _updateStep();
+    }
+  }
+
+  void _updateStep() {
+    setState(() {
+      activeStep = _mapStatusToStep(widget.orderStatus.status);
+    });
+  }
+
+  int _mapStatusToStep(String status) {
+    switch (status) {
+      case AppConst.awaits:
+        return 0;
+      case AppConst.cooked:
+        return 1;
+      case AppConst.delivered:
+        return 2;
+      case AppConst.finished:
+        return 3;
+      default:
+        return 0;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    checkStep();
-
     return SizedBox(
-      height: 110,
+      height: 100,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            flex: 15,
-            child: EasyStepper(
-                activeStep: activeStep,
-                maxReachedStep: reachedStep,
-                lineStyle: LineStyle(
-                  lineLength: 70,
-                  lineType: LineType.normal,
-                  unreachedLineColor: AppColors.grey.withValues(alpha: 0.5),
-                  finishedLineColor: AppColors.primary,
-                  activeLineColor: AppColors.grey.withValues(alpha: 0.5),
+        children: List.generate(_steps.length, (index) {
+          final isActive = index == activeStep;
+          final isCompleted = index < activeStep;
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: isActive
+                      ? AppColors.green
+                      : isCompleted
+                          ? AppColors.primary
+                          : AppColors.grey.withValues(alpha: 0.5),
+                  shape: BoxShape.circle,
                 ),
-                activeStepBorderColor: AppColors.green,
-                activeStepIconColor: AppColors.green,
-                activeStepTextColor: AppColors.green,
-                activeStepBackgroundColor: AppColors.white,
-                unreachedStepBackgroundColor:
-                    AppColors.grey.withValues(alpha: 0.5),
-                unreachedStepBorderColor: AppColors.grey.withValues(alpha: 0.5),
-                unreachedStepIconColor: AppColors.grey,
-                unreachedStepTextColor: AppColors.grey.withValues(alpha: 0.5),
-                finishedStepBackgroundColor: AppColors.primary,
-                finishedStepBorderColor: AppColors.grey.withValues(alpha: 0.5),
-                finishedStepIconColor: AppColors.grey,
-                finishedStepTextColor: AppColors.primary,
-                borderThickness: 10,
-                showLoadingAnimation: false,
-                steps: [
-                  EasyStep(
-                    icon: const Icon(Icons.timer),
-                    title: 'awaiting',
-                    lineText: context.l10n.confirmOrder,
-                    enabled: _allowTabStepping(0, StepEnabling.sequential),
-                  ),
-                  EasyStep(
-                    icon: const Icon(Icons.restaurant_menu),
-                    title: context.l10n.kitchen,
-                    lineText: context.l10n.foodIsPrepared,
-                    enabled: _allowTabStepping(0, StepEnabling.sequential),
-                  ),
-                  EasyStep(
-                    icon: const Icon(CupertinoIcons.car),
-                    title: context.l10n.delivery,
-                    lineText: context.l10n.deliveredText2,
-                    enabled: _allowTabStepping(1, StepEnabling.sequential),
-                  ),
-                  EasyStep(
-                    icon: const Icon(Icons.check_circle_outline),
-                    title: context.l10n.delivered,
-                    lineText: context.l10n.deliveredText,
-                    enabled: _allowTabStepping(2, StepEnabling.sequential),
-                  ),
-                ],
-                onStepReached: (index) {}),
-          ),
-        ],
+                child: Icon(
+                  _steps[index].icon,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                _steps[index].title,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: isActive || isCompleted
+                      ? AppColors.primary
+                      : AppColors.grey.withValues(alpha: 0.5),
+                ),
+              ),
+            ],
+          );
+        }),
       ),
     );
   }
-
-  bool _allowTabStepping(int index, StepEnabling enabling) {
-    return enabling == StepEnabling.sequential
-        ? index <= reachedStep
-        : reachedSteps.contains(index);
-  }
-
-  checkStep() {
-    log(widget.orderStatus.status);
-
-    widget.orderStatus.status == AppConst.awaits
-        ? activeStep = 0
-        : widget.orderStatus.status == AppConst.cooked
-            ? activeStep = 1
-            : widget.orderStatus.status == AppConst.delivered
-                ? activeStep = 2
-                : widget.orderStatus.status == AppConst.finished
-                    ? activeStep = 3
-                    : activeStep = 0;
-
-    if (widget.orderStatus.status == AppConst.finished) {
-      context.read<HistoryCubit>().getActiveOrders();
-    }
-  }
 }
 
-enum StepEnabling { sequential, individual }
+class StepData {
+  final IconData icon;
+  final String title;
+
+  StepData({
+    required this.icon,
+    required this.title,
+  });
+}
+
+final List<StepData> _steps = [
+  StepData(icon: Icons.timer, title: 'Ожидается'),
+  StepData(icon: Icons.restaurant_menu, title: 'Кухня'),
+  StepData(icon: CupertinoIcons.car, title: 'Доставка'),
+  StepData(icon: Icons.check_circle_outline, title: 'Доставлен'),
+];

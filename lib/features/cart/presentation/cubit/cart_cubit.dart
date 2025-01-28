@@ -31,7 +31,7 @@ class CartCubit extends Cubit<CartState> {
     try {
       await _cartRepository.addToCart(product);
       emit(AddToCartSuccess());
-      getCartItems(); // Refresh cart items
+      getCartItems(); 
     } catch (e) {
       emit(AddToCartError());
     }

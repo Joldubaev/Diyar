@@ -6,10 +6,10 @@ class DeliveryPriceInfo extends StatelessWidget {
   final ThemeData theme;
 
   const DeliveryPriceInfo({
-    Key? key,
+    super.key,
     required this.deliveryPrice,
     required this.theme,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

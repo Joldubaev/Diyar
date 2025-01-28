@@ -9,12 +9,12 @@ class BottomSheetWidget extends StatelessWidget {
   final VoidCallback onAddressCardTap;
 
   const BottomSheetWidget({
-    Key? key,
+    super.key,
     required this.theme,
     required this.address,
     required this.deliveryPrice,
     required this.onAddressCardTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

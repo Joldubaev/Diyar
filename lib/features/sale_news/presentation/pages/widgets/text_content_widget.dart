@@ -7,11 +7,11 @@ class TextContentWidget extends StatelessWidget {
   final int? discount;
 
   const TextContentWidget({
-    Key? key,
+    super.key,
     required this.title,
     required this.description,
     this.discount,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

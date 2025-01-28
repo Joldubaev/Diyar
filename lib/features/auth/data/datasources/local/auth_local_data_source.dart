@@ -13,11 +13,8 @@ abstract class AuthLocalDataSource {
   Future<void> setLangToCache(String langCode);
   Future<void> setUserToCache(TokenModel user);
   String? getUserFromCache();
-  Future<void> setTokenToCache({
-    String? refresh,
-    required String access,
-    String phone,
-  });
+  Future<void> setTokenToCache(
+      {String? refresh, required String access, String phone});
 }
 
 class AuthLocalDataSourceImpl implements AuthLocalDataSource {
@@ -58,7 +55,6 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
       if (refresh != null) {
         await prefs.setString(AppConst.refreshToken, refresh);
       }
-
       await prefs.setString(AppConst.accessToken, access);
       log("setTokenToCache: ${AppConst.accessToken}");
       if (phone != null) await prefs.setString(AppConst.phone, phone);

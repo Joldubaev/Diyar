@@ -9,11 +9,11 @@ class MapWidget extends StatelessWidget {
   final Function(YandexMapController) onMapCreated;
 
   const MapWidget({
-    Key? key,
+    super.key,
     required this.mapObjects,
     required this.onCameraPositionChanged,
     required this.onMapCreated,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

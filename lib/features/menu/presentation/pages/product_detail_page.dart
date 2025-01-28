@@ -72,7 +72,9 @@ class ProductDetailPage extends StatelessWidget {
                       icon: const Icon(Icons.remove),
                       onPressed: () {
                         if (quantity! > 1) {
-                          if (UserHelper.isAuth()) {
+                          if (UserHelper.isAuth(
+                            
+                          )) {
                             context.read<CartCubit>().decrementCart(food.id!);
                           } else {
                             _showRegisterDialog(context);
@@ -124,7 +126,7 @@ class ProductDetailPage extends StatelessWidget {
 class ProductImage extends StatelessWidget {
   final FoodModel food;
 
-  const ProductImage({Key? key, required this.food}) : super(key: key);
+  const ProductImage({super.key, required this.food});
 
   @override
   Widget build(BuildContext context) {
@@ -150,7 +152,7 @@ class ProductImage extends StatelessWidget {
 class ProductName extends StatelessWidget {
   final FoodModel food;
 
-  const ProductName({Key? key, required this.food}) : super(key: key);
+  const ProductName({super.key, required this.food});
 
   @override
   Widget build(BuildContext context) {
@@ -172,7 +174,7 @@ class ProductName extends StatelessWidget {
 class ProductWeightAndPrice extends StatelessWidget {
   final FoodModel food;
 
-  const ProductWeightAndPrice({Key? key, required this.food}) : super(key: key);
+  const ProductWeightAndPrice({super.key, required this.food});
 
   @override
   Widget build(BuildContext context) {
@@ -204,7 +206,7 @@ class ProductWeightAndPrice extends StatelessWidget {
 class ProductDescription extends StatelessWidget {
   final FoodModel food;
 
-  const ProductDescription({Key? key, required this.food}) : super(key: key);
+  const ProductDescription({super.key, required this.food});
 
   @override
   Widget build(BuildContext context) {
