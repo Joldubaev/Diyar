@@ -11,7 +11,7 @@ import 'package:diyar/shared/components/components.dart';
 import 'package:diyar/shared/theme/theme.dart';
 
 class SignUpForm extends StatefulWidget {
-  const SignUpForm({Key? key}) : super(key: key);
+  const SignUpForm({super.key});
 
   @override
   State<SignUpForm> createState() => _SignUpFormState();

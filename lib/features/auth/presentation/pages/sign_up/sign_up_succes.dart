@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 @RoutePage()
 class SignUpSucces extends StatelessWidget {
-  const SignUpSucces({Key? key}) : super(key: key);
+  const SignUpSucces({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -9,13 +9,13 @@ class CardWidget extends StatelessWidget {
   final int? discount;
 
   const CardWidget({
-    Key? key,
+    super.key,
     required this.title,
     required this.description,
     this.image,
     this.placeholderImage = 'assets/images/app_icon.png',
     this.discount,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

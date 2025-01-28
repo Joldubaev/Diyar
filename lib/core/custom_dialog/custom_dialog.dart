@@ -5,10 +5,10 @@ class RegistrationAlertDialog extends StatelessWidget {
   final VoidCallback onCancel; // Функция для кнопки "Нет"
 
   const RegistrationAlertDialog({
-    Key? key,
+    super.key,
     required this.onRegister,
     required this.onCancel,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

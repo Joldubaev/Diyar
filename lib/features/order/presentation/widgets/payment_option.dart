@@ -6,11 +6,11 @@ class PaymentTypeOption extends StatelessWidget {
   final ValueChanged<String> onSelected;
 
   const PaymentTypeOption({
-    Key? key,
+    super.key,
     required this.title,
     required this.isSelected,
     required this.onSelected,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

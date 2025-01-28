@@ -16,8 +16,7 @@ import '../widgets/custom_dialog_widget.dart';
 class PickupFormPage extends StatefulWidget {
   final List<CartItemModel> cart;
   final int totalPrice;
-  const PickupFormPage({Key? key, required this.cart, required this.totalPrice})
-      : super(key: key);
+  const PickupFormPage({super.key, required this.cart, required this.totalPrice});
 
   @override
   State<PickupFormPage> createState() => _PickupFormPageState();

@@ -1,33 +1,29 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:diyar/core/utils/helper/base_helper.dart';
 import 'package:diyar/features/menu/menu.dart';
 import 'package:diyar/shared/constants/constant.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/menu/data/models/category_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class MenuRemoteDataSource {
   Future<List<CategoryModel>> getProductsWithMenu({String? query});
   Future<List<FoodModel>> getPopulartFoods();
   Future<List<FoodModel>> searchFoods({String? name});
-  Future<int?> getImageFileSize(String imageUrl);
 }
 
 class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
   final Dio _dio;
-  final SharedPreferences _prefs;
 
-  MenuRemoteDataSourceImpl(this._dio, this._prefs);
+  MenuRemoteDataSourceImpl(this._dio);
 
   @override
   Future<List<CategoryModel>> getProductsWithMenu({String? query}) async {
     try {
-      var token = _prefs.getString(AppConst.accessToken) ?? '';
-
       var res = await _dio.get(
         ApiConst.getCategories,
-        options: Options(headers: ApiConst.authMap(token)),
+        options: Options(headers: BaseHelper.getHeaders(isAuth: true)),
         queryParameters: {if (query != null) 'foodName': query},
       );
 
@@ -50,14 +46,11 @@ class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
   @override
   Future<List<FoodModel>> searchFoods({String? name}) async {
     try {
-      var token = _prefs.getString(AppConst.accessToken) ?? '';
-
       var res = await _dio.post(
         ApiConst.searchFoodsByName,
-        options: Options(headers: ApiConst.authMap(token)),
+        options: Options(headers: BaseHelper.getHeaders(isAuth: true)),
         data: {if (name != null) 'foodName': name, 'page': 1, 'pageSize': 10},
       );
-
       if (res.statusCode == 200) {
         if (res.data != null) {
           List<dynamic> list = res.data;
@@ -91,13 +84,9 @@ class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
   @override
   Future<List<FoodModel>> getPopulartFoods() async {
     try {
-      var token = _prefs.getString(AppConst.accessToken) ?? '';
-
       var res = await _dio.get(
         ApiConst.getPopularFoods,
-        options: Options(
-          headers: ApiConst.authMap(token),
-        ),
+        options: Options(headers: BaseHelper.getHeaders(isAuth: true)),
       );
 
       if (res.statusCode == 200) {
@@ -112,40 +101,6 @@ class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
     } catch (e) {
       log("Error: $e");
       throw ServerException();
-    }
-  }
-
-  @override
-  Future<int?> getImageFileSize(String imageUrl) async {
-    try {
-      var response = await _dio.head(
-        imageUrl,
-        options: Options(
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
-        ),
-      );
-
-      if (response.statusCode == 200) {
-        String? contentLength = response.headers.value('content-length');
-        if (contentLength != null) {
-          return int.parse(contentLength);
-        }
-      } else if (response.statusCode == 302) {
-        // Handle redirect
-        String? redirectUrl = response.headers.value('location');
-        if (redirectUrl != null) {
-          return getImageFileSize(redirectUrl);
-        }
-      }
-
-      log('Failed to get image size. Status code: ${response.statusCode}');
-      return null;
-    } catch (e) {
-      log('Error getting image size: $e');
-      return null;
     }
   }
 }

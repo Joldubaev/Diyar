@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/router/routes.gr.dart';
+import 'package:diyar/features/auth/data/datasources/datasources.dart';
 import 'package:diyar/shared/constants/app_const/app_const.dart';
 import 'package:diyar/injection_container.dart';
 import 'package:diyar/shared/utils/utils.dart';
@@ -56,9 +57,10 @@ class AppRouter extends RootStackRouter {
 
 class AuthGuard extends AutoRouteGuard {
   final prefs = sl<SharedPreferences>();
+  final authDataSource = sl<AuthRemoteDataSource>();
 
   @override
-  void onNavigation(NavigationResolver resolver, StackRouter router) {
+  void onNavigation(NavigationResolver resolver, StackRouter router) async {
     final token = prefs.getString(AppConst.accessToken);
     final role = prefs.getString(AppConst.userRole);
 
@@ -66,20 +68,38 @@ class AuthGuard extends AutoRouteGuard {
     log('AuthGuard: Token - $token');
     log('AuthGuard: Role - $role');
 
+    // Проверка на наличие и истечение токена
     if (token == null || JwtDecoder.isExpired(token)) {
-      log('AuthGuard: Session expired or token not found');
-      showToast('Сессия истекла, войдите заново', isError: true);
-      resolver.next(false);
-      router.push(const SignInRoute());
-    } else {
-      if (role == 'Courier') {
-        log('AuthGuard: Redirecting to CurierRoute');
+      log('AuthGuard: Token отсутствует или истек');
+
+      // Попробовать обновить токен
+      try {
+        log('AuthGuard: Попытка обновления токена...');
+        await authDataSource.refreshToken();
+
+        // Успешное обновление токена
+        log('AuthGuard: Токен успешно обновлен');
+        resolver.next(true); // Разрешить навигацию
+        return;
+      } catch (e) {
+        log('AuthGuard: Не удалось обновить токен: $e');
+        showToast('Сессия истекла, войдите заново', isError: true);
+
+        // Перенаправление на экран входа
         resolver.next(false);
-        router.push(const CurierRoute());
-      } else {
-        log('AuthGuard: Proceeding to the requested route');
-        resolver.next(true);
+        router.push(const SignInRoute());
+        return;
       }
+    }
+
+    // Если токен существует и валиден
+    if (role == 'Courier') {
+      log('AuthGuard: Redirecting to CurierRoute');
+      resolver.next(false);
+      router.push(const CurierRoute());
+    } else {
+      log('AuthGuard: Proceeding to the requested route');
+      resolver.next(true);
     }
   }
 }

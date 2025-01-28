@@ -2,13 +2,13 @@ import 'package:flutter/cupertino.dart';
 
 class ConfirmButton extends StatelessWidget {
   const ConfirmButton({
-    Key? key,
+    super.key,
     required this.confirmText,
     required this.confirmIsDestructive,
     required this.confirmPressed,
     required this.confirmlIsDefault,
     required this.onFinish,
-  }) : super(key: key);
+  });
 
   final String? confirmText;
   final bool confirmIsDestructive;

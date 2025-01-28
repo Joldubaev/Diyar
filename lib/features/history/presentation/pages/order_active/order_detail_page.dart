@@ -10,8 +10,7 @@ import '../pickup_history/user_pickup_detail_page.dart';
 @RoutePage()
 class OrderDetailPage extends StatefulWidget {
   final String orderNumber;
-  const OrderDetailPage({Key? key, required this.orderNumber})
-      : super(key: key);
+  const OrderDetailPage({super.key, required this.orderNumber});
 
   @override
   State<OrderDetailPage> createState() => _OrderDetailPageState();

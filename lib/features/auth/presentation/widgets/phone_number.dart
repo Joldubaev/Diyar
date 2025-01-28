@@ -5,7 +5,7 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class PhoneNumberMask extends StatefulWidget {
   const PhoneNumberMask({
-    Key? key,
+    super.key,
     required this.hint,
     required this.textInputType,
     required this.textController,
@@ -14,7 +14,7 @@ class PhoneNumberMask extends StatefulWidget {
     this.isReadOnly,
     this.validator,
     this.title,
-  }) : super(key: key);
+  });
   final TextEditingController textController;
   final MaskTextInputFormatter formatter;
   final FormFieldValidator<String>? validator;
@@ -93,11 +93,10 @@ class SpecialMaskTextInputFormatter extends MaskTextInputFormatter {
   static String maskA = "S.####";
   static String maskB = "S.######";
 
-  SpecialMaskTextInputFormatter({String? initialText})
+  SpecialMaskTextInputFormatter({super.initialText})
       : super(
             mask: maskA,
-            filter: {"#": RegExp('[0-9]'), "S": RegExp('[AB]')},
-            initialText: initialText);
+            filter: {"#": RegExp('[0-9]'), "S": RegExp('[AB]')});
 
   @override
   TextEditingValue formatEditUpdate(

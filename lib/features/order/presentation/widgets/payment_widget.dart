@@ -9,10 +9,10 @@ class PaymentTypeSelector extends StatelessWidget {
   final ValueChanged<String> onSelected;
 
   const PaymentTypeSelector({
-    Key? key,
+    super.key,
     required this.currentPaymentType,
     required this.onSelected,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

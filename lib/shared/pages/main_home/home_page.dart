@@ -97,7 +97,7 @@ class _HomePageState extends State<HomePage> {
 }
 
 class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _HomeAppBar({Key? key}) : super(key: key);
+  const _HomeAppBar();
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +133,7 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
 class _PopularSection extends StatelessWidget {
   final List<FoodModel> menu;
 
-  const _PopularSection({Key? key, required this.menu}) : super(key: key);
+  const _PopularSection({required this.menu});
 
   @override
   Widget build(BuildContext context) {
@@ -185,7 +185,7 @@ class _PopularSection extends StatelessWidget {
 }
 
 class _AboutUsSection extends StatelessWidget {
-  const _AboutUsSection({Key? key}) : super(key: key);
+  const _AboutUsSection();
 
   @override
   Widget build(BuildContext context) {
@@ -197,7 +197,7 @@ class _AboutUsSection extends StatelessWidget {
 }
 
 class _NewsSection extends StatelessWidget {
-  const _NewsSection({Key? key}) : super(key: key);
+  const _NewsSection();
 
   @override
   Widget build(BuildContext context) {
@@ -213,7 +213,7 @@ class _NewsSection extends StatelessWidget {
 }
 
 class _ContactTile extends StatelessWidget {
-  const _ContactTile({Key? key}) : super(key: key);
+  const _ContactTile();
 
   @override
   Widget build(BuildContext context) {
