@@ -144,12 +144,11 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
                       decoration: BoxDecoration(
                         border: Border.fromBorderSide(
                           BorderSide(
-                            color:  Color.fromRGBO(234, 239, 243, 1),
+                            color: Color.fromRGBO(234, 239, 243, 1),
                             width: 1,
                           ),
                         ),
-                        borderRadius:
-                            BorderRadius.all(Radius.circular(15)),
+                        borderRadius: BorderRadius.all(Radius.circular(15)),
                       ),
                     ),
                   ),
