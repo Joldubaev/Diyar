@@ -44,8 +44,8 @@ class SignUpSucces extends StatelessWidget {
           title: context.l10n.next,
           bgColor: AppColors.primary,
           textStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
-            color: AppColors.white,
-          ),
+                color: AppColors.white,
+              ),
           onTap: () {
             var role = sl<SharedPreferences>().getString(AppConst.userRole);
             if (role?.toLowerCase() == "user".toLowerCase()) {

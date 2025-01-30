@@ -182,6 +182,10 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
     if (_formKey.currentState!.validate()) {
       var deliveryPrice = context.read<OrderCubit>().deliveryPrice;
       if (deliveryPrice == 0) {
+        deliveryPrice =
+            int.tryParse(widget.distric?.price.toString() ?? '0') ?? 0;
+        log('deliveryPrice=========: $deliveryPrice');
+      } else {
         deliveryPrice = 550;
       }
 
@@ -189,7 +193,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
           ? widget.distric!.price! + widget.totalPrice
           : widget.totalPrice + deliveryPrice;
       final sdacha = int.tryParse(_sdachaController.text) ?? 0;
-
+      log('Total order cost: $totalOrderCost');
       if (sdacha < totalOrderCost) {
         showToast('Сдача должна быть больше или равна общей стоимости заказа',
             isError: true);

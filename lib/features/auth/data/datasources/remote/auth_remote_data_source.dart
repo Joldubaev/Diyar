@@ -66,8 +66,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         await _localDataSource.setTokenToCache(
           refresh: res.data['refreshToken'],
           // access: res.data['accessToken'],
-          access:
-              'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzgzMDQ0NDEsImlhdCI6MTczODA0NTI0MSwidXNlcklEIjoiMzdjMWEzOWYtZTdiNS00ZTQwLTk5NDgtMmU3ZGRmZjQ0YzQ5Iiwicm9sZSI6InVzZXIifQ.wB6j-R_eEbBbLNNYUGoOVskqyUTxk9XtaO8Io0MelO8',
+          access:res.data['accessToken'],
           phone: user.phone.toString(),
         );
         log("Token -------------------: ${res.data['accessToken']}");

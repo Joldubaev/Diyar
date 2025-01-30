@@ -5,7 +5,6 @@ import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/features/auth/data/datasources/datasources.dart';
 import 'package:diyar/shared/constants/app_const/app_const.dart';
 import 'package:diyar/injection_container.dart';
-import 'package:diyar/shared/utils/utils.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -68,38 +67,24 @@ class AuthGuard extends AutoRouteGuard {
     log('AuthGuard: Token - $token');
     log('AuthGuard: Role - $role');
 
-    // Проверка на наличие и истечение токена
+    // Проверка на наличие токена и его срок действия
     if (token == null || JwtDecoder.isExpired(token)) {
       log('AuthGuard: Token отсутствует или истек');
-
-      // Попробовать обновить токен
-      try {
-        log('AuthGuard: Попытка обновления токена...');
-        await authDataSource.refreshToken();
-
-        // Успешное обновление токена
-        log('AuthGuard: Токен успешно обновлен');
-        resolver.next(true); // Разрешить навигацию
-        return;
-      } catch (e) {
-        log('AuthGuard: Не удалось обновить токен: $e');
-        showToast('Сессия истекла, войдите заново', isError: true);
-
-        // Перенаправление на экран входа
-        resolver.next(false);
-        router.push(const SignInRoute());
-        return;
-      }
+      resolver.next(false);
+      router.push(const SignInRoute());
+      return;
     }
 
-    // Если токен существует и валиден
+    // Перенаправление в зависимости от роли
     if (role == 'Courier') {
       log('AuthGuard: Redirecting to CurierRoute');
       resolver.next(false);
-      router.push(const CurierRoute());
+      router.replace(
+          const CurierRoute()); // Заменяем стек, чтобы нельзя было вернуться назад
     } else {
-      log('AuthGuard: Proceeding to the requested route');
-      resolver.next(true);
+      log('AuthGuard: Redirecting to MainRoute');
+      resolver.next(false);
+      router.replace(const MainRoute()); // Заменяем стек
     }
   }
 }
