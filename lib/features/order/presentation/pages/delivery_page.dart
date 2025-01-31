@@ -181,20 +181,27 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
 
     if (_formKey.currentState!.validate()) {
       var deliveryPrice = context.read<OrderCubit>().deliveryPrice;
-      if (deliveryPrice == 0) {
-        deliveryPrice =
-            int.tryParse(widget.distric?.price.toString() ?? '0') ?? 0;
-        log('deliveryPrice=========: $deliveryPrice');
+      var districtPrice = widget.distric?.price ?? 0;
+
+      // 🔥 Устанавливаем правильную цену доставки
+      if (deliveryPrice == 0 && districtPrice == 0) {
+        deliveryPrice = 550; // Если нигде нет цены, ставим 550
       } else {
-        deliveryPrice = 550;
+        deliveryPrice = deliveryPrice != 0 ? deliveryPrice : districtPrice;
       }
 
-      final totalOrderCost = widget.distric != null
-          ? widget.distric!.price! + widget.totalPrice
-          : widget.totalPrice + deliveryPrice;
-      final sdacha = int.tryParse(_sdachaController.text) ?? 0;
-      log('Total order cost: $totalOrderCost');
-      if (sdacha < totalOrderCost) {
+      log('Delivery Price: $deliveryPrice');
+
+      final totalOrderCost = widget.totalPrice + deliveryPrice;
+
+      // 🔥 Теперь сдача учитывает deliveryPrice или districtPrice
+      final sdachaValue = int.tryParse(_sdachaController.text) ?? 0;
+      final calculatedSdacha = sdachaValue != 0 ? sdachaValue : deliveryPrice;
+
+      log('Total Order Cost: $totalOrderCost');
+      log('Sdacha: $calculatedSdacha');
+
+      if (calculatedSdacha < totalOrderCost) {
         showToast('Сдача должна быть больше или равна общей стоимости заказа',
             isError: true);
         return;
@@ -228,7 +235,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
             floorController: _floorController,
             entranceController: _entranceController,
             paymentType: _paymentType,
-            sdacha: sdacha,
+            sdacha: calculatedSdacha,
           );
         },
       );
