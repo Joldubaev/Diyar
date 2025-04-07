@@ -75,4 +75,7 @@ class ApiConst {
 
   // DISTRICTS
   static const getDistricts = "$baseUrl/districts/get-all-districts";
+
+  /// onlain payment
+  static const getPayment = "$baseUrl/payments/create-payment";
 }

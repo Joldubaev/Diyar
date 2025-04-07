@@ -35,7 +35,15 @@ class SelectDeliveryPriceError extends OrderState {}
 
 class CreateOrderLoading extends OrderState {}
 
-class CreateOrderLoaded extends OrderState {}
+class CreateOrderLoaded extends OrderState {
+  final String orderNumber;
+  const CreateOrderLoaded(this.orderNumber);
+
+  @override
+  List<Object> get props => [orderNumber];
+}
+
+class CreateOrderSuccess extends OrderState {} // Добавлен успех без orderNumber
 
 class CreateOrderError extends OrderState {}
 
@@ -50,9 +58,19 @@ class DistricLoaded extends OrderState {
   List<Object> get props => [districts];
 }
 
-
 class DistricError extends OrderState {
   final String message;
 
   const DistricError({required this.message});
 }
+
+class GetPaymentLoading extends OrderState {}
+
+class GetPaymentSuccess extends OrderState {
+  final String url;
+  const GetPaymentSuccess(this.url);
+  @override
+  List<Object> get props => [url];
+} // Добавлен успех для платежа
+
+class GetPaymentError extends OrderState {}

@@ -1,4 +1,9 @@
+import 'dart:developer';
+
+import 'package:auto_route/auto_route.dart';
+import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/features/cart/presentation/presentation.dart';
+import 'package:diyar/features/order/data/models/create_payment_model.dart';
 import 'package:diyar/features/order/order.dart';
 import 'package:diyar/features/order/presentation/pages/delivery_page.dart';
 import 'package:diyar/features/order/presentation/widgets/custom_dialog_widget.dart';
@@ -24,7 +29,7 @@ class CustomBottomSheet extends StatelessWidget {
   final TextEditingController intercomController;
   final TextEditingController floorController;
   final TextEditingController entranceController;
-  final PaymentTypeDelivery paymentType;
+  final PaymentMethod paymentType;
 
   const CustomBottomSheet({
     super.key,
@@ -125,11 +130,10 @@ class CustomBottomSheet extends StatelessWidget {
     );
   }
 
-  void _onConfirmOrder(BuildContext context) {
+  void _onConfirmOrder(BuildContext context) async {
     final orderCubit = context.read<OrderCubit>();
 
-    orderCubit
-        .createOrder(
+    final result = await orderCubit.createOrder(
       CreateOrderModel(
         userPhone: phoneController.text,
         userName: userName.text,
@@ -146,23 +150,84 @@ class CustomBottomSheet extends StatelessWidget {
         dishesCount: widget.dishCount,
         sdacha: sdacha,
         region: region,
-
         foods: widget.cart
-            .map(
-              (e) => OrderFoodItem(
-                name: e.food?.name ?? '',
-                price: e.food?.price ?? 0,
-                quantity: e.quantity ?? 1,
-              ),
-            )
+            .map((e) => OrderFoodItem(
+                  name: e.food?.name ?? '',
+                  price: e.food?.price ?? 0,
+                  quantity: e.quantity ?? 1,
+                ))
             .toList(),
       ),
-    )
-        .then((value) {
-      if (context.mounted) {
-        context.read<CartCubit>().clearCart();
-        context.read<CartCubit>().dishCount = 0;
-      }
-    });
+    );
+
+    result.fold(
+      (failure) {
+        log("❌ Ошибка при создании заказа: ${failure.message}");
+      },
+      (orderNumber) {
+        log("✅ Заказ создан. Номер: $orderNumber");
+
+        if (context.mounted) {
+          context.read<CartCubit>().clearCart();
+          context.read<CartCubit>().dishCount = 0;
+        }
+
+        if (paymentType == PaymentMethod.cash) {
+          _showOrderConfirmationDialog(context);
+        } else {
+          _startOnlinePayment(context, orderNumber);
+        }
+      },
+    );
+  }
+
+  void _showOrderConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(context.l10n.yourOrdersConfirm),
+          content: Text(context.l10n.operatorContact),
+          actions: [
+            SubmitButtonWidget(
+              title: context.l10n.ok,
+              bgColor: AppColors.green,
+              onTap: () {
+                context.router.pushAndPopUntil(
+                  const MainRoute(),
+                  predicate: (route) => false,
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _startOnlinePayment(BuildContext context, String orderNumber) async {
+    final payment = PaymentModel(
+      amount: widget.totalPrice + deliveryPrice,
+      orderNumber: int.tryParse(orderNumber) ?? 0,
+      phone: phoneController.text,
+      status: "pending",
+      userName: userName.text,
+    );
+
+    final paymentResult = await context.read<OrderCubit>().getPayment(payment);
+
+    paymentResult.fold(
+      (failure) {
+        log("❌ Ошибка получения ссылки для оплаты: ${failure.message}");
+      },
+      (paymentUrl) {
+        if (paymentUrl.isNotEmpty) {
+          log("🔗 Открываем ссылку: $paymentUrl");
+          context.router.push(OnlainPaymentRoute(paymentUrl: paymentUrl));
+        } else {
+          log("❌ Ошибка: Ссылка на оплату не получена");
+        }
+      },
+    );
   }
 }
