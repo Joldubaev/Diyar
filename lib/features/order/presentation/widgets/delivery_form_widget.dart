@@ -21,6 +21,8 @@ class DeliveryFormWidget extends StatefulWidget {
     required this.intercomController,
     required this.sdachaController,
     required this.commentController,
+    required this.paymentMethod,
+    required this.onPaymentMethodChanged,
   });
 
   final ThemeData theme;
@@ -37,6 +39,8 @@ class DeliveryFormWidget extends StatefulWidget {
   final TextEditingController intercomController;
   final TextEditingController sdachaController;
   final TextEditingController commentController;
+  final PaymentMethod paymentMethod;
+  final ValueChanged<PaymentMethod> onPaymentMethodChanged;
 
   @override
   State<DeliveryFormWidget> createState() => _DeliveryFormWidgetState();
@@ -54,12 +58,6 @@ class _DeliveryFormWidgetState extends State<DeliveryFormWidget> {
   TextEditingController get _sdachaController => widget.sdachaController;
   TextEditingController get _commentController => widget.commentController;
   GlobalKey<FormState> get _formKey => widget.formKey;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   log("address2: ${_addressController.text}");
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -176,6 +174,39 @@ class _DeliveryFormWidgetState extends State<DeliveryFormWidget> {
             ],
           ),
           const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: RadioListTile<PaymentMethod>(
+                  title: Text(
+                    'Наличными',
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
+                  ),
+                  value: PaymentMethod.cash,
+                  groupValue: widget.paymentMethod,
+                  activeColor: Colors.orange,
+                  onChanged: (PaymentMethod? value) {
+                    widget.onPaymentMethodChanged(value!);
+                  },
+                ),
+              ),
+              Expanded(
+                child: RadioListTile<PaymentMethod>(
+                  title: Text(
+                    'Онлайн',
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
+                  ),
+                  value: PaymentMethod.online,
+                  groupValue: widget.paymentMethod,
+                  activeColor: Colors.orange,
+                  onChanged: (PaymentMethod? value) {
+                    widget.onPaymentMethodChanged(value!);
+                  },
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
           CustomInputWidget(
             titleColor: widget.theme.colorScheme.onSurface,
             filledColor: widget.theme.colorScheme.surface,
@@ -217,3 +248,5 @@ class _DeliveryFormWidgetState extends State<DeliveryFormWidget> {
     );
   }
 }
+
+enum PaymentMethod { cash, online }
