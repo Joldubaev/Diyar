@@ -12,8 +12,10 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   UserModel? user;
 
-  Future getUser() async {
-    if (!UserHelper.isAuth()) return;
+  Future<void> getUser() async {
+    final isAuth = UserHelper.isAuth();
+    if (!isAuth) return;
+
     emit(ProfileGetLoading());
     try {
       user = await _userRepository.getUser();
