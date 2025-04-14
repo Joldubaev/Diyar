@@ -10,7 +10,6 @@ import 'package:diyar/shared/pages/widgets/news_widget.dart';
 import 'package:diyar/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../widgets/sales_section_page.dart';
 
 @RoutePage()
@@ -23,7 +22,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<FoodModel> menu = [];
-
   @override
   void initState() {
     super.initState();

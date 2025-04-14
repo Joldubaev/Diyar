@@ -5,7 +5,7 @@ import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/features/auth/data/datasources/datasources.dart';
 import 'package:diyar/shared/constants/app_const/app_const.dart';
 import 'package:diyar/injection_container.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
+// import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 @AutoRouterConfig()
@@ -68,12 +68,12 @@ class AuthGuard extends AutoRouteGuard {
     log('AuthGuard: Role - $role');
 
     // Проверка на наличие токена и его срок действия
-    if (token == null || JwtDecoder.isExpired(token)) {
-      log('AuthGuard: Token отсутствует или истек');
-      resolver.next(false);
-      router.push(const SignInRoute());
-      return;
-    }
+    // if (token == null || JwtDecoder.isExpired(token)) {
+    //   log('AuthGuard: Token отсутствует или истек');
+    //   resolver.next(false);
+    //   router.push(const SignInRoute());
+    //   return;
+    // }
 
     // Перенаправление в зависимости от роли
     if (role == 'Courier') {
