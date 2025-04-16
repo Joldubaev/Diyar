@@ -1,0 +1,98 @@
+name: diyar
+
+packages:
+  - app
+  - packages/**
+
+command:
+  bootstrap:
+    runPubGetInParallel: false
+    usePubspecOverrides: true
+
+scripts:
+  format:
+    exec: dart format . --line-length 120
+    select-package:
+      dir-exists: lib
+    description: "Format Dart code for selected package"
+
+  format-all:
+    exec: dart format . --line-length 120
+    description: "Format all Dart code"
+
+  format-check:
+    exec: dart format . --line-length 120 --set-exit-if-changed
+    description: "Check format all Dart code"
+
+  analyze:
+    exec: fvm flutter analyze
+    description: "Analyze all Dart code"
+
+  analyze-check:
+    exec: fvm flutter analyze --fatal-warnings
+    description: "Analyze all Dart code and exit if there are any fatal warnings"
+
+  flutter-clean:
+    exec: fvm flutter clean
+    select-package:
+      dir-exists: lib
+    description: "Clean pub dependencies selected package"
+
+  flutter-clean-all:
+    exec: fvm flutter clean
+    description: "Clean pub dependencies"
+
+  pub-get:
+    exec: fvm flutter pub get
+    select-package:
+      dir-exists: lib
+    description: "Clean pub dependencies selected package"
+
+  pub-get-all:
+    exec: fvm flutter pub get
+    description: "Get pub dependencies"
+
+  test:
+    exec: fvm flutter test
+    select-package:
+      dir-exists: test
+    description: "Run unit tests selected package"
+
+  unit-test:
+    exec: fvm flutter test
+    description: "Run unit tests (all packages)"
+
+  doctor:
+    run: fvm flutter doctor
+    description: "Run Flutter doctor"
+
+  run-build-runner:
+    run: cd app && fvm flutter pub run build_runner build --delete-conflicting-outputs
+    description: "Run unit tests selected package"
+
+  run-build-runner-all:
+    run: melos exec --depends-on="build_runner" -- fvm flutter pub run build_runner build --delete-conflicting-outputs
+    description: "Generate code with build_runner"
+
+  # Run My Quran
+  run-app:
+    run: cd app && flutter run --verbose
+    description: "Run my_quran"
+
+  # Build apk and appbundle My Quran
+  build-apk:
+    run: cd app && fvm flutter build apk
+    description: "Build an APK file"
+
+  build-ios:
+    run: cd app && fvm flutter build ios --release --no-codesign
+    description: "Build an IOS file"
+
+  build-appbundle:
+    run: cd app && fvm flutter build appbundle
+    description: "Build an appbundle file"
+
+  # Integration test My Quran
+  integration-test:
+    run: cd app && fvm flutter drive --target=test_driver/app.dart --no-enable-impeller
+    description: "Run integration tests for the my_quran"
