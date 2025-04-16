@@ -1,0 +1,168 @@
+import '../../../cart/presentation/presentation.dart';
+import '../../order.dart';
+import '../pages/delivery_page.dart';
+import 'custom_dialog_widget.dart';
+import '../../../../l10n/l10n.dart';
+import '../../../../core/components/components.dart';
+import '../../../../core/theme/theme.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+class CustomBottomSheet extends StatelessWidget {
+  final ThemeData theme;
+  final DeliveryFormPage widget;
+  final int deliveryPrice;
+  final int totalOrderCost;
+  final int sdacha;
+  final String? region;
+  final TextEditingController phoneController;
+  final TextEditingController userName;
+  final TextEditingController addressController;
+  final TextEditingController commentController;
+  final TextEditingController houseController;
+  final TextEditingController apartmentController;
+  final TextEditingController intercomController;
+  final TextEditingController floorController;
+  final TextEditingController entranceController;
+  final PaymentTypeDelivery paymentType;
+
+  const CustomBottomSheet({
+    super.key,
+    required this.theme,
+    required this.widget,
+    required this.deliveryPrice,
+    required this.totalOrderCost,
+    required this.sdacha,
+    required this.phoneController,
+    required this.userName,
+    required this.addressController,
+    required this.commentController,
+    required this.houseController,
+    required this.apartmentController,
+    required this.intercomController,
+    required this.floorController,
+    required this.entranceController,
+    required this.paymentType,
+    required this.region,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return DraggableScrollableSheet(
+      initialChildSize: 0.35,
+      minChildSize: 0.35,
+      maxChildSize: 0.35,
+      expand: false,
+      builder: (context, scrollController) {
+        return Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: const BorderRadius.vertical(
+              top: Radius.circular(16),
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeader(context),
+              const SizedBox(height: 15),
+              _buildDetails(context),
+              const Divider(),
+              BlocBuilder<OrderCubit, OrderState>(
+                builder: (context, state) {
+                  return SubmitButtonWidget(
+                    textStyle: theme.textTheme.bodyMedium!
+                        .copyWith(color: theme.colorScheme.onPrimary),
+                    title: context.l10n.confirm,
+                    bgColor: AppColors.green,
+                    isLoading: state is CreateOrderLoading,
+                    onTap: () => _onConfirmOrder(context),
+                  );
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildHeader(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          context.l10n.orderConfirmation,
+          style: theme.textTheme.bodyLarge!
+              .copyWith(color: theme.colorScheme.onSurface),
+        ),
+        IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDetails(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        CustomDialogWidget(
+          title: context.l10n.orderAmount,
+          description: '${widget.totalPrice} сом',
+        ),
+        CustomDialogWidget(
+          title: context.l10n.deliveryCost,
+          description: '$deliveryPrice сом',
+        ),
+        CustomDialogWidget(
+          title: context.l10n.total,
+          description: '$totalOrderCost сом',
+        ),
+      ],
+    );
+  }
+
+  void _onConfirmOrder(BuildContext context) {
+    final orderCubit = context.read<OrderCubit>();
+
+    orderCubit
+        .createOrder(
+      CreateOrderModel(
+        userPhone: phoneController.text,
+        userName: userName.text,
+        address: addressController.text,
+        comment: commentController.text,
+        price: widget.totalPrice,
+        deliveryPrice: deliveryPrice,
+        houseNumber: houseController.text,
+        kvOffice: apartmentController.text,
+        intercom: intercomController.text,
+        floor: floorController.text,
+        entrance: entranceController.text,
+        paymentMethod: paymentType.name,
+        dishesCount: widget.dishCount,
+        sdacha: sdacha,
+        region: region,
+
+        foods: widget.cart
+            .map(
+              (e) => OrderFoodItem(
+                name: e.food?.name ?? '',
+                price: e.food?.price ?? 0,
+                quantity: e.quantity ?? 1,
+              ),
+            )
+            .toList(),
+      ),
+    )
+        .then((value) {
+      if (context.mounted) {
+        context.read<CartCubit>().clearCart();
+        context.read<CartCubit>().dishCount = 0;
+      }
+    });
+  }
+}

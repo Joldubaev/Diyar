@@ -1,0 +1,55 @@
+import 'dart:developer';
+
+import 'package:dio/dio.dart';
+import '../../../../core/core.dart';
+import '../models/restaurant_model.dart';
+import '../../../../core/constants/constant.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+abstract class AboutUsRemoteDataSource {
+  Future<AboutUsModel> getAboutUs({required String type});
+}
+
+class AboutUsRemoteDataSourceImpl implements AboutUsRemoteDataSource {
+  SharedPreferences prefs;
+  final Dio _dio;
+
+  AboutUsRemoteDataSourceImpl(this.prefs, this._dio);
+
+  @override
+  Future<AboutUsModel> getAboutUs({required String type}) async {
+    try {
+      var token = prefs.getString(AppConst.accessToken) ?? '';
+
+      var res = await _dio.get(
+        ApiConst.getAboutUs(type: type),
+        options: Options(
+          headers: ApiConst.authMap(token),
+        ),
+      );
+
+      if (res.statusCode == 200) {
+        if (res.data != null) {
+          log("About Us Response: ${res.data}");
+          return AboutUsModel.fromJson(res.data);
+        } else {
+          throw ServerException(
+            "No data found",
+            res.statusCode,
+          );
+        }
+      } else {
+        throw ServerException(
+          "Error: ${res.statusCode}",
+          res.statusCode,
+        );
+      }
+    } catch (e) {
+      log("Error: $e");
+      throw ServerException(
+        "Failed to fetch data",
+        (e is DioException) ? e.response?.statusCode : null,
+      );
+    }
+  }
+}
