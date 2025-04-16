@@ -1,10 +1,10 @@
 import 'package:auto_route/auto_route.dart';
-import '../../../core/custom_dialog/custom_dialog.dart';
+import '../../../core/components/custom_dialog/custom_dialog.dart';
 import '../../../core/router/routes.gr.dart';
 import '../../../core/utils/helper/user_helper.dart';
 import '../../../features/app/cubit/remote_config_cubit.dart';
 import '../../../features/cart/cart.dart';
-import '../../theme/app_colors.dart';
+import '../../../core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

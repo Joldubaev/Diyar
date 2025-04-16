@@ -1,8 +1,8 @@
 import 'package:auto_route/auto_route.dart';
-import '../../../cart/cart.dart';
-import '../../menu.dart';
-import '../../../../l10n/l10n.dart';
-import '../../../../shared/shared.dart';
+import 'package:diyar/core/core.dart';
+import 'package:diyar/features/cart/cart.dart';
+import 'package:diyar/features/features.dart';
+import 'package:diyar/l10n/l10n.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -8,3 +8,4 @@ export 'input/custom_input_widget.dart';
 export 'tile/custom_tile.dart';
 export 'product/product_item_content_widget.dart';
 export 'product/product_item_widget.dart';
+export 'custom_dialog/custom_dialog.dart';

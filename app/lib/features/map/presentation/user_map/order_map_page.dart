@@ -1,20 +1,18 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:auto_route/auto_route.dart';
-import '../../../../core/router/routes.gr.dart';
-import '../../../../core/utils/helper/helper.dart';
-import '../../../cart/cart.dart';
-import '../../data/repositories/yandex_service.dart';
-import '../widgets/coordinats.dart';
-import '../widgets/widgets.dart';
-import '../../../order/order.dart';
-import '../../../../l10n/l10n.dart';
-import '../../../../shared/shared.dart';
+import 'package:diyar/core/core.dart';
+import 'package:diyar/features/cart/data/data.dart';
+import 'package:diyar/features/cart/presentation/presentation.dart';
+import 'package:diyar/features/map/map.dart';
+import 'package:diyar/features/map/presentation/widgets/widgets.dart';
+import 'package:diyar/features/order/order.dart';
+import 'package:diyar/l10n/l10n.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 import 'package:geolocator/geolocator.dart';
-import 'order_map.dart';
 
 @RoutePage()
 class OrderMapPage extends StatefulWidget {

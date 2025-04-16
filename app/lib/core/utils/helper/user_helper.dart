@@ -1,5 +1,5 @@
 import '../../../injection_container.dart';
-import '../../../shared/constants/constant.dart';
+import '../../constants/constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserHelper {

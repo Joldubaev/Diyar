@@ -3,10 +3,10 @@ import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import '../../../../core/error/failure.dart';
+import 'package:diyar/core/constants/constant.dart';
+import 'package:diyar/core/core.dart';
 import '../data.dart';
 import '../models/distric_model.dart';
-import '../../../../shared/constants/constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../map/data/models/location_model.dart';
@@ -137,16 +137,16 @@ class OrderRemoteDataSourceImpl extends OrderRemoteDataSource {
           return Right(districts);
         } else {
           log('Unexpected data format: ${res.data}');
-          return const Left(ServerFailure('Unexpected data format'));
+          return const Left(ServerFailure('Unexpected data format' , null));
         }
       } else {
         log('Error Message: ${res.data['message']}');
-        return Left(ServerFailure(res.data['message'] ?? 'Unknown error'));
+        return Left(ServerFailure(res.data['message'] ?? 'Unknown error' , res.statusCode));
       }
     } catch (e, stacktrace) {
       log('Exception: $e');
       log('Stacktrace: $stacktrace');
-      return const Left(ServerFailure('Failed to fetch districts'));
+      return const Left(ServerFailure('Failed to fetch districts', null));
     }
   }
 }

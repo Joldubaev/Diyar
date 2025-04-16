@@ -1,8 +1,8 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import '../../../../shared/constants/api_const/api_const.dart';
-import '../../../../shared/constants/app_const/app_const.dart';
+import '../../../../core/constants/api_const/api_const.dart';
+import '../../../../core/constants/app_const/app_const.dart';
 import '../../../../core/core.dart';
 import '../../../auth/data/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -31,10 +31,16 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
       if (res.statusCode == 200) {
         return UserModel.fromJson(res.data);
       } else {
-        throw ServerException();
+        throw ServerException(
+          'Error fetching user data',
+          res.statusCode,
+        );
       }
     } catch (e) {
-      throw ServerException();
+      throw ServerException(
+        'Error fetching user data',
+        null,
+      );
     }
   }
 
@@ -48,7 +54,10 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
       );
 
       if (res.statusCode != 200) {
-        throw ServerException();
+        throw ServerException(
+          'Error deleting user',
+          res.statusCode,
+        );
       }
     } on DioException catch (e) {
       if (e.response != null) {
@@ -83,10 +92,16 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
         ),
       );
       if (res.statusCode != 200) {
-        throw ServerException();
+        throw ServerException(
+          'Error updating user',
+          res.statusCode,
+        );
       }
     } catch (e) {
-      throw ServerException();
+      throw ServerException(
+        'Error updating user',
+        null,
+      );
     }
   }
 }

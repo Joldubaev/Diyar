@@ -1,10 +1,8 @@
 import 'dart:developer';
-
 import 'package:dio/dio.dart';
-import '../../../../../shared/constants/constant.dart';
+import '../../../../../core/constants/constant.dart';
 import '../../../../../core/core.dart';
 import '../../../../features.dart';
-import '../../../../../shared/utils/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class AuthRemoteDataSource {
@@ -23,11 +21,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   AuthRemoteDataSourceImpl(this._dio, this._localDataSource, this._prefs);
 
   @override
-  Future<void> confirmResetPassword({
-    required ResetModel model,
-  }) async {
+  Future<void> confirmResetPassword({required ResetModel model}) async {
     try {
-      var res = await _dio.post(
+      final res = await _dio.post(
         ApiConst.resetPsw,
         data: {
           "code": model.code,
@@ -37,21 +33,20 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
 
       if (res.statusCode != 200) {
-        throw DioException.badResponse(
-          requestOptions: RequestOptions(path: ApiConst.resetPsw),
-          statusCode: res.statusCode!,
-          response: res,
+        throw ServerException(
+           'Ошибка сброса пароля',
+          res.statusCode,
         );
       }
     } catch (e) {
       log("$e");
       if (e is DioException && e.response?.statusCode == 400) {
-        showToast(e.response?.data['developerMessage'], isError: true);
-        throw Exception(
-            e.response?.data['developerMessage'] ?? 'Ошибка сервера');
+        final msg = e.response?.data['developerMessage'] ?? 'Ошибка сброса';
+        showToast(msg, isError: true);
+        throw ServerException( msg,  400);
       } else {
         showToast('Ошибка сервера', isError: true);
-        throw Exception('Ошибка сервера');
+        throw ServerException( 'Ошибка сервера' ,null);
       }
     }
   }
@@ -59,28 +54,31 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<void> login(UserModel user) async {
     try {
-      var res = await _dio.post(ApiConst.signIn,
-          data: {"phone": user.phone, "password": user.password});
+      final res = await _dio.post(
+        ApiConst.signIn,
+        data: {"phone": user.phone, "password": user.password},
+      );
 
       if ([200, 201].contains(res.statusCode)) {
         await _localDataSource.setTokenToCache(
           refresh: res.data['refreshToken'],
-          // access: res.data['accessToken'],
-          access:res.data['accessToken'],
+          access: res.data['accessToken'],
           phone: user.phone.toString(),
         );
-        log("Token -------------------: ${res.data['accessToken']}");
+        log("Token: ${res.data['accessToken']}");
+      } else {
+        throw ServerException( 'Неверный ответ от сервера', res.statusCode);
       }
     } catch (e) {
       log("$e");
-      throw ServerException();
+      throw ServerException( 'Ошибка при входе', null);
     }
   }
 
   @override
   Future<void> register(UserModel user) async {
     try {
-      var res = await _dio.post(ApiConst.signUp, data: user.toJson());
+      final res = await _dio.post(ApiConst.signUp, data: user.toJson());
 
       if (res.statusCode == 200) {
         await _localDataSource.setTokenToCache(
@@ -88,38 +86,34 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           access: res.data['accessToken'],
           phone: user.phone.toString(),
         );
+      } else {
+        throw ServerException( 'Ошибка регистрации', res.statusCode);
       }
     } catch (e) {
-      if (e is DioException && e.response?.statusCode == 400) {
-        showToast('Пользователь с таким email уже существует', isError: true);
-        throw ServerException();
-      } else if (e is DioException && e.response?.statusCode == 418) {
-        showToast('Пользователь с таким номером телефона уже существует',
-            isError: true);
-        throw ServerException();
-      } else {
-        throw DioException(
-          error: 'Ошибка сервера',
-          requestOptions: RequestOptions(path: ApiConst.signUp),
-        );
+      if (e is DioException) {
+        final code = e.response?.statusCode;
+        if (code == 400) {
+          showToast('Пользователь с таким email уже существует', isError: true);
+          throw ServerException( 'Email занят',  400);
+        } else if (code == 418) {
+          showToast('Пользователь с таким номером телефона уже существует', isError: true);
+          throw ServerException('Телефон занят',  418);
+        }
       }
+      throw ServerException( 'Ошибка сервера', null);
     }
   }
 
   @override
   Future<void> sendForgotPasswordCodeToPhone(String phone) async {
     try {
-      var res = await _dio.post(
-        ApiConst.sendCodeToPhone,
-        data: {"phone": phone},
-      );
-
+      final res = await _dio.post(ApiConst.sendCodeToPhone, data: {"phone": phone});
       if (res.statusCode != 200) {
-        throw ServerException();
+        throw ServerException( 'Не удалось отправить код', res.statusCode);
       }
     } catch (e) {
       log("$e");
-      throw ServerException();
+      throw ServerException( 'Ошибка при отправке кода' , null);
     }
   }
 
@@ -127,7 +121,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<void> refreshToken() async {
     log("refreshToken started...");
     try {
-      var res = await _dio.post(
+      final res = await _dio.post(
         ApiConst.refreshToken,
         data: {"refreshToken": _prefs.getString(AppConst.refreshToken)},
       );
@@ -138,11 +132,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           access: res.data['accessToken'],
         );
       } else {
-        throw ServerException();
+        throw ServerException( 'Не удалось обновить токен', res.statusCode);
       }
     } catch (e) {
       log("$e");
-      throw ServerException();
+      throw ServerException( 'Ошибка при обновлении токена', null);
     } finally {
       log("refreshToken finished...");
     }

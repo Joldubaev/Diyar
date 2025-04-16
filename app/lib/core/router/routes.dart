@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:auto_route/auto_route.dart';
 import 'routes.gr.dart';
 import '../../features/auth/data/datasources/datasources.dart';
-import '../../shared/constants/app_const/app_const.dart';
+import '../constants/app_const/app_const.dart';
 import '../../injection_container.dart';
 // import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';

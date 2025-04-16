@@ -1,6 +1,6 @@
 import '../../main.dart';
 import '../cubit/bloc/internet_bloc.dart';
-import '../theme/app_colors.dart';
+import '../../core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

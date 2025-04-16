@@ -1,13 +1,9 @@
 import 'dart:async';
 import 'package:auto_route/auto_route.dart';
-import '../../../../core/router/routes.gr.dart';
-import '../../../auth/auth.dart';
-import '../../curier.dart';
-import '../../../features.dart';
-import '../../../../l10n/l10n.dart';
-import '../../../../shared/components/components.dart';
-import '../../../../shared/theme/theme.dart';
-import '../../../../shared/utils/utils.dart';
+import 'package:diyar/core/core.dart';
+import 'package:diyar/features/auth/auth.dart';
+import 'package:diyar/features/curier/curier.dart';
+import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';

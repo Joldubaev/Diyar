@@ -4,7 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import '../../../../../core/router/routes.gr.dart';
 import '../../../../features.dart';
 import '../../../../../l10n/l10n.dart';
-import '../../../../../shared/theme/theme.dart';
+import '../../../../../core/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

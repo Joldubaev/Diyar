@@ -1,9 +1,9 @@
 import 'dart:developer';
 import 'package:auto_route/auto_route.dart';
-import '../../../../../shared/constants/app_const/app_const.dart';
+import '../../../../../core/constants/app_const/app_const.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../../core/router/routes.gr.dart';
-import '../../../../../shared/theme/theme.dart';
+import '../../../../../core/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 @RoutePage()

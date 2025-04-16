@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:diyar/core/core.dart';
 import '../presentation.dart';
 import '../../../menu/data/data.dart';
 import '../../../../l10n/l10n.dart';
-import '../../../../shared/utils/fmt/show_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 

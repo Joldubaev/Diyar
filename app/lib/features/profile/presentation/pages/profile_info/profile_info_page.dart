@@ -1,10 +1,8 @@
 import 'package:auto_route/auto_route.dart';
-import '../../../prof.dart';
-import '../../../../../l10n/l10n.dart';
-import '../../../../../shared/components/components.dart';
-import '../../../../auth/data/models/user_model.dart';
-import '../../../../../shared/theme/app_colors.dart';
-import '../../../../../shared/utils/fmt/show_alert.dart';
+import 'package:diyar/core/core.dart';
+import 'package:diyar/features/auth/auth.dart';
+import 'package:diyar/features/profile/prof.dart';
+import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';

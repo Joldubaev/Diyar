@@ -1,8 +1,7 @@
 import 'package:dio/dio.dart';
-import '../../../../core/error/exception.dart';
-import '../model/news_model.dart';
-import '../model/sale_model.dart';
-import '../../../../shared/shared.dart';
+import 'package:diyar/core/constants/constant.dart';
+import 'package:diyar/core/core.dart';
+import 'package:diyar/features/features.dart';
 
 abstract class HomeRemoteDataSource {
   Future<List<NewsModel>> getNews();
@@ -33,7 +32,10 @@ class HomeFeaturesRepositoryImpl implements HomeRemoteDataSource {
       _newsCache = news.map((e) => NewsModel.fromJson(e)).toList();
       return _newsCache!;
     } else {
-      throw ServerException();
+      throw ServerException(
+        'Error fetching news data',
+        response.statusCode,
+      );
     }
   }
 
@@ -54,7 +56,10 @@ class HomeFeaturesRepositoryImpl implements HomeRemoteDataSource {
       _salesCache = sales;
       return _salesCache!;
     } else {
-      throw ServerException();
+      throw ServerException(
+        'Error fetching sales data',
+        response.statusCode,
+      );
     }
   }
 }

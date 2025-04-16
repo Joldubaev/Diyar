@@ -3,8 +3,8 @@ import '../../order.dart';
 import '../pages/delivery_page.dart';
 import 'custom_dialog_widget.dart';
 import '../../../../l10n/l10n.dart';
-import '../../../../shared/components/components.dart';
-import '../../../../shared/theme/theme.dart';
+import '../../../../core/components/components.dart';
+import '../../../../core/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

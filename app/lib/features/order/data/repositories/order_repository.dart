@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
-import '../../../../core/error/failure.dart';
-import '../../../map/data/models/location_model.dart';
+import 'package:diyar/core/core.dart';
+import 'package:diyar/features/features.dart';
+import 'package:diyar/features/map/map.dart';
 import '../models/distric_model.dart';
-import '../../order.dart';
 
 abstract class OrderRepository {
   // Future<List<String>> getOrderHistory();

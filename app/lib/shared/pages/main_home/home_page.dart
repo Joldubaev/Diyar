@@ -1,4 +1,6 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:diyar/core/components/components.dart';
+import 'package:diyar/core/theme/theme.dart';
 import '../../../core/router/routes.gr.dart';
 import '../../../features/cart/data/models/cart_item_model.dart';
 import '../../../features/cart/presentation/cubit/cart_cubit.dart';

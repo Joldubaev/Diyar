@@ -1,12 +1,11 @@
 import 'dart:developer';
 import 'package:auto_route/auto_route.dart';
-import '../../../../core/router/routes.gr.dart';
-import '../../../cart/cart.dart';
-import '../../../features.dart';
+import 'package:diyar/core/core.dart';
+import 'package:diyar/features/cart/cart.dart';
+import 'package:diyar/features/features.dart';
+import 'package:diyar/features/profile/prof.dart';
+import 'package:diyar/l10n/l10n.dart';
 import '../../data/models/distric_model.dart';
-import '../../../profile/presentation/cubit/profile_cubit.dart';
-import '../../../../l10n/l10n.dart';
-import '../../../../shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

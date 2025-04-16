@@ -2,7 +2,6 @@
 class CacheException implements Exception {}
 
 /// Exception thrown when there is an error related to the server.
-class ServerException implements Exception {}
 
 class OfflineException implements Exception {}
 

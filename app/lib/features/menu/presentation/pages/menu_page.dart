@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import '../../../../l10n/l10n.dart';
-import '../../../../shared/components/product/product_item_widget.dart';
+import '../../../../core/components/product/product_item_widget.dart';
 import '../../../cart/cart.dart';
 import '../../data/models/category_model.dart';
 import '../../menu.dart';

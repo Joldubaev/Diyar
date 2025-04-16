@@ -1,10 +1,9 @@
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
-import '../../../auth.dart';
-import '../../../../features.dart';
-import '../../../../../injection_container.dart';
-import '../../../../../shared/shared.dart';
+import 'package:diyar/core/constants/constant.dart';
+import 'package:diyar/features/features.dart';
+import 'package:diyar/injection_container.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:meta/meta.dart';
 import 'package:shared_preferences/shared_preferences.dart';

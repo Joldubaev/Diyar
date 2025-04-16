@@ -4,7 +4,7 @@ import '../../../../curier/presentation/presentation.dart';
 import '../../../data/model/user_pickup_history_model.dart';
 import '../../../history.dart';
 import '../../../../../l10n/l10n.dart';
-import '../../../../../shared/components/components.dart';
+import '../../../../../core/components/components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

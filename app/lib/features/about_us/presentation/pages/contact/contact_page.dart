@@ -1,9 +1,9 @@
 import 'package:auto_route/auto_route.dart';
-import '../../../../../core/core.dart';
-import '../../../../features.dart';
-import '../../../../profile/presentation/presentation.dart';
-import '../../../../../l10n/l10n.dart';
-import '../../../../../shared/shared.dart';
+import 'package:diyar/core/constants/constant.dart';
+import 'package:diyar/core/core.dart';
+import 'package:diyar/features/features.dart';
+import 'package:diyar/features/profile/prof.dart';
+import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';

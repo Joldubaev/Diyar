@@ -1,5 +1,5 @@
 import '../../cart.dart';
-import '../../../../shared/theme/theme.dart';
+import '../../../../core/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

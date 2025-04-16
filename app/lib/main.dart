@@ -1,13 +1,11 @@
 import 'dart:developer';
 import 'core/core.dart';
-import 'core/router/routes.dart';
 import 'features/app/cubit/remote_config_cubit.dart';
 import 'features/curier/curier.dart';
 import 'firebase_options.dart';
 import 'injection_container.dart';
 import 'shared/cubit/bloc/internet_bloc.dart';
 import 'shared/cubit/popular_cubit.dart';
-import 'shared/theme/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'injection_container.dart' as di;

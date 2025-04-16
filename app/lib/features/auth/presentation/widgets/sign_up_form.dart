@@ -1,14 +1,11 @@
 import 'package:auto_route/auto_route.dart';
-import '../../../../core/launch/launch.dart';
-import '../../../../shared/constants/app_const/app_const.dart';
-import '../../../../shared/utils/show/bottom_sheet.dart';
+import 'package:diyar/core/constants/constant.dart';
+import 'package:diyar/core/core.dart';
+import 'package:diyar/features/auth/auth.dart';
+import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/router/routes.gr.dart';
-import '../../../features.dart';
-import '../../../../l10n/l10n.dart';
-import '../../../../shared/components/components.dart';
-import '../../../../shared/theme/theme.dart';
+
 
 class SignUpForm extends StatefulWidget {
   const SignUpForm({super.key});

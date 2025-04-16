@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../data.dart';
-import '../../../../shared/constants/app_const/app_const.dart';
+import '../../../../core/constants/app_const/app_const.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class CartRemoteDataSource {

@@ -1,13 +1,11 @@
 import 'package:auto_route/auto_route.dart';
-import '../../../data/model/news_model.dart';
-import '../widgets/custom_widget.dart';
-import '../../../../../l10n/l10n.dart';
-import '../../../../../shared/shared.dart';
+import 'package:diyar/core/core.dart';
+import 'package:diyar/features/features.dart';
+import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../cubit/home_features_cubit.dart';
 
 @RoutePage()
 class NewsPage extends StatefulWidget {

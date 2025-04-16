@@ -1,10 +1,10 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import '../../../../core/error/exception.dart';
+import 'package:diyar/core/constants/constant.dart';
+import 'package:diyar/core/core.dart';
 import '../model/curier_model.dart';
 import '../model/get_user_moderl.dart';
-import '../../../../shared/constants/constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class CurierDataSource {
@@ -32,10 +32,16 @@ class CurierDataSourceImpl extends CurierDataSource {
       if (res.statusCode == 200) {
         return GetUserModel.fromJson(res.data);
       } else {
-        throw ServerException();
+        throw ServerException(
+          'Ошибка получения данных пользователя',
+          res.statusCode,
+        );
       }
     } catch (e) {
-      throw ServerException();
+      throw ServerException(
+        'Ошибка получения данных пользователя',
+        null,
+      );
     }
   }
 

@@ -1,13 +1,10 @@
 import 'package:auto_route/auto_route.dart';
-import '../../../../core/router/routes.gr.dart';
-import '../../../../injection_container.dart';
-import '../../../../l10n/l10n.dart';
-import '../../../../shared/components/components.dart';
-import '../../../features.dart';
-import '../../../../shared/constants/app_const/app_const.dart';
-import '../../../../shared/theme/theme.dart';
-import '../../../../shared/utils/show/bottom_sheet.dart';
-import '../../../../shared/utils/snackbar/snackbar_message.dart';
+import 'package:diyar/core/constants/constant.dart';
+import 'package:diyar/core/core.dart';
+import 'package:diyar/features/auth/auth.dart';
+import 'package:diyar/injection_container.dart';
+import 'package:diyar/l10n/l10n.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';

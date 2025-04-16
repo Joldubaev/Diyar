@@ -1,11 +1,10 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import '../../../../core/utils/helper/base_helper.dart';
-import '../../menu.dart';
-import '../../../../shared/constants/constant.dart';
-import '../../../../core/core.dart';
-import '../models/category_model.dart';
+import 'package:diyar/core/constants/constant.dart';
+import 'package:diyar/core/core.dart';
+import 'package:diyar/features/features.dart';
+import 'package:diyar/features/menu/data/models/category_model.dart';
 
 abstract class MenuRemoteDataSource {
   Future<List<CategoryModel>> getProductsWithMenu({String? query});
@@ -35,11 +34,17 @@ class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
         }
         return [];
       } else {
-        throw ServerException();
+        throw ServerException(
+          'Error fetching categories',
+          res.statusCode,
+        );
       }
     } catch (e) {
       log("Error: $e");
-      throw ServerException();
+      throw ServerException(
+        'Error fetching categories',
+        null,
+      );
     }
   }
 
@@ -62,7 +67,10 @@ class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
         return [];
       } else {
         log('Server responded with status code: ${res.statusCode}');
-        throw ServerException();
+        throw ServerException(
+          'Error fetching food data',
+          res.statusCode,
+        );
       }
     } on DioException catch (e) {
       if (e.response != null) {
@@ -74,10 +82,16 @@ class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
         // There was an error sending the request
         log('Error sending request: $e');
       }
-      throw ServerException();
+      throw ServerException(
+        'Error fetching food data',
+        e.response?.statusCode,
+      );
     } catch (e) {
       log('Unexpected error: $e');
-      throw ServerException();
+      throw ServerException(
+        'Error fetching food data',
+        null,
+      );
     }
   }
 
@@ -96,11 +110,17 @@ class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
         }
         return [];
       } else {
-        throw ServerException();
+        throw ServerException(
+          'Error fetching popular foods',
+          res.statusCode,
+        );
       }
     } catch (e) {
       log("Error: $e");
-      throw ServerException();
+      throw ServerException(
+        'Error fetching popular foods',
+        null,
+      );
     }
   }
 }

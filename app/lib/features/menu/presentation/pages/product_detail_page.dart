@@ -1,12 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../../../../core/custom_dialog/custom_dialog.dart';
+import '../../../../core/components/custom_dialog/custom_dialog.dart';
 import '../../../../core/router/routes.gr.dart';
 import '../../../../core/utils/helper/user_helper.dart';
 import '../../../cart/data/models/cart_item_model.dart';
 import '../../../cart/presentation/cubit/cart_cubit.dart';
 import 'package:flutter/material.dart';
-import '../../../../shared/theme/app_colors.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../features.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

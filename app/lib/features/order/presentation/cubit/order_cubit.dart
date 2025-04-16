@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import '../../../features.dart';
+import 'package:diyar/features/features.dart';
 import '../../data/models/distric_model.dart';
 import 'package:equatable/equatable.dart';
 

@@ -1,6 +1,6 @@
 /// Exception occur when server failure
 class ServerException implements Exception {
-  final String message;
+  final String? message;
   final int? statusCode;
 
   ServerException(this.message, this.statusCode);

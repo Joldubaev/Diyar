@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import '../../../../core/core.dart';
 import '../models/restaurant_model.dart';
-import '../../../../shared/constants/constant.dart';
+import '../../../../core/constants/constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class AboutUsRemoteDataSource {
@@ -33,14 +33,23 @@ class AboutUsRemoteDataSourceImpl implements AboutUsRemoteDataSource {
           log("About Us Response: ${res.data}");
           return AboutUsModel.fromJson(res.data);
         } else {
-          throw ServerException();
+          throw ServerException(
+            "No data found",
+            res.statusCode,
+          );
         }
       } else {
-        throw ServerException();
+        throw ServerException(
+          "Error: ${res.statusCode}",
+          res.statusCode,
+        );
       }
     } catch (e) {
       log("Error: $e");
-      throw ServerException();
+      throw ServerException(
+        "Failed to fetch data",
+        (e is DioException) ? e.response?.statusCode : null,
+      );
     }
   }
 }

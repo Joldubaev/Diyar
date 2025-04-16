@@ -1,11 +1,9 @@
 import 'package:auto_route/auto_route.dart';
-import '../../../../core/router/routes.gr.dart';
-import '../../data/data.dart';
+import 'package:diyar/core/core.dart';
+import 'package:diyar/features/cart/cart.dart';
+import 'package:diyar/features/cart/presentation/widgets/cart_empty_widget.dart';
+import 'package:diyar/l10n/l10n.dart';
 import '../../../menu/data/models/food_model.dart';
-import '../../../../l10n/l10n.dart';
-import '../presentation.dart';
-import '../widgets/cart_empty_widget.dart';
-import '../../../../shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

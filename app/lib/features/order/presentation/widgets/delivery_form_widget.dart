@@ -1,6 +1,6 @@
 import '../../../auth/presentation/widgets/phone_number.dart';
 import '../../../../l10n/l10n.dart';
-import '../../../../shared/components/components.dart';
+import '../../../../core/components/components.dart';
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 

@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import '../../model/user_pickup_history_model.dart';
 import '../../../history.dart';
-import '../../../../../shared/constants/constant.dart';
+import '../../../../../core/constants/constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class HistoryReDatasource {

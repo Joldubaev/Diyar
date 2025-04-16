@@ -1,4 +1,4 @@
-import '../../theme/theme.dart';
+import '../../../core/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 class SaleWidget extends StatelessWidget {

@@ -1,8 +1,8 @@
 import '../../../history/data/model/order_status_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../../../shared/constants/constant.dart';
-import '../../../../shared/theme/theme.dart';
+import '../../../../core/constants/constant.dart';
+import '../../../../core/theme/theme.dart';
 
 class OrderStepper extends StatefulWidget {
   final OrderStatusModel orderStatus;

@@ -1,5 +1,5 @@
 import '../../../../l10n/l10n.dart';
-import '../../../../shared/theme/theme.dart';
+import '../../../../core/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 class MenuCategoryNameListWidget extends StatelessWidget {
