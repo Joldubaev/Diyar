@@ -1,10 +1,9 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import '../../../../core/constants/api_const/api_const.dart';
-import '../../../../core/constants/app_const/app_const.dart';
-import '../../../../core/core.dart';
-import '../../../auth/data/models/user_model.dart';
+import 'package:diyar/core/core.dart';
+import 'package:diyar/features/auth/auth.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class UserRemoteDataSource {

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:diyar/core/constants/constant.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/curier/curier.dart';
 import 'package:diyar/features/features.dart';

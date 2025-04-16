@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:diyar/core/constants/constant.dart';
 import 'package:diyar/core/core.dart';
 import '../model/curier_model.dart';
 import '../model/get_user_moderl.dart';

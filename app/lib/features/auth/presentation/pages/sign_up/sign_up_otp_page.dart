@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:diyar/core/constants/constant.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/features.dart';
 import 'package:diyar/l10n/l10n.dart';

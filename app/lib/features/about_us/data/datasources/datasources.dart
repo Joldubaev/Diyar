@@ -1,9 +1,8 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import '../../../../core/core.dart';
+import 'package:diyar/core/core.dart';
 import '../models/restaurant_model.dart';
-import '../../../../core/constants/constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class AboutUsRemoteDataSource {

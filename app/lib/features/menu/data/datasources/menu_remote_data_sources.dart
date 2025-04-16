@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:diyar/core/constants/constant.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/features.dart';
 import 'package:diyar/features/menu/data/models/category_model.dart';

@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:diyar/core/constants/constant.dart';
 import 'package:diyar/core/core.dart';
-import '../../../../../shared/models/token_model.dart';
+import 'package:diyar/shared/models/models.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

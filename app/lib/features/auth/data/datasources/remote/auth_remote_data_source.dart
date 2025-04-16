@@ -1,8 +1,8 @@
 import 'dart:developer';
 import 'package:dio/dio.dart';
-import '../../../../../core/constants/constant.dart';
-import '../../../../../core/core.dart';
-import '../../../../features.dart';
+import 'package:diyar/core/core.dart';
+import 'package:diyar/features/auth/auth.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class AuthRemoteDataSource {
