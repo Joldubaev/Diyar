@@ -1,41 +1,55 @@
 import 'package:bloc/bloc.dart';
-import '../../../data/data.dart';
+import 'package:diyar/features/auth/domain/domain.dart';
 import 'package:meta/meta.dart';
 
 part 'sign_up_state.dart';
 
 class SignUpCubit extends Cubit<SignUpState> {
-  final SmsRepository _smsRepository;
   final AuthRepository authRepository;
 
-  SignUpCubit(
-    this.authRepository,
-    this._smsRepository,
-  ) : super(SignUpInitial());
+  SignUpCubit(this.authRepository) : super(SignUpInitial());
 
-  void signUpUser(UserModel model) async {
+  // 🔐 Регистрация
+  Future<void> signUpUser(UserEntities model) async {
     emit(SignUpLoading());
-    try {
-      final user = await authRepository.register(model);
-      emit(SignUpSuccess());
-      return user;
-    } catch (e) {
-      emit(SignUpFailure(e.toString()));
-    }
+
+    final res = await authRepository.register(model);
+    res.fold(
+      (failure) => emit(SignUpFailure(failure.message)),
+      (_) => emit(SignUpSuccess()),
+    );
   }
 
-  String unformatPhoneNumber(String formattedPhoneNumber) {
-    return formattedPhoneNumber.replaceAll(RegExp(r'\D'), '');
+  // 📞 Проверка номера
+  Future<void> checkPhoneNumber(String phone) async {
+    emit(CheckPhoneLoading());
+
+    final res = await authRepository.checkPhoneNumber(phone);
+    res.fold(
+      (failure) => emit(CheckPhoneFailure(failure.message)),
+      (_) => emit(CheckPhoneSuccess()),
+    );
   }
 
-  void sendRegisterSms({required String code, required String phone}) async {
-    emit(SmsSignUpLoading());
-    try {
-      String unformattedPhone = unformatPhoneNumber(phone);
-      await _smsRepository.sendSms(code, unformattedPhone);
-      emit(SmsSignUpLoaded());
-    } catch (e) {
-      emit(SmsSignUpError());
-    }
+  // 📤 Отправка кода
+  Future<void> sendVerificationCode(String phone) async {
+    emit(SendCodeLoading());
+
+    final res = await authRepository.sendVerificationCode(phone);
+    res.fold(
+      (failure) => emit(SendCodeFailure(failure.message)),
+      (_) => emit(SendCodeSuccess()),
+    );
+  }
+
+  // ✅ Подтверждение кода
+  Future<void> verifyCode(String phone, String code) async {
+    emit(VerifyCodeLoading());
+
+    final res = await authRepository.verifyCode(phone, code);
+    res.fold(
+      (failure) => emit(VerifyCodeFailure(failure.message)),
+      (_) => emit(VerifyCodeSuccess()),
+    );
   }
 }

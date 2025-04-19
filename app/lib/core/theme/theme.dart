@@ -9,12 +9,12 @@ final lightTheme = ThemeData(
   primaryColor: AppColors.primary,
   primarySwatch: AppColors.primary,
   fontFamily: "Roboto",
-  scaffoldBackgroundColor: const Color(0xffFAFAFA),
+  scaffoldBackgroundColor: AppColors.grey2,
   colorScheme: const ColorScheme(
     primary: AppColors.primary,
     secondary: AppColors.primary,
     surface: Colors.white,
-    error: Colors.red,
+    error: AppColors.error,
     onPrimary: Colors.white,
     onSecondary: Colors.white,
     onSurface: Colors.black,
@@ -24,11 +24,12 @@ final lightTheme = ThemeData(
   appBarTheme: const AppBarTheme(
     elevation: 0,
     backgroundColor: Colors.white,
-    titleTextStyle: TextStyle(fontSize: 16, color: Colors.black),
+    titleTextStyle: TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.w500),
     foregroundColor: Colors.black,
     surfaceTintColor: Colors.white,
   ),
   textTheme: const TextTheme(
+    // Основной текст
     bodySmall: TextStyle(
       fontSize: 12,
       fontWeight: FontWeight.w400,
@@ -44,21 +45,79 @@ final lightTheme = ThemeData(
       fontWeight: FontWeight.w500,
       color: AppColors.black1,
     ),
+    // Заголовки
     titleLarge: TextStyle(
       fontSize: 28,
       color: Colors.black,
-      fontWeight: FontWeight.w500,
+      fontWeight: FontWeight.w600,
     ),
     titleMedium: TextStyle(
       fontSize: 24,
       color: Colors.black,
-      fontWeight: FontWeight.w500,
+      fontWeight: FontWeight.w600,
     ),
     titleSmall: TextStyle(
       fontSize: 20,
       color: Colors.black,
-      fontWeight: FontWeight.w500,
+      fontWeight: FontWeight.w600,
     ),
+    // Кнопки
+    labelLarge: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.w500,
+      color: Colors.white,
+    ),
+    labelMedium: TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w500,
+      color: Colors.white,
+    ),
+    labelSmall: TextStyle(
+      fontSize: 12,
+      fontWeight: FontWeight.w500,
+      color: Colors.white,
+    ),
+  ),
+  // Стили для карточек
+  cardTheme: const CardTheme(
+    color: Colors.white,
+    elevation: 0,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(12)),
+    ),
+  ),
+  // Стили для кнопок
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ElevatedButton.styleFrom(
+      backgroundColor: AppColors.primary,
+      foregroundColor: Colors.white,
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+      ),
+    ),
+  ),
+  // Стили для полей ввода
+  inputDecorationTheme: const InputDecorationTheme(
+    filled: true,
+    fillColor: Colors.white,
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(8)),
+      borderSide: BorderSide(color: AppColors.grey1),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(8)),
+      borderSide: BorderSide(color: AppColors.grey1),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(8)),
+      borderSide: BorderSide(color: AppColors.primary),
+    ),
+    errorBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(8)),
+      borderSide: BorderSide(color: AppColors.error),
+    ),
+    contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
   ),
   bottomSheetTheme: const BottomSheetThemeData(
     backgroundColor: Colors.transparent,
@@ -72,8 +131,10 @@ final lightTheme = ThemeData(
     ),
   ),
   bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-    selectedLabelStyle: TextStyle(fontSize: 14),
-    unselectedLabelStyle: TextStyle(fontSize: 14),
+    selectedLabelStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+    unselectedLabelStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+    selectedItemColor: AppColors.primary,
+    unselectedItemColor: AppColors.grey,
   ),
 );
 

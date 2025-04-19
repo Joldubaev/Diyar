@@ -1,43 +1,59 @@
-import '../../../features.dart';
-
-abstract class AuthRepository {
-  Future<void> login(UserModel user);
-  Future<void> register(UserModel user);
-  Future<void> sendForgotPasswordCodeToPhone(String phone);
-  Future<void> resetPassword({required ResetModel model});
-  Future<void> refreshToken();
-  Future<void> logout();
-}
+import 'package:dartz/dartz.dart';
+import 'package:diyar/core/core.dart';
+import 'package:diyar/features/auth/domain/domain.dart';
+import 'package:diyar/features/auth/data/datasources/remote/auth_remote_data_source.dart';
+import 'package:diyar/features/auth/data/datasources/local/auth_local_data_source.dart';
+import 'package:diyar/features/auth/data/models/user_model.dart';
+import 'package:diyar/features/auth/data/models/reset_password_model.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
-  final AuthRemoteDataSource _remoteDataSource;
-  final AuthLocalDataSource _localDataSource;
+  final AuthRemoteDataSource remoteDataSource;
+  final AuthLocalDataSource localDataSource;
 
-  AuthRepositoryImpl(this._remoteDataSource, this._localDataSource);
+  AuthRepositoryImpl(this.remoteDataSource, this.localDataSource);
 
   @override
-  Future<void> login(UserModel user) async {
-    return _remoteDataSource.login(user);
+  Future<Either<Failure, void>> login(UserEntities user) {
+    return remoteDataSource.login(UserModel.fromEntity(user));
   }
 
   @override
-  Future<void> register(UserModel user) async {
-    return _remoteDataSource.register(user);
+  Future<Either<Failure, void>> register(UserEntities user) {
+    return remoteDataSource.register(UserModel.fromEntity(user));
   }
 
   @override
-  Future<void> sendForgotPasswordCodeToPhone(String phone) async {
-    return _remoteDataSource.sendForgotPasswordCodeToPhone(phone);
+  Future<Either<Failure, bool>> checkPhoneNumber(String phone) {
+    return remoteDataSource.checkPhoneNumber(phone);
   }
 
   @override
-  Future<void> resetPassword({required ResetModel model}) async {
-    return _remoteDataSource.confirmResetPassword(model: model);
+  Future<Either<Failure, void>> sendVerificationCode(String phone) {
+    return remoteDataSource.sendVerificationCode(phone);
   }
 
   @override
-  Future<void> logout() async => await _localDataSource.logout();
+  Future<Either<Failure, void>> verifyCode(String phone, String code) {
+    return remoteDataSource.verifyCode(phone, code);
+  }
 
   @override
-  Future<void> refreshToken() async => await _remoteDataSource.refreshToken();
+  Future<Either<Failure, void>> sendForgotPasswordCodeToPhone(String phone) {
+    return remoteDataSource.sendForgotPasswordCodeToPhone(phone);
+  }
+
+  @override
+  Future<Either<Failure, void>> resetPassword(ResetPasswordEntity model) {
+    return remoteDataSource.confirmResetPassword(ResetPasswordModel.fromEntity(model));
+  }
+
+  @override
+  Future<Either<Failure, void>> refreshToken() {
+    return remoteDataSource.refreshToken();
+  }
+
+  @override
+  Future<void> logout() {
+    return localDataSource.logout();
+  }
 }

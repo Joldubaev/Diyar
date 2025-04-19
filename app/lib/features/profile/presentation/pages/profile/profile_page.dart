@@ -109,7 +109,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: ProfileTile(
                     imgPath: 'assets/icons/profile_icon.svg',
                     text:
-                        user!.name ?? '', // Используем безопасный доступ к user
+                        user!.userName ?? '', // Используем безопасный доступ к user
                     isSvg: true,
                   ),
                 ),

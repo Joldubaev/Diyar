@@ -4,8 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/auth/auth.dart';
 
-import 'package:shared_preferences/shared_preferences.dart';
-
 abstract class UserRemoteDataSource {
   Future<UserModel> getUser();
   Future<void> updateUser(String name, String phone);
@@ -14,32 +12,33 @@ abstract class UserRemoteDataSource {
 
 class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   final Dio _dio;
-  final SharedPreferences _prefs;
+  final LocalStorage _prefs;
 
   UserRemoteDataSourceImpl(this._dio, this._prefs);
 
   @override
   Future<UserModel> getUser() async {
     try {
-      var res = await _dio.post(ApiConst.getUser,
-          data: {"phone": _prefs.getString(AppConst.phone)},
-          options: Options(
-            headers:
-                ApiConst.authMap(_prefs.getString(AppConst.accessToken) ?? ''),
-          ));
+      log('get user phone: ${_prefs.getString(AppConst.phone)}');
+
+      final res = await _dio.post(
+        ApiConst.getUser,
+        data: {"phone": _prefs.getString(AppConst.phone)},
+        options: Options(
+          headers: ApiConst.authMap(_prefs.getString(AppConst.accessToken) ?? ''),
+        ),
+      );
+
       if (res.statusCode == 200) {
-        return UserModel.fromJson(res.data);
+        final json = res.data['message'];
+        log('[GET USER] message: $json');
+        return UserModel.fromJson(json);
       } else {
-        throw ServerException(
-          'Error fetching user data',
-          res.statusCode,
-        );
+        throw ServerException('Error fetching user data', res.statusCode);
       }
     } catch (e) {
-      throw ServerException(
-        'Error fetching user data',
-        null,
-      );
+      log('[GET USER ERROR] $e');
+      throw ServerException('Error fetching user data', null);
     }
   }
 
@@ -86,8 +85,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
         ApiConst.updateUser,
         data: {"newPhoneNumber": phone, "newUserName": name},
         options: Options(
-          headers:
-              ApiConst.authMap(_prefs.getString(AppConst.accessToken) ?? ''),
+          headers: ApiConst.authMap(_prefs.getString(AppConst.accessToken) ?? ''),
         ),
       );
       if (res.statusCode != 200) {

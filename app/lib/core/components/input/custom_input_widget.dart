@@ -44,7 +44,7 @@ class CustomInputWidget extends StatefulWidget {
 }
 
 final phoneFormatter = MaskTextInputFormatter(
-  mask: "+996 (###) ##-##-##",
+  mask: "+996#########",
   filter: {"#": RegExp(r'[0-9]')},
   type: MaskAutoCompletionType.lazy,
 );

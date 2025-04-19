@@ -1,11 +1,9 @@
 import 'dart:developer';
 
 import 'package:auto_route/auto_route.dart';
-import 'routes.gr.dart';
-import '../../features/auth/data/datasources/datasources.dart';
-import '../constants/app_const/app_const.dart';
-import '../../injection_container.dart';
-// import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:diyar/core/core.dart';
+import 'package:diyar/features/auth/auth.dart';
+import 'package:diyar/injection_container.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 @AutoRouterConfig()
@@ -22,6 +20,7 @@ class AppRouter extends RootStackRouter {
           ],
         ),
         AutoRoute(page: SplashRoute.page, initial: true),
+        AutoRoute(page: CheckPhoneNumberRoute.page),
         AutoRoute(page: CartRoute.page),
         AutoRoute(page: SearchMenuRoute.page),
         AutoRoute(page: ProfileInfoRoute.page, guards: [AuthGuard()]),
@@ -51,6 +50,10 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: ProductDetailRoute.page),
         AutoRoute(page: TerasaRoute.page),
         AutoRoute(page: SecondOrderRoute.page),
+        AutoRoute(page: OrderHistoryRoute.page),
+
+        // AutoRoute(page: TwoGisMapRoute.page),
+
       ];
 }
 
@@ -79,8 +82,7 @@ class AuthGuard extends AutoRouteGuard {
     if (role == 'Courier') {
       log('AuthGuard: Redirecting to CurierRoute');
       resolver.next(false);
-      router.replace(
-          const CurierRoute()); // Заменяем стек, чтобы нельзя было вернуться назад
+      router.replace(const CurierRoute()); // Заменяем стек, чтобы нельзя было вернуться назад
     } else {
       log('AuthGuard: Redirecting to MainRoute');
       resolver.next(false);

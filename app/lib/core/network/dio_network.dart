@@ -3,16 +3,13 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'app_logger.dart';
-import '../../features/features.dart';
-import '../../injection_container.dart';
-import '../constants/api_const/api_const.dart';
-import '../constants/app_const/app_const.dart';
+import 'package:diyar/core/core.dart';
+import 'package:diyar/features/auth/domain/domain.dart';
+import 'package:diyar/injection_container.dart';
 import 'package:flutter/foundation.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'logger_interceptor.dart';
 
 class DioNetwork {
   static late Dio appAPI;

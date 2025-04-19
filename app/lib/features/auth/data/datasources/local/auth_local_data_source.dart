@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/shared/models/models.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class AuthLocalDataSource {
   Future<String?> getLangFromCache();
@@ -11,12 +10,11 @@ abstract class AuthLocalDataSource {
   Future<void> setLangToCache(String langCode);
   Future<void> setUserToCache(TokenModel user);
   String? getUserFromCache();
-  Future<void> setTokenToCache(
-      {String? refresh, required String access, String phone});
+  Future<void> setTokenToCache({String? refresh, required String access, String phone});
 }
 
 class AuthLocalDataSourceImpl implements AuthLocalDataSource {
-  final SharedPreferences prefs;
+  final LocalStorage prefs;
 
   AuthLocalDataSourceImpl(this.prefs);
 
@@ -44,6 +42,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   }
 
   @override
+  @override
   Future<void> setTokenToCache({
     String? refresh,
     required String access,
@@ -54,13 +53,24 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
         await prefs.setString(AppConst.refreshToken, refresh);
       }
       await prefs.setString(AppConst.accessToken, access);
-      log("setTokenToCache: ${AppConst.accessToken}");
-      if (phone != null) await prefs.setString(AppConst.phone, phone);
-      await prefs.setString(
-          AppConst.userId, JwtDecoder.decode(access)['userID']);
-      await prefs.setString(
-          AppConst.userRole, JwtDecoder.decode(access)['role']);
+      log("setTokenToCache: $access");
+
+      if (phone != null) {
+        await prefs.setString(AppConst.phone, phone);
+        log('[CACHE] phone saved: $phone');
+      }
+
+      final payload = JwtDecoder.decode(access);
+      final userId = payload['nameid']; // заменили!
+      final role = payload['role'];
+
+      log('[CACHE] userId from token: $userId');
+      log('[CACHE] role from token: $role');
+
+      await prefs.setString(AppConst.userId, userId);
+      await prefs.setString(AppConst.userRole, role);
     } catch (e) {
+      log('[CACHE ERROR] $e');
       throw CacheException();
     }
   }

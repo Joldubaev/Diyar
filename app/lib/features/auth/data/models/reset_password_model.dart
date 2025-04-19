@@ -1,21 +1,42 @@
-class ResetModel {
-  int? code;
-  String? phone;
-  String? newPassword;
+import 'package:diyar/features/auth/domain/entities/reset_password_entity.dart';
 
-  ResetModel({this.code, this.phone, this.newPassword});
+class ResetPasswordModel extends ResetPasswordEntity {
+  ResetPasswordModel({
+     super.phone,
+    super.newPassword,
+    super.code,
+  });
 
-  ResetModel.fromJson(Map<String, dynamic> json) {
-    code = json['code'];
-    phone = json['phone'];
-    newPassword = json['newPassword'];
+  factory ResetPasswordModel.fromJson(Map<String, dynamic> json) {
+    return ResetPasswordModel(
+      phone: json['phone'] as String,
+      newPassword: json['newPassword'] as String?,
+      code: json['code'] as int?,
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['code'] = code;
-    data['phone'] = phone;
-    data['newPassword'] = newPassword;
-    return data;
+    return {
+      'phone': phone,
+      'newPassword': newPassword,
+      'code': code,
+    };
+  }
+
+    factory ResetPasswordModel.fromEntity(ResetPasswordEntity entity) {
+    return ResetPasswordModel(
+      phone: entity.phone,
+      newPassword: entity.newPassword,
+      code: entity.code,
+    );
+  }
+
+
+  ResetPasswordEntity toEntity() {
+    return ResetPasswordEntity(
+      phone: phone,
+      newPassword: newPassword,
+      code: code,
+    );
   }
 }

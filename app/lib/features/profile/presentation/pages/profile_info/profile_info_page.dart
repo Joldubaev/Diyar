@@ -24,8 +24,8 @@ class _ProfileInfoPageState extends State<ProfileInfoPage> {
   @override
   void initState() {
     super.initState();
-    fullNameController.text = widget.user.name ?? '';
-    _phoneController.text = widget.user.phone ?? '';
+    fullNameController.text = widget.user.userName ?? '';
+    _phoneController.text = widget.user.phone;
   }
 
   @override
@@ -73,7 +73,7 @@ class _ProfileInfoPageState extends State<ProfileInfoPage> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                Text('${widget.user.name} ',
+                Text('${widget.user.userName} ',
                     style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 40),
                 CustomInputWidget(

@@ -33,7 +33,7 @@ class AppConst {
   // Map
   static const getLocations = "6d9fa3b5-2a2b-46fa-838b-ce4e9fc4e4f8";
   static const email = 'Diyarcafe1996@mail.ru';
-  static const phone = '+996 (703) 18-28-59';
+  static const phone = 'USER_PHONE';
 
   // terms and conditions
   static const terms =
