@@ -78,7 +78,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
           );
         } else if (state is ProfileGetLoaded) {
           user = state.userModel;
-          _userName.text = user?.name ?? '';
+          _userName.text = user?.userName ?? '';
           _phoneController.text = user?.phone ?? '+996';
         }
         return BlocConsumer<OrderCubit, OrderState>(

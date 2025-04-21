@@ -1,13 +1,15 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/auth/auth.dart';
+import 'package:diyar/features/auth/domain/entities/reset_password_entity.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 @RoutePage()
 class RessetPasswordPage extends StatefulWidget {
-  const RessetPasswordPage({super.key});
+  final String? phone;
+  const RessetPasswordPage({super.key, this.phone});
 
   @override
   State<RessetPasswordPage> createState() => _RessetPasswordPageState();
@@ -20,6 +22,12 @@ class _RessetPasswordPageState extends State<RessetPasswordPage> {
   final _confirmPasswordController = TextEditingController();
   final resedPasswordCode = TextEditingController();
   bool _isNavigated = false;
+
+  @override
+  void initState() {
+    _phoneController.text = widget.phone ?? '';
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,10 +44,7 @@ class _RessetPasswordPageState extends State<RessetPasswordPage> {
         ),
         title: Text(
           context.l10n.passwordRecovery,
-          style: Theme.of(context)
-              .textTheme
-              .titleSmall!
-              .copyWith(color: theme.colorScheme.onPrimary),
+          style: Theme.of(context).textTheme.titleSmall!.copyWith(color: theme.colorScheme.onPrimary),
         ),
       ),
       body: Padding(
@@ -57,9 +62,10 @@ class _RessetPasswordPageState extends State<RessetPasswordPage> {
               const SizedBox(height: 10),
               Text(
                 context.l10n.passwordRecoveryText,
-                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    color: theme.colorScheme.primary,
-                    fontWeight: FontWeight.w600),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge!
+                    .copyWith(color: theme.colorScheme.primary, fontWeight: FontWeight.w600),
                 textAlign: TextAlign.center,
               ),
               CustomInputWidget(
@@ -131,8 +137,7 @@ class _RessetPasswordPageState extends State<RessetPasswordPage> {
                     if (!_isNavigated) {
                       _isNavigated = true;
                       WidgetsBinding.instance.addPostFrameCallback((_) {
-                        context.router.pushAndPopUntil(const SignInRoute(),
-                            predicate: (_) => false);
+                        context.router.pushAndPopUntil(const SignInRoute(), predicate: (_) => false);
                       });
                       showToast(context.l10n.passwordChanged, isError: false);
                     }
@@ -152,24 +157,19 @@ class _RessetPasswordPageState extends State<RessetPasswordPage> {
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyMedium!
-                                .copyWith(
-                                    color:
-                                        const Color.fromARGB(255, 233, 71, 35),
-                                    fontWeight: FontWeight.bold),
+                                .copyWith(color: const Color.fromARGB(255, 233, 71, 35), fontWeight: FontWeight.bold),
                           ),
                         ),
                         const SizedBox(height: 10),
                         SubmitButtonWidget(
-                          textStyle: Theme.of(context)
-                              .textTheme
-                              .bodyLarge!
-                              .copyWith(color: theme.colorScheme.onPrimary),
+                          textStyle:
+                              Theme.of(context).textTheme.bodyLarge!.copyWith(color: theme.colorScheme.onPrimary),
                           bgColor: theme.colorScheme.primary,
                           title: context.l10n.entrance,
                           onTap: () {
                             if (_formKey.currentState!.validate()) {
                               context.read<SignInCubit>().resetPassword(
-                                    model: ResetModel(
+                                    ResetPasswordEntity(
                                       phone: _phoneController.text,
                                       newPassword: _passwordController.text,
                                       code: int.parse(resedPasswordCode.text),
@@ -183,16 +183,13 @@ class _RessetPasswordPageState extends State<RessetPasswordPage> {
                   }
 
                   return SubmitButtonWidget(
-                    textStyle: Theme.of(context)
-                        .textTheme
-                        .bodyLarge!
-                        .copyWith(color: theme.colorScheme.onPrimary),
+                    textStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(color: theme.colorScheme.onPrimary),
                     bgColor: theme.colorScheme.primary,
                     title: context.l10n.entrance,
                     onTap: () {
                       if (_formKey.currentState!.validate()) {
                         context.read<SignInCubit>().resetPassword(
-                              model: ResetModel(
+                              ResetPasswordEntity(
                                 phone: _phoneController.text,
                                 newPassword: _passwordController.text,
                                 code: int.parse(resedPasswordCode.text),

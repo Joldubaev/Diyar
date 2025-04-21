@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:diyar/core/constants/constant.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/features.dart';
 import 'package:diyar/features/profile/prof.dart';
@@ -110,7 +109,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: ProfileTile(
                     imgPath: 'assets/icons/profile_icon.svg',
                     text:
-                        user!.name ?? '', // Используем безопасный доступ к user
+                        user!.userName ?? '', // Используем безопасный доступ к user
                     isSvg: true,
                   ),
                 ),

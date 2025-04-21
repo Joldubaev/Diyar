@@ -173,8 +173,8 @@ class _PickupFormPageState extends State<PickupFormPage> {
             body: Center(child: CircularProgressIndicator()),
           );
         } else if (state is ProfileGetLoaded) {
-          _userName.text = state.userModel.name ?? '';
-          _phoneController.text = state.userModel.phone ?? '+996';
+          _userName.text = state.userModel.userName ?? '';
+          _phoneController.text = state.userModel.phone;
         }
         return BlocConsumer<OrderCubit, OrderState>(
           listener: (context, state) {

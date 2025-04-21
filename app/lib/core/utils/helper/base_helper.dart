@@ -1,7 +1,6 @@
 
 import 'package:diyar/core/constants/constant.dart';
-
-import '../../../injection_container.dart';
+import 'package:diyar/injection_container.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BaseHelper {

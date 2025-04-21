@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AuthBottomSheet extends StatelessWidget {
-  const AuthBottomSheet({super.key, required this.resedPasswordCode});
+  const AuthBottomSheet({super.key, required this.resetPasswordPhone});
 
-  final TextEditingController resedPasswordCode;
+  final TextEditingController resetPasswordPhone;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class AuthBottomSheet extends StatelessWidget {
           CustomInputWidget(
             hintText: '+996',
             filledColor: Theme.of(context).colorScheme.surface,
-            controller: resedPasswordCode,
+            controller: resetPasswordPhone,
             inputType: TextInputType.phone,
             inputFormatters: [phoneFormatter],
             validator: (value) {
@@ -46,11 +46,11 @@ class AuthBottomSheet extends StatelessWidget {
             bgColor: Theme.of(context).colorScheme.primary,
             title: context.l10n.send,
             onTap: () {
-              if (resedPasswordCode.text.isNotEmpty) {
-                context
-                    .read<SignInCubit>()
-                    .sendCodeToPhone(resedPasswordCode.text);
-                context.router.push(const RessetPasswordRoute());
+              if (resetPasswordPhone.text.isNotEmpty) {
+                context.read<SignInCubit>().sendCode(resetPasswordPhone.text);
+                context.router.push(
+                  RessetPasswordRoute(phone: resetPasswordPhone.text),
+                );
               } else {
                 SnackBarMessage().showErrorSnackBar(
                   message: context.l10n.pleaseEnterCorrectPhone,

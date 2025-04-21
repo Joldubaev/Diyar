@@ -1,3 +1,5 @@
+import 'package:diyar/features/about_us/domain/domain.dart';
+
 class AboutUsModel {
   AboutUsModel({
     this.name,
@@ -24,4 +26,21 @@ class AboutUsModel {
             ? null
             : List<dynamic>.from(photoLinks!.map((x) => x.toJson())),
       };
+
+factory AboutUsModel.fromEntity(AboutUsEntities entity) {
+    return AboutUsModel(
+      name: entity.name,
+      description: entity.description,
+      photoLinks: entity.photoLinks,
+    );
+  }
+
+  AboutUsEntities toEntity() {
+    return AboutUsEntities(
+      name: name ?? '',
+      description: description ?? '',
+      photoLinks: photoLinks ?? [],
+    );
+  }
+  
 }

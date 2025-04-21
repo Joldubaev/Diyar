@@ -1,7 +1,8 @@
 import 'package:auto_route/auto_route.dart';
-import '../../../../features.dart';
-import '../../../../../l10n/l10n.dart';
-import '../../../../../core/theme/theme.dart';
+import 'package:diyar/core/core.dart';
+import 'package:diyar/features/about_us/domain/domain.dart';
+import 'package:diyar/features/features.dart';
+import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,7 +16,7 @@ class VipPage extends StatefulWidget {
 
 class _VipPageState extends State<VipPage> {
   final type = AboutUsType.values;
-  AboutUsModel? model;
+  AboutUsEntities? model;
 
   @override
   void initState() {
@@ -29,11 +30,7 @@ class _VipPageState extends State<VipPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: theme.colorScheme.primary,
-        title: Text(context.l10n.vip,
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium!
-                .copyWith(color: AppColors.white)),
+        title: Text(context.l10n.vip, style: Theme.of(context).textTheme.titleMedium!.copyWith(color: AppColors.white)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: AppColors.white),
           onPressed: () {

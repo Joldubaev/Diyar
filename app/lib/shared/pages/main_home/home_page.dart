@@ -109,15 +109,13 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: theme.colorScheme.primary,
       title: BlocBuilder<ProfileCubit, ProfileState>(
         builder: (context, state) {
-          final userName =
-              context.read<ProfileCubit>().user?.name ?? 'в Дияр Экспресс';
+          final userName = context.read<ProfileCubit>().user?.userName ?? 'в Дияр Экспресс';
           return Align(
             alignment: Alignment.centerLeft,
             child: FittedBox(
               child: Text(
                 '${l10n.welcome}, $userName!',
-                style: theme.textTheme.titleSmall
-                    ?.copyWith(color: AppColors.white),
+                style: theme.textTheme.titleSmall?.copyWith(color: AppColors.white),
               ),
             ),
           );
@@ -145,8 +143,7 @@ class _PopularSection extends StatelessWidget {
       children: [
         Text(
           l10n.popularFood,
-          style: theme.textTheme.titleSmall
-              ?.copyWith(color: theme.colorScheme.onSurface),
+          style: theme.textTheme.titleSmall?.copyWith(color: theme.colorScheme.onSurface),
         ),
         const SizedBox(height: 10),
         SizedBox(

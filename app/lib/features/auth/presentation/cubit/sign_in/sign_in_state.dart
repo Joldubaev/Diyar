@@ -11,7 +11,7 @@ final class SignInSuccessWithUser extends SignInState {}
 
 final class SignOutSuccess extends SignInState {}
 
-final class FogotPasswordSuccess extends SignInState {}
+final class ForgotPasswordSuccess extends SignInState {}
 
 final class ResetPasswordSuccess extends SignInState {}
 

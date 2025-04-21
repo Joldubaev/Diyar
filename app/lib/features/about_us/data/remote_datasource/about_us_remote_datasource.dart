@@ -1,31 +1,29 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import '../../../../core/core.dart';
-import '../models/restaurant_model.dart';
-import '../../../../core/constants/constant.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:diyar/core/core.dart';
+import 'package:diyar/features/features.dart';
 
 abstract class AboutUsRemoteDataSource {
   Future<AboutUsModel> getAboutUs({required String type});
 }
 
 class AboutUsRemoteDataSourceImpl implements AboutUsRemoteDataSource {
-  SharedPreferences prefs;
   final Dio _dio;
+  final LocalStorage _localStorage;
 
-  AboutUsRemoteDataSourceImpl(this.prefs, this._dio);
+  AboutUsRemoteDataSourceImpl(this._dio, this._localStorage);
+  String get token => _localStorage.getString(AppConst.accessToken) ?? "";
 
   @override
   Future<AboutUsModel> getAboutUs({required String type}) async {
     try {
-      var token = prefs.getString(AppConst.accessToken) ?? '';
-
       var res = await _dio.get(
-        ApiConst.getAboutUs(type: type),
-        options: Options(
-          headers: ApiConst.authMap(token),
-        ),
+        ApiConst.getAboutUs,
+        queryParameters: {
+          "about": type,
+        },
+        options: Options(headers: BaseHelper.authToken(token)),
       );
 
       if (res.statusCode == 200) {

@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
-import '../../../../core/router/routes.gr.dart';
-import '../../../../l10n/l10n.dart';
-import '../../../../core/theme/app_colors.dart';
+import 'package:diyar/core/core.dart';
+import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 

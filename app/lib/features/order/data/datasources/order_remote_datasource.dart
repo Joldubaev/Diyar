@@ -3,13 +3,12 @@ import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:diyar/core/constants/constant.dart';
 import 'package:diyar/core/core.dart';
+import 'package:diyar/features/map/map.dart';
 import '../data.dart';
 import '../models/distric_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../map/data/models/location_model.dart';
 
 abstract class OrderRemoteDataSource {
   Future<List<String>> getOrderHistory();
