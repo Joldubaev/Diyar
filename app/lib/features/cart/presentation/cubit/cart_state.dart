@@ -12,7 +12,7 @@ class CartInitial extends CartState {}
 class GetAllCartLoading extends CartState {}
 
 class GetAllCartLoaded extends CartState {
-  final Stream<List<CartItemModel>> items;
+  final Stream<List<CartItemEntity>> items;
 
   const GetAllCartLoaded({required this.items});
 

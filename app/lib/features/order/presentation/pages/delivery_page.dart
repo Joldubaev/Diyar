@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/cart.dart';
+import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:diyar/features/features.dart';
 import 'package:diyar/features/profile/prof.dart';
 import 'package:diyar/l10n/l10n.dart';
@@ -11,7 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 @RoutePage()
 class DeliveryFormPage extends StatefulWidget {
-  final List<CartItemModel> cart;
+  final List<CartItemEntity> cart;
   final int totalPrice;
   final int dishCount;
   final DistricModel? distric;

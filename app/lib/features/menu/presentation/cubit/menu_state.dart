@@ -12,7 +12,7 @@ class MenuInitial extends MenuState {}
 class GetMenuLoading extends MenuState {}
 
 class GetMenuLoaded extends MenuState {
-  final List<CategoryModel> categories;
+  final List<CategoryEntity> categories;
 
   const GetMenuLoaded(this.categories);
 }
@@ -22,7 +22,7 @@ class GetMenuFailure extends MenuState {}
 class SearchMenuLoading extends MenuState {}
 
 class SearchMenuLoaded extends MenuState {
-  final List<FoodModel> foods;
+  final List<FoodEntity> foods;
 
   const SearchMenuLoaded(this.foods);
 }

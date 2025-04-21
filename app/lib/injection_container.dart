@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/about_us/about_us_injection.dart';
 import 'package:diyar/features/auth/auth_injection.dart';
+import 'package:diyar/features/menu/menu_injection.dart';
 import 'features/app/cubit/remote_config_cubit.dart';
 import 'features/cart/cart.dart';
 import 'features/curier/curier.dart';
@@ -38,13 +39,15 @@ Future<void> init() async {
   // aboutUsInjection();
   await aboutUsInjection();
 
+  // menuInjection();
+  await menuInjection();
+
   // ✅ Остальная инициализация...
   sl.registerFactory(() => ProfileCubit(sl()));
-  sl.registerFactory(() => MenuCubit(sl()));
+
   sl.registerFactory(() => CartCubit(sl()));
   sl.registerFactory(() => PopularCubit(sl()));
   sl.registerFactory(() => OrderCubit(sl()));
-  // sl.registerFactory(() => AboutUsCubit(sl()));
   sl.registerFactory(() => HomeFeaturesCubit(sl()));
   sl.registerFactory(() => HistoryCubit(sl()));
   sl.registerFactory(() => CurierCubit(sl()));
@@ -61,9 +64,6 @@ Future<void> init() async {
 
   sl.registerLazySingleton<UserRepository>(() => UserRepositoryImpl(sl()));
   sl.registerLazySingleton<UserRemoteDataSource>(() => UserRemoteDataSourceImpl(sl(), sl()));
-
-  sl.registerLazySingleton<MenuRepository>(() => MenuRepositoryImpl(sl()));
-  sl.registerLazySingleton<MenuRemoteDataSource>(() => MenuRemoteDataSourceImpl(sl()));
 
   sl.registerLazySingleton<HomeRemoteDataSource>(() => HomeFeaturesRepositoryImpl(sl()));
   sl.registerLazySingleton<HomeRepository>(() => HomeFeaturesRepoImpl(sl()));

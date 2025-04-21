@@ -49,6 +49,10 @@ class AppConst {
   static const delivered = "order is being delivered";
   static const finished = "Finished";
   static const cancel = "canceled order";
+
+  static const String kCachedCategories = 'cached_categories';
+  static const String kCachedFoods = 'cached_foods';
+  static const String kCachedPopularFoods = 'cached_popular_foods';
 }
 
 String generateOtpCode() {

@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
 import '../../../../core/utils/helper/user_helper.dart';
 import '../../data/data.dart';
 import '../../data/repository/cart_repository.dart';
@@ -10,7 +11,7 @@ class CartCubit extends Cubit<CartState> {
   final CartRepository _cartRepository;
   CartCubit(this._cartRepository) : super(CartInitial());
 
-  Stream<List<CartItemModel>> cart = const Stream.empty();
+  Stream<List<CartItemEntity>> cart = const Stream.empty();
 
   int dishCount = 0;
   int totalPrice = 0;
@@ -27,7 +28,7 @@ class CartCubit extends Cubit<CartState> {
     }
   }
 
-  Future<void> addToCart(CartItemModel product) async {
+  Future<void> addToCart(CartItemEntity product) async {
     try {
       await _cartRepository.addToCart(product);
       emit(AddToCartSuccess());
@@ -83,7 +84,7 @@ class CartCubit extends Cubit<CartState> {
     }
   }
 
-  Future<void> setCartItemCount(CartItemModel cart) async {
+  Future<void> setCartItemCount(CartItemEntity cart) async {
     emit(SetCartItemLoading());
     try {
       await _cartRepository.setCartItemCount(cart);

@@ -1,4 +1,5 @@
-import '../../features/features.dart';
+import 'package:diyar/features/menu/domain/domain.dart';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -9,14 +10,14 @@ class PopularCubit extends Cubit<PopularState> {
 
   final MenuRepository _menuRepository;
 
-  List<FoodModel> popularFoods = [];
+  List<FoodEntity> popularFoods = [];
 
   Future getPopularProducts() async {
     emit(PopularLoading());
     try {
       final product = await _menuRepository.getPopularFoods();
-      popularFoods = product;
-      emit(PopularLoaded(product));
+      // popularFoods = product;
+      // emit(PopularLoaded(product));
     } catch (e) {
       emit(const PopularError('Ошибка загрузки данных'));
     }

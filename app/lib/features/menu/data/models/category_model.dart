@@ -1,43 +1,45 @@
 import 'dart:convert';
+import 'package:diyar/features/menu/domain/domain.dart';
+import 'message_model.dart';
 
-import 'food_model.dart';
-
-CategoryModel menuModelFromJson(String str) =>
-    CategoryModel.fromJson(json.decode(str));
+CategoryModel menuModelFromJson(String str) => CategoryModel.fromJson(json.decode(str));
 
 String menuModelToJson(CategoryModel data) => json.encode(data.toJson());
 
 class CategoryModel {
-  CategoryName? category;
-  List<FoodModel>? foods;
+  final int? code;
+  final List<MessagModel>? message;
 
-  CategoryModel({this.category, this.foods});
+  CategoryModel({
+    this.code,
+    this.message,
+  });
 
-  factory CategoryModel.fromJson(Map<String, dynamic> json) => CategoryModel(
-        category: json["Category"] == null
-            ? null
-            : CategoryName.fromJson(json["Category"]),
-        foods: json["Foods"] == null
-            ? []
-            : List<FoodModel>.from(
-                json["Foods"]!.map((x) => FoodModel.fromJson(x))),
-      );
+  Map<String, dynamic> toJson() {
+    return {
+      'code': code,
+      'message': message?.map((x) => x.toJson()).toList(),
+    };
+  }
 
-  Map<String, dynamic> toJson() => {
-        "Category": category?.toJson(),
-        "Foods": foods == null
-            ? []
-            : List<dynamic>.from(foods!.map((x) => x.toJson())),
-      };
-}
+  factory CategoryModel.fromJson(Map<String, dynamic> map) {
+    return CategoryModel(
+      code: map['code']?.toInt(),
+      message:
+          map['message'] != null ? List<MessagModel>.from(map['message']?.map((x) => MessagModel.fromJson(x))) : null,
+    );
+  }
 
-class CategoryName {
-  String? name;
-
-  CategoryName({this.name});
-
-  factory CategoryName.fromJson(Map<String, dynamic> json) =>
-      CategoryName(name: json["name"]);
-
-  Map<String, dynamic> toJson() => {"name": name};
+  factory CategoryModel.fromEntity(CategoryEntity entity) {
+    return CategoryModel(
+      code: entity.code,
+      message: entity.message?.map((e) => MessagModel.fromEntity(e)).toList(),
+    );
+  }
+  CategoryEntity toEntity() {
+    return CategoryEntity(
+      code: code,
+      message: message?.map((e) => e.toEntity()).toList(),
+    );
+  }
 }

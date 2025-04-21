@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/cart.dart';
+import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:diyar/features/features.dart';
 import 'package:diyar/features/profile/presentation/presentation.dart';
 import 'package:diyar/l10n/l10n.dart';
@@ -12,7 +13,7 @@ import '../widgets/custom_dialog_widget.dart';
 
 @RoutePage()
 class PickupFormPage extends StatefulWidget {
-  final List<CartItemModel> cart;
+  final List<CartItemEntity> cart;
   final int totalPrice;
   const PickupFormPage({super.key, required this.cart, required this.totalPrice});
 

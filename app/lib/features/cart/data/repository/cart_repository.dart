@@ -1,14 +1,16 @@
+import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
+
 import '../data.dart';
 
 abstract class CartRepository {
   // CARTS
-  Future<void> addToCart(CartItemModel product);
+  Future<void> addToCart(CartItemEntity product);
   Future<void> removeFromCart(String id);
   Future<void> incrementCart(String id);
   Future<void> decrementCart(String id);
-  Future<void> setCartItemCount(CartItemModel cart);
+  Future<void> setCartItemCount(CartItemEntity cart);
   Future<void> clearCart();
-  Stream<List<CartItemModel>> getAllCartItems();
+  Stream<List<CartItemEntity>> getAllCartItems();
 }
 
 class CartRepositoryImpl implements CartRepository {
@@ -17,8 +19,8 @@ class CartRepositoryImpl implements CartRepository {
   CartRepositoryImpl(this._cartRemoteDataSource);
 
   @override
-  Future<void> addToCart(CartItemModel product) {
-    return _cartRemoteDataSource.addToCart(product);
+  Future<void> addToCart(CartItemEntity product) {
+    return _cartRemoteDataSource.addToCart(CartItemModel.fromEntity(product));
   }
 
   @override
@@ -37,8 +39,10 @@ class CartRepositoryImpl implements CartRepository {
   }
 
   @override
-  Stream<List<CartItemModel>> getAllCartItems() {
-    return _cartRemoteDataSource.getAllCartItems();
+  Stream<List<CartItemEntity>> getAllCartItems() {
+    return _cartRemoteDataSource.getAllCartItems().map(
+      (cartItemModels) => cartItemModels.map((model) => model.toEntity()).toList(),
+    );
   }
 
   @override
@@ -47,7 +51,7 @@ class CartRepositoryImpl implements CartRepository {
   }
 
   @override
-  Future<void> setCartItemCount(CartItemModel cart) {
-    return _cartRemoteDataSource.setCartItemCount(cart);
+  Future<void> setCartItemCount(CartItemEntity cart) {
+    return _cartRemoteDataSource.setCartItemCount(CartItemModel.fromEntity(cart));
   }
 }

@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart' show ProductItemWidget;
 import 'package:diyar/features/cart/cart.dart';
-import 'package:diyar/features/menu/data/models/category_model.dart';
+import 'package:diyar/features/menu/domain/domain.dart';
 import 'package:diyar/features/menu/menu.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +23,7 @@ class _MenuPageState extends State<MenuPage>
   final ItemPositionsListener _itemPositionsListener =
       ItemPositionsListener.create();
   final ScrollController _scrollController = ScrollController();
-  List<CategoryModel> menu = [];
+  List<CategoryEntity> menu = [];
 
   @override
   void initState() {

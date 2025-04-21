@@ -1,19 +1,16 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../../../../core/components/custom_dialog/custom_dialog.dart';
-import '../../../../core/router/routes.gr.dart';
-import '../../../../core/utils/helper/user_helper.dart';
-import '../../../cart/data/models/cart_item_model.dart';
-import '../../../cart/presentation/cubit/cart_cubit.dart';
+import 'package:diyar/core/core.dart';
+import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
+import 'package:diyar/features/cart/presentation/cubit/cart_cubit.dart';
+import 'package:diyar/features/menu/domain/domain.dart';
 import 'package:flutter/material.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../features.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 @RoutePage()
 class ProductDetailPage extends StatelessWidget {
   final int? quantity;
-  final FoodModel food;
+  final FoodEntity food;
 
   const ProductDetailPage({
     super.key,
@@ -52,7 +49,7 @@ class ProductDetailPage extends StatelessWidget {
             ProductName(food: food),
             ProductWeightAndPrice(food: food),
             ProductDescription(food: food),
-            StreamBuilder<List<CartItemModel>>(
+            StreamBuilder<List<CartItemEntity>>(
               stream: context.read<CartCubit>().cart,
               builder: (context, snapshot) {
                 List cart = [];
@@ -62,7 +59,7 @@ class ProductDetailPage extends StatelessWidget {
 
                 final cartItem = cart.firstWhere(
                   (element) => element.food?.id == food.id,
-                  orElse: () => CartItemModel(food: food, quantity: 0),
+                  orElse: () => CartItemEntity(food: food, quantity: 0),
                 );
                 return Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -98,7 +95,7 @@ class ProductDetailPage extends StatelessWidget {
                         if (quantity == 0) {
                           if (UserHelper.isAuth()) {
                             context.read<CartCubit>().addToCart(
-                                  CartItemModel(food: food, quantity: 1),
+                                  CartItemEntity(food: food, quantity: 1),
                                 );
                           } else {
                             _showRegisterDialog(context);
@@ -124,7 +121,7 @@ class ProductDetailPage extends StatelessWidget {
 }
 
 class ProductImage extends StatelessWidget {
-  final FoodModel food;
+  final FoodEntity food;
 
   const ProductImage({super.key, required this.food});
 
@@ -150,7 +147,7 @@ class ProductImage extends StatelessWidget {
 }
 
 class ProductName extends StatelessWidget {
-  final FoodModel food;
+  final FoodEntity food;
 
   const ProductName({super.key, required this.food});
 
@@ -172,7 +169,7 @@ class ProductName extends StatelessWidget {
 }
 
 class ProductWeightAndPrice extends StatelessWidget {
-  final FoodModel food;
+  final FoodEntity food;
 
   const ProductWeightAndPrice({super.key, required this.food});
 
@@ -204,7 +201,7 @@ class ProductWeightAndPrice extends StatelessWidget {
 }
 
 class ProductDescription extends StatelessWidget {
-  final FoodModel food;
+  final FoodEntity food;
 
   const ProductDescription({super.key, required this.food});
 

@@ -12,7 +12,7 @@ class PopularInitial extends PopularState {}
 class PopularLoading extends PopularState {}
 
 class PopularLoaded extends PopularState {
-  final List<FoodModel> products;
+  final List<FoodEntity> products;
 
   const PopularLoaded(this.products);
 

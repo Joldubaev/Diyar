@@ -24,8 +24,8 @@ import 'package:diyar/features/about_us/presentation/pages/about/vip_page.dart'
     as _i37;
 import 'package:diyar/features/about_us/presentation/pages/contact/contact_page.dart'
     as _i6;
-import 'package:diyar/features/auth/auth.dart' as _i45;
-import 'package:diyar/features/auth/domain/domain.dart' as _i47;
+import 'package:diyar/features/auth/auth.dart' as _i44;
+import 'package:diyar/features/auth/domain/domain.dart' as _i46;
 import 'package:diyar/features/auth/presentation/pages/reset_password/reset_password_page.dart'
     as _i22;
 import 'package:diyar/features/auth/presentation/pages/sign_in/sign_in_page.dart'
@@ -40,16 +40,15 @@ import 'package:diyar/features/auth/presentation/pages/sign_up/sign_up_succes.da
     as _i30;
 import 'package:diyar/features/auth/presentation/pages/splash/splash_page.dart'
     as _i31;
-import 'package:diyar/features/cart/cart.dart' as _i41;
-import 'package:diyar/features/cart/data/data.dart' as _i42;
+import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart'
+    as _i41;
 import 'package:diyar/features/cart/presentation/pages/cart_page.dart' as _i3;
 import 'package:diyar/features/curier/presentation/pages/curier_page.dart'
     as _i7;
 import 'package:diyar/features/curier/presentation/pages/history_page.dart'
     as _i10;
-import 'package:diyar/features/features.dart' as _i44;
 import 'package:diyar/features/history/data/model/user_pickup_history_model.dart'
-    as _i48;
+    as _i47;
 import 'package:diyar/features/history/presentation/pages/order_active/order_active_page.dart'
     as _i2;
 import 'package:diyar/features/history/presentation/pages/order_active/order_detail_page.dart'
@@ -64,6 +63,7 @@ import 'package:diyar/features/history/presentation/pages/pickup_history/user_pi
     as _i36;
 import 'package:diyar/features/map/presentation/user_map/order_map_page.dart'
     as _i17;
+import 'package:diyar/features/menu/domain/domain.dart' as _i43;
 import 'package:diyar/features/menu/presentation/pages/menu_page.dart' as _i13;
 import 'package:diyar/features/menu/presentation/pages/product_detail_page.dart'
     as _i19;
@@ -80,7 +80,7 @@ import 'package:diyar/features/profile/presentation/pages/profile/profile_page.d
     as _i21;
 import 'package:diyar/features/profile/presentation/pages/profile_info/profile_info_page.dart'
     as _i20;
-import 'package:diyar/features/sale_news/data/model/sale_model.dart' as _i46;
+import 'package:diyar/features/sale_news/data/model/sale_model.dart' as _i45;
 import 'package:diyar/features/sale_news/presentation/pages/news/news_page.dart'
     as _i14;
 import 'package:diyar/features/sale_news/presentation/pages/sale/sale_page.dart'
@@ -89,7 +89,7 @@ import 'package:diyar/features/templates/presentation/pages/templates_page.dart'
     as _i32;
 import 'package:diyar/shared/pages/main_home/home_page.dart' as _i11;
 import 'package:diyar/shared/pages/main_home/main_page.dart' as _i12;
-import 'package:flutter/cupertino.dart' as _i43;
+import 'package:flutter/cupertino.dart' as _i42;
 import 'package:flutter/material.dart' as _i39;
 
 /// generated route for
@@ -211,7 +211,7 @@ class DeliveryFormRoute extends _i38.PageRouteInfo<DeliveryFormRouteArgs> {
     _i39.Key? key,
     _i40.DistricModel? distric,
     String? address,
-    required List<_i41.CartItemModel> cart,
+    required List<_i41.CartItemEntity> cart,
     required int dishCount,
     required int totalPrice,
     List<_i38.PageRouteInfo>? children,
@@ -262,7 +262,7 @@ class DeliveryFormRouteArgs {
 
   final String? address;
 
-  final List<_i41.CartItemModel> cart;
+  final List<_i41.CartItemEntity> cart;
 
   final int dishCount;
 
@@ -428,7 +428,7 @@ class OrderHistoryRoute extends _i38.PageRouteInfo<void> {
 class OrderMapRoute extends _i38.PageRouteInfo<OrderMapRouteArgs> {
   OrderMapRoute({
     _i39.Key? key,
-    required List<_i42.CartItemModel> cart,
+    required List<_i41.CartItemEntity> cart,
     required int totalPrice,
     List<_i38.PageRouteInfo>? children,
   }) : super(
@@ -461,7 +461,7 @@ class OrderMapRouteArgs {
 
   final _i39.Key? key;
 
-  final List<_i42.CartItemModel> cart;
+  final List<_i41.CartItemEntity> cart;
 
   final int totalPrice;
 
@@ -475,8 +475,8 @@ class OrderMapRouteArgs {
 /// [_i18.PickupFormPage]
 class PickupFormRoute extends _i38.PageRouteInfo<PickupFormRouteArgs> {
   PickupFormRoute({
-    _i43.Key? key,
-    required List<_i41.CartItemModel> cart,
+    _i42.Key? key,
+    required List<_i41.CartItemEntity> cart,
     required int totalPrice,
     List<_i38.PageRouteInfo>? children,
   }) : super(
@@ -511,9 +511,9 @@ class PickupFormRouteArgs {
     required this.totalPrice,
   });
 
-  final _i43.Key? key;
+  final _i42.Key? key;
 
-  final List<_i41.CartItemModel> cart;
+  final List<_i41.CartItemEntity> cart;
 
   final int totalPrice;
 
@@ -528,7 +528,7 @@ class PickupFormRouteArgs {
 class ProductDetailRoute extends _i38.PageRouteInfo<ProductDetailRouteArgs> {
   ProductDetailRoute({
     _i39.Key? key,
-    required _i44.FoodModel food,
+    required _i43.FoodEntity food,
     int? quantity,
     List<_i38.PageRouteInfo>? children,
   }) : super(
@@ -557,7 +557,7 @@ class ProductDetailRouteArgs {
 
   final _i39.Key? key;
 
-  final _i44.FoodModel food;
+  final _i43.FoodEntity food;
 
   final int? quantity;
 
@@ -572,7 +572,7 @@ class ProductDetailRouteArgs {
 class ProfileInfoRoute extends _i38.PageRouteInfo<ProfileInfoRouteArgs> {
   ProfileInfoRoute({
     _i39.Key? key,
-    required _i45.UserModel user,
+    required _i44.UserModel user,
     List<_i38.PageRouteInfo>? children,
   }) : super(
          ProfileInfoRoute.name,
@@ -596,7 +596,7 @@ class ProfileInfoRouteArgs {
 
   final _i39.Key? key;
 
-  final _i45.UserModel user;
+  final _i44.UserModel user;
 
   @override
   String toString() {
@@ -680,7 +680,7 @@ class RestorantRoute extends _i38.PageRouteInfo<void> {
 class SaleRoute extends _i38.PageRouteInfo<SaleRouteArgs> {
   SaleRoute({
     _i39.Key? key,
-    _i46.SaleModel? sale,
+    _i45.SaleModel? sale,
     List<_i38.PageRouteInfo>? children,
   }) : super(
          SaleRoute.name,
@@ -706,7 +706,7 @@ class SaleRouteArgs {
 
   final _i39.Key? key;
 
-  final _i46.SaleModel? sale;
+  final _i45.SaleModel? sale;
 
   @override
   String toString() {
@@ -735,7 +735,7 @@ class SearchMenuRoute extends _i38.PageRouteInfo<void> {
 class SecondOrderRoute extends _i38.PageRouteInfo<SecondOrderRouteArgs> {
   SecondOrderRoute({
     _i39.Key? key,
-    required List<_i41.CartItemModel> cart,
+    required List<_i41.CartItemEntity> cart,
     required int dishCount,
     required int totalPrice,
     List<_i38.PageRouteInfo>? children,
@@ -776,7 +776,7 @@ class SecondOrderRouteArgs {
 
   final _i39.Key? key;
 
-  final List<_i41.CartItemModel> cart;
+  final List<_i41.CartItemEntity> cart;
 
   final int dishCount;
 
@@ -809,7 +809,7 @@ class SignInRoute extends _i38.PageRouteInfo<void> {
 class SignUpOtpRoute extends _i38.PageRouteInfo<SignUpOtpRouteArgs> {
   SignUpOtpRoute({
     _i39.Key? key,
-    required _i47.UserEntities user,
+    required _i46.UserEntities user,
     List<_i38.PageRouteInfo>? children,
   }) : super(
          SignUpOtpRoute.name,
@@ -833,7 +833,7 @@ class SignUpOtpRouteArgs {
 
   final _i39.Key? key;
 
-  final _i47.UserEntities user;
+  final _i46.UserEntities user;
 
   @override
   String toString() {
@@ -846,7 +846,7 @@ class SignUpOtpRouteArgs {
 class SignUpRoute extends _i38.PageRouteInfo<SignUpRouteArgs> {
   SignUpRoute({
     _i39.Key? key,
-    _i47.UserEntities? user,
+    _i46.UserEntities? user,
     List<_i38.PageRouteInfo>? children,
   }) : super(
          SignUpRoute.name,
@@ -872,7 +872,7 @@ class SignUpRouteArgs {
 
   final _i39.Key? key;
 
-  final _i47.UserEntities? user;
+  final _i46.UserEntities? user;
 
   @override
   String toString() {
@@ -966,7 +966,7 @@ class UserPickupDetailRoute
     extends _i38.PageRouteInfo<UserPickupDetailRouteArgs> {
   UserPickupDetailRoute({
     _i39.Key? key,
-    required _i48.UserPickupHistoryModel order,
+    required _i47.UserPickupHistoryModel order,
     List<_i38.PageRouteInfo>? children,
   }) : super(
          UserPickupDetailRoute.name,
@@ -990,7 +990,7 @@ class UserPickupDetailRouteArgs {
 
   final _i39.Key? key;
 
-  final _i48.UserPickupHistoryModel order;
+  final _i47.UserPickupHistoryModel order;
 
   @override
   String toString() {

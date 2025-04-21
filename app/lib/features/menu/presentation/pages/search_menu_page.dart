@@ -1,7 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/cart.dart';
+import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:diyar/features/features.dart';
+import 'package:diyar/features/menu/domain/domain.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +18,7 @@ class SearchMenuPage extends StatefulWidget {
 }
 
 class _SearchMenuPageState extends State<SearchMenuPage> {
-  List<FoodModel> foods = [];
+  List<FoodEntity> foods = [];
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +91,7 @@ class _SearchMenuPageState extends State<SearchMenuPage> {
                           style: const TextStyle(fontSize: 16),
                         ),
                       )
-                    : StreamBuilder<List<CartItemModel>>(
+                    : StreamBuilder<List<CartItemEntity>>(
                         stream: context.read<CartCubit>().cart,
                         builder: (context, snapshot) {
                           List cart = [];
@@ -110,7 +112,7 @@ class _SearchMenuPageState extends State<SearchMenuPage> {
                                 final cartItem = cart.firstWhere(
                                   (element) => element.food?.id == food.id,
                                   orElse: () =>
-                                      CartItemModel(food: food, quantity: 0),
+                                      CartItemEntity(food: food, quantity: 0),
                                 );
                                 return ProductItemWidget(
                                   food: food,

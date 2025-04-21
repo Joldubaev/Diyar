@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
-import '../../data/models/category_model.dart';
-import '../../menu.dart';
+import 'package:diyar/features/menu/domain/domain.dart';
 import 'package:equatable/equatable.dart';
 
 part 'menu_state.dart';
@@ -10,7 +9,7 @@ class MenuCubit extends Cubit<MenuState> {
 
   MenuCubit(this._menuRepository) : super(MenuInitial());
 
-  List<CategoryModel> menu = [];
+  List<CategoryEntity> menu = [];
 
   void getProductsWithMenu({String? query}) async {
     emit(GetMenuLoading());

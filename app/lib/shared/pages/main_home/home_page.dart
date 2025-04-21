@@ -1,15 +1,16 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/components/components.dart';
+import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/core/theme/theme.dart';
-import '../../../core/router/routes.gr.dart';
-import '../../../features/cart/data/models/cart_item_model.dart';
-import '../../../features/cart/presentation/cubit/cart_cubit.dart';
-import '../../../features/features.dart';
-import '../../../features/profile/presentation/presentation.dart';
-import '../../../l10n/l10n.dart';
-import '../../cubit/popular_cubit.dart';
-import '../widgets/news_widget.dart';
-import '../../shared.dart';
+import 'package:diyar/features/cart/cart.dart';
+import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
+import 'package:diyar/features/features.dart';
+import 'package:diyar/features/menu/domain/domain.dart';
+import 'package:diyar/features/profile/prof.dart';
+import 'package:diyar/l10n/l10n.dart';
+import 'package:diyar/shared/cubit/popular_cubit.dart';
+import 'package:diyar/shared/pages/widgets/news_widget.dart';
+import 'package:diyar/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/sales_section_page.dart';
@@ -23,7 +24,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<FoodModel> menu = [];
+  List<FoodEntity> menu = [];
   @override
   void initState() {
     super.initState();
@@ -129,7 +130,7 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 class _PopularSection extends StatelessWidget {
-  final List<FoodModel> menu;
+  final List<FoodEntity> menu;
 
   const _PopularSection({required this.menu});
 
@@ -149,7 +150,7 @@ class _PopularSection extends StatelessWidget {
         SizedBox(
           width: double.infinity,
           height: 220,
-          child: StreamBuilder<List<CartItemModel>>(
+          child: StreamBuilder<List<CartItemEntity>>(
             stream: context.read<CartCubit>().cart,
             builder: (context, snapshot) {
               final cart = snapshot.data ?? [];
@@ -162,7 +163,7 @@ class _PopularSection extends StatelessWidget {
                   final food = menu[index];
                   final cartItem = cart.firstWhere(
                     (element) => element.food?.id == food.id,
-                    orElse: () => CartItemModel(food: food, quantity: 0),
+                    orElse: () => CartItemEntity(food: food, quantity: 0),
                   );
                   return SizedBox(
                     width: 200,

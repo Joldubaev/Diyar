@@ -1,14 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import '../custom_dialog/custom_dialog.dart';
-import '../../../features/menu/data/models/food_model.dart';
+import 'package:diyar/core/core.dart';
+import 'package:diyar/features/cart/cart.dart';
+import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
+import 'package:diyar/features/menu/domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:auto_route/auto_route.dart';
-import '../../router/routes.gr.dart';
-import '../../utils/helper/user_helper.dart';
-import '../../../features/cart/data/models/cart_item_model.dart';
-import '../../../features/cart/presentation/cubit/cart_cubit.dart';
-import '../../theme/theme.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class ProductItemContentWidget extends StatefulWidget {
@@ -16,7 +13,7 @@ class ProductItemContentWidget extends StatefulWidget {
   final bool? isCounter;
   final bool? isShadowVisible;
   final int quantity;
-  final FoodModel food;
+  final FoodEntity food;
 
   const ProductItemContentWidget({
     super.key,
@@ -237,7 +234,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                         if (valInt > 0) {
                           if (UserHelper.isAuth()) {
                             context.read<CartCubit>().setCartItemCount(
-                                  CartItemModel(
+                                  CartItemEntity(
                                     food: widget.food,
                                     quantity: valInt,
                                   ),
@@ -264,7 +261,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                       if (widget.quantity == 0) {
                         if (UserHelper.isAuth()) {
                           context.read<CartCubit>().addToCart(
-                                CartItemModel(food: widget.food, quantity: 1),
+                                CartItemEntity(food: widget.food, quantity: 1),
                               );
                         } else {
                           _showRegisterDialog(context);

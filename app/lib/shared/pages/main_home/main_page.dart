@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
 import '../../../core/components/custom_dialog/custom_dialog.dart';
 import '../../../core/router/routes.gr.dart';
 import '../../../core/utils/helper/user_helper.dart';
@@ -22,8 +23,8 @@ class _MainPageState extends State<MainPage> {
   int currentIndex = 0;
   bool isLoading = false;
   String? token;
-  List<CartItemModel> cart = [];
-  late Stream<List<CartItemModel>> cartItems;
+  List<CartItemEntity> cart = [];
+  late Stream<List<CartItemEntity>> cartItems;
 
   @override
   void initState() {
@@ -84,7 +85,7 @@ class _MainPageState extends State<MainPage> {
 
   // Build Floating Action Button for the cart with authentication check
   Widget _buildFloatingActionButton(BuildContext context, ThemeData theme) {
-    return StreamBuilder<List<CartItemModel>>(
+    return StreamBuilder<List<CartItemEntity>>(
       stream: cartItems,
       builder: (context, snapshot) {
         if (snapshot.hasData) {

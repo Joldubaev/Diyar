@@ -1,4 +1,5 @@
-import '../../../features.dart';
+import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
+import 'package:diyar/features/menu/menu.dart';
 
 class CartItemModel {
   final FoodModel? food;
@@ -22,16 +23,18 @@ class CartItemModel {
         "quantity": quantity,
         "price": totalPrice,
       };
-
-  CartItemModel copyWith({
-    FoodModel? food,
-    int? quantity,
-    double? totalPrice,
-  }) {
+  factory CartItemModel.fromEntity(CartItemEntity entity) {
     return CartItemModel(
-      food: food ?? this.food,
-      quantity: quantity ?? this.quantity,
-      totalPrice: totalPrice ?? this.totalPrice,
+      food: entity.food != null ? FoodModel.fromEntity(entity.food!) : null,
+      quantity: entity.quantity,
+      totalPrice: entity.totalPrice,
+    );
+  }
+  CartItemEntity toEntity() {
+    return CartItemEntity(
+      food: food?.toEntity(),
+      quantity: quantity,
+      totalPrice: totalPrice,
     );
   }
 }

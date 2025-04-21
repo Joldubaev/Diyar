@@ -1,7 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/cart.dart';
+import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:diyar/features/cart/presentation/widgets/cart_empty_widget.dart';
+import 'package:diyar/features/menu/domain/entities/food_entity.dart';
 import 'package:diyar/l10n/l10n.dart';
 import '../../../menu/data/models/food_model.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +19,7 @@ class CartPage extends StatefulWidget {
 
 class CartPageState extends State<CartPage>
     with SingleTickerProviderStateMixin {
-  List<CartItemModel> carts = [];
+  List<CartItemEntity> carts = [];
   int totalPrice = 0;
   int dishCount = 0;
   @override
@@ -70,7 +72,7 @@ class CartPageState extends State<CartPage>
           ),
         ],
       ),
-      body: StreamBuilder<List<CartItemModel>>(
+      body: StreamBuilder<List<CartItemEntity>>(
         stream: context.read<CartCubit>().cart,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -104,7 +106,7 @@ class CartPageState extends State<CartPage>
                       (context, index) {
                         return CartItemWidgets(
                           counter: carts[index].quantity ?? 0,
-                          food: carts[index].food ?? FoodModel(),
+                          food: carts[index].food ?? FoodEntity(),
                           onRemove: () {
                             context
                                 .read<CartCubit>()
@@ -166,7 +168,7 @@ class CartPageState extends State<CartPage>
     );
   }
 
-  void getDistricts(BuildContext context, List<CartItemModel> carts,
+  void getDistricts(BuildContext context, List<CartItemEntity> carts,
       int totalPrice, int dishCount) {
     context.router.push(
       SecondOrderRoute(
@@ -178,7 +180,7 @@ class CartPageState extends State<CartPage>
   }
 
   void _showAppropriateDialog(
-      BuildContext context, List<CartItemModel> carts, int totalPrice) {
+      BuildContext context, List<CartItemEntity> carts, int totalPrice) {
     final currentTime = DateTime.now();
     const startWorkTime = TimeOfDay(hour: 10, minute: 0);
     const endWorkTime = TimeOfDay(hour: 22, minute: 0);
@@ -206,7 +208,7 @@ class CartPageState extends State<CartPage>
   }
 
   Future<dynamic> _showDeliveryDialog(
-      BuildContext context, List<CartItemModel> carts, int totalPrice) {
+      BuildContext context, List<CartItemEntity> carts, int totalPrice) {
     return showDialog(
       context: context,
       builder: (context) {

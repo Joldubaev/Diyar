@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/data/data.dart';
+import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:diyar/features/cart/presentation/presentation.dart';
 import 'package:diyar/features/map/map.dart';
 import 'package:diyar/features/map/presentation/widgets/widgets.dart';
@@ -17,7 +18,7 @@ import 'package:geolocator/geolocator.dart';
 @RoutePage()
 class OrderMapPage extends StatefulWidget {
   final int totalPrice;
-  final List<CartItemModel> cart;
+  final List<CartItemEntity> cart;
   const OrderMapPage({super.key, required this.cart, required this.totalPrice});
 
   @override

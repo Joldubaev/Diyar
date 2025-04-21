@@ -1,11 +1,8 @@
-import '../../../features.dart';
-import '../models/category_model.dart';
+import 'package:dartz/dartz.dart';
+import 'package:diyar/core/network/error/failures.dart';
+import 'package:diyar/features/menu/domain/domain.dart';
+import 'package:diyar/features/menu/menu.dart';
 
-abstract class MenuRepository {
-  Future<List<CategoryModel>> getProductsWithMenu({String? query});
-  Future<List<FoodModel>> searchFoods({String? name});
-  Future<List<FoodModel>> getPopularFoods();
-}
 
 class MenuRepositoryImpl implements MenuRepository {
   final MenuRemoteDataSource _remoteDataSource;
@@ -13,14 +10,38 @@ class MenuRepositoryImpl implements MenuRepository {
   MenuRepositoryImpl(this._remoteDataSource);
 
   @override
-  Future<List<CategoryModel>> getProductsWithMenu({String? query}) async =>
-      _remoteDataSource.getProductsWithMenu(query: query);
+  Future<Either<Failure, List<FoodEntity>>> getProducts({String? foodName}) async {
+    final result = await _remoteDataSource.getProducts(foodName: foodName);
+    return result.fold(
+      (failure) => Left(failure),
+      (models) => Right(models.map((e) => e.toEntity()).toList()),
+    );
+  }
 
   @override
-  Future<List<FoodModel>> searchFoods({String? name}) async =>
-      await _remoteDataSource.searchFoods(name: name);
+  Future<Either<Failure, List<FoodEntity>>> searchFoods({String? query}) async {
+    final result = await _remoteDataSource.searchFoods(query: query);
+    return result.fold(
+      (failure) => Left(failure),
+      (models) => Right(models.map((e) => e.toEntity()).toList()),
+    );
+  }
 
   @override
-  Future<List<FoodModel>> getPopularFoods() async =>
-      await _remoteDataSource.getPopulartFoods();
+  Future<Either<Failure, List<FoodEntity>>> getPopularFoods() async {
+    final result = await _remoteDataSource.getPopulartFoods();
+    return result.fold(
+      (failure) => Left(failure),
+      (models) => Right(models.map((e) => e.toEntity()).toList()),
+    );
+  }
+
+  @override
+  Future<Either<Failure, List<CategoryEntity>>> getFoodsByCategory() async {
+    final result = await _remoteDataSource.getFoodsCategory();
+    return result.fold(
+      (failure) => Left(failure),
+      (models) => Right(models.map((e) => e.toEntity()).toList()),
+    );
+  }
 }

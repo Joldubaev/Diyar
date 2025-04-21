@@ -66,18 +66,18 @@ class MenuToggleButton extends StatelessWidget {
                             child: Row(
                               children: [
                                 Text(
-                                  "${menu[index].category?.name}",
+                                  "${menu[index].message}",
                                   style: Theme.of(context).textTheme.bodyLarge,
                                 ),
                                 const Spacer(),
                                 Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Text(
-                                      "${menu[index].foods?.length}",
-                                      style:
-                                          Theme.of(context).textTheme.bodyLarge,
-                                    ),
+                                    // Text(
+                                    //   "${menu[index].foods?.length}",
+                                    //   style:
+                                    //       Theme.of(context).textTheme.bodyLarge,
+                                    // ),
                                     const SizedBox(width: 6),
                                     Icon(
                                       Icons.arrow_forward_ios_sharp,

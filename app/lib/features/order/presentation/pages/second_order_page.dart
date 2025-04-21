@@ -1,19 +1,19 @@
 import 'dart:developer';
 
 import 'package:auto_route/auto_route.dart';
-import '../../../../core/router/routes.gr.dart';
-import '../../../cart/cart.dart';
-import '../widgets/search_bottom_widget.dart';
-import '../../../../core/components/input/custom_input_widget.dart';
-import '../../../../core/theme/app_colors.dart';
+import 'package:diyar/core/core.dart';
+import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
+import 'package:diyar/features/order/data/models/distric_model.dart';
+import 'package:diyar/features/order/order.dart';
+import 'package:diyar/features/order/presentation/widgets/search_bottom_widget.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../order.dart';
-import '../../data/models/distric_model.dart';
+
 
 @RoutePage()
 class SecondOrderPage extends StatefulWidget {
-  final List<CartItemModel> cart;
+  final List<CartItemEntity> cart;
   final int dishCount;
   final int totalPrice;
 
