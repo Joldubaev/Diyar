@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:diyar/core/core.dart';
+import 'package:diyar/features/about_us/about_us_injection.dart';
 import 'package:diyar/features/auth/auth_injection.dart';
 import 'features/app/cubit/remote_config_cubit.dart';
 import 'features/cart/cart.dart';
@@ -34,13 +35,16 @@ Future<void> init() async {
   //! Теперь — Auth, который зависит от всего выше
   await authInjection();
 
+  // aboutUsInjection();
+  await aboutUsInjection();
+
   // ✅ Остальная инициализация...
   sl.registerFactory(() => ProfileCubit(sl()));
   sl.registerFactory(() => MenuCubit(sl()));
   sl.registerFactory(() => CartCubit(sl()));
   sl.registerFactory(() => PopularCubit(sl()));
   sl.registerFactory(() => OrderCubit(sl()));
-  sl.registerFactory(() => AboutUsCubit(sl()));
+  // sl.registerFactory(() => AboutUsCubit(sl()));
   sl.registerFactory(() => HomeFeaturesCubit(sl()));
   sl.registerFactory(() => HistoryCubit(sl()));
   sl.registerFactory(() => CurierCubit(sl()));

@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import '../../../features.dart';
+import 'package:diyar/features/about_us/domain/domain.dart';
 import 'package:equatable/equatable.dart';
 
 part 'about_us_state.dart';

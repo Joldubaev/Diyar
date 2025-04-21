@@ -8,20 +8,13 @@ import 'package:diyar/features/auth/data/datasources/local/auth_local_data_sourc
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class AuthRemoteDataSource {
-  // 🔓 Login
   Future<Either<Failure, void>> login(UserModel user);
-
-  // 🔐 Registration
   Future<Either<Failure, void>> register(UserModel user);
   Future<Either<Failure, bool>> checkPhoneNumber(String phone);
   Future<Either<Failure, void>> sendVerificationCode(String phone);
   Future<Either<Failure, void>> verifyCode(String phone, String code);
-
-  // 🔄 Password
   Future<Either<Failure, void>> sendForgotPasswordCodeToPhone(String phone);
   Future<Either<Failure, void>> confirmResetPassword(ResetPasswordModel model);
-
-  // 🔁 Tokens
   Future<Either<Failure, void>> refreshToken();
 }
 
@@ -31,14 +24,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final Dio _dio;
 
   AuthRemoteDataSourceImpl(this._dio, this._localDataSource, this._prefs);
-
-  Failure _handleError(dynamic e) {
-    if (e is DioException) {
-      final msg = e.response?.data['message'] ?? e.message ?? 'Неизвестная ошибка';
-      return Failure(msg.toString());
-    }
-    return const Failure('Непредвиденная ошибка');
-  }
 
   // ───── LOGIN ─────
   @override
@@ -73,18 +58,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
     } catch (e) {
       log("login error: $e");
-
-      if (e is DioException) {
-        return Left(Failure(handleDioError(e)));
-      } else if (e is CacheException) {
-        return const Left(Failure("Ошибка при сохранении токенов в кэш"));
-      } else {
-        return const Left(Failure("Неизвестная ошибка при логине"));
-      }
+      return _extractDioError(e);
     }
   }
 
-  // ───── REGISTER ─────
   @override
   Future<Either<Failure, void>> register(UserModel user) async {
     try {
@@ -97,11 +74,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
     } catch (e) {
       log("register error: $e");
-      return Left(_handleError(e));
+      return _extractDioError(e);
     }
   }
 
-  // ───── PHONE CHECK ─────
   @override
   Future<Either<Failure, bool>> checkPhoneNumber(String phone) async {
     try {
@@ -112,18 +88,16 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       log("checkPhoneNumber: ${res.data}");
 
       if (res.statusCode == 200) {
-        // await _localDataSource.setToUserPhine(phone);
         return Right(res.data['exists'] ?? false);
       } else {
         return Left(Failure(res.data['message'].toString()));
       }
     } catch (e) {
       log("checkPhoneNumber error: $e");
-      return Left(_handleError(e));
+      return _extractDioError(e);
     }
   }
 
-  // ───── VERIFY CODE ─────
   @override
   Future<Either<Failure, void>> verifyCode(String phone, String code) async {
     try {
@@ -145,11 +119,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
     } catch (e) {
       log("verifyCode error: $e");
-      return Left(_handleError(e));
+      return _extractDioError(e);
     }
   }
 
-  // ───── SEND CODE ─────
   @override
   Future<Either<Failure, void>> sendVerificationCode(String phone) async {
     try {
@@ -161,11 +134,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       return res.statusCode == 200 ? const Right(null) : Left(Failure(res.data['message'].toString()));
     } catch (e) {
       log("sendVerificationCode error: $e");
-      return Left(_handleError(e));
+      return _extractDioError(e);
     }
   }
 
-  // ───── RESET CODE ─────
   @override
   Future<Either<Failure, void>> sendForgotPasswordCodeToPhone(String phone) async {
     try {
@@ -177,11 +149,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       return res.statusCode == 200 ? const Right(null) : Left(Failure(res.data['message'].toString()));
     } catch (e) {
       log("sendForgotPasswordCodeToPhone error: $e");
-      return Left(_handleError(e));
+      return _extractDioError(e);
     }
   }
 
-  // ───── CONFIRM RESET ─────
   @override
   Future<Either<Failure, void>> confirmResetPassword(ResetPasswordModel model) async {
     try {
@@ -193,11 +164,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       return res.statusCode == 200 ? const Right(null) : Left(Failure(res.data['message'].toString()));
     } catch (e) {
       log("confirmResetPassword error: $e");
-      return Left(_handleError(e));
+      return _extractDioError(e);
     }
   }
 
-  // ───── REFRESH TOKEN ─────
   @override
   Future<Either<Failure, void>> refreshToken() async {
     try {
@@ -217,7 +187,27 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
     } catch (e) {
       log("refreshToken error: $e");
-      return Left(_handleError(e));
+      return _extractDioError(e);
+    }
+  }
+
+  // ───── UNIVERSAL ERROR HANDLER ─────
+  Either<Failure, T> _extractDioError<T>(Object e) {
+    if (e is DioException) {
+      final data = e.response?.data;
+      String message = 'Произошла ошибка';
+
+      if (data is Map && data['message'] is Map && data['message']['message'] is String) {
+        message = data['message']['message'];
+      } else if (data is Map && data['message'] is String) {
+        message = data['message'];
+      }
+
+      return Left(Failure(message));
+    } else if (e is CacheException) {
+      return const Left(Failure("Ошибка при работе с кэшем"));
+    } else {
+      return const Left(Failure("Неизвестная ошибка"));
     }
   }
 }

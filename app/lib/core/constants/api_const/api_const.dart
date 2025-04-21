@@ -55,7 +55,7 @@ class ApiConst {
   static const getDeliveryPrice = "$baseUrl/districts/find-district-price";
 
   // about us
-  static String getAboutUs({required String type}) => "$baseUrl/about-us/information?about=$type";
+  static String getAboutUs = "$baseUrl/about-us/information";
   // sale
   static const getSales = "$baseUrl/sale/get-all-sales";
   //news

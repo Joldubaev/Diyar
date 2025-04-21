@@ -12,7 +12,7 @@ class AboutUsInitial extends AboutUsState {}
 class AboutUsLoading extends AboutUsState {}
 
 class AboutUsLoaded extends AboutUsState {
-  final AboutUsModel aboutUsModel;
+  final AboutUsEntities aboutUsModel;
 
   const AboutUsLoaded(this.aboutUsModel);
 

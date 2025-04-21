@@ -30,8 +30,9 @@ class _CheckPhoneNumberPageState extends State<CheckPhoneNumberPage> {
     return BlocListener<SignUpCubit, SignUpState>(
       listener: (context, state) {
         if (state is CheckPhoneFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
+          SnackBarMessage().showErrorSnackBar(
+            message: state.message,
+            context: context,
           );
         } else if (state is CheckPhoneSuccess) {
           context.router.push(
