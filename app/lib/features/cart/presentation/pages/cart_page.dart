@@ -5,7 +5,6 @@ import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:diyar/features/cart/presentation/widgets/cart_empty_widget.dart';
 import 'package:diyar/features/menu/domain/entities/food_entity.dart';
 import 'package:diyar/l10n/l10n.dart';
-import '../../../menu/data/models/food_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

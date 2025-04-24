@@ -1,8 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:diyar/core/network/error/failures.dart';
-import 'package:diyar/features/menu/domain/domain.dart';
 import 'package:diyar/features/menu/menu.dart';
-
 
 class MenuRepositoryImpl implements MenuRepository {
   final MenuRemoteDataSource _remoteDataSource;
@@ -10,11 +8,11 @@ class MenuRepositoryImpl implements MenuRepository {
   MenuRepositoryImpl(this._remoteDataSource);
 
   @override
-  Future<Either<Failure, List<FoodEntity>>> getProducts({String? foodName}) async {
+  Future<Either<Failure,  List<CategoryFoodEntity>>> getProducts({String? foodName}) async {
     final result = await _remoteDataSource.getProducts(foodName: foodName);
     return result.fold(
       (failure) => Left(failure),
-      (models) => Right(models.map((e) => e.toEntity()).toList()),
+      (models) => Right([models.toEntity()]),
     );
   }
 
@@ -37,11 +35,11 @@ class MenuRepositoryImpl implements MenuRepository {
   }
 
   @override
-  Future<Either<Failure, List<CategoryEntity>>> getFoodsByCategory() async {
+  Future<Either<Failure, List<CategoryEntity>>> getFoodsCategory() async {
     final result = await _remoteDataSource.getFoodsCategory();
     return result.fold(
       (failure) => Left(failure),
-      (models) => Right(models.map((e) => e.toEntity()).toList()),
+      (list) => Right(list.map((e) => e.toEntity()).toList()),
     );
   }
 }

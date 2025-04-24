@@ -13,7 +13,7 @@ final class MenuInitial extends MenuState {}
 final class GetProductsLoading extends MenuState {}
 
 final class GetProductsLoaded extends MenuState {
-  final List<FoodEntity> foods;
+  final List< CategoryFoodEntity> foods;
   const GetProductsLoaded(this.foods);
 
   @override

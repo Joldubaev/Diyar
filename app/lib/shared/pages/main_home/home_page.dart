@@ -5,7 +5,6 @@ import 'package:diyar/core/theme/theme.dart';
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:diyar/features/features.dart';
-import 'package:diyar/features/menu/domain/domain.dart';
 import 'package:diyar/features/profile/prof.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/cubit/popular_cubit.dart';

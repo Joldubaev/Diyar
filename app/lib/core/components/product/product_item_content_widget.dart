@@ -25,8 +25,7 @@ class ProductItemContentWidget extends StatefulWidget {
   });
 
   @override
-  State<ProductItemContentWidget> createState() =>
-      _ProductItemContentWidgetState();
+  State<ProductItemContentWidget> createState() => _ProductItemContentWidgetState();
 }
 
 class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
@@ -101,42 +100,64 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                 ),
                 child: Stack(
                   children: [
-                    CachedNetworkImage(
-                      imageUrl: widget.food.urlPhoto ?? '',
-                      placeholder: (context, url) => const Center(
-                        child: CircularProgressIndicator(),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: CachedNetworkImage(
+                        imageUrl: widget.food.urlPhoto ?? 'https://i.ibb.co/GkL25DB/ALE-1357-7.png',
+                        placeholder: (context, url) => Container(
+                          color: theme.colorScheme.surface,
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              color: theme.colorScheme.primary,
+                              strokeWidth: 2,
+                            ),
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Container(
+                          color: theme.colorScheme.surface,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.image_not_supported_outlined,
+                                size: 24,
+                                color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Нет фото',
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        width: 160,
+                        height: 110,
+                        memCacheWidth: 300,
+                        memCacheHeight: 300,
+                        cacheManager: DefaultCacheManager(),
+                        fit: BoxFit.cover,
                       ),
-                      errorWidget: (context, url, error) =>
-                          Image.asset('assets/images/app_logo.png'),
-                      width: double.infinity,
-                      height: 110,
-                      // cacheManager: customCacheManager,
-                      fit: BoxFit.contain,
                     ),
                     if (isChangedCounter)
-                      Positioned(
-                        right: 0,
-                        top: 0,
-                        left: 0,
-                        bottom: 0,
+                      Positioned.fill(
                         child: AnimatedSwitcher(
                           duration: const Duration(milliseconds: 400),
-                          child: DecoratedBox(
+                          child: Container(
                             key: ValueKey<int>(widget.quantity),
                             decoration: BoxDecoration(
-                              color: theme.colorScheme.onSurface
-                                  .withValues(alpha: 0.5),
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(10)),
+                              color: theme.colorScheme.primary.withValues(alpha: 0.8),
+                              borderRadius: BorderRadius.circular(10),
                             ),
                             child: Center(
                               child: Text(
                                 '${widget.quantity}',
                                 key: ValueKey<int>(widget.quantity),
-                                style: theme.textTheme.titleMedium?.copyWith(
-                                  color: theme.colorScheme.surface,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 60,
+                                style: theme.textTheme.titleLarge?.copyWith(
+                                  color: theme.colorScheme.onPrimary,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
                             ),
@@ -200,17 +221,13 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                     onPressed: () {
                       if (widget.quantity > 1) {
                         if (UserHelper.isAuth()) {
-                          context
-                              .read<CartCubit>()
-                              .decrementCart(widget.food.id!);
+                          context.read<CartCubit>().decrementCart(widget.food.id!);
                         } else {
                           _showRegisterDialog(context);
                         }
                       } else {
                         if (UserHelper.isAuth()) {
-                          context
-                              .read<CartCubit>()
-                              .removeFromCart(widget.food.id!);
+                          context.read<CartCubit>().removeFromCart(widget.food.id!);
                         } else {
                           _showRegisterDialog(context);
                         }
@@ -244,9 +261,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                           }
                         } else {
                           if (UserHelper.isAuth()) {
-                            context
-                                .read<CartCubit>()
-                                .removeFromCart(widget.food.id!);
+                            context.read<CartCubit>().removeFromCart(widget.food.id!);
                           } else {
                             _showRegisterDialog(context);
                           }
@@ -268,9 +283,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> {
                         }
                       } else {
                         if (UserHelper.isAuth()) {
-                          context
-                              .read<CartCubit>()
-                              .incrementCart(widget.food.id!);
+                          context.read<CartCubit>().incrementCart(widget.food.id!);
                         } else {
                           _showRegisterDialog(context);
                         }

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
-import 'package:diyar/features/cart/data/data.dart';
 import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:diyar/features/cart/presentation/presentation.dart';
 import 'package:diyar/features/map/map.dart';

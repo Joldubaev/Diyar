@@ -32,7 +32,7 @@ class ApiConst {
   static const getCategories = "$baseUrl/category/get-all-categories";
   static const getAllFoodsByName = "$baseUrl/foods/get-all-foods-by-category-name";
   static const getCountFoddsByCategory = "$baseUrl/categorys/get-quantity-foods-by-category/";
-  static const searchFoodsByName = '$baseUrl/foods/search-food-by-pagination';
+  static const searchFoodsByName = '$baseUrl/foods/search-foods-by-pagination';
   static const getPopularFoods = "$baseUrl/foods/get-popular-foods";
 
   // Map

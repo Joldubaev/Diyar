@@ -12,14 +12,12 @@ class PopularCubit extends Cubit<PopularState> {
 
   List<FoodEntity> popularFoods = [];
 
-  Future getPopularProducts() async {
+  Future<void> getPopularProducts() async {
     emit(PopularLoading());
-    try {
-      final product = await _menuRepository.getPopularFoods();
-      // popularFoods = product;
-      // emit(PopularLoaded(product));
-    } catch (e) {
-      emit(const PopularError('Ошибка загрузки данных'));
-    }
+    final result = await _menuRepository.getPopularFoods();
+    result.fold(
+      (failure) => emit(PopularError(failure.message)),
+      (foods) => emit(PopularLoaded(foods)),
+    );
   }
 }

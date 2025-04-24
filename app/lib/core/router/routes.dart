@@ -23,7 +23,7 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: CheckPhoneNumberRoute.page),
         AutoRoute(page: CartRoute.page),
         AutoRoute(page: SearchMenuRoute.page),
-        AutoRoute(page: ProfileInfoRoute.page, guards: [AuthGuard()]),
+        AutoRoute(page: ProfileInfoRoute.page),
         AutoRoute(page: ContactRoute.page),
         AutoRoute(page: SignInRoute.page),
         AutoRoute(page: SignUpRoute.page),
@@ -53,7 +53,6 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: OrderHistoryRoute.page),
 
         // AutoRoute(page: TwoGisMapRoute.page),
-
       ];
 }
 

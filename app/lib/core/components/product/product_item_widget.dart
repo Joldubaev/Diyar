@@ -8,8 +8,11 @@ class ProductItemWidget extends StatelessWidget {
   final FoodEntity food;
   final int quantity;
 
-  const ProductItemWidget(
-      {super.key, required this.food, required this.quantity});
+  const ProductItemWidget({
+    super.key,
+    required this.food,
+    required this.quantity,
+  });
 
   @override
   Widget build(BuildContext context) {

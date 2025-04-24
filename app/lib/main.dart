@@ -1,4 +1,5 @@
 import 'dart:developer';
+
 import 'core/core.dart';
 import 'features/app/cubit/remote_config_cubit.dart';
 import 'features/curier/curier.dart';
@@ -56,7 +57,7 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => di.sl<ProfileCubit>()),
         BlocProvider(create: (context) => di.sl<SignInCubit>()),
         BlocProvider(create: (context) => di.sl<CartCubit>()),
-        BlocProvider(create: (context) => di.sl<MenuCubit>()),
+        BlocProvider(create: (context) => di.sl<MenuBloc>()),
         BlocProvider(create: (context) => di.sl<PopularCubit>()),
         BlocProvider(create: (context) => di.sl<OrderCubit>()),
         BlocProvider(create: (context) => di.sl<AboutUsCubit>()),

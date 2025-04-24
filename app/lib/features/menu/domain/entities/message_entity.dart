@@ -1,21 +1,9 @@
-import 'package:flutter/widgets.dart';
-
-class MessageEntity {
+class CategoryEntity {
   final String? id;
   final String? name;
 
-  MessageEntity({
+  CategoryEntity({
     this.id,
     this.name,
   });
-
-  MessageEntity copyWith({
-    ValueGetter<String?>? id,
-    ValueGetter<String?>? name,
-  }) {
-    return MessageEntity(
-      id: id != null ? id() : this.id,
-      name: name != null ? name() : this.name,
-    );
-  }
 }

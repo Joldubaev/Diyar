@@ -43,7 +43,7 @@ class FoodModel {
         categoryId: json["categoryId"],
         price: json["price"],
         weight: json["weight"],
-        urlPhoto: json["URLPhoto"],
+        urlPhoto: json["urlPhoto"],
         stopList: json["stopList"],
         iDctMax: json["iDCTMax"],
         containerName: json["containerName"],

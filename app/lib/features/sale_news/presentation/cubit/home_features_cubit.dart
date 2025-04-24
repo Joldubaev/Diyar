@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
-import '../../data/model/news_model.dart';
-import '../../data/model/sale_model.dart';
-import '../../data/repositories/home_repository.dart';
+import 'package:diyar/features/sale_news/sale_news.dart';
+
 
 part 'home_features_state.dart';
 

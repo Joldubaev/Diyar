@@ -4,7 +4,7 @@ import 'package:diyar/core/core.dart';
 import 'package:diyar/features/features.dart';
 
 abstract class MenuRemoteDataSource {
-  Future<Either<Failure, List<FoodModel>>> getProducts({String? foodName});
+  Future<Either<Failure, CatergoryFoodModel>> getProducts({String? foodName});
   Future<Either<Failure, List<FoodModel>>> getPopulartFoods();
   Future<Either<Failure, List<FoodModel>>> searchFoods({String? query});
   Future<Either<Failure, List<CategoryModel>>> getFoodsCategory();
@@ -22,10 +22,19 @@ class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
         options: Options(headers: BaseHelper.getHeaders(isAuth: true)),
       );
 
-      if (res.statusCode == 200 && res.data != null) {
-        final list = res.data as List;
-        return Right(list.map((e) => CategoryModel.fromJson(e)).toList());
+      if (res.data['code'] == 200) {
+        final messageList = res.data['message'] as List;
+
+        final categories = messageList.map((e) {
+          return CategoryModel(
+            id: e['id'] ?? '',
+            name: e['name'] ?? '',
+          );
+        }).toList();
+
+        return Right(categories);
       }
+
       return const Left(Failure('Ошибка при получении категорий'));
     } catch (e) {
       return Left(_handleError(e, 'Ошибка при получении категорий'));
@@ -33,17 +42,16 @@ class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
   }
 
   @override
-  Future<Either<Failure, List<FoodModel>>> getProducts({String? foodName}) async {
+  Future<Either<Failure, CatergoryFoodModel>> getProducts({String? foodName}) async {
     try {
       final res = await _dio.get(
         ApiConst.getAllFoodsByName,
         options: Options(headers: BaseHelper.getHeaders(isAuth: true)),
-        queryParameters: {if (foodName != null) 'foodName': foodName},
+        queryParameters: {if (foodName != null) 'categoryName': foodName},
       );
 
-      if (res.statusCode == 200 && res.data != null) {
-        final list = res.data as List;
-        return Right(list.map((e) => FoodModel.fromJson(e)).toList());
+      if (res.data['code'] == 200) {
+        return Right(CatergoryFoodModel.fromJson(res.data as Map<String, dynamic>));
       }
       return const Left(Failure('Ошибка при получении блюд'));
     } catch (e) {
@@ -63,12 +71,12 @@ class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
           'pageSize': 10,
         },
       );
-
-      if (res.statusCode == 200 && res.data != null) {
-        final list = res.data;
-        return Right((list.first['foods'] as List).map((e) => FoodModel.fromJson(e)).toList());
+      if (res.data['code'] == 200 && res.data != null) {
+        final list = res.data['message']['foods'] as List;
+        final foods = list.map((e) => FoodModel.fromJson(e as Map<String, dynamic>)).toList();
+        return Right(foods);
       }
-      return const Left(Failure('Ошибка при поиске блюд'));
+      return const Left(Failure('Некорректный формат ответа сервера'));
     } catch (e) {
       return Left(_handleError(e, 'Ошибка при поиске блюд'));
     }
@@ -82,8 +90,8 @@ class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
         options: Options(headers: BaseHelper.getHeaders(isAuth: true)),
       );
 
-      if (res.statusCode == 200 && res.data != null) {
-        final list = res.data as List;
+      if (res.data['code'] == 200 && res.data != null) {
+        final list = res.data['message'] as List;
         return Right(list.map((e) => FoodModel.fromJson(e)).toList());
       }
       return const Left(Failure('Ошибка при получении популярных блюд'));
