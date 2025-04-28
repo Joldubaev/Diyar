@@ -1,7 +1,7 @@
+import 'dart:developer';
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/cart.dart';
-import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:diyar/features/features.dart';
 import 'package:diyar/features/profile/presentation/presentation.dart';
 import 'package:diyar/l10n/l10n.dart';
@@ -23,8 +23,7 @@ class PickupFormPage extends StatefulWidget {
 
 class _PickupFormPageState extends State<PickupFormPage> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _phoneController =
-      TextEditingController(text: '+996');
+  final TextEditingController _phoneController = TextEditingController(text: '+996');
   final TextEditingController _userName = TextEditingController();
   final TextEditingController _commentController = TextEditingController();
   final TextEditingController _timeController = TextEditingController();
@@ -45,10 +44,7 @@ class _PickupFormPageState extends State<PickupFormPage> {
   }
 
   double _calculateTotalPrice() {
-    return widget.cart.fold(
-        0,
-        (total, item) =>
-            total + (item.food?.price ?? 0) * (item.quantity ?? 1));
+    return widget.cart.fold(0, (total, item) => total + (item.food?.price ?? 0) * (item.quantity ?? 1));
   }
 
   void _selectTime() async {
@@ -62,8 +58,10 @@ class _PickupFormPageState extends State<PickupFormPage> {
         return AlertDialog(
           title: Text(
             'Внимание! Время подготовки заказа займет не менее 15 минут',
-            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                fontSize: 16, color: Theme.of(context).colorScheme.error),
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium!
+                .copyWith(fontSize: 16, color: Theme.of(context).colorScheme.error),
             textAlign: TextAlign.center,
           ),
           content: SizedBox(
@@ -89,9 +87,10 @@ class _PickupFormPageState extends State<PickupFormPage> {
                       onPressed: () => Navigator.of(context).pop(),
                       child: Text(
                         'Отмена',
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            fontSize: 16,
-                            color: Theme.of(context).colorScheme.primary),
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium!
+                            .copyWith(fontSize: 16, color: Theme.of(context).colorScheme.primary),
                       ),
                     ),
                     TextButton(
@@ -107,9 +106,10 @@ class _PickupFormPageState extends State<PickupFormPage> {
                       },
                       child: Text(
                         'Подтвердить',
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                            fontSize: 16,
-                            color: Theme.of(context).colorScheme.primary),
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium!
+                            .copyWith(fontSize: 16, color: Theme.of(context).colorScheme.primary),
                       ),
                     ),
                   ],
@@ -137,6 +137,14 @@ class _PickupFormPageState extends State<PickupFormPage> {
       return;
     }
 
+    int currentTotalItems = 0;
+    final cartState = context.read<CartBloc>().state;
+    if (cartState is CartLoaded) {
+      currentTotalItems = cartState.totalItems;
+    } else {
+      log("Warning: Cart state is not CartLoaded in _submitOrder");
+    }
+
     context
         .read<OrderCubit>()
         .getPickupOrder(PickupOrderModel(
@@ -145,7 +153,7 @@ class _PickupFormPageState extends State<PickupFormPage> {
             prepareFor: _timeController.text,
             comment: _commentController.text,
             price: widget.totalPrice,
-            dishesCount: context.read<CartCubit>().dishCount,
+            dishesCount: currentTotalItems,
             foods: widget.cart
                 .map((e) => OrderFoodItem(
                       name: e.food?.name ?? '',
@@ -153,14 +161,11 @@ class _PickupFormPageState extends State<PickupFormPage> {
                       quantity: e.quantity ?? 1,
                     ))
                 .toList()))
-        .then(
-          (value) {
-            if (mounted) {
-              context.read<CartCubit>().clearCart();
-            }
-          }
-        );
-    context.read<CartCubit>().dishCount = 0;
+        .then((value) {
+      if (mounted) {
+        context.read<CartBloc>().add(ClearCart());
+      }
+    });
     context.maybePop();
   }
 
@@ -187,19 +192,16 @@ class _PickupFormPageState extends State<PickupFormPage> {
                     canPop: false,
                     child: AlertDialog(
                       title: Text(context.l10n.yourOrdersConfirm,
-                          style: theme.textTheme.bodyLarge!
-                              .copyWith(fontSize: 16)),
+                          style: theme.textTheme.bodyLarge!.copyWith(fontSize: 16)),
                       content: Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(context.l10n.operatorContact,
-                              style: theme.textTheme.bodyMedium!.copyWith(
-                                  color: theme.colorScheme.onSurface)),
+                              style: theme.textTheme.bodyMedium!.copyWith(color: theme.colorScheme.onSurface)),
                           const SizedBox(height: 10),
                           SubmitButtonWidget(
-                              textStyle: theme.textTheme.bodyMedium!
-                                  .copyWith(color: theme.colorScheme.surface),
+                              textStyle: theme.textTheme.bodyMedium!.copyWith(color: theme.colorScheme.surface),
                               title: context.l10n.ok,
                               bgColor: AppColors.green,
                               onTap: () {
@@ -229,14 +231,12 @@ class _PickupFormPageState extends State<PickupFormPage> {
                     ),
                   ),
                   leading: IconButton(
-                      icon: Icon(Icons.arrow_back_ios_sharp,
-                          color: theme.colorScheme.onTertiaryFixed),
+                      icon: Icon(Icons.arrow_back_ios_sharp, color: theme.colorScheme.onTertiaryFixed),
                       onPressed: () => context.router.maybePop())),
               body: Form(
                 key: _formKey,
                 child: ListView(
-                  padding:
-                      const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),
                   children: [
                     CustomInputWidget(
                       titleColor: theme.colorScheme.onSurface,
@@ -257,8 +257,7 @@ class _PickupFormPageState extends State<PickupFormPage> {
                       hintText: '+996 (___) __-__-__',
                       textController: _phoneController,
                       hint: context.l10n.phone,
-                      formatter:
-                          MaskTextInputFormatter(mask: "+996 (###) ##-##-##"),
+                      formatter: MaskTextInputFormatter(mask: "+996 (###) ##-##-##"),
                       textInputType: TextInputType.phone,
                       validator: (value) {
                         if (value!.isEmpty) {
@@ -290,20 +289,13 @@ class _PickupFormPageState extends State<PickupFormPage> {
                       },
                     ),
                     const SizedBox(height: 10),
-                    Text(context.l10n.orderPickupAd,
-                        style:
-                            theme.textTheme.bodyMedium!.copyWith(fontSize: 16)),
-                    Text(context.l10n.address,
-                        style:
-                            theme.textTheme.bodyMedium!.copyWith(fontSize: 16)),
+                    Text(context.l10n.orderPickupAd, style: theme.textTheme.bodyMedium!.copyWith(fontSize: 16)),
+                    Text(context.l10n.address, style: theme.textTheme.bodyMedium!.copyWith(fontSize: 16)),
                     const SizedBox(height: 10),
                     SubmitButtonWidget(
                       title: context.l10n.confirmOrder,
                       bgColor: Theme.of(context).colorScheme.primary,
-                      textStyle: Theme.of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .copyWith(color: theme.colorScheme.surface),
+                      textStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(color: theme.colorScheme.surface),
                       onTap: () {
                         if (_formKey.currentState!.validate()) {
                           double totalPrice = _calculateTotalPrice();
@@ -321,13 +313,11 @@ class _PickupFormPageState extends State<PickupFormPage> {
     );
   }
 
-  Future<dynamic> showBottomDialog(
-      ThemeData theme, BuildContext context, double totalPrice) {
+  Future<dynamic> showBottomDialog(ThemeData theme, BuildContext context, double totalPrice) {
     return showModalBottomSheet(
       backgroundColor: theme.colorScheme.surface,
       shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))),
       useSafeArea: true,
       isScrollControlled: true,
       context: context,
@@ -348,28 +338,21 @@ class _PickupFormPageState extends State<PickupFormPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
-                            child: Text(
-                                '${context.l10n.orderPickupAd} ${context.l10n.address}',
-                                style: theme.textTheme.bodyLarge!
-                                    .copyWith(fontSize: 16))),
-                        IconButton(
-                            onPressed: () => context.maybePop(),
-                            icon: const Icon(Icons.close)),
+                            child: Text('${context.l10n.orderPickupAd} ${context.l10n.address}',
+                                style: theme.textTheme.bodyLarge!.copyWith(fontSize: 16))),
+                        IconButton(onPressed: () => context.maybePop(), icon: const Icon(Icons.close)),
                       ],
                     ),
                   ),
                   const Divider(),
                   const SizedBox(height: 10),
-                  CustomDialogWidget(
-                      title: context.l10n.orderAmount,
-                      description: '${widget.totalPrice} сом'),
+                  CustomDialogWidget(title: context.l10n.orderAmount, description: '${widget.totalPrice} сом'),
                   const SizedBox(height: 10),
                   BlocBuilder<OrderCubit, OrderState>(
                     builder: (context, state) {
                       return SubmitButtonWidget(
                           isLoading: state is CreateOrderLoading,
-                          textStyle: theme.textTheme.bodyMedium!
-                              .copyWith(color: theme.colorScheme.surface),
+                          textStyle: theme.textTheme.bodyMedium!.copyWith(color: theme.colorScheme.surface),
                           title: context.l10n.confirm,
                           bgColor: AppColors.green,
                           onTap: _submitOrder);

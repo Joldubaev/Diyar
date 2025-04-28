@@ -3,7 +3,6 @@ import 'package:diyar/core/components/components.dart';
 import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/core/theme/theme.dart';
 import 'package:diyar/features/cart/cart.dart';
-import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:diyar/features/features.dart';
 import 'package:diyar/features/profile/prof.dart';
 import 'package:diyar/l10n/l10n.dart';
@@ -31,19 +30,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _initializeData() async {
-    final popularCubit = context.read<PopularCubit>();
-    final cartCubit = context.read<CartCubit>();
-    final profileCubit = context.read<ProfileCubit>();
-    final homeFeaturesCubit = context.read<HomeFeaturesCubit>();
-
-    await popularCubit.getPopularProducts();
-
-    if (mounted) {
-      await cartCubit.getCartItems();
-    }
-
-    profileCubit.getUser();
-    homeFeaturesCubit.getSales();
+    context.read<PopularCubit>().getPopularProducts();
+    context.read<ProfileCubit>().getUser();
+    context.read<HomeFeaturesCubit>().getSales();
   }
 
   @override
@@ -149,18 +138,19 @@ class _PopularSection extends StatelessWidget {
         SizedBox(
           width: double.infinity,
           height: 220,
-          child: StreamBuilder<List<CartItemEntity>>(
-            stream: context.read<CartCubit>().cart,
-            builder: (context, snapshot) {
-              final cart = snapshot.data ?? [];
+          child: BlocBuilder<CartBloc, CartState>(
+            builder: (context, cartState) {
+              List<CartItemEntity> cartItems = [];
+              if (cartState is CartLoaded) {
+                cartItems = cartState.items;
+              }
               return ListView.separated(
                 scrollDirection: Axis.horizontal,
                 separatorBuilder: (context, index) => const SizedBox(width: 10),
                 itemCount: menu.length,
-                controller: PageController(viewportFraction: 0.6),
                 itemBuilder: (context, index) {
                   final food = menu[index];
-                  final cartItem = cart.firstWhere(
+                  final cartItem = cartItems.firstWhere(
                     (element) => element.food?.id == food.id,
                     orElse: () => CartItemEntity(food: food, quantity: 0),
                   );

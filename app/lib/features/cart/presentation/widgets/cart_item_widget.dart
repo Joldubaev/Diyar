@@ -1,11 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:diyar/core/core.dart';
 import 'package:diyar/features/menu/domain/domain.dart';
-import 'package:diyar/l10n/l10n.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-
 import 'counter_widget.dart';
 
 class CartItemWidgets extends StatelessWidget {
@@ -46,10 +42,7 @@ class CartItemWidgets extends StatelessWidget {
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                     boxShadow: [
                       BoxShadow(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withValues(alpha: 0.2),
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2),
                         spreadRadius: 1,
                         blurRadius: 5,
                         offset: const Offset(0, 0),
@@ -62,8 +55,7 @@ class CartItemWidgets extends StatelessWidget {
                       fadeInCurve: Curves.easeIn,
                       fadeOutCurve: Curves.easeOut,
                       imageUrl: food.urlPhoto ?? '',
-                      errorWidget: (context, url, error) =>
-                          Image.asset('assets/images/placeholder.png'),
+                      errorWidget: (context, url, error) => Image.asset('assets/images/placeholder.png'),
                       width: 120,
                       height: 120,
                       placeholder: (context, url) => const Center(
@@ -96,13 +88,7 @@ class CartItemWidgets extends StatelessWidget {
                           ),
                         ),
                         IconButton(
-                          onPressed: () {
-                            AppAlert.showConfirmDialog(
-                                context: context,
-                                title: context.l10n.deleteOrder,
-                                content: Text(context.l10n.deleteOrderText),
-                                confirmPressed: onRemove);
-                          },
+                          onPressed: onRemove,
                           icon: SvgPicture.asset(
                             'assets/icons/delete.svg',
                             colorFilter: ColorFilter.mode(
@@ -121,11 +107,7 @@ class CartItemWidgets extends StatelessWidget {
                             style: Theme.of(context)
                                 .textTheme
                                 .bodySmall!
-                                .copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurface
-                                        .withValues(alpha: 0.6)),
+                                .copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6)),
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -136,8 +118,7 @@ class CartItemWidgets extends StatelessWidget {
                           style: Theme.of(context)
                               .textTheme
                               .bodySmall!
-                              .copyWith(
-                                  color: Theme.of(context).colorScheme.primary),
+                              .copyWith(color: Theme.of(context).colorScheme.primary),
                         ),
                       ],
                     ),

@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/menu/domain/domain.dart';
 import 'package:diyar/features/menu/presentation/presentation.dart';
 import 'package:diyar/l10n/l10n.dart';
@@ -28,7 +27,6 @@ class _MenuPageState extends State<MenuPage> with SingleTickerProviderStateMixin
   void initState() {
     super.initState();
     context.read<MenuBloc>().add(GetFoodsByCategoryEvent());
-    context.read<CartCubit>().getCartItems();
     _itemPositionsListener.itemPositions.addListener(_onScroll);
   }
 
@@ -137,7 +135,6 @@ class _MenuPageState extends State<MenuPage> with SingleTickerProviderStateMixin
                       context.read<MenuBloc>().add(GetFoodsByCategoryEvent());
                     },
                     child: ProductsList(
-                      menu: menu,
                       activeIndex: _activeIndex,
                       itemScrollController: _itemScrollController,
                       itemPositionsListener: _itemPositionsListener,

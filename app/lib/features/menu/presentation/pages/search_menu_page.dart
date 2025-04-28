@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/core/components/product/custom_gridview.dart';
 import 'package:diyar/features/cart/cart.dart';
-import 'package:diyar/features/menu/data/models/food_model.dart';
 import 'package:diyar/features/menu/domain/domain.dart';
 import 'package:diyar/features/menu/presentation/bloc/menu_bloc.dart';
 import 'package:diyar/l10n/l10n.dart';
@@ -48,19 +47,18 @@ class _SearchMenuPageState extends State<SearchMenuPage> {
               listener: (context, state) {
                 if (state is SearchFoodsLoaded) {
                   setState(() => foods = state.foods);
-                  context.read<CartCubit>().getCartItems();
                 }
               },
-              builder: (context, state) {
-                if (state is SearchFoodsLoading) {
+              builder: (context, menuState) {
+                if (menuState is SearchFoodsLoading) {
                   return const Center(child: CircularProgressIndicator());
                 }
 
-                if (state is SearchFoodsFailure) {
+                if (menuState is SearchFoodsFailure) {
                   return Center(child: Text(context.l10n.notFound));
                 }
 
-                if (foods.isEmpty) {
+                if (menuState is! SearchFoodsLoaded && foods.isEmpty) {
                   return Center(
                     child: Text(
                       context.l10n.searchByNames,
@@ -69,39 +67,35 @@ class _SearchMenuPageState extends State<SearchMenuPage> {
                   );
                 }
 
-                return StreamBuilder<List<CartItemModel>>(
-                  stream: context
-                      .read<CartCubit>()
-                      .cart
-                      .map((entities) => entities.map((entity) => CartItemModel.fromEntity(entity)).toList()),
-                  builder: (context, snapshot) {
-                    List<CartItemModel> cart = snapshot.data ?? [];
+                if (menuState is SearchFoodsLoaded && foods.isEmpty) {
+                  return Center(child: Text(context.l10n.notFound));
+                }
 
-                    return PaginatedMasonryGridView<FoodEntity>(
-                      items: foods,
-                      isLoadingMore: false,
-                      loadMore: () {}, // Пока оставим пустым, так как у нас нет пагинации
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 10,
-                      crossAxisSpacing: 10,
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      itemBuilder: (context, food) {
-                        final cartItem = cart.firstWhere(
-                          (element) => element.food?.id == food.id,
-                          orElse: () => CartItemModel(
-                            food: FoodModel.fromEntity(food),
-                            quantity: 0,
-                          ),
-                        );
-
-                        return ProductItemWidget(
-                          food: food,
-                          quantity: cartItem.quantity ?? 0,
-                        );
-                      },
-                    );
-                  },
-                );
+                return BlocBuilder<CartBloc, CartState>(builder: (context, cartState) {
+                  List<CartItemEntity> cartItems = [];
+                  if (cartState is CartLoaded) {
+                    cartItems = cartState.items;
+                  }
+                  return PaginatedMasonryGridView<FoodEntity>(
+                    items: foods,
+                    isLoadingMore: false,
+                    loadMore: () {},
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 10,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    itemBuilder: (context, food) {
+                      final cartItem = cartItems.firstWhere(
+                        (element) => element.food?.id == food.id,
+                        orElse: () => CartItemEntity(food: food, quantity: 0),
+                      );
+                      return ProductItemWidget(
+                        food: food,
+                        quantity: cartItem.quantity ?? 0,
+                      );
+                    },
+                  );
+                });
               },
             ),
           ),

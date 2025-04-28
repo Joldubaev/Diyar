@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
-import 'package:diyar/features/cart/presentation/cubit/cart_cubit.dart';
+import 'package:diyar/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:diyar/features/menu/domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -97,19 +97,23 @@ class CartControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<CartItemEntity>>(
-      stream: context.read<CartCubit>().cart,
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return const SizedBox.shrink();
-        }
+    return BlocBuilder<CartBloc, CartState>(
+      builder: (context, state) {
+        int itemQuantity = 0;
+        CartItemEntity? cartItem;
 
-        final cart = snapshot.data ?? [];
-        final cartItem = cart.firstWhere(
-          (element) => element.food?.id == food.id,
-          orElse: () => CartItemEntity(food: food, quantity: 0),
-        );
-        final itemQuantity = cartItem.quantity ?? 0;
+        if (state is CartLoaded) {
+          cartItem = state.items.firstWhere(
+            (element) => element.food?.id == food.id,
+            orElse: () => CartItemEntity(food: food, quantity: 0),
+          );
+          itemQuantity = cartItem.quantity ?? 0;
+        } else if (state is CartLoading || state is CartInitial) {
+          // Optionally show a loading indicator or disable buttons
+          // For simplicity, we'll just show 0 and buttons might be disabled based on quantity
+        } else if (state is CartError) {
+          // Optionally show an error indicator
+        }
 
         return Container(
           padding: const EdgeInsets.symmetric(vertical: 8),
@@ -118,7 +122,10 @@ class CartControls extends StatelessWidget {
             children: [
               _CounterButton(
                 icon: Icons.remove,
-                onPressed: itemQuantity > 0 ? () => _handleCartAction(context, cartItem, isIncrement: false) : null,
+                onPressed: itemQuantity > 0
+                    ? () => _handleCartAction(context, cartItem ?? CartItemEntity(food: food, quantity: 0),
+                        isIncrement: false)
+                    : null,
               ),
               SizedBox(
                 width: 50,
@@ -130,7 +137,8 @@ class CartControls extends StatelessWidget {
               ),
               _CounterButton(
                 icon: Icons.add,
-                onPressed: () => _handleCartAction(context, cartItem, isIncrement: true),
+                onPressed: () =>
+                    _handleCartAction(context, cartItem ?? CartItemEntity(food: food, quantity: 0), isIncrement: true),
               ),
             ],
           ),
@@ -146,20 +154,22 @@ class CartControls extends StatelessWidget {
     }
 
     final currentQuantity = cartItem.quantity ?? 0;
-    final cartCubit = context.read<CartCubit>();
+    final cartBloc = context.read<CartBloc>();
+    final foodId = food.id;
+
+    if (foodId == null) return;
 
     if (isIncrement) {
       if (currentQuantity == 0) {
-        cartCubit.addToCart(CartItemEntity(food: food, quantity: 1));
+        cartBloc.add(AddItemToCart(CartItemEntity(food: food, quantity: 1)));
       } else {
-        cartCubit.incrementCart(food.id!);
+        cartBloc.add(IncrementItemQuantity(foodId));
       }
     } else {
-      if (currentQuantity <= 0) return;
-      if (currentQuantity == 1) {
-        cartCubit.removeFromCart(food.id!);
-      } else {
-        cartCubit.decrementCart(food.id!);
+      if (currentQuantity > 1) {
+        cartBloc.add(DecrementItemQuantity(foodId));
+      } else if (currentQuantity == 1) {
+        cartBloc.add(RemoveItemFromCart(foodId));
       }
     }
   }
@@ -215,8 +225,8 @@ class ProductImage extends StatelessWidget {
           imageBuilder: (context, imageProvider) => _buildImage(imageProvider),
           errorWidget: (context, url, error) => _buildErrorWidget(context),
           placeholder: (context, url) => _buildLoadingWidget(),
-          memCacheWidth: 800, // Оптимизировано для современных устройств
-          memCacheHeight: 800,
+          // memCacheWidth: 600,
+          // memCacheHeight: 600,
         ),
       ),
     );

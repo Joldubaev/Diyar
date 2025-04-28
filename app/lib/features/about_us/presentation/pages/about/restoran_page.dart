@@ -20,7 +20,7 @@ class _RestorantPageState extends State<RestorantPage> {
 
   @override
   void initState() {
-    context.read<AboutUsCubit>().getAboutUs(type: 'restoran');
+    context.read<AboutUsCubit>().getAboutUs(type: 'РЕСТОРАН');
     super.initState();
   }
 

@@ -1,9 +1,16 @@
 import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:diyar/features/menu/menu.dart';
+import 'package:hive/hive.dart';
 
+part 'cart_item_model.g.dart';
+
+@HiveType(typeId: 0)
 class CartItemModel {
+  @HiveField(0)
   final FoodModel? food;
+  @HiveField(1)
   final int? quantity;
+  @HiveField(2)
   final double? totalPrice;
 
   CartItemModel({

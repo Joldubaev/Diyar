@@ -20,7 +20,7 @@ class _VipPageState extends State<VipPage> {
 
   @override
   void initState() {
-    context.read<AboutUsCubit>().getAboutUs(type: 'VIP');
+    context.read<AboutUsCubit>().getAboutUs(type: 'VIP ЗАЛЫ');
     super.initState();
   }
 

@@ -1,11 +1,8 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
-import '../../../core/components/custom_dialog/custom_dialog.dart';
-import '../../../core/router/routes.gr.dart';
-import '../../../core/utils/helper/user_helper.dart';
-import '../../../features/app/cubit/remote_config_cubit.dart';
-import '../../../features/cart/cart.dart';
-import '../../../core/theme/app_colors.dart';
+import 'package:diyar/core/core.dart';
+import 'package:diyar/features/app/cubit/remote_config_cubit.dart';
+import 'package:diyar/features/cart/cart.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,16 +18,11 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int currentIndex = 0;
-  bool isLoading = false;
-  String? token;
-  List<CartItemEntity> cart = [];
-  late Stream<List<CartItemEntity>> cartItems;
 
   @override
   void initState() {
     super.initState();
-    context.read<CartCubit>().getCartItems();
-    cartItems = context.read<CartCubit>().cart;
+    context.read<CartBloc>().add(LoadCart());
     SchedulerBinding.instance.addPostFrameCallback((_) {
       context.read<RemoteConfigCubit>().init();
     });
@@ -85,14 +77,14 @@ class _MainPageState extends State<MainPage> {
 
   // Build Floating Action Button for the cart with authentication check
   Widget _buildFloatingActionButton(BuildContext context, ThemeData theme) {
-    return StreamBuilder<List<CartItemEntity>>(
-      stream: cartItems,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          cart = snapshot.data!;
+    return BlocBuilder<CartBloc, CartState>(
+      builder: (context, state) {
+        int cartCount = 0;
+        bool isCartLoaded = false;
+        if (state is CartLoaded) {
+          cartCount = state.totalItems;
+          isCartLoaded = true;
         }
-        final cartCount =
-            cart.fold(0, (sum, item) => sum + (item.quantity ?? 0));
 
         return Stack(
           children: [
@@ -114,7 +106,7 @@ class _MainPageState extends State<MainPage> {
                 ),
               ),
             ),
-            if (cart.isNotEmpty)
+            if (isCartLoaded && cartCount > 0)
               Positioned(
                 right: 0,
                 top: 0,
@@ -184,9 +176,8 @@ class CustomBottomNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final unselectedColor = Theme.of(context).brightness == Brightness.dark
-        ? Colors.white.withValues(alpha: 0.8)
-        : Colors.grey;
+    final unselectedColor =
+        Theme.of(context).brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.8) : Colors.grey;
 
     return BottomNavigationBar(
       currentIndex: currentIndex,
@@ -199,8 +190,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
         _buildBottomNavItem(context, "assets/icons/home_icon.svg", "Главная"),
         _buildBottomNavItem(context, "assets/icons/menu_icon.svg", "Меню"),
         _buildBottomNavItem(context, "assets/icons/orders_icon.svg", "История"),
-        _buildBottomNavItem(
-            context, "assets/icons/profile_icon.svg", "Профиль"),
+        _buildBottomNavItem(context, "assets/icons/profile_icon.svg", "Профиль"),
       ],
     );
   }

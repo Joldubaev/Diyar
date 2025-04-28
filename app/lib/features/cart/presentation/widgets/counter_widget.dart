@@ -1,5 +1,6 @@
-import '../../cart.dart';
-import '../../../../core/theme/theme.dart';
+
+import 'package:diyar/core/core.dart';
+import 'package:diyar/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -30,17 +31,16 @@ class CounterWidget extends StatelessWidget {
                 icon: const Icon(Icons.remove),
                 onPressed: () {
                   if (counter > 1) {
-                    context.read<CartCubit>().decrementCart(id);
-                  } else {
-                    context.read<CartCubit>().removeFromCart(id);
+                    context.read<CartBloc>().add(DecrementItemQuantity(id));
+                  } else if (counter == 1) {
+                    context.read<CartBloc>().add(RemoveItemFromCart(id));
                   }
                 },
               ),
-              Text(counter.toString(),
-                  style: Theme.of(context).textTheme.bodyLarge),
+              Text(counter.toString(), style: Theme.of(context).textTheme.bodyLarge),
               IconButton(
                 icon: const Icon(Icons.add),
-                onPressed: () => context.read<CartCubit>().incrementCart(id),
+                onPressed: () => context.read<CartBloc>().add(IncrementItemQuantity(id)),
               ),
             ],
           ),
