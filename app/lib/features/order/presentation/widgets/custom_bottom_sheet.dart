@@ -1,4 +1,5 @@
 import '../../../cart/presentation/presentation.dart';
+import '../../../cart/presentation/bloc/cart_bloc.dart';
 import '../../order.dart';
 import '../pages/delivery_page.dart';
 import 'custom_dialog_widget.dart';
@@ -72,8 +73,7 @@ class CustomBottomSheet extends StatelessWidget {
               BlocBuilder<OrderCubit, OrderState>(
                 builder: (context, state) {
                   return SubmitButtonWidget(
-                    textStyle: theme.textTheme.bodyMedium!
-                        .copyWith(color: theme.colorScheme.onPrimary),
+                    textStyle: theme.textTheme.bodyMedium!.copyWith(color: theme.colorScheme.onPrimary),
                     title: context.l10n.confirm,
                     bgColor: AppColors.green,
                     isLoading: state is CreateOrderLoading,
@@ -94,8 +94,7 @@ class CustomBottomSheet extends StatelessWidget {
       children: [
         Text(
           context.l10n.orderConfirmation,
-          style: theme.textTheme.bodyLarge!
-              .copyWith(color: theme.colorScheme.onSurface),
+          style: theme.textTheme.bodyLarge!.copyWith(color: theme.colorScheme.onSurface),
         ),
         IconButton(
           icon: const Icon(Icons.close),
@@ -146,7 +145,6 @@ class CustomBottomSheet extends StatelessWidget {
         dishesCount: widget.dishCount,
         sdacha: sdacha,
         region: region,
-
         foods: widget.cart
             .map(
               (e) => OrderFoodItem(
@@ -160,8 +158,7 @@ class CustomBottomSheet extends StatelessWidget {
     )
         .then((value) {
       if (context.mounted) {
-        context.read<CartCubit>().clearCart();
-        context.read<CartCubit>().dishCount = 0;
+        context.read<CartBloc>().add(ClearCart());
       }
     });
   }

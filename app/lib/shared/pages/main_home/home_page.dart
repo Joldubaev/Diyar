@@ -1,15 +1,14 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/components/components.dart';
+import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/core/theme/theme.dart';
-import '../../../core/router/routes.gr.dart';
-import '../../../features/cart/data/models/cart_item_model.dart';
-import '../../../features/cart/presentation/cubit/cart_cubit.dart';
-import '../../../features/features.dart';
-import '../../../features/profile/presentation/presentation.dart';
-import '../../../l10n/l10n.dart';
-import '../../cubit/popular_cubit.dart';
-import '../widgets/news_widget.dart';
-import '../../shared.dart';
+import 'package:diyar/features/cart/cart.dart';
+import 'package:diyar/features/features.dart';
+import 'package:diyar/features/profile/prof.dart';
+import 'package:diyar/l10n/l10n.dart';
+import 'package:diyar/shared/cubit/popular_cubit.dart';
+import 'package:diyar/shared/pages/widgets/news_widget.dart';
+import 'package:diyar/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/sales_section_page.dart';
@@ -23,7 +22,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<FoodModel> menu = [];
+  List<FoodEntity> menu = [];
   @override
   void initState() {
     super.initState();
@@ -31,19 +30,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _initializeData() async {
-    final popularCubit = context.read<PopularCubit>();
-    final cartCubit = context.read<CartCubit>();
-    final profileCubit = context.read<ProfileCubit>();
-    final homeFeaturesCubit = context.read<HomeFeaturesCubit>();
-
-    await popularCubit.getPopularProducts();
-
-    if (mounted) {
-      await cartCubit.getCartItems();
-    }
-
-    profileCubit.getUser();
-    homeFeaturesCubit.getSales();
+    context.read<PopularCubit>().getPopularProducts();
+    context.read<ProfileCubit>().getUser();
+    context.read<HomeFeaturesCubit>().getSales();
   }
 
   @override
@@ -129,7 +118,7 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 class _PopularSection extends StatelessWidget {
-  final List<FoodModel> menu;
+  final List<FoodEntity> menu;
 
   const _PopularSection({required this.menu});
 
@@ -149,20 +138,21 @@ class _PopularSection extends StatelessWidget {
         SizedBox(
           width: double.infinity,
           height: 220,
-          child: StreamBuilder<List<CartItemModel>>(
-            stream: context.read<CartCubit>().cart,
-            builder: (context, snapshot) {
-              final cart = snapshot.data ?? [];
+          child: BlocBuilder<CartBloc, CartState>(
+            builder: (context, cartState) {
+              List<CartItemEntity> cartItems = [];
+              if (cartState is CartLoaded) {
+                cartItems = cartState.items;
+              }
               return ListView.separated(
                 scrollDirection: Axis.horizontal,
                 separatorBuilder: (context, index) => const SizedBox(width: 10),
                 itemCount: menu.length,
-                controller: PageController(viewportFraction: 0.6),
                 itemBuilder: (context, index) {
                   final food = menu[index];
-                  final cartItem = cart.firstWhere(
+                  final cartItem = cartItems.firstWhere(
                     (element) => element.food?.id == food.id,
-                    orElse: () => CartItemModel(food: food, quantity: 0),
+                    orElse: () => CartItemEntity(food: food, quantity: 0),
                   );
                   return SizedBox(
                     width: 200,

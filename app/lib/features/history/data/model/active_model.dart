@@ -1,4 +1,5 @@
-import '../../../menu/menu.dart';
+
+import 'package:diyar/features/menu/menu.dart';
 
 class ActiveOrderModel {
   final OrderActiveItemModel? order;

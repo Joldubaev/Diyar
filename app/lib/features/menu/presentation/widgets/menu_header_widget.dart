@@ -21,8 +21,7 @@ class _MenuHeaderWidgetState extends State<MenuHeaderWidget> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(width: 16),
-          Text(context.l10n.menu,
-              style: Theme.of(context).textTheme.titleSmall),
+          Text(context.l10n.menu, style: Theme.of(context).textTheme.titleSmall),
           const SizedBox(width: 20),
           Expanded(
             child: Row(

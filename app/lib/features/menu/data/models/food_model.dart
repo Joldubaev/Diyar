@@ -1,22 +1,40 @@
+import 'package:hive/hive.dart';
 import 'dart:convert';
+import 'package:diyar/features/menu/domain/domain.dart';
+
+part 'food_model.g.dart';
 
 FoodModel foodModelFromJson(String str) => FoodModel.fromJson(json.decode(str));
 
 String foodModelToJson(FoodModel data) => json.encode(data.toJson());
 
+@HiveType(typeId: 1)
 class FoodModel {
+  @HiveField(0)
   String? id;
+  @HiveField(1)
   String? name;
+  @HiveField(2)
   String? description;
+  @HiveField(3)
   String? categoryId;
+  @HiveField(4)
   int? price;
+  @HiveField(5)
   String? weight;
+  @HiveField(6)
   String? urlPhoto;
+  @HiveField(7)
   bool? stopList;
+  @HiveField(8)
   int? iDctMax;
+  @HiveField(9)
   String? containerName;
+  @HiveField(10)
   int? containerCount;
+  @HiveField(11)
   int? quantity;
+  @HiveField(12)
   int? containerPrice;
 
   FoodModel({
@@ -35,45 +53,14 @@ class FoodModel {
     this.containerPrice,
   });
 
-  FoodModel copyWith({
-    String? id,
-    String? name,
-    String? description,
-    String? categoryId,
-    int? price,
-    String? weight,
-    String? urlPhoto,
-    bool? stopList,
-    int? iDctMax,
-    String? containerName,
-    int? containerCount,
-    int? quantity,
-    int? containerPrice,
-  }) =>
-      FoodModel(
-        id: id ?? this.id,
-        name: name ?? this.name,
-        description:description ?? description,
-        categoryId: categoryId ?? this.categoryId,
-        price: price ?? this.price,
-        weight: weight ?? this.weight,
-        urlPhoto: urlPhoto ?? this.urlPhoto,
-        stopList: stopList ?? this.stopList,
-        iDctMax: iDctMax ?? this.iDctMax,
-        containerName: containerName ?? this.containerName,
-        containerCount: containerCount ?? this.containerCount,
-        quantity: quantity ?? this.quantity,
-        containerPrice: containerPrice ?? this.containerPrice,
-      );
-
   factory FoodModel.fromJson(Map<String, dynamic> json) => FoodModel(
         id: json["id"],
         name: json["name"],
-        description:json["description"],
+        description: json["description"],
         categoryId: json["categoryId"],
         price: json["price"],
         weight: json["weight"],
-        urlPhoto: json["URLPhoto"],
+        urlPhoto: json["urlPhoto"],
         stopList: json["stopList"],
         iDctMax: json["iDCTMax"],
         containerName: json["containerName"],
@@ -85,7 +72,7 @@ class FoodModel {
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
-        "description":description,
+        "description": description,
         "categoryId": categoryId,
         "price": price,
         "weight": weight,
@@ -97,4 +84,40 @@ class FoodModel {
         "containerPrice": containerPrice,
         if (quantity != null) "quantity": quantity,
       };
+
+  factory FoodModel.fromEntity(FoodEntity entity) {
+    return FoodModel(
+      id: entity.id,
+      name: entity.name,
+      description: entity.description,
+      categoryId: entity.categoryId,
+      price: entity.price,
+      weight: entity.weight,
+      urlPhoto: entity.urlPhoto,
+      stopList: entity.stopList,
+      iDctMax: entity.iDctMax,
+      containerName: entity.containerName,
+      containerCount: entity.containerCount,
+      quantity: entity.quantity,
+      containerPrice: entity.containerPrice,
+    );
+  }
+
+  FoodEntity toEntity() {
+    return FoodEntity(
+      id: id,
+      name: name,
+      description: description,
+      categoryId: categoryId,
+      price: price,
+      weight: weight,
+      urlPhoto: urlPhoto,
+      stopList: stopList,
+      iDctMax: iDctMax,
+      containerName: containerName,
+      containerCount: containerCount,
+      quantity: quantity,
+      containerPrice: containerPrice,
+    );
+  }
 }

@@ -1,305 +1,44 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/cart.dart';
-import 'package:diyar/features/cart/presentation/widgets/cart_empty_widget.dart';
-import 'package:diyar/l10n/l10n.dart';
-import '../../../menu/data/models/food_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 @RoutePage()
-class CartPage extends StatefulWidget {
+class CartPage extends StatelessWidget {
   const CartPage({super.key});
 
   @override
-  CartPageState createState() => CartPageState();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: const CartAppBarWidget(),
+      body: const CartContentsWidget(),
+    );
+  }
 }
 
-class CartPageState extends State<CartPage>
-    with SingleTickerProviderStateMixin {
-  List<CartItemModel> carts = [];
-  int totalPrice = 0;
-  int dishCount = 0;
-  @override
-  void initState() {
-    context.read<CartCubit>().getCartItems();
-    super.initState();
-    _updateCartData();
-  }
-
-  void _updateCartData() {
-    context.read<CartCubit>().cart.listen((data) {
-      setState(() {
-        carts = data;
-        totalPrice = carts.fold(
-          0,
-          (prevValue, element) =>
-              prevValue + (element.food?.price ?? 0) * (element.quantity ?? 0),
-        );
-        dishCount = carts.length;
-      });
-    });
-  }
+class CartContentsWidget extends StatelessWidget {
+  const CartContentsWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: AppColors.white),
-          onPressed: () => context.maybePop(),
-        ),
-        title: Text(
-          context.l10n.cart,
-          style: theme.textTheme.titleSmall?.copyWith(color: AppColors.white),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.delivery_dining,
-              size: 30,
-              color: AppColors.white,
-            ),
-            onPressed: carts.isNotEmpty
-                ? () {
-                    getDistricts(context, carts, totalPrice, dishCount);
-                  }
-                : null,
-          ),
-        ],
-      ),
-      body: StreamBuilder<List<CartItemModel>>(
-        stream: context.read<CartCubit>().cart,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-            final carts = snapshot.data!;
-            final containerPrice = carts.fold(
-              0,
-              (prevValue, element) =>
-                  prevValue +
-                  (element.food?.containerPrice ?? 0) * (element.quantity ?? 0),
-            );
-            final totalPrice = containerPrice +
-                (carts.fold(
-                            0,
-                            (prevValue, element) =>
-                                prevValue +
-                                (element.food?.price ?? 0) *
-                                    (element.quantity ?? 0)) *
-                        0.9)
-                    .toInt();
-
-            return Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: CustomScrollView(
-                slivers: [
-                  SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        return CartItemWidgets(
-                          counter: carts[index].quantity ?? 0,
-                          food: carts[index].food ?? FoodModel(),
-                          onRemove: () {
-                            context
-                                .read<CartCubit>()
-                                .removeFromCart(carts[index].food!.id ?? '');
-                            context.maybePop();
-                            if (carts.length == 1) {
-                              context.read<CartCubit>().dishCount = 0;
-                            }
-                          },
-                        );
-                      },
-                      childCount: carts.length,
-                    ),
-                  ),
-                  SliverPadding(
-                    padding: const EdgeInsets.all(8),
-                    sliver: SliverToBoxAdapter(
-                      child: TotalPriceWidget(
-                        containerPrice: containerPrice,
-                        price: (carts.fold(
-                                  0,
-                                  (previousValue, element) =>
-                                      previousValue +
-                                      (element.food?.price ?? 0) *
-                                          (element.quantity ?? 0),
-                                ) *
-                                0.9)
-                            .toInt(),
-                        sale: 10,
-                        totalPrice: totalPrice,
-                      ),
-                    ),
-                  ),
-                  SliverPadding(
-                    padding: const EdgeInsets.fromLTRB(12, 6, 12, 6),
-                    sliver: SliverToBoxAdapter(
-                      child: SubmitButtonWidget(
-                        textStyle: theme.textTheme.bodyLarge!.copyWith(
-                            color: Theme.of(context).colorScheme.surface),
-                        bgColor: Theme.of(context).colorScheme.primary,
-                        title: context.l10n.confirmOrder,
-                        onTap: () {
-                          _showAppropriateDialog(context, carts, totalPrice);
-                        },
-                      ),
-                    ),
-                  ),
-                  const SliverToBoxAdapter(
-                    child: SizedBox(height: 20),
-                  ),
-                ],
-              ),
-            );
-          } else {
+    return BlocBuilder<CartBloc, CartState>(
+      builder: (context, state) {
+        if (state is CartLoading || state is CartInitial) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is CartError) {
+          return Center(child: Text('Ошибка: ${state.message}'));
+        } else if (state is CartLoaded) {
+          if (state.items.isEmpty) {
             return const CartEmptyWidget();
           }
-        },
-      ),
-    );
-  }
-
-  void getDistricts(BuildContext context, List<CartItemModel> carts,
-      int totalPrice, int dishCount) {
-    context.router.push(
-      SecondOrderRoute(
-        totalPrice: totalPrice,
-        cart: carts,
-        dishCount: dishCount,
-      ),
-    );
-  }
-
-  void _showAppropriateDialog(
-      BuildContext context, List<CartItemModel> carts, int totalPrice) {
-    final currentTime = DateTime.now();
-    const startWorkTime = TimeOfDay(hour: 10, minute: 0);
-    const endWorkTime = TimeOfDay(hour: 22, minute: 0);
-    int timeOfDayToMinutes(TimeOfDay time) => time.hour * 60 + time.minute;
-
-    final currentTimeOfDay = TimeOfDay.fromDateTime(currentTime);
-    final currentTimeInMinutes = timeOfDayToMinutes(currentTimeOfDay);
-    final startWorkTimeInMinutes = timeOfDayToMinutes(startWorkTime);
-    final endWorkTimeInMinutes = timeOfDayToMinutes(endWorkTime);
-
-    bool isShopClosed;
-    if (startWorkTimeInMinutes < endWorkTimeInMinutes) {
-      isShopClosed = currentTimeInMinutes < startWorkTimeInMinutes ||
-          currentTimeInMinutes > endWorkTimeInMinutes;
-    } else {
-      isShopClosed = currentTimeInMinutes < startWorkTimeInMinutes &&
-          currentTimeInMinutes > endWorkTimeInMinutes;
-    }
-
-    if (isShopClosed) {
-      _showClosedAlertDialog(context);
-    } else {
-      _showDeliveryDialog(context, carts, totalPrice);
-    }
-  }
-
-  Future<dynamic> _showDeliveryDialog(
-      BuildContext context, List<CartItemModel> carts, int totalPrice) {
-    return showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    flex: 5,
-                    child: Text(
-                      'Выберите способ доставки',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Theme.of(context).colorScheme.error,
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
-                  ),
-                  Expanded(
-                    child: IconButton(
-                      icon: const Icon(Icons.close, color: AppColors.red),
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Expanded(
-                    child: CustomBoxWidget(
-                      icon: Icons.delivery_dining,
-                      label: context.l10n.delivery,
-                      onTap: () {
-                        Navigator.of(context).pop();
-                        context.pushRoute(
-                            OrderMapRoute(cart: carts, totalPrice: totalPrice));
-                      },
-                    ),
-                  ),
-                  Expanded(
-                    child: CustomBoxWidget(
-                      icon: Icons.store,
-                      label: context.l10n.pickup,
-                      onTap: () {
-                        Navigator.of(context).pop();
-                        context.pushRoute(PickupFormRoute(
-                            cart: carts, totalPrice: totalPrice));
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Future<dynamic> _showClosedAlertDialog(BuildContext context) {
-    return showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.error.withValues(alpha: 0.1),
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                ),
-                child: Text(
-                  'Доставка и самовывоз доступны с 10:00 до 22:00. Пожалуйста, оформите заказ в это время.',
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.error,
-                        fontWeight: FontWeight.bold,
-                      ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              const SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () => context.maybePop(),
-                child: const Text('Закрыть'),
-              ),
-            ],
-          ),
-        );
+          return LoadedCartView(cartState: state);
+        } else {
+          return const Center(
+            child: Text(
+              'Неизвестное состояние корзины',
+            ),
+          );
+        }
       },
     );
   }

@@ -1,8 +1,16 @@
-import '../../../features.dart';
+import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
+import 'package:diyar/features/menu/menu.dart';
+import 'package:hive/hive.dart';
 
+part 'cart_item_model.g.dart';
+
+@HiveType(typeId: 0)
 class CartItemModel {
+  @HiveField(0)
   final FoodModel? food;
+  @HiveField(1)
   final int? quantity;
+  @HiveField(2)
   final double? totalPrice;
 
   CartItemModel({
@@ -22,16 +30,18 @@ class CartItemModel {
         "quantity": quantity,
         "price": totalPrice,
       };
-
-  CartItemModel copyWith({
-    FoodModel? food,
-    int? quantity,
-    double? totalPrice,
-  }) {
+  factory CartItemModel.fromEntity(CartItemEntity entity) {
     return CartItemModel(
-      food: food ?? this.food,
-      quantity: quantity ?? this.quantity,
-      totalPrice: totalPrice ?? this.totalPrice,
+      food: entity.food != null ? FoodModel.fromEntity(entity.food!) : null,
+      quantity: entity.quantity,
+      totalPrice: entity.totalPrice,
+    );
+  }
+  CartItemEntity toEntity() {
+    return CartItemEntity(
+      food: food?.toEntity(),
+      quantity: quantity,
+      totalPrice: totalPrice,
     );
   }
 }

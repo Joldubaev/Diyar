@@ -1,12 +1,11 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:diyar/core/core.dart' show ProductItemWidget;
-import 'package:diyar/features/cart/cart.dart';
-import 'package:diyar/features/menu/data/models/category_model.dart';
-import 'package:diyar/features/menu/menu.dart';
+import 'package:diyar/features/menu/domain/domain.dart';
+import 'package:diyar/features/menu/presentation/presentation.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import '../widgets/category_list.dart';
 
 @RoutePage()
 class MenuPage extends StatefulWidget {
@@ -16,20 +15,18 @@ class MenuPage extends StatefulWidget {
   State<MenuPage> createState() => _MenuPageState();
 }
 
-class _MenuPageState extends State<MenuPage>
-    with SingleTickerProviderStateMixin {
-  int _activeIndex = 0;
+class _MenuPageState extends State<MenuPage> with SingleTickerProviderStateMixin {
   final ItemScrollController _itemScrollController = ItemScrollController();
-  final ItemPositionsListener _itemPositionsListener =
-      ItemPositionsListener.create();
+  final ItemPositionsListener _itemPositionsListener = ItemPositionsListener.create();
   final ScrollController _scrollController = ScrollController();
-  List<CategoryModel> menu = [];
+  final ValueNotifier<int> _activeIndex = ValueNotifier<int>(0);
+  List<CategoryFoodEntity> menu = [];
+  List<CategoryEntity> category = [];
 
   @override
   void initState() {
     super.initState();
-    context.read<MenuCubit>().getProductsWithMenu();
-    context.read<CartCubit>().getCartItems();
+    context.read<MenuBloc>().add(GetFoodsByCategoryEvent());
     _itemPositionsListener.itemPositions.addListener(_onScroll);
   }
 
@@ -37,6 +34,7 @@ class _MenuPageState extends State<MenuPage>
   void dispose() {
     _itemPositionsListener.itemPositions.removeListener(_onScroll);
     _scrollController.dispose();
+    _activeIndex.dispose();
     super.dispose();
   }
 
@@ -45,22 +43,27 @@ class _MenuPageState extends State<MenuPage>
         .where((itemPosition) => itemPosition.itemLeadingEdge < 0.5)
         .map((itemPosition) => itemPosition.index)
         .toList();
-    if (indices.isNotEmpty && _activeIndex != indices.first) {
-      setState(() {
-        _activeIndex = indices.first;
-      });
+    if (indices.isNotEmpty && _activeIndex.value != indices.first) {
+      _activeIndex.value = indices.first;
     }
   }
 
   Future<void> _scrollToCategory(int index) async {
-    await _itemScrollController.scrollTo(
-      index: index,
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
-    );
-    setState(() {
-      _activeIndex = index;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_itemScrollController.isAttached) {
+        _itemScrollController.scrollTo(
+          index: index,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      }
     });
+
+    _activeIndex.value = index;
+
+    context.read<MenuBloc>().add(
+          GetProductsEvent(foodName: category[index].name),
+        );
 
     final scrollPosition = index * 100.0;
     _scrollController.animateTo(
@@ -72,139 +75,69 @@ class _MenuPageState extends State<MenuPage>
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Scaffold(
-      body: BlocConsumer<MenuCubit, MenuState>(
+      body: BlocConsumer<MenuBloc, MenuState>(
         listener: (context, state) {
-          if (state is GetMenuLoaded) {
-            setState(() => menu = state.categories);
+          if (state is GetFoodsByCategoryLoading) {
+            Center(child: CircularProgressIndicator());
+          } else if (state is GetFoodsByCategoryFailure) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(context.l10n.loadedWrong),
+              ),
+            );
+          }
+          if (state is GetFoodsByCategoryLoaded) {
+            category = state.categories;
+            if (_activeIndex.value == 0 && state.categories.isNotEmpty) {
+              context.read<MenuBloc>().add(
+                    GetProductsEvent(foodName: state.categories[0].name),
+                  );
+            }
+          } else if (state is GetProductsLoaded) {
+            menu = state.foods;
+          } else if (state is GetProductsFailure) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(context.l10n.loadedWrong),
+              ),
+            );
           }
         },
         builder: (context, state) {
-          if (state is GetMenuLoading) {
+          if (state is GetFoodsByCategoryLoading) {
             return const Center(child: CircularProgressIndicator());
-          } else if (state is GetMenuFailure) {
+          } else if (state is GetFoodsByCategoryFailure) {
             return Center(child: Text(context.l10n.loadedWrong));
           }
+
           return SafeArea(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 MenuHeaderWidget(
-                  onTapMenu: (int idx) {
-                    _scrollToCategory(idx);
-                    context.maybePop();
+                  onTapMenu: (int index) {
+                    context.router.maybePop();
+                    _scrollToCategory(index);
                   },
                 ),
-                SizedBox(
-                  height: 35,
-                  child: ListView.separated(
-                    controller: _scrollController,
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(width: 10),
-                    itemCount: menu.length,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) => GestureDetector(
-                      onTap: () => _scrollToCategory(index),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        decoration: BoxDecoration(
-                          color: index == _activeIndex
-                              ? theme.colorScheme.primary
-                              : theme.colorScheme.surface,
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(20)),
-                          border: index != _activeIndex
-                              ? Border.all(
-                                  color: theme.colorScheme.onSurface,
-                                  width: 0.4)
-                              : Border.all(
-                                  color: theme.colorScheme.primary, width: 0.4),
-                        ),
-                        child: Center(
-                          child: Text(
-                            "${menu[index].category?.name}",
-                            style: TextStyle(
-                              color: index == _activeIndex
-                                  ? theme.colorScheme.surface
-                                  : theme.colorScheme.onSurface
-                                      .withValues(alpha: 0.6),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                const SizedBox(height: 10),
+                CategoryList(
+                  categories: category,
+                  activeIndex: _activeIndex,
+                  onCategoryTap: _scrollToCategory,
+                  scrollController: _scrollController,
                 ),
                 const SizedBox(height: 10),
                 Expanded(
                   child: RefreshIndicator(
                     onRefresh: () async {
-                      context.read<MenuCubit>().getProductsWithMenu();
+                      context.read<MenuBloc>().add(GetFoodsByCategoryEvent());
                     },
-                    child: ScrollablePositionedList.builder(
+                    child: ProductsList(
+                      activeIndex: _activeIndex,
                       itemScrollController: _itemScrollController,
                       itemPositionsListener: _itemPositionsListener,
-                      itemCount: menu.length,
-                      itemBuilder: (context, index) {
-                        final category = menu[index];
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 8),
-                              child: Text(
-                                category.category?.name ?? '',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: index == _activeIndex
-                                      ? theme.colorScheme.primary
-                                      : theme.colorScheme.onSurface,
-                                ),
-                              ),
-                            ),
-                            StreamBuilder<List<CartItemModel>>(
-                              stream: context.read<CartCubit>().cart,
-                              builder: (context, snapshot) {
-                                List cart = [];
-                                if (snapshot.hasData) {
-                                  cart = snapshot.data ?? [];
-                                }
-                                return GridView.count(
-                                  crossAxisCount: 2,
-                                  mainAxisSpacing: 10,
-                                  crossAxisSpacing: 10,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16),
-                                  childAspectRatio: 0.72,
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  children: List.generate(
-                                    category.foods?.length ?? 0,
-                                    (index) {
-                                      final food = category.foods![index];
-                                      final cartItem = cart.firstWhere(
-                                        (element) =>
-                                            element.food?.id == food.id,
-                                        orElse: () => CartItemModel(
-                                            food: food, quantity: 0),
-                                      );
-                                      return ProductItemWidget(
-                                        food: food,
-                                        quantity: cartItem.quantity ?? 0,
-                                      );
-                                    },
-                                  ),
-                                );
-                              },
-                            ),
-                            const SizedBox(height: 15),
-                          ],
-                        );
-                      },
                     ),
                   ),
                 ),

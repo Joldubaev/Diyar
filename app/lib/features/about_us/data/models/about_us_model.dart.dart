@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:diyar/features/about_us/domain/domain.dart';
 
 class AboutUsModel {
@@ -14,20 +15,16 @@ class AboutUsModel {
   factory AboutUsModel.fromJson(Map<String, dynamic> json) => AboutUsModel(
         name: json['name'],
         description: json['description'],
-        photoLinks: json['photoLinks'] == null
-            ? null
-            : List.from(json['photoLinks']).map((x) => x).toList(),
+        photoLinks: json['photoLinks'] == null ? [] : List<String>.from(jsonDecode(json['photoLinks'])),
       );
 
   Map<String, dynamic> toJson() => {
         'name': name,
         'description': description,
-        'photoLinks': photoLinks == null
-            ? null
-            : List<dynamic>.from(photoLinks!.map((x) => x.toJson())),
+        'photoLinks': photoLinks == null ? null : List<dynamic>.from(photoLinks!.map((x) => x.toJson())),
       };
 
-factory AboutUsModel.fromEntity(AboutUsEntities entity) {
+  factory AboutUsModel.fromEntity(AboutUsEntities entity) {
     return AboutUsModel(
       name: entity.name,
       description: entity.description,
@@ -42,5 +39,4 @@ factory AboutUsModel.fromEntity(AboutUsEntities entity) {
       photoLinks: photoLinks ?? [],
     );
   }
-  
 }

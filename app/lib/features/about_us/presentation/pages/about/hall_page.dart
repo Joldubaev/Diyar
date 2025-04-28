@@ -20,7 +20,7 @@ class _HallPageState extends State<HallPage> {
 
   @override
   void initState() {
-    context.read<AboutUsCubit>().getAboutUs(type: 'hall');
+    context.read<AboutUsCubit>().getAboutUs(type: 'БАНКЕТ ХОЛЛ');
     super.initState();
   }
 

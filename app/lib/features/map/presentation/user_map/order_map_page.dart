@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
-import 'package:diyar/features/cart/data/data.dart';
-import 'package:diyar/features/cart/presentation/presentation.dart';
+import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
+import 'package:diyar/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:diyar/features/map/map.dart';
 import 'package:diyar/features/map/presentation/widgets/widgets.dart';
 import 'package:diyar/features/order/order.dart';
@@ -17,7 +17,7 @@ import 'package:geolocator/geolocator.dart';
 @RoutePage()
 class OrderMapPage extends StatefulWidget {
   final int totalPrice;
-  final List<CartItemModel> cart;
+  final List<CartItemEntity> cart;
   const OrderMapPage({super.key, required this.cart, required this.totalPrice});
 
   @override
@@ -58,8 +58,7 @@ class _OrderMapPageState extends State<OrderMapPage> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title:
-            Text(context.l10n.chooseAddress, style: theme.textTheme.titleSmall),
+        title: Text(context.l10n.chooseAddress, style: theme.textTheme.titleSmall),
       ),
       body: Stack(
         children: [
@@ -89,15 +88,13 @@ class _OrderMapPageState extends State<OrderMapPage> {
       floatingActionButton: FloatingActionButtonsWidget(
         theme: theme,
         onNavigationPressed: _fetchCurrentLocation,
-        onSearchPressed: () =>
-            showMapSearchBottom(context, onSearch: _searchMap),
+        onSearchPressed: () => showMapSearchBottom(context, onSearch: _searchMap),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
     );
   }
 
-  void _onCameraPositionChanged(
-      CameraPosition cameraPosition, CameraUpdateReason reason, bool finished) {
+  void _onCameraPositionChanged(CameraPosition cameraPosition, CameraUpdateReason reason, bool finished) {
     if (finished) {
       _updateAddressDetails(AppLatLong(
         latitude: cameraPosition.target.latitude,
@@ -141,17 +138,14 @@ class _OrderMapPageState extends State<OrderMapPage> {
         mapId: MapObjectId('polygon_${polygon.id}'),
         polygon: Polygon(
           outerRing: LinearRing(
-            points: polygon.coordinates
-                .map((e) => Point(latitude: e.latitude, longitude: e.longitude))
-                .toList(),
+            points: polygon.coordinates.map((e) => Point(latitude: e.latitude, longitude: e.longitude)).toList(),
           ),
           innerRings: _polygons.isEmpty
               ? []
               : _polygons
                   .map((e) => LinearRing(
                         points: polygon.coordinates
-                            .map((e) => Point(
-                                latitude: e.latitude, longitude: e.longitude))
+                            .map((e) => Point(latitude: e.latitude, longitude: e.longitude))
                             .toList(),
                       ))
                   .toList(),
@@ -175,8 +169,7 @@ class _OrderMapPageState extends State<OrderMapPage> {
 
   Future<void> _fetchCurrentLocation() async {
     try {
-      final position = await Geolocator.getCurrentPosition(
-          locationSettings: locationSettings);
+      final position = await Geolocator.getCurrentPosition(locationSettings: locationSettings);
       setState(() {
         userLocation = position;
         _lat = position.latitude;
@@ -217,19 +210,16 @@ class _OrderMapPageState extends State<OrderMapPage> {
 
       final searchSessionResult = await searchSessionData.$2;
 
-      if (searchSessionResult.items != null &&
-          searchSessionResult.items!.isNotEmpty) {
+      if (searchSessionResult.items != null && searchSessionResult.items!.isNotEmpty) {
         final formattedAddress = searchSessionResult.items!.first.name;
         final point = searchSessionResult.items!.first.geometry.first.point;
 
-        if (point != null &&
-            _isPointInKyrgyzstan(point.latitude, point.longitude)) {
+        if (point != null && _isPointInKyrgyzstan(point.latitude, point.longitude)) {
           setState(() => _address = formattedAddress);
         } else {
           setState(() => _address = context.l10n.addressIsNotFounded);
           if (!_firstLaunch) {
-            showToast('Адрес находится за пределами Кыргызстана',
-                isError: true);
+            showToast('Адрес находится за пределами Кыргызстана', isError: true);
           }
         }
       } else {
@@ -254,6 +244,14 @@ class _OrderMapPageState extends State<OrderMapPage> {
       return;
     }
 
+    final cartState = context.read<CartBloc>().state;
+    int currentTotalItems = 0;
+    if (cartState is CartLoaded) {
+      currentTotalItems = cartState.totalItems;
+    } else {
+      log("Cart state is not CartLoaded when trying to get totalItems.");
+    }
+
     context.read<OrderCubit>()
       ..changeAddress(_address!)
       ..changeAddressSearch(false)
@@ -262,12 +260,11 @@ class _OrderMapPageState extends State<OrderMapPage> {
     context.router.push(DeliveryFormRoute(
       totalPrice: widget.totalPrice,
       cart: widget.cart,
-      dishCount: context.read<CartCubit>().dishCount,
+      dishCount: currentTotalItems,
     ));
   }
 
   double _calculateDeliveryPrice() {
-    return MapHelper.isCoordinateInsidePolygons(_lat, _long,
-        polygons: Polygons.getPolygons());
+    return MapHelper.isCoordinateInsidePolygons(_lat, _long, polygons: Polygons.getPolygons());
   }
 }

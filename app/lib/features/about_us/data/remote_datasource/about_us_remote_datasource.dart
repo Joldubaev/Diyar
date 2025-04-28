@@ -26,10 +26,10 @@ class AboutUsRemoteDataSourceImpl implements AboutUsRemoteDataSource {
         options: Options(headers: BaseHelper.authToken(token)),
       );
 
-      if (res.statusCode == 200) {
-        if (res.data != null) {
-          log("About Us Response: ${res.data}");
-          return AboutUsModel.fromJson(res.data);
+      if (res.data['code'] == 200) {
+        if (res.data['code'] != null) {
+          log("About Us Response: ${res.data['message']}");
+          return AboutUsModel.fromJson(res.data['message']);
         } else {
           throw ServerException(
             "No data found",

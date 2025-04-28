@@ -11,7 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 @RoutePage()
 class DeliveryFormPage extends StatefulWidget {
-  final List<CartItemModel> cart;
+  final List<CartItemEntity> cart;
   final int totalPrice;
   final int dishCount;
   final DistricModel? distric;
@@ -91,16 +91,12 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
                     canPop: false,
                     child: AlertDialog(
                       title: Text(context.l10n.yourOrdersConfirm,
-                          style: theme.textTheme.bodyLarge!
-                              .copyWith(color: theme.colorScheme.onSurface)),
+                          style: theme.textTheme.bodyLarge!.copyWith(color: theme.colorScheme.onSurface)),
                       content: Text(context.l10n.operatorContact,
-                          style: theme.textTheme.bodyMedium!
-                              .copyWith(color: theme.colorScheme.onSurface),
-                          maxLines: 2),
+                          style: theme.textTheme.bodyMedium!.copyWith(color: theme.colorScheme.onSurface), maxLines: 2),
                       actions: [
                         SubmitButtonWidget(
-                          textStyle: theme.textTheme.bodyMedium!
-                              .copyWith(color: theme.colorScheme.onPrimary),
+                          textStyle: theme.textTheme.bodyMedium!.copyWith(color: theme.colorScheme.onPrimary),
                           title: context.l10n.ok,
                           bgColor: AppColors.green,
                           onTap: () {
@@ -122,9 +118,8 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
           builder: (context, state) {
             var deliveryPrice = context.read<OrderCubit>().deliveryPrice;
 
-            final totalOrderCost = widget.distric != null
-                ? widget.distric!.price! + widget.totalPrice
-                : widget.totalPrice + deliveryPrice;
+            final totalOrderCost =
+                widget.distric != null ? widget.distric!.price! + widget.totalPrice : widget.totalPrice + deliveryPrice;
             if (deliveryPrice == 0) {
               deliveryPrice = 550;
             }
@@ -140,12 +135,10 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
               appBar: AppBar(
                 backgroundColor: theme.colorScheme.primary,
                 title: Text(context.l10n.orderDetails,
-                    style: theme.textTheme.titleSmall!
-                        .copyWith(color: theme.colorScheme.onTertiaryFixed)),
+                    style: theme.textTheme.titleSmall!.copyWith(color: theme.colorScheme.onTertiaryFixed)),
                 centerTitle: true,
                 leading: IconButton(
-                  icon: Icon(Icons.arrow_back_ios_sharp,
-                      color: theme.colorScheme.onTertiaryFixed),
+                  icon: Icon(Icons.arrow_back_ios_sharp, color: theme.colorScheme.onTertiaryFixed),
                   onPressed: () {
                     context.router.maybePop();
                   },
@@ -176,7 +169,17 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
 
   void _onSubmit() {
     final theme = Theme.of(context);
-    log(context.read<CartCubit>().totalPrice.toString());
+
+    // Get total price from CartBloc state
+    double cartBlocTotalPrice = 0.0;
+    final cartState = context.read<CartBloc>().state;
+    if (cartState is CartLoaded) {
+      cartBlocTotalPrice = cartState.totalPrice;
+    } else {
+      log("Warning: Cart state is not CartLoaded in _onSubmit");
+      // Handle error or use a default? For logging, maybe 0 is ok.
+    }
+    log("CartBloc Total Price (for logging): ${cartBlocTotalPrice.toString()}");
 
     if (_formKey.currentState!.validate()) {
       var deliveryPrice = context.read<OrderCubit>().deliveryPrice;
@@ -188,12 +191,9 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
       } else {
         deliveryPrice = deliveryPrice != 0 ? deliveryPrice : districtPrice;
       }
-
       log('Delivery Price: $deliveryPrice');
 
       final totalOrderCost = widget.totalPrice + deliveryPrice;
-
-      // 🔥 Теперь сдача учитывает deliveryPrice или districtPrice
       final sdachaValue = int.tryParse(_sdachaController.text) ?? 0;
       final calculatedSdacha = sdachaValue != 0 ? sdachaValue : deliveryPrice;
 
@@ -201,8 +201,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
       log('Sdacha: $calculatedSdacha');
 
       if (calculatedSdacha < totalOrderCost) {
-        showToast('Сдача должна быть больше или равна общей стоимости заказа',
-            isError: true);
+        showToast('Сдача должна быть больше или равна общей стоимости заказа', isError: true);
         return;
       }
 

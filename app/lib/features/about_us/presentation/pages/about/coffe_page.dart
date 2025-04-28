@@ -20,7 +20,7 @@ class _CofePageState extends State<CofePage> {
 
   @override
   void initState() {
-    context.read<AboutUsCubit>().getAboutUs(type: 'cafe');
+    context.read<AboutUsCubit>().getAboutUs(type: 'ЭКСПРЕСС КАФЕ');
     super.initState();
   }
 

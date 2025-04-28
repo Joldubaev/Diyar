@@ -42,10 +42,7 @@ class _ProfilePageState extends State<ProfilePage> {
         backgroundColor: Theme.of(context).colorScheme.primary,
         title: Text(
           context.l10n.cabinet,
-          style: Theme.of(context)
-              .textTheme
-              .titleSmall
-              ?.copyWith(color: AppColors.white),
+          style: Theme.of(context).textTheme.titleSmall?.copyWith(color: AppColors.white),
         ),
         actions: [
           Padding(
@@ -54,14 +51,11 @@ class _ProfilePageState extends State<ProfilePage> {
               backgroundColor: AppColors.white,
               child: IconButton(
                 icon: Icon(
-                  Theme.of(context).brightness == Brightness.dark
-                      ? Icons.sunny
-                      : Icons.nightlight_round,
+                  Theme.of(context).brightness == Brightness.dark ? Icons.sunny : Icons.nightlight_round,
                   color: Theme.of(context).colorScheme.secondary,
                 ),
                 onPressed: () {
-                  final isDarkMode =
-                      Theme.of(context).brightness == Brightness.dark;
+                  final isDarkMode = Theme.of(context).brightness == Brightness.dark;
                   context.read<ThemeCubit>().toggleTheme(
                         isDarkMode ? Brightness.light : Brightness.dark,
                       );
@@ -108,8 +102,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   onTap: () => context.pushRoute(ProfileInfoRoute(user: user!)),
                   child: ProfileTile(
                     imgPath: 'assets/icons/profile_icon.svg',
-                    text:
-                        user!.userName ?? '', // Используем безопасный доступ к user
+                    text: user!.userName ?? '',
                     isSvg: true,
                   ),
                 ),
@@ -123,34 +116,19 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: Column(
                     children: [
                       SettingsTile(
-                        leading: SvgPicture.asset('assets/icons/about.svg',
-                            height: 40),
+                        leading: SvgPicture.asset('assets/icons/about.svg', height: 40),
                         text: context.l10n.aboutUs,
-                        onPressed: () =>
-                            context.pushRoute(const AboutUsRoute()),
+                        onPressed: () => context.pushRoute(const AboutUsRoute()),
                       ),
-                      Divider(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withValues(alpha: 0.2),
-                          height: 1),
+                      Divider(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2), height: 1),
                       SettingsTile(
-                        leading: SvgPicture.asset('assets/icons/phone.svg',
-                            height: 40),
+                        leading: SvgPicture.asset('assets/icons/phone.svg', height: 40),
                         text: context.l10n.contact,
-                        onPressed: () =>
-                            context.pushRoute(const ContactRoute()),
+                        onPressed: () => context.pushRoute(const ContactRoute()),
                       ),
-                      Divider(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withValues(alpha: 0.2),
-                          height: 1),
+                      Divider(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2), height: 1),
                       SettingsTile(
-                        leading: SvgPicture.asset('assets/icons/document.svg',
-                            height: 40),
+                        leading: SvgPicture.asset('assets/icons/document.svg', height: 40),
                         text: context.l10n.policy,
                         onPressed: () => AppLaunch.launchURL(AppConst.terms),
                       ),
@@ -165,8 +143,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     borderRadius: const BorderRadius.all(Radius.circular(12)),
                   ),
                   child: SettingsTile(
-                    leading:
-                        SvgPicture.asset('assets/icons/logout.svg', height: 40),
+                    leading: SvgPicture.asset('assets/icons/logout.svg', height: 40),
                     text: context.l10n.exit,
                     onPressed: () {
                       AppAlert.showConfirmDialog(
@@ -200,8 +177,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: VersionWidgets(
                     leading: const Icon(Icons.local_fire_department),
                     title: context.l10n.appVersion,
-                    trailing: Text(version,
-                        style: Theme.of(context).textTheme.bodyMedium),
+                    trailing: Text(version, style: Theme.of(context).textTheme.bodyMedium),
                   ),
                 ),
               ],
