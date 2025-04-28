@@ -23,10 +23,11 @@ class GeneralRes<T> {
   Map<String, dynamic> toJson({
     Map<String, dynamic> Function(T)? toJson,
   }) {
+    final localData = data;
     return <String, dynamic>{
       'code': code,
       'message': message,
-      if (data != null && toJson != null) 'data': toJson(data!),
+      if (localData != null && toJson != null) 'data': toJson(localData),
     };
   }
 

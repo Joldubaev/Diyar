@@ -17,6 +17,7 @@ class ProfilePage extends StatefulWidget {
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
+// TODO: full refatoring code profile page
 class _ProfilePageState extends State<ProfilePage> {
   UserModel? user; // Изменяем переменную на nullable
   String version = '';

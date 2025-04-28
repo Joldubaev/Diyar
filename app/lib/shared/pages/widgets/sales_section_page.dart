@@ -176,7 +176,7 @@ class SaleCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(SalesSection._defaultPadding),
         decoration: BoxDecoration(
-          color: theme.colorScheme.surface.withOpacity(SalesSection._overlayOpacity),
+          color: theme.colorScheme.surface.withAlpha((SalesSection._overlayOpacity * 255).round()),
           borderRadius: const BorderRadius.all(
             Radius.circular(_buttonRadius),
           ),

@@ -15,7 +15,7 @@ class CurierPage extends StatefulWidget {
   @override
   State<CurierPage> createState() => _CurierPageState();
 }
-
+// TODO: full refatoring code curier page
 class _CurierPageState extends State<CurierPage> {
   final mapControllerCompleter = Completer<YandexMapController>();
   List<CurierOrderModel> orders = [];

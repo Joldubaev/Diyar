@@ -19,6 +19,8 @@ class CartPage extends StatelessWidget {
 class CartContentsWidget extends StatelessWidget {
   const CartContentsWidget({super.key});
 
+  // TODO: cart page working wit bug must be fixe problem with state and hive
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CartBloc, CartState>(

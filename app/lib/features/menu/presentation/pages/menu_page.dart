@@ -72,7 +72,7 @@ class _MenuPageState extends State<MenuPage> with SingleTickerProviderStateMixin
       curve: Curves.easeInOut,
     );
   }
-
+// TODO: make optimization images and prepare for release
   @override
   Widget build(BuildContext context) {
     return Scaffold(

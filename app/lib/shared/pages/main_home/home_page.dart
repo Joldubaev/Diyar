@@ -34,6 +34,7 @@ class _HomePageState extends State<HomePage> {
     context.read<ProfileCubit>().getUser();
     context.read<HomeFeaturesCubit>().getSales();
   }
+  // TODO: full refatoring code home page
 
   @override
   Widget build(BuildContext context) {
