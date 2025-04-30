@@ -5,8 +5,8 @@ import 'features/app/cubit/remote_config_cubit.dart';
 import 'features/curier/curier.dart';
 import 'firebase_options.dart';
 import 'injection_container.dart';
-import 'shared/cubit/bloc/internet_bloc.dart';
-import 'shared/cubit/popular_cubit.dart';
+import 'shared/presentation/bloc/internet_bloc.dart';
+import 'shared/presentation/cubit/popular_cubit.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'injection_container.dart' as di;
@@ -19,8 +19,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'features/app/view/app_listener.dart';
-import 'shared/cubit/theme/cubit/theme_cubit.dart';
-import 'shared/pages/app_wrapper_connection_page.dart';
+import 'shared/presentation/theme_cubit/theme_cubit.dart';
+import 'shared/presentation/pages/app_wrapper_connection_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

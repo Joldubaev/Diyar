@@ -1,5 +1,7 @@
-class TokenModel {
-  TokenModel({
+import 'package:equatable/equatable.dart';
+
+class TokenModel extends Equatable {
+  const TokenModel({
     required this.role,
     required this.refreshToken,
     required this.accessToken,
@@ -9,9 +11,9 @@ class TokenModel {
   final String accessToken;
 
   factory TokenModel.fromJson(Map<String, dynamic> json) => TokenModel(
-        refreshToken: json["refreshToken"],
-        accessToken: json["accessToken"],
-        role: json["role"],
+        refreshToken: json["refreshToken"] ?? '',
+        accessToken: json["accessToken"] ?? '',
+        role: json["role"] ?? '',
       );
 
   Map<String, dynamic> toJson() => {
@@ -19,4 +21,7 @@ class TokenModel {
         "accessToken": accessToken,
         "role": role,
       };
+
+  @override
+  List<Object?> get props => [role, refreshToken, accessToken];
 }
