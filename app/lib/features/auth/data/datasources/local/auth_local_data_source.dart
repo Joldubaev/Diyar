@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:diyar/core/core.dart';
-import 'package:diyar/shared/models/models.dart';
+import 'package:diyar/shared/shared.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 abstract class AuthLocalDataSource {
@@ -108,6 +108,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
       throw CacheException();
     }
   }
+
   @override
   Future<void> setPinCode(String pinCode) async {
     try {

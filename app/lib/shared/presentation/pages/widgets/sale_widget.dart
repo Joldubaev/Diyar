@@ -1,4 +1,4 @@
-import '../../../core/theme/theme.dart';
+import 'package:diyar/core/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 class SaleWidget extends StatelessWidget {
@@ -33,15 +33,15 @@ class SaleWidget extends StatelessWidget {
                       colors: [Colors.black54, Colors.transparent],
                       begin: Alignment.bottomCenter,
                       end: Alignment.topCenter),
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(20),
-                      bottomRight: Radius.circular(20))),
+                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20))),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(title,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: AppColors.white, fontWeight: FontWeight.bold)),
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleLarge
+                          ?.copyWith(color: AppColors.white, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 10),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -51,9 +51,10 @@ class SaleWidget extends StatelessWidget {
                         )),
                     onPressed: onTap,
                     child: Text('$discount %',
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            color: AppColors.white,
-                            fontWeight: FontWeight.bold)),
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleSmall
+                            ?.copyWith(color: AppColors.white, fontWeight: FontWeight.bold)),
                   )
                 ],
               ),

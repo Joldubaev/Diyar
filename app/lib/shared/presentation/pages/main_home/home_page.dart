@@ -6,8 +6,7 @@ import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/features.dart';
 import 'package:diyar/features/profile/prof.dart';
 import 'package:diyar/l10n/l10n.dart';
-import 'package:diyar/shared/cubit/popular_cubit.dart';
-import 'package:diyar/shared/pages/widgets/news_widget.dart';
+import 'package:diyar/shared/presentation/pages/widgets/news_widget.dart';
 import 'package:diyar/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,7 +33,6 @@ class _HomePageState extends State<HomePage> {
     context.read<ProfileCubit>().getUser();
     context.read<HomeFeaturesCubit>().getSales();
   }
-  // TODO: full refatoring code home page
 
   @override
   Widget build(BuildContext context) {

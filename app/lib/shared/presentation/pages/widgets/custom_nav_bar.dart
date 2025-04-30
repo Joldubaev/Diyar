@@ -1,5 +1,3 @@
-
-// Custom Bottom Navigation Bar with selected and unselected states
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart' show SvgPicture;
 
