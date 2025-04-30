@@ -53,6 +53,16 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<void> setPinCode(String code) {
+    return localDataSource.setPinCode(code);
+  }
+
+  @override
+  Future<String?> getPinCode() {
+    return localDataSource.getPinCode();
+  }
+
+  @override
   Future<void> logout() {
     return localDataSource.logout();
   }

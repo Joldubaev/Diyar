@@ -20,7 +20,6 @@ class _SignInPageState extends State<SignInPage> {
       ),
       body: const SafeArea(
         child: LoginForm(),
-        //TODO: Implement biometric authentication
       ),
     );
   }

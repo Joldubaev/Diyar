@@ -55,7 +55,6 @@ class _OrderMapPageState extends State<OrderMapPage> {
 
   @override
   Widget build(BuildContext context) {
-
     // TODO: full refatoring  and implementation of map page 2gis map
     final theme = Theme.of(context);
     return Scaffold(

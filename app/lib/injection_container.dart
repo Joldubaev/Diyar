@@ -4,6 +4,7 @@ import 'package:diyar/features/about_us/about_us_injection.dart';
 import 'package:diyar/features/auth/auth_injection.dart';
 import 'package:diyar/features/cart/cart_injection.dart';
 import 'package:diyar/features/menu/menu_injection.dart';
+import 'package:local_auth/local_auth.dart';
 import 'features/app/cubit/remote_config_cubit.dart';
 import 'features/curier/curier.dart';
 import 'features/features.dart';
@@ -104,6 +105,9 @@ Future<void> initLocalStorageInjections() async {
   });
 
   await sl.isReady<LocalStorage>();
+
+
+  sl.registerLazySingleton<LocalAuthentication>(() => LocalAuthentication());
 }
 
 Future<void> initNetworkInjections() async {

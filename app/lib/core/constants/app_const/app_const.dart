@@ -53,6 +53,14 @@ class AppConst {
   static const String kCachedCategories = 'cached_categories';
   static const String kCachedFoods = 'cached_foods';
   static const String kCachedPopularFoods = 'cached_popular_foods';
+
+  // pin code
+  static const pinCode = 'PIN_CODE';
+  static const setPinCode = 'SET_PIN_CODE';
+  static const biometricEnabled = 'BIOMETRIC_ENABLED';
+
+  // first launch
+  static const firstLaunch = 'FIRST_LAUNCH';
 }
 
 String generateOtpCode() {
