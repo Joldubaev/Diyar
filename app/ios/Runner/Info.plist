@@ -64,5 +64,9 @@
 			<key>NSAllowsArbitraryLoads</key>
 			<true/>
 		</dict>
+		<!-- Для аунтентификаций с использованием Face ID -->
+		<key>NSFaceIDUsageDescription</key>
+		<string>Для аутентификации с использованием Face ID</string>
+
 	</dict>
 </plist>

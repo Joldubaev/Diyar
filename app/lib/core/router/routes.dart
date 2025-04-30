@@ -52,6 +52,11 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: SecondOrderRoute.page),
         AutoRoute(page: OrderHistoryRoute.page),
 
+        AutoRoute(page: PinCodeRoute.page),
+        AutoRoute(page: SetNewPinCodeRoute.page),
+
+        AutoRoute(page: SecurityRoute.page),
+
         // AutoRoute(page: TwoGisMapRoute.page),
       ];
 }

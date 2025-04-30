@@ -15,4 +15,8 @@ abstract class AuthRepository {
   Future<Either<Failure, void>> resetPassword(ResetPasswordEntity model);
   Future<Either<Failure, void>> refreshToken();
   Future<void> logout();
+
+  // pin code
+  Future<void> setPinCode(String code);
+  Future<String?> getPinCode();
 }

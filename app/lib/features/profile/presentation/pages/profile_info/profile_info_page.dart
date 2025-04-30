@@ -1,10 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/auth/auth.dart';
-import 'package:diyar/features/profile/prof.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
 @RoutePage()
@@ -91,7 +89,6 @@ class _ProfileInfoPageState extends State<ProfileInfoPage> {
               const SizedBox(height: ProfileInfoPage._defaultSpacing),
               _buildPhoneInput(context),
               const SizedBox(height: ProfileInfoPage._largeSpacing),
-              _buildDeleteAccountButton(context),
             ],
           ),
         ),
@@ -153,39 +150,6 @@ class _ProfileInfoPageState extends State<ProfileInfoPage> {
         }
         return null;
       },
-    );
-  }
-
-  Widget _buildDeleteAccountButton(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 10,
-      ),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: const BorderRadius.all(Radius.circular(12)),
-      ),
-      child: SettingsTile(
-        leading: SvgPicture.asset(
-          'assets/icons/delete_a.svg',
-          height: 40,
-        ),
-        text: 'Удалить аккаунт',
-        onPressed: () => _showDeleteConfirmation(context),
-        color: Theme.of(context).colorScheme.error,
-      ),
-    );
-  }
-
-  void _showDeleteConfirmation(BuildContext context) {
-    AppAlert.showConfirmDialog(
-      context: context,
-      title: 'Удалить',
-      content: const Text('Вы уверены что хотите удалить аккаунт?'),
-      cancelText: context.l10n.no,
-      confirmText: context.l10n.yes,
-      cancelPressed: () => Navigator.pop(context),
-      confirmPressed: () => context.read<ProfileCubit>().deleteUser(),
     );
   }
 }

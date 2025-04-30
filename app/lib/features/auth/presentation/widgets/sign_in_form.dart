@@ -2,12 +2,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/auth/auth.dart';
 import 'package:diyar/features/auth/domain/domain.dart';
-import 'package:diyar/injection_container.dart';
 import 'package:diyar/l10n/l10n.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -29,118 +26,130 @@ class _LoginFormState extends State<LoginForm> {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Form(
         key: _formKey,
-        child: Column(
-          spacing: 20,
-          children: <Widget>[
-            Image(
-              height: 150,
-              width: 150,
-              color: theme.colorScheme.primary,
-              image: const AssetImage("assets/images/auth_images.png"),
+        child: SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight:
+                  MediaQuery.of(context).size.height - MediaQuery.of(context).viewInsets.bottom - kToolbarHeight - 40,
             ),
-            Align(
-                alignment: Alignment.center,
-                child: Text(context.l10n.welcome, style: Theme.of(context).textTheme.titleLarge)),
-            CustomInputWidget(
-              hintText: '+996',
-              filledColor: theme.colorScheme.surface,
-              controller: _phoneController,
-              inputType: TextInputType.phone,
-              inputFormatters: [phoneFormatter],
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return context.l10n.pleaseEnterPhone;
-                } else if (value.length < 10) {
-                  return context.l10n.pleaseEnterCorrectPhone;
-                }
-                return null;
-              },
-            ),
-            CustomInputWidget(
-              filledColor: theme.colorScheme.surface,
-              hintText: context.l10n.password,
-              controller: _passwordController,
-              isPasswordField: true,
-              inputType: TextInputType.text,
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return context.l10n.pleaseEnterPassword;
-                } else if (value.length < 5) {
-                  return context.l10n.pleaseEnterCorrectPassword;
-                }
-                return null;
-              },
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    AppBottomSheet.showBottomSheet(
-                      initialChildSize: 0.7,
-                      context,
-                      AuthBottomSheet(resetPasswordPhone: resedPasswordCode),
-                    );
-                  },
-                  child: Text(
-                    context.l10n.forgotPassword,
-                    style: theme.textTheme.bodyMedium!.copyWith(
-                      color: AppColors.blue,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Column(
+                  children: [
+                    Image(
+                      height: 150,
+                      width: 150,
+                      color: theme.colorScheme.primary,
+                      image: const AssetImage("assets/images/auth_images.png"),
                     ),
-                  ),
+                    const SizedBox(height: 20),
+                    Align(
+                        alignment: Alignment.center,
+                        child: Text(context.l10n.welcome, style: Theme.of(context).textTheme.titleLarge)),
+                    const SizedBox(height: 20),
+                    CustomInputWidget(
+                      hintText: '+996',
+                      filledColor: theme.colorScheme.surface,
+                      controller: _phoneController,
+                      inputType: TextInputType.phone,
+                      inputFormatters: [phoneFormatter],
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return context.l10n.pleaseEnterPhone;
+                        } else if (value.length < 10) {
+                          return context.l10n.pleaseEnterCorrectPhone;
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    CustomInputWidget(
+                      filledColor: theme.colorScheme.surface,
+                      hintText: context.l10n.password,
+                      controller: _passwordController,
+                      isPasswordField: true,
+                      inputType: TextInputType.text,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return context.l10n.pleaseEnterPassword;
+                        } else if (value.length < 5) {
+                          return context.l10n.pleaseEnterCorrectPassword;
+                        }
+                        return null;
+                      },
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            AppBottomSheet.showBottomSheet(
+                              initialChildSize: 0.7,
+                              context,
+                              AuthBottomSheet(resetPasswordPhone: resedPasswordCode),
+                            );
+                          },
+                          child: Text(
+                            context.l10n.forgotPassword,
+                            style: theme.textTheme.bodyMedium!.copyWith(
+                              color: AppColors.blue,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    BlocConsumer<SignInCubit, SignInState>(
+                      listener: (context, state) {
+                        if (state is SignInFailure) {
+                          SnackBarMessage().showErrorSnackBar(
+                            message: state.message,
+                            context: context,
+                          );
+                        } else if (state is SignInSuccessWithUser) {
+                          context.router.pushAndPopUntil(
+                            const SetNewPinCodeRoute(),
+                            predicate: (route) => false,
+                          );
+                        }
+                      },
+                      builder: (context, state) {
+                        return SubmitButtonWidget(
+                          textStyle:
+                              Theme.of(context).textTheme.bodyLarge!.copyWith(color: theme.colorScheme.onPrimary),
+                          bgColor: theme.colorScheme.primary,
+                          isLoading: state is SignInLoading,
+                          title: context.l10n.authorize,
+                          onTap: () {
+                            if (_formKey.currentState!.validate()) {
+                              context.read<SignInCubit>().signIn(
+                                    UserEntities(
+                                      phone: _phoneController.text,
+                                      password: _passwordController.text,
+                                    ),
+                                  );
+                            }
+                          },
+                        );
+                      },
+                    ),
+                    TextCheckButton(
+                      text: context.l10n.notHaveAccount,
+                      route: context.l10n.register,
+                      onPressed: () {
+                        context.pushRoute(CheckPhoneNumberRoute());
+                      },
+                    ),
+                    const SizedBox(height: 40),
+                  ],
                 ),
               ],
             ),
-            Spacer(),
-            BlocConsumer<SignInCubit, SignInState>(
-              listener: (context, state) {
-                if (state is SignInFailure) {
-                  SnackBarMessage().showErrorSnackBar(
-                    message: state.message,
-                    context: context,
-                  );
-                } else if (state is SignInSuccessWithUser) {
-                  var role = sl<SharedPreferences>().getString(AppConst.userRole);
-                  if (role?.toLowerCase() == "user".toLowerCase()) {
-                    context.router.pushAndPopUntil(
-                      const MainRoute(),
-                      predicate: (_) => false,
-                    );
-                  } else {
-                    context.router.pushAndPopUntil(
-                      const CurierRoute(),
-                      predicate: (_) => false,
-                    );
-                  }
-                }
-              },
-              builder: (context, state) {
-                return SubmitButtonWidget(
-                  textStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(color: theme.colorScheme.onPrimary),
-                  bgColor: theme.colorScheme.primary,
-                  isLoading: state is SignInLoading,
-                  title: context.l10n.authorize,
-                  onTap: () {
-                    if (_formKey.currentState!.validate()) {
-                      context.read<SignInCubit>().signIn(
-                            UserEntities(
-                              phone: _phoneController.text,
-                              password: _passwordController.text,
-                            ),
-                          );
-                    }
-                  },
-                );
-              },
-            ),
-            TextCheckButton(
-              text: context.l10n.notHaveAccount,
-              route: context.l10n.register,
-              onPressed: () {
-                context.pushRoute(CheckPhoneNumberRoute());
-              },
-            ),
-          ],
+          ),
         ),
       ),
     );

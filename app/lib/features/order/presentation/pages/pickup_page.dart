@@ -346,7 +346,7 @@ class _PickupFormPageState extends State<PickupFormPage> {
                   ),
                   const Divider(),
                   const SizedBox(height: 10),
-                  CustomDialogWidget(title: context.l10n.orderAmount, description: '${widget.totalPrice} сом'),
+                  CustomDialogWidgets(title: context.l10n.orderAmount, description: '${widget.totalPrice} сом'),
                   const SizedBox(height: 10),
                   BlocBuilder<OrderCubit, OrderState>(
                     builder: (context, state) {

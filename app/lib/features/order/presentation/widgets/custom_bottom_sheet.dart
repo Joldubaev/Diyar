@@ -108,15 +108,15 @@ class CustomBottomSheet extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CustomDialogWidget(
+        CustomDialogWidgets(
           title: context.l10n.orderAmount,
           description: '${widget.totalPrice} сом',
         ),
-        CustomDialogWidget(
+        CustomDialogWidgets(
           title: context.l10n.deliveryCost,
           description: '$deliveryPrice сом',
         ),
-        CustomDialogWidget(
+        CustomDialogWidgets(
           title: context.l10n.total,
           description: '$totalOrderCost сом',
         ),

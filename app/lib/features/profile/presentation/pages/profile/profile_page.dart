@@ -133,6 +133,12 @@ class _ProfilePageState extends State<ProfilePage> {
                         text: context.l10n.policy,
                         onPressed: () => AppLaunch.launchURL(AppConst.terms),
                       ),
+                      Divider(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2), height: 1),
+                      SettingsTile(
+                        leading: SvgPicture.asset('assets/icons/sec.svg', height: 40),
+                        text: 'Безопасность',
+                        onPressed: () => context.pushRoute(const SecurityRoute()),
+                      ),
                     ],
                   ),
                 ),
