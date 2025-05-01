@@ -79,10 +79,8 @@ class _MainPageState extends State<MainPage> {
     return BlocBuilder<CartBloc, CartState>(
       builder: (context, state) {
         int cartCount = 0;
-        bool isCartLoaded = false;
         if (state is CartLoaded) {
           cartCount = state.totalItems;
-          isCartLoaded = true;
         }
 
         return Stack(
@@ -96,6 +94,7 @@ class _MainPageState extends State<MainPage> {
                   context.router.push(const CartRoute());
                 }
               },
+              tooltip: 'Корзина',
               child: SvgPicture.asset(
                 "assets/icons/cart_icon.svg",
                 height: 40,
@@ -105,7 +104,7 @@ class _MainPageState extends State<MainPage> {
                 ),
               ),
             ),
-            if (isCartLoaded && cartCount > 0)
+            if (cartCount > 0)
               Positioned(
                 right: 0,
                 top: 0,

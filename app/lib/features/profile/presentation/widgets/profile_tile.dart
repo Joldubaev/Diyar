@@ -1,4 +1,4 @@
-import '../../../../core/theme/theme.dart';
+import 'package:diyar/core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 

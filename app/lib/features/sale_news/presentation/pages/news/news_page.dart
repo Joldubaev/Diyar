@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-
 @RoutePage()
 class NewsPage extends StatefulWidget {
   const NewsPage({super.key});
@@ -24,6 +23,8 @@ class _NewsPageState extends State<NewsPage> {
     context.read<HomeFeaturesCubit>().getNews();
   }
 
+  // TODO: full refactor this is module
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -38,10 +39,7 @@ class _NewsPageState extends State<NewsPage> {
         ),
         title: Text(
           context.l10n.news,
-          style: Theme.of(context)
-              .textTheme
-              .titleSmall
-              ?.copyWith(color: AppColors.white),
+          style: Theme.of(context).textTheme.titleSmall?.copyWith(color: AppColors.white),
         ),
       ),
       body: BlocConsumer<HomeFeaturesCubit, HomeFeaturesState>(
@@ -64,14 +62,12 @@ class _NewsPageState extends State<NewsPage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SvgPicture.asset('assets/icons/cuate.svg',
-                          width: 200, height: 200),
+                      SvgPicture.asset('assets/icons/cuate.svg', width: 200, height: 200),
                       const SizedBox(height: 20),
                       Text(
                         context.l10n.noNews,
                         style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                              color: theme.colorScheme.onSurface
-                                  .withValues(alpha: 0.5),
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                             ),
                       ),
                     ],
@@ -80,10 +76,11 @@ class _NewsPageState extends State<NewsPage> {
               : ListView.builder(
                   itemCount: news.length,
                   itemBuilder: (context, index) {
+                    final currentNews = news[index];
                     return CardWidget(
-                      title: news[index].name!,
-                      description: news[index].description!,
-                      image: news[index].photoLink!,
+                      title: currentNews.name ?? 'Новость',
+                      description: currentNews.description ?? '',
+                      image: currentNews.photoLink,
                     );
                   },
                 );

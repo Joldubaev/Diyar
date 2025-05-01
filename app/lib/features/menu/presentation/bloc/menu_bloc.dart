@@ -1,17 +1,22 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:diyar/features/menu/domain/domain.dart';
+import 'dart:developer';
+
 part 'menu_event.dart';
 part 'menu_state.dart';
 
 class MenuBloc extends Bloc<MenuEvent, MenuState> {
   final MenuRepository _menuRepository;
 
-  MenuBloc(this._menuRepository) : super(MenuInitial()) {
+  MenuBloc(
+    this._menuRepository,
+  ) : super(MenuInitial()) {
     on<GetProductsEvent>(_onGetProducts);
     on<SearchFoodsEvent>(_onSearchFoods);
     on<GetPopularFoodsEvent>(_onGetPopularFoods);
     on<GetFoodsByCategoryEvent>(_onGetFoodsCategory);
+    on<ClearSearchEvent>(_onClearSearch);
   }
 
   Future<void> _onGetProducts(GetProductsEvent event, Emitter<MenuState> emit) async {
@@ -46,9 +51,7 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
       final result = await _menuRepository.getPopularFoods();
       result.fold(
         (failure) => emit(GetPopularFoodsFailure(failure.toString())),
-        (foods) {
-          emit(GetPopularFoodsLoaded(foods));
-        },
+        (foods) => emit(GetPopularFoodsLoaded(foods)),
       );
     } catch (e) {
       emit(GetPopularFoodsFailure(e.toString()));
@@ -68,5 +71,13 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
     } catch (e) {
       emit(GetFoodsByCategoryFailure(e.toString()));
     }
+  }
+
+  Future<void> _onClearSearch(
+    ClearSearchEvent event,
+    Emitter<MenuState> emit,
+  ) async {
+    log("Clearing search state");
+    emit(MenuInitial());
   }
 }

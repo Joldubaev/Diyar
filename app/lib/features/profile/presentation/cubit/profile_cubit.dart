@@ -1,13 +1,13 @@
 import 'package:bloc/bloc.dart';
-import '../../../../core/utils/helper/user_helper.dart';
-import '../../../auth/data/models/user_model.dart';
-import '../../data/data.dart';
+import 'package:diyar/core/core.dart';
+import 'package:diyar/features/auth/auth.dart';
+import 'package:diyar/features/profile/prof.dart';
 import 'package:equatable/equatable.dart';
 
 part 'profile_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
-  final UserRepository _userRepository;
+  final ProfileRepository _userRepository;
   ProfileCubit(this._userRepository) : super(ProfileInitial());
 
   UserModel? user;

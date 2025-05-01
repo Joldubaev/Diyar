@@ -1,8 +1,8 @@
-import 'dart:convert';
 import 'package:diyar/features/about_us/domain/domain.dart';
+import 'package:equatable/equatable.dart';
 
-class AboutUsModel {
-  AboutUsModel({
+class AboutUsModel extends Equatable {
+  const AboutUsModel({
     this.name,
     this.description,
     this.photoLinks,
@@ -10,25 +10,35 @@ class AboutUsModel {
 
   final String? name;
   final String? description;
-  final List? photoLinks;
+  final List<String>? photoLinks;
 
-  factory AboutUsModel.fromJson(Map<String, dynamic> json) => AboutUsModel(
-        name: json['name'],
-        description: json['description'],
-        photoLinks: json['photoLinks'] == null ? [] : List<String>.from(jsonDecode(json['photoLinks'])),
-      );
+  factory AboutUsModel.fromJson(Map<String, dynamic> json) {
+    final photosJson = json['photoLinks'];
+    List<String>? parsedPhotoLinks;
+    if (photosJson is List) {
+      parsedPhotoLinks = photosJson.map((item) => item.toString()).toList();
+    } else {
+      parsedPhotoLinks = [];
+    }
+
+    return AboutUsModel(
+      name: json['name'] as String?,
+      description: json['description'] as String?,
+      photoLinks: parsedPhotoLinks,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         'name': name,
         'description': description,
-        'photoLinks': photoLinks == null ? null : List<dynamic>.from(photoLinks!.map((x) => x.toJson())),
+        'photoLinks': photoLinks,
       };
 
   factory AboutUsModel.fromEntity(AboutUsEntities entity) {
     return AboutUsModel(
       name: entity.name,
       description: entity.description,
-      photoLinks: entity.photoLinks,
+      photoLinks: entity.photoLinks?.map((item) => item.toString()).toList(),
     );
   }
 
@@ -39,4 +49,7 @@ class AboutUsModel {
       photoLinks: photoLinks ?? [],
     );
   }
+
+  @override
+  List<Object?> get props => [name, description, photoLinks];
 }

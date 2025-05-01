@@ -1,10 +1,12 @@
-class NewsModel {
+import 'package:equatable/equatable.dart';
+
+class NewsModel extends Equatable {
   final String? id;
   final String? name;
   final String? description;
   final String? photoLink;
 
-  NewsModel({
+  const NewsModel({
     this.id,
     this.name,
     this.description,
@@ -12,10 +14,10 @@ class NewsModel {
   });
 
   factory NewsModel.fromJson(Map<String, dynamic> json) => NewsModel(
-        id: json["id"],
-        name: json["name"],
-        description: json["description"],
-        photoLink: json["photoLink"],
+        id: json["id"] as String?,
+        name: json["name"] as String?,
+        description: json["description"] as String?,
+        photoLink: json["photoLink"] as String?,
       );
 
   Map<String, dynamic> toJson() => {
@@ -24,4 +26,7 @@ class NewsModel {
         "description": description,
         "photoLink": photoLink,
       };
+
+  @override
+  List<Object?> get props => [id, name, description, photoLink];
 }

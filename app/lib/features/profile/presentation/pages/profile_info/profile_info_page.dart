@@ -135,6 +135,7 @@ class _ProfileInfoPageState extends State<ProfileInfoPage> {
 
   Widget _buildPhoneInput(BuildContext context) {
     return CustomInputWidget(
+      isReadOnly: true,
       title: context.l10n.phone,
       hintText: '+996',
       filledColor: Theme.of(context).colorScheme.surface,

@@ -1,1 +1,12 @@
-// TODO: Making this module full functionalality and implementing payments
+ // TODO:  Making this module full functionalality and implementing payments
+
+ import 'package:flutter/material.dart';
+
+class PaymentPage extends StatelessWidget {
+   const PaymentPage({super.key});
+ 
+   @override
+   Widget build(BuildContext context) {
+     return Container();
+   }
+ }

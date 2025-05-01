@@ -1,5 +1,6 @@
-import '../../../../l10n/l10n.dart';
-import '../../../../core/theme/theme.dart';
+
+import 'package:diyar/core/theme/theme.dart';
+import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
 class HallCardWidget extends StatelessWidget {
