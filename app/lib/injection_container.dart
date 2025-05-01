@@ -3,6 +3,7 @@ import 'package:diyar/core/core.dart';
 import 'package:diyar/features/about_us/about_us_injection.dart';
 import 'package:diyar/features/auth/auth_injection.dart';
 import 'package:diyar/features/cart/cart_injection.dart';
+import 'package:diyar/features/home_content/home_content_injection.dart';
 import 'package:diyar/features/menu/menu_injection.dart';
 import 'package:diyar/features/profile/profile_injection.dart';
 import 'package:local_auth/local_auth.dart';
@@ -46,12 +47,15 @@ Future<void> init() async {
   // profileInjection();
   await profileInjection();
 
+  // home content
+   await homeContentInjection();
+
   // ✅ Остальная инициализация...
 
   // sl.registerFactory(() => Cart(sl()));
   sl.registerFactory(() => PopularCubit(sl()));
   sl.registerFactory(() => OrderCubit(sl()));
-  sl.registerFactory(() => HomeFeaturesCubit(sl()));
+
   sl.registerFactory(() => HistoryCubit(sl()));
   sl.registerFactory(() => CurierCubit(sl()));
   sl.registerFactory(() => InternetBloc());
@@ -65,8 +69,7 @@ Future<void> init() async {
   // sl.registerLazySingleton<AboutUsRepository>(() => AboutUsRepositoryImpl(sl()));
   // sl.registerLazySingleton<AboutUsRemoteDataSource>(() => AboutUsRemoteDataSourceImpl(sl(), sl()));
 
-  sl.registerLazySingleton<HomeRemoteDataSource>(() => HomeFeaturesRepositoryImpl(sl()));
-  sl.registerLazySingleton<HomeRepository>(() => HomeFeaturesRepoImpl(sl()));
+
 
   // sl.registerLazySingleton<CartRepository>(() => CartRepositoryImpl(sl()));
   // sl.registerLazySingleton<CartRemoteDataSource>(() => CartRemoteDataSourceImpl(sl()));

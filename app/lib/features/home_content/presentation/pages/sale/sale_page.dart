@@ -1,14 +1,14 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../../../data/model/sale_model.dart';
-import '../../../../../l10n/l10n.dart';
-import '../../../../../core/theme/theme.dart';
+import 'package:diyar/core/core.dart';
+import 'package:diyar/features/home_content/domain/domain.dart';
+import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 @RoutePage()
 class SalePage extends StatefulWidget {
-  final SaleModel? sale;
+  final SaleEntity? sale;
   const SalePage({super.key, this.sale});
 
   @override
@@ -16,7 +16,7 @@ class SalePage extends StatefulWidget {
 }
 
 class _SalePageState extends State<SalePage> {
-  SaleModel? sale;
+  SaleEntity? sale;
 
   @override
   void initState() {

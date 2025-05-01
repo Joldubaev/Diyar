@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:diyar/core/router/routes.gr.dart';
-import 'package:diyar/features/sale_news/sale_news.dart';
+import 'package:diyar/features/home_content/home_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,11 +15,11 @@ class SalesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeFeaturesCubit, HomeFeaturesState>(
+    return BlocBuilder<HomeContentCubit, HomeContentState>(
       builder: (context, state) {
         return switch (state) {
           GetSalesLoading() => _buildLoadingState(),
-          GetSalesError() => _buildErrorState(context, state.message),
+          HomeContentError() => _buildErrorState(context, state.message),
           GetSalesLoaded() => _buildLoadedState(context, state.sales),
           _ => const SizedBox(),
         };
@@ -59,7 +59,7 @@ class SalesSection extends StatelessWidget {
             ),
           ),
           TextButton(
-            onPressed: () => context.read<HomeFeaturesCubit>().getSales(),
+            onPressed: () => context.read<HomeContentCubit>().getSales(),
             style: TextButton.styleFrom(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               minimumSize: const Size(0, 32),
@@ -77,7 +77,7 @@ class SalesSection extends StatelessWidget {
     );
   }
 
-  Widget _buildLoadedState(BuildContext context, List<SaleModel> sales) {
+  Widget _buildLoadedState(BuildContext context, List<SaleEntity> sales) {
     if (sales.isEmpty) return const SizedBox();
 
     return Column(
@@ -90,7 +90,7 @@ class SalesSection extends StatelessWidget {
     );
   }
 
-  Widget _buildSalesCarousel(List<SaleModel> sales) {
+  Widget _buildSalesCarousel(List<SaleEntity> sales) {
     return ClipRRect(
       borderRadius: const BorderRadius.all(
         Radius.circular(_borderRadius),
@@ -111,7 +111,7 @@ class SaleCard extends StatelessWidget {
   static const double _overlaySpacing = 20.0;
   static const double _buttonRadius = 8.0;
 
-  final SaleModel sale;
+  final SaleEntity sale;
 
   const SaleCard({
     super.key,

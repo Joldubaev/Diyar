@@ -15,15 +15,13 @@ class NewsPage extends StatefulWidget {
 }
 
 class _NewsPageState extends State<NewsPage> {
-  List<NewsModel> news = [];
+  List<NewsEntity> news = [];
 
   @override
   void initState() {
     super.initState();
-    context.read<HomeFeaturesCubit>().getNews();
+    context.read<HomeContentCubit>().getNews();
   }
-
-  // TODO: full refactor this is module
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +40,9 @@ class _NewsPageState extends State<NewsPage> {
           style: Theme.of(context).textTheme.titleSmall?.copyWith(color: AppColors.white),
         ),
       ),
-      body: BlocConsumer<HomeFeaturesCubit, HomeFeaturesState>(
+      body: BlocConsumer<HomeContentCubit, HomeContentState>(
         listener: (context, state) {
-          if (state is GetNewsError) {
+          if (state is HomeContentError) {
             SnackBarMessage().showErrorSnackBar(
               message: state.message,
               context: context,
