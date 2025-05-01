@@ -1,3 +1,4 @@
+import 'package:diyar/features/home_content/domain/entities/news_entity.dart';
 import 'package:equatable/equatable.dart';
 
 class NewsModel extends Equatable {
@@ -26,6 +27,13 @@ class NewsModel extends Equatable {
         "description": description,
         "photoLink": photoLink,
       };
+
+  NewsEntity toEntity() => NewsEntity(
+        id: id,
+        name: name,
+        description: description,
+        photoLink: photoLink,
+      );
 
   @override
   List<Object?> get props => [id, name, description, photoLink];

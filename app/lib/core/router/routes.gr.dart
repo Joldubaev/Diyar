@@ -65,6 +65,11 @@ import 'package:diyar/features/history/presentation/pages/pickup_history/user_pi
     as _i38;
 import 'package:diyar/features/history/presentation/pages/pickup_history/user_pickup_history_page.dart'
     as _i39;
+import 'package:diyar/features/home_content/domain/domain.dart' as _i49;
+import 'package:diyar/features/home_content/presentation/pages/news/news_page.dart'
+    as _i14;
+import 'package:diyar/features/home_content/presentation/pages/sale/sale_page.dart'
+    as _i25;
 import 'package:diyar/features/map/presentation/user_map/order_map_page.dart'
     as _i17;
 import 'package:diyar/features/menu/domain/domain.dart' as _i47;
@@ -86,15 +91,12 @@ import 'package:diyar/features/profile/presentation/pages/profile_info/profile_i
     as _i21;
 import 'package:diyar/features/profile/presentation/pages/security/security_page.dart'
     as _i28;
-import 'package:diyar/features/sale_news/data/model/sale_model.dart' as _i49;
-import 'package:diyar/features/sale_news/presentation/pages/news/news_page.dart'
-    as _i14;
-import 'package:diyar/features/sale_news/presentation/pages/sale/sale_page.dart'
-    as _i25;
 import 'package:diyar/features/templates/presentation/pages/templates_page.dart'
     as _i35;
-import 'package:diyar/shared/presentation/pages/main_home/home_page.dart' as _i11;
-import 'package:diyar/shared/presentation/pages/main_home/main_page.dart' as _i12;
+import 'package:diyar/shared/presentation/pages/main_home/home_page.dart'
+    as _i11;
+import 'package:diyar/shared/presentation/pages/main_home/main_page.dart'
+    as _i12;
 import 'package:flutter/cupertino.dart' as _i46;
 import 'package:flutter/material.dart' as _i42;
 
@@ -791,7 +793,7 @@ class RestorantRoute extends _i41.PageRouteInfo<void> {
 class SaleRoute extends _i41.PageRouteInfo<SaleRouteArgs> {
   SaleRoute({
     _i42.Key? key,
-    _i49.SaleModel? sale,
+    _i49.SaleEntity? sale,
     List<_i41.PageRouteInfo>? children,
   }) : super(
           SaleRoute.name,
@@ -825,7 +827,7 @@ class SaleRouteArgs {
 
   final _i42.Key? key;
 
-  final _i49.SaleModel? sale;
+  final _i49.SaleEntity? sale;
 
   @override
   String toString() {

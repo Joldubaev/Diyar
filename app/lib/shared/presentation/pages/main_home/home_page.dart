@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> _initializeData() async {
     context.read<PopularCubit>().getPopularProducts();
     context.read<ProfileCubit>().getUser();
-    context.read<HomeFeaturesCubit>().getSales();
+    context.read<HomeContentCubit>().getSales();
   }
 
   @override
