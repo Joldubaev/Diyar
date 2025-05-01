@@ -1,17 +1,16 @@
-import '../../../auth/data/models/user_model.dart';
+import 'package:diyar/features/auth/auth.dart';
+import 'package:diyar/features/profile/prof.dart';
 
-import '../datasources/user_remote_data_source.dart';
-
-abstract class UserRepository {
+abstract class ProfileRepository {
   Future<UserModel> getUser();
   Future<void> updateUser(String name, String phone);
   Future<void> deleteUser();
 }
 
-class UserRepositoryImpl implements UserRepository {
-  final UserRemoteDataSource _remoteDataSource;
+class ProfileRepositoryImpl implements ProfileRepository {
+  final ProfileRemoteDataSource _remoteDataSource;
 
-  UserRepositoryImpl(this._remoteDataSource);
+  ProfileRepositoryImpl(this._remoteDataSource);
 
   @override
   Future<UserModel> getUser() async {

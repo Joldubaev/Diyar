@@ -1,7 +1,6 @@
 import 'package:auto_route/annotations.dart';
 import 'package:diyar/core/core.dart';
-import 'package:diyar/features/auth/presentation/cubit/sign_in/sign_in_cubit.dart';
-import 'package:diyar/features/profile/presentation/widgets/settings_toogle_card_widget.dart';
+import 'package:diyar/features/features.dart';
 import 'package:diyar/features/profile/prof.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';

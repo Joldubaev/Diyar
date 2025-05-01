@@ -11,20 +11,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/search_bar.dart' show MenuSearchBar;
 
 @RoutePage()
-class SearchMenuPage extends StatefulWidget {
+class SearchMenuPage extends StatelessWidget {
   const SearchMenuPage({super.key});
-
-  @override
-  State<SearchMenuPage> createState() => _SearchMenuPageState();
-}
-
-class _SearchMenuPageState extends State<SearchMenuPage> {
-  List<FoodEntity> foods = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        // leading: IconButton(
+        //   icon: const Icon(Icons.arrow_back_ios),
+        //   onPressed: () => context.pushRoute(MenuRoute()),
+        // ),
         title: Text(
           context.l10n.searchMeal,
           style: Theme.of(context).textTheme.titleSmall,
@@ -34,31 +31,43 @@ class _SearchMenuPageState extends State<SearchMenuPage> {
         children: [
           MenuSearchBar(
             onSearch: (value) {
-              EasyDebounce.debounce(
-                'menu-search-debounce',
-                const Duration(milliseconds: 500),
-                () => context.read<MenuBloc>().add(SearchFoodsEvent(query: value)),
-              );
+              if (value.isEmpty) {
+                EasyDebounce.cancel('menu-search-debounce');
+                context.read<MenuBloc>().add(ClearSearchEvent());
+              } else {
+                EasyDebounce.debounce(
+                  'menu-search-debounce',
+                  const Duration(milliseconds: 500),
+                  () => context.read<MenuBloc>().add(SearchFoodsEvent(query: value)),
+                );
+              }
             },
           ),
           const SizedBox(height: 10),
           Expanded(
-            child: BlocConsumer<MenuBloc, MenuState>(
-              listener: (context, state) {
-                if (state is SearchFoodsLoaded) {
-                  setState(() => foods = state.foods);
-                }
-              },
+            child: BlocBuilder<MenuBloc, MenuState>(
               builder: (context, menuState) {
+                List<FoodEntity> currentFoods = [];
+                if (menuState is SearchFoodsLoaded) {
+                  currentFoods = menuState.foods;
+                }
+
                 if (menuState is SearchFoodsLoading) {
                   return const Center(child: CircularProgressIndicator());
                 }
 
                 if (menuState is SearchFoodsFailure) {
-                  return Center(child: Text(context.l10n.notFound));
+                  final errorMessage = menuState.message.isNotEmpty ? menuState.message : context.l10n.loadedWrong;
+                  return Center(
+                      child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            "Ошибка поиска: $errorMessage",
+                            textAlign: TextAlign.center,
+                          )));
                 }
 
-                if (menuState is! SearchFoodsLoaded && foods.isEmpty) {
+                if (menuState is MenuInitial) {
                   return Center(
                     child: Text(
                       context.l10n.searchByNames,
@@ -67,7 +76,7 @@ class _SearchMenuPageState extends State<SearchMenuPage> {
                   );
                 }
 
-                if (menuState is SearchFoodsLoaded && foods.isEmpty) {
+                if (menuState is SearchFoodsLoaded && currentFoods.isEmpty) {
                   return Center(child: Text(context.l10n.notFound));
                 }
 
@@ -77,7 +86,7 @@ class _SearchMenuPageState extends State<SearchMenuPage> {
                     cartItems = cartState.items;
                   }
                   return PaginatedMasonryGridView<FoodEntity>(
-                    items: foods,
+                    items: currentFoods,
                     isLoadingMore: false,
                     loadMore: () {},
                     crossAxisCount: 2,

@@ -31,20 +31,29 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
   void _onLoadCart(LoadCart event, Emitter<CartState> emit) {
     emit(CartLoading());
-    _cartSubscription?.cancel(); // Cancel previous subscription if any
     try {
+      // 1. Получаем ТЕКУЩЕЕ состояние синхронно (или через быстрый Future)
+      // Предполагаем, что репозиторий предоставляет такой метод
+      final currentItems = _cartRepository?.getCurrentCartItems() ?? [];
+      final currentTotalPrice = _calculateTotalPrice(currentItems);
+      final currentTotalItems = _calculateTotalItems(currentItems);
+      // 2. Сразу эмитим CartLoaded с текущими данными
+      emit(CartLoaded(items: currentItems, totalPrice: currentTotalPrice, totalItems: currentTotalItems));
+
+      // 3. Подписываемся на БУДУЩИЕ изменения
+      _cartSubscription?.cancel(); // Отменяем старую подписку
       _cartSubscription = _cartRepository?.getAllCartItems().listen((items) {
-        // When the stream emits new data, add an internal event
+        // При обновлении потока добавляем внутреннее событие
         add(_CartUpdated(items));
       }, onError: (error) {
-        // Handle stream errors if necessary
         addError(error);
-        emit(CartError("Ошибка при загрузке корзины: ${error.toString()}"));
+        // Эмитим ошибку, но состояние УЖЕ CartLoaded, UI не зависнет на загрузке
+        emit(CartError("Ошибка при обновлении корзины из потока: ${error.toString()}"));
       });
     } catch (e) {
-      emit(CartError("Ошибка при подписке на корзину: ${e.toString()}"));
+      // Ошибка при синхронной загрузке или подписке
+      emit(CartError("Ошибка при инициализации корзины: ${e.toString()}"));
     }
-    // Note: Initial state will be emitted by the first stream event via _CartUpdated
   }
 
   void _onCartUpdated(_CartUpdated event, Emitter<CartState> emit) {

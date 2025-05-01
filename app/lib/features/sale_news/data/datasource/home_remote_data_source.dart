@@ -27,8 +27,9 @@ class HomeFeaturesRepositoryImpl implements HomeRemoteDataSource {
     final response = await client.get(ApiConst.getNews);
 
     if (response.statusCode == 200) {
-      final List<dynamic> news = response.data;
-      _newsCache = news.map((e) => NewsModel.fromJson(e)).toList();
+      final responseData = response.data as Map<String, dynamic>;
+      final List<dynamic> newsList = responseData['message'] as List<dynamic>? ?? [];
+      _newsCache = newsList.map((e) => NewsModel.fromJson(e as Map<String, dynamic>)).toList();
       return _newsCache!;
     } else {
       throw ServerException(

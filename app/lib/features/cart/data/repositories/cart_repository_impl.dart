@@ -106,6 +106,20 @@ class CartRepositoryImpl implements CartRepository {
     await _localDataSource.removeCartItem(foodId);
   }
 
+  // Реализация синхронного получения текущих элементов
+  @override
+  List<CartItemEntity> getCurrentCartItems() {
+    try {
+      final models = _localDataSource.getAllCartItems();
+      // Преобразуем модели из dataSource в entities
+      // Убедитесь, что у CartItemModel есть метод toEntity()
+      return models.map((model) => model.toEntity()).toList();
+    } catch (e) {
+      log("Error getting current cart items: $e");
+      return []; // Возвращаем пустой список при ошибке
+    }
+  }
+
   // setCartItemCount uses localDataSource now
   @override
   Future<void> setCartItemCount(CartItemEntity cart) async {

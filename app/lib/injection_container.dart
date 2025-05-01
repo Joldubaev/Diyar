@@ -4,12 +4,11 @@ import 'package:diyar/features/about_us/about_us_injection.dart';
 import 'package:diyar/features/auth/auth_injection.dart';
 import 'package:diyar/features/cart/cart_injection.dart';
 import 'package:diyar/features/menu/menu_injection.dart';
+import 'package:diyar/features/profile/profile_injection.dart';
 import 'package:local_auth/local_auth.dart';
 import 'features/app/cubit/remote_config_cubit.dart';
 import 'features/curier/curier.dart';
 import 'features/features.dart';
-import 'features/profile/data/data.dart';
-import 'features/profile/presentation/cubit/profile_cubit.dart';
 import 'shared/presentation/bloc/internet_bloc.dart';
 import 'shared/presentation/cubit/popular_cubit.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -44,8 +43,10 @@ Future<void> init() async {
   // cartInjection();
   await cartInjection();
 
+  // profileInjection();
+  await profileInjection();
+
   // ✅ Остальная инициализация...
-  sl.registerFactory(() => ProfileCubit(sl()));
 
   // sl.registerFactory(() => Cart(sl()));
   sl.registerFactory(() => PopularCubit(sl()));
@@ -63,9 +64,6 @@ Future<void> init() async {
 
   // sl.registerLazySingleton<AboutUsRepository>(() => AboutUsRepositoryImpl(sl()));
   // sl.registerLazySingleton<AboutUsRemoteDataSource>(() => AboutUsRemoteDataSourceImpl(sl(), sl()));
-
-  sl.registerLazySingleton<UserRepository>(() => UserRepositoryImpl(sl()));
-  sl.registerLazySingleton<UserRemoteDataSource>(() => UserRemoteDataSourceImpl(sl(), sl()));
 
   sl.registerLazySingleton<HomeRemoteDataSource>(() => HomeFeaturesRepositoryImpl(sl()));
   sl.registerLazySingleton<HomeRepository>(() => HomeFeaturesRepoImpl(sl()));
@@ -105,7 +103,6 @@ Future<void> initLocalStorageInjections() async {
   });
 
   await sl.isReady<LocalStorage>();
-
 
   sl.registerLazySingleton<LocalAuthentication>(() => LocalAuthentication());
 }

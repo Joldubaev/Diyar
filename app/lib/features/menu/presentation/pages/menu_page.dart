@@ -5,7 +5,7 @@ import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-import '../widgets/category_list.dart';
+import 'dart:developer';
 
 @RoutePage()
 class MenuPage extends StatefulWidget {
@@ -21,7 +21,7 @@ class _MenuPageState extends State<MenuPage> with SingleTickerProviderStateMixin
   final ScrollController _scrollController = ScrollController();
   final ValueNotifier<int> _activeIndex = ValueNotifier<int>(0);
   List<CategoryFoodEntity> menu = [];
-  List<CategoryEntity> category = [];
+  List<CategoryEntity> categories = [];
 
   @override
   void initState() {
@@ -61,9 +61,23 @@ class _MenuPageState extends State<MenuPage> with SingleTickerProviderStateMixin
 
     _activeIndex.value = index;
 
-    context.read<MenuBloc>().add(
-          GetProductsEvent(foodName: category[index].name),
-        );
+    // Проверяем, что имя категории не null
+    final categoryName = categories[index].name;
+    if (categoryName != null) {
+      context.read<MenuBloc>().add(
+            GetProductsEvent(foodName: categoryName),
+          );
+    } else {
+      // Обработка случая, когда имя категории null
+      log("Error: Category name at index $index is null.");
+      // Можно показать сообщение пользователю
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Не удалось загрузить продукты: категория без имени."),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
 
     final scrollPosition = index * 100.0;
     _scrollController.animateTo(
@@ -73,15 +87,13 @@ class _MenuPageState extends State<MenuPage> with SingleTickerProviderStateMixin
     );
   }
 
-// TODO: make optimization images and prepare for release
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocConsumer<MenuBloc, MenuState>(
         listener: (context, state) {
-          if (state is GetFoodsByCategoryLoading) {
-            Center(child: CircularProgressIndicator());
-          } else if (state is GetFoodsByCategoryFailure) {
+          log("MenuPage Listener State: ${state.runtimeType}");
+          if (state is GetFoodsByCategoryFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(context.l10n.loadedWrong),
@@ -89,28 +101,34 @@ class _MenuPageState extends State<MenuPage> with SingleTickerProviderStateMixin
             );
           }
           if (state is GetFoodsByCategoryLoaded) {
-            category = state.categories;
-            if (_activeIndex.value == 0 && state.categories.isNotEmpty) {
+            categories = state.categories;
+            if (_activeIndex.value == 0 && state.categories.isNotEmpty && state.categories[0].name != null) {
+              final firstCategoryName = state.categories[0].name!;
               context.read<MenuBloc>().add(
-                    GetProductsEvent(foodName: state.categories[0].name),
+                    GetProductsEvent(foodName: firstCategoryName),
                   );
             }
           } else if (state is GetProductsLoaded) {
             menu = state.foods;
+            log("MenuPage Listener: ${state.foods.length}", name: "MENU_LOADED");
           } else if (state is GetProductsFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(context.l10n.loadedWrong),
+                content: Text("Ошибка загрузки продуктов: ${state.message}"),
+                backgroundColor: Colors.red,
               ),
             );
           }
         },
         builder: (context, state) {
+          log("MenuPage Builder State: ${state.runtimeType}");
           if (state is GetFoodsByCategoryLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is GetFoodsByCategoryFailure) {
             return Center(child: Text(context.l10n.loadedWrong));
           }
+          final bool isProductsLoading = state is GetProductsLoading;
+          final bool hasProductsLoadingFailed = state is GetProductsFailure;
 
           return SafeArea(
             child: Column(
@@ -118,28 +136,29 @@ class _MenuPageState extends State<MenuPage> with SingleTickerProviderStateMixin
               children: [
                 MenuHeaderWidget(
                   onTapMenu: (int index) {
-                    context.router.maybePop();
                     _scrollToCategory(index);
                   },
                 ),
                 const SizedBox(height: 10),
-                CategoryList(
-                  categories: category,
-                  activeIndex: _activeIndex,
-                  onCategoryTap: _scrollToCategory,
-                  scrollController: _scrollController,
-                ),
+                if (categories.isNotEmpty)
+                  CategoryList(
+                    categories: categories,
+                    activeIndex: _activeIndex,
+                    onCategoryTap: _scrollToCategory,
+                    scrollController: _scrollController,
+                  ),
                 const SizedBox(height: 10),
                 Expanded(
                   child: RefreshIndicator(
                     onRefresh: () async {
                       context.read<MenuBloc>().add(GetFoodsByCategoryEvent());
+                      if (categories.isNotEmpty &&
+                          _activeIndex.value < categories.length &&
+                          categories[_activeIndex.value].name != null) {
+                        context.read<MenuBloc>().add(GetProductsEvent(foodName: categories[_activeIndex.value].name!));
+                      }
                     },
-                    child: ProductsList(
-                      activeIndex: _activeIndex,
-                      itemScrollController: _itemScrollController,
-                      itemPositionsListener: _itemPositionsListener,
-                    ),
+                    child: _buildProductSection(state, isProductsLoading, hasProductsLoadingFailed),
                   ),
                 ),
               ],
@@ -147,6 +166,34 @@ class _MenuPageState extends State<MenuPage> with SingleTickerProviderStateMixin
           );
         },
       ),
+    );
+  }
+
+  /// Строит секцию продуктов в зависимости от текущего состояния Bloc
+  Widget _buildProductSection(MenuState state, bool isProductsLoading, bool hasProductsLoadingFailed) {
+    // Показываем загрузку, если грузятся именно продукты
+    if (isProductsLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    // Показываем ошибку, если была ошибка загрузки ПРОДУКТОВ
+    // и локальный список `menu` пуст (т.е. нет старых данных для показа)
+    if (hasProductsLoadingFailed && menu.isEmpty) {
+      String errorMessage = "Неизвестная ошибка"; // Сообщение по умолчанию
+      if (state is GetProductsFailure) {
+        // Проверяем тип перед доступом к message
+        errorMessage = state.message;
+      }
+      return Center(child: Text("Ошибка загрузки продуктов: $errorMessage"));
+    }
+
+    // Во всех остальных случаях (включая Search*, GetProductsLoaded, или GetProductsFailure с непустым `menu`)
+    return ProductsList(
+      activeIndex: _activeIndex,
+      itemScrollController: _itemScrollController,
+      itemPositionsListener: _itemPositionsListener,
+      // Передаем список продуктов, если ProductsList его ожидает
+      // foods: menu,
     );
   }
 }

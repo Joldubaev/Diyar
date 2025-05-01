@@ -1,20 +1,19 @@
 import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/auth/auth.dart';
 
-abstract class UserRemoteDataSource {
+abstract class ProfileRemoteDataSource {
   Future<UserModel> getUser();
   Future<void> updateUser(String name, String phone);
   Future<void> deleteUser();
 }
 
-class UserRemoteDataSourceImpl implements UserRemoteDataSource {
+class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   final Dio _dio;
   final LocalStorage _prefs;
 
-  UserRemoteDataSourceImpl(this._dio, this._prefs);
+  ProfileRemoteDataSourceImpl(this._dio, this._prefs);
 
   @override
   Future<UserModel> getUser() async {

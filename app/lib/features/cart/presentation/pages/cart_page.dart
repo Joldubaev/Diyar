@@ -18,14 +18,11 @@ class CartPage extends StatelessWidget {
 
 class CartContentsWidget extends StatelessWidget {
   const CartContentsWidget({super.key});
-
-  // TODO: cart page working wit bug must be fixe problem with state and hive
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CartBloc, CartState>(
       builder: (context, state) {
-        if (state is CartLoading || state is CartInitial) {
+        if (state is CartLoading) {
           return const Center(child: CircularProgressIndicator());
         } else if (state is CartError) {
           return Center(child: Text('Ошибка: ${state.message}'));
