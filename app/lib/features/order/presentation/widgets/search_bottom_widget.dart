@@ -1,15 +1,14 @@
-import '../../../../core/theme/theme.dart';
+import 'package:diyar/core/core.dart';
+import 'package:diyar/features/features.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 
-import '../../data/models/distric_model.dart';
-
 showDistrictSearchBottom(
   BuildContext context, {
-  required Function(DistricModel) onDistrictSelected,
-  required Future<List<DistricModel>> Function(String) onSearch,
+  required Function(DistrictDataModel) onDistrictSelected,
+  required Future<List<DistrictDataModel>> Function(String) onSearch,
 }) {
-  List<DistricModel> districts = [];
+  List<DistrictDataModel> districts = [];
 
   showModalBottomSheet(
     context: context,

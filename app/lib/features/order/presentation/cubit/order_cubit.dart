@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:diyar/features/features.dart';
-import '../../data/models/distric_model.dart';
+import 'package:diyar/features/order/domain/entities/entities.dart';
+import 'package:diyar/features/order/domain/repositories/order_repositories.dart';
 import 'package:equatable/equatable.dart';
 
 part 'order_state.dart';
@@ -13,61 +13,64 @@ class OrderCubit extends Cubit<OrderState> {
   int deliveryPrice = 0;
   bool isAddressSearch = false;
 
-  changeAddress(String str) {
+  void changeAddress(String str) {
     emit(OrderAddressLoading());
     address = str;
     emit(OrderAddressChanged(address: str));
   }
 
-  changeAddressSearch(bool isSearch) {
+  void changeAddressSearch(bool isSearch) {
     emit(OrderAddressLoading());
     isAddressSearch = isSearch;
     emit(OrderAddressLoading());
   }
 
-  selectDeliveryPrice(double price) {
+  void selectDeliveryPrice(double price) {
     emit(SelectDeliveryPriceLoading());
     deliveryPrice = price.toInt();
     emit(SelectDeliveryPriceLoaded(deliveryPrice: price));
   }
 
-  Future<List<DistricModel>?> getDistricts({String? search}) async {
+  Future<void> getDistricts({String? search}) async {
     emit(DistricLoading());
     try {
       final result = await _orderRepository.getDistricts(search: search);
-      return result.fold(
-        (error) {
-          emit(DistricError(message: error.message));
-          return null;
+      result.fold(
+        (failure) {
+          emit(DistricError(message: failure.message));
         },
-        (districts) {
-          emit(DistricLoaded(districts));
-          return districts;
+        (districtEntities) {
+          emit(DistricLoaded(districtEntities));
         },
       );
     } catch (e) {
       emit(DistricError(message: e.toString()));
-      return null;
     }
   }
 
-  Future createOrder(CreateOrderModel order) async {
+  Future<void> createOrder(CreateOrderEntity orderEntity) async {
     emit(CreateOrderLoading());
     try {
-      await _orderRepository.createOrder(order);
-      emit(CreateOrderLoaded());
+      final result = await _orderRepository.createOrder(orderEntity);
+      result.fold(
+        (failure) => emit(CreateOrderError(failure.message)),
+        (_) => emit(CreateOrderLoaded()),
+      );
     } catch (e) {
-      emit(CreateOrderError());
+      emit(CreateOrderError(e.toString()));
     }
   }
 
-  Future getPickupOrder(PickupOrderModel order) async {
+  Future<void> getPickupOrder(PickupOrderEntity orderEntity) async {
     emit(CreateOrderLoading());
     try {
-      await _orderRepository.getPickupOrder(order);
-      emit(CreateOrderLoaded());
+      final result = await _orderRepository.getPickupOrder(orderEntity);
+      result.fold(
+        (failure) => emit(CreateOrderError(failure.message)),
+        (_) => emit(CreateOrderLoaded()),
+      );
     } catch (e) {
-      emit(CreateOrderError());
+      emit(CreateOrderError(e.toString()));
     }
   }
 }

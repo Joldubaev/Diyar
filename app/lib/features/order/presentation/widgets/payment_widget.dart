@@ -1,5 +1,6 @@
-import '../../order.dart';
-import '../../../../l10n/l10n.dart';
+
+import 'package:diyar/features/features.dart';
+import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
 enum PaymentTypeDelivery { cash, card, online }
@@ -46,40 +47,3 @@ class PaymentTypeSelector extends StatelessWidget {
     );
   }
 }
-
-  //  ElevatedButton(
-  //               onPressed: () {},
-  //               child: PopupMenuButton<String>(
-  //                 onSelected: (String value) {
-  //                   log('Selected: $value');
-  //                   setState(() {
-  //                     if (value == context.l10n.payWithCash) {
-  //                       _paymentType = PaymentTypeDelivery.cash;
-  //                     } else if (value == context.l10n.payWithCard) {
-  //                       _paymentType = PaymentTypeDelivery.card;
-  //                     } else if (value == context.l10n.payOnline) {
-  //                       _paymentType = PaymentTypeDelivery.online;
-  //                     }
-  //                   });
-  //                 },
-  //                 itemBuilder: (BuildContext context) {
-  //                   return [
-  //                     context.l10n.payWithCash,
-  //                     // 'Оплатить картой',
-  //                     // 'Оплатить онлайн'
-  //                   ].map((String choice) {
-  //                     return PopupMenuItem<String>(
-  //                         value: choice, child: Text(choice));
-  //                   }).toList();
-  //                 },
-  //                 child: Row(
-  //                   mainAxisSize: MainAxisSize.min,
-  //                   children: [
-  //                     ClipRRect(
-  //                         borderRadius: BorderRadius.circular(100),
-  //                         child: const Icon(Icons.payment)),
-  //                     Text(context.l10n.payWithCash),
-  //                   ],
-  //                 ),
-  //               ),
-  //             ),

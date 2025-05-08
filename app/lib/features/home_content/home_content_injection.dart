@@ -6,8 +6,7 @@ import 'package:diyar/features/home_content/presentation/cubit/home_content_cubi
 import 'package:diyar/injection_container.dart';
 import 'data/datasource/home_content_repository_impl.dart';
 
- homeContentInjection() {
-
+homeContentInjection() {
   sl.registerLazySingleton<HomeContentRemoteDatasource>(
       () => HomeContentRemoteDatasourceImpl(sl())); // Регистрируем реализацию Datasource
 
