@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'core/core.dart';
 import 'features/app/cubit/remote_config_cubit.dart';
 import 'features/curier/curier.dart';
+import 'features/pick_up/pick_up.dart';
 import 'firebase_options.dart';
 import 'injection_container.dart';
 import 'shared/presentation/bloc/internet_bloc.dart';
@@ -70,6 +71,7 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => di.sl<CurierCubit>()),
         BlocProvider(create: (context) => di.sl<RemoteConfigCubit>()),
         BlocProvider(create: (context) => ThemeCubit()),
+        BlocProvider(create: (context) => di.sl<PickUpCubit>()),
       ],
       child: AppListener(
         navigationKey: appRoute.navigatorKey,

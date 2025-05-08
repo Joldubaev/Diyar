@@ -1,2 +1,4 @@
 export 'user_map/order_map.dart';
-export 'widgets/coordinats.dart';
+export 'user_map/order_map_page.dart';
+export 'widgets/widgets.dart';
+export 'cubit/user_map_cubit.dart';

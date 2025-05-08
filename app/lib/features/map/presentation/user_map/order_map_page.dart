@@ -5,10 +5,8 @@ import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:diyar/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:diyar/features/map/map.dart';
-import 'package:diyar/features/map/presentation/widgets/widgets.dart';
 import 'package:diyar/features/order/order.dart';
 import 'package:diyar/l10n/l10n.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
@@ -55,7 +53,6 @@ class _OrderMapPageState extends State<OrderMapPage> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: full refatoring  and implementation of map page 2gis map
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
@@ -262,6 +259,7 @@ class _OrderMapPageState extends State<OrderMapPage> {
       totalPrice: widget.totalPrice,
       cart: widget.cart,
       dishCount: currentTotalItems,
+      address: _address!,
     ));
   }
 

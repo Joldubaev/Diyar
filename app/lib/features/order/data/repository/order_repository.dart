@@ -11,11 +11,6 @@ class OrderRepositoryImpl implements OrderRepository {
 
   OrderRepositoryImpl(this._orderDataSource);
 
-  // @override
-  // Future<List<String>> getOrderHistory() async {
-  //   return _orderDataSource.getOrderHistory();
-  // }
-
   @override
   Future<Either<Failure, LocationModel>> getGeoSuggestions({required String query}) async {
     return _orderDataSource.getGeoSuggestions(query: query);
@@ -42,17 +37,6 @@ class OrderRepositoryImpl implements OrderRepository {
       );
     } catch (e) {
       return Left(ServerFailure('Repository Error: Failed to get districts or map them: ${e.toString()}', null));
-    }
-  }
-
-  @override
-  Future<Either<Failure, Unit>> getPickupOrder(PickupOrderEntity orderEntity) async {
-    try {
-      final orderModel = PickupOrderModel.fromEntity(orderEntity);
-      return await _orderDataSource.getPickupOrder(orderModel);
-    } catch (e) {
-      return Left(ServerFailure(
-          'Repository Error: Failed to map PickupOrderEntity or during datasource call: ${e.toString()}', null));
     }
   }
 }

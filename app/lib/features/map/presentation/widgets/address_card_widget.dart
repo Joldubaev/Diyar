@@ -1,11 +1,10 @@
-
-import '../../../../l10n/l10n.dart';
+import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
 class AddressCard extends StatelessWidget {
   final ThemeData theme;
   final String? address;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   const AddressCard({
     super.key,

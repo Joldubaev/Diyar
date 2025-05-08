@@ -1,7 +1,7 @@
 import 'dart:convert';
 // import 'package:diyar/features/order/data/models/food_item_order_model.dart'; // Заменено на model.dart, если он экспортирует FoodItemOrderModel
-import 'package:diyar/features/order/data/models/model.dart'; // Убедитесь, что FoodItemOrderModel экспортируется отсюда
-import 'package:diyar/features/order/domain/entities/entities.dart'; // Для PickupOrderEntity и FoodItemOrderEntity
+import 'package:diyar/core/core.dart';
+import 'package:diyar/features/pick_up/domain/domain.dart';
 
 PickupOrderModel pickupOrderModelFromJson(String str) => PickupOrderModel.fromJson(json.decode(str));
 

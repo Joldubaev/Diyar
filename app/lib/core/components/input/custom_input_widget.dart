@@ -1,4 +1,4 @@
-import '../../theme/theme.dart';
+import 'package:diyar/core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -67,8 +67,7 @@ class _CustomInputWidgetState extends State<CustomInputWidget> {
         if (widget.title != null)
           ListTile(
             dense: true,
-            contentPadding:
-                const EdgeInsets.all(0), // remove the default padding
+            contentPadding: const EdgeInsets.all(0), // remove the default padding
             visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
             title: Text(
               widget.title!,
@@ -100,8 +99,7 @@ class _CustomInputWidgetState extends State<CustomInputWidget> {
               borderRadius: const BorderRadius.all(Radius.circular(10)),
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide:
-                  BorderSide(color: Theme.of(context).colorScheme.primary),
+              borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
               borderRadius: const BorderRadius.all(Radius.circular(10)),
             ),
             errorBorder: const OutlineInputBorder(
@@ -128,9 +126,7 @@ class _CustomInputWidgetState extends State<CustomInputWidget> {
                           setState(() {});
                         },
                         child: Icon(
-                          _obsecureText
-                              ? Icons.visibility_off_outlined
-                              : Icons.visibility_outlined,
+                          _obsecureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
                           color: AppColors.black1.withValues(alpha: 0.6),
                         ),
                       )

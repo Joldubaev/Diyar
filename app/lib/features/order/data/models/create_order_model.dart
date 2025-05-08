@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:diyar/features/order/data/models/model.dart';
+import 'package:diyar/core/components/components.dart';
 import 'package:diyar/features/order/domain/domain.dart';
 
 CreateOrderModel createOrderModelFromJson(String str) => CreateOrderModel.fromJson(json.decode(str));

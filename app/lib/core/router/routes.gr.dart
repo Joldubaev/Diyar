@@ -81,7 +81,7 @@ import 'package:diyar/features/menu/presentation/pages/search_menu_page.dart'
 import 'package:diyar/features/order/domain/entities/entities.dart' as _i43;
 import 'package:diyar/features/order/presentation/pages/delivery_page.dart'
     as _i8;
-import 'package:diyar/features/order/presentation/pages/pickup_page.dart'
+import 'package:diyar/features/pick_up/presentation/pages/pickup_page.dart'
     as _i18;
 import 'package:diyar/features/order/presentation/pages/second_order_page.dart'
     as _i27;
