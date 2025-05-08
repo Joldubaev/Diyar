@@ -1,15 +1,13 @@
-import 'dart:developer';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
-import 'package:diyar/features/order/data/models/distric_model.dart';
-import 'package:diyar/features/order/order.dart';
+import 'package:diyar/features/order/domain/entities/entities.dart';
+import 'package:diyar/features/order/data/models/model.dart';
+import 'package:diyar/features/order/presentation/cubit/order_cubit.dart';
 import 'package:diyar/features/order/presentation/widgets/search_bottom_widget.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 
 @RoutePage()
 class SecondOrderPage extends StatefulWidget {
@@ -29,7 +27,7 @@ class SecondOrderPage extends StatefulWidget {
 }
 
 class _SecondOrderPageState extends State<SecondOrderPage> {
-  DistricModel? selectedDistrict;
+  DistrictDataModel? selectedDistrict;
   final TextEditingController addressController = TextEditingController();
   final TextEditingController searchController = TextEditingController();
 
@@ -101,17 +99,17 @@ class _SecondOrderPageState extends State<SecondOrderPage> {
               const Spacer(),
               ElevatedButton(
                 onPressed: () {
-                  if (selectedDistrict == null ||
-                      addressController.text.isEmpty) {
+                  if (selectedDistrict == null || addressController.text.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Заполните все поля')),
                     );
                   } else {
+                    final DistrictEntity? districtEntity = selectedDistrict?.toEntity();
                     context.router.push(DeliveryFormRoute(
                       cart: widget.cart,
                       dishCount: widget.dishCount,
                       totalPrice: widget.totalPrice,
-                      distric: selectedDistrict!,
+                      distric: districtEntity,
                       address: addressController.text,
                     ));
                   }
@@ -144,18 +142,10 @@ class _SecondOrderPageState extends State<SecondOrderPage> {
     showDistrictSearchBottom(
       context,
       onSearch: (query) async {
-        // Проверяем результат выполнения
-        final result =
-            await context.read<OrderCubit>().getDistricts(search: query);
-        if (result == null) {
-          log("Ошибка: result is null");
-          return [];
-        }
-
-        log("Результаты поиска: ${result.map((e) => e.name).join(', ')}");
-        return result;
+        context.read<OrderCubit>().getDistricts(search: query);
+        return <DistrictDataModel>[];
       },
-      onDistrictSelected: (district) {
+      onDistrictSelected: (DistrictDataModel district) {
         setState(() {
           selectedDistrict = district;
         });

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class CustomDialogWidgets extends StatelessWidget {
-  const CustomDialogWidgets({
+class InfoDialogWidget extends StatelessWidget {
+  const InfoDialogWidget({
     super.key,
     required this.title,
     required this.description,

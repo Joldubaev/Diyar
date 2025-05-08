@@ -78,7 +78,7 @@ import 'package:diyar/features/menu/presentation/pages/product_detail_page.dart'
     as _i20;
 import 'package:diyar/features/menu/presentation/pages/search_menu_page.dart'
     as _i26;
-import 'package:diyar/features/order/data/models/distric_model.dart' as _i43;
+import 'package:diyar/features/order/domain/entities/entities.dart' as _i43;
 import 'package:diyar/features/order/presentation/pages/delivery_page.dart'
     as _i8;
 import 'package:diyar/features/order/presentation/pages/pickup_page.dart'
@@ -238,7 +238,7 @@ class CurierRoute extends _i41.PageRouteInfo<void> {
 class DeliveryFormRoute extends _i41.PageRouteInfo<DeliveryFormRouteArgs> {
   DeliveryFormRoute({
     _i42.Key? key,
-    _i43.DistricModel? distric,
+    _i43.DistrictEntity? distric,
     String? address,
     required List<_i44.CartItemEntity> cart,
     required int dishCount,
@@ -287,7 +287,7 @@ class DeliveryFormRouteArgs {
 
   final _i42.Key? key;
 
-  final _i43.DistricModel? distric;
+  final _i43.DistrictEntity? distric;
 
   final String? address;
 

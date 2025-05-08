@@ -61,6 +61,9 @@ class AppConst {
 
   // first launch
   static const firstLaunch = 'FIRST_LAUNCH';
+
+  // yandex map key
+  static const yandexMapKey = '1d3a039d-6ce6-44a2-9ad1-209ee24e3eb1';
 }
 
 String generateOtpCode() {

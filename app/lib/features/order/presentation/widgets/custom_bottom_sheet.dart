@@ -1,13 +1,11 @@
-import '../../../cart/presentation/presentation.dart';
-import '../../../cart/presentation/bloc/cart_bloc.dart';
-import '../../order.dart';
-import '../pages/delivery_page.dart';
-import 'custom_dialog_widget.dart';
-import '../../../../l10n/l10n.dart';
-import '../../../../core/components/components.dart';
-import '../../../../core/theme/theme.dart';
+import 'package:diyar/core/core.dart';
+import 'package:diyar/features/cart/cart.dart';
+import 'package:diyar/features/order/order.dart';
+import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'info_dialog_widget.dart';
 
 class CustomBottomSheet extends StatelessWidget {
   final ThemeData theme;
@@ -108,15 +106,15 @@ class CustomBottomSheet extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CustomDialogWidgets(
+        InfoDialogWidget(
           title: context.l10n.orderAmount,
           description: '${widget.totalPrice} сом',
         ),
-        CustomDialogWidgets(
+        InfoDialogWidget(
           title: context.l10n.deliveryCost,
           description: '$deliveryPrice сом',
         ),
-        CustomDialogWidgets(
+        InfoDialogWidget(
           title: context.l10n.total,
           description: '$totalOrderCost сом',
         ),
@@ -129,7 +127,7 @@ class CustomBottomSheet extends StatelessWidget {
 
     orderCubit
         .createOrder(
-      CreateOrderModel(
+      CreateOrderEntity(
         userPhone: phoneController.text,
         userName: userName.text,
         address: addressController.text,
@@ -147,7 +145,8 @@ class CustomBottomSheet extends StatelessWidget {
         region: region,
         foods: widget.cart
             .map(
-              (e) => OrderFoodItem(
+              (e) => FoodItemOrderEntity(
+                dishId: '${e.food?.id}',
                 name: e.food?.name ?? '',
                 price: e.food?.price ?? 0,
                 quantity: e.quantity ?? 1,

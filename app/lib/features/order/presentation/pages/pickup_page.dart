@@ -9,7 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import '../widgets/custom_dialog_widget.dart';
+import '../widgets/info_dialog_widget.dart';
 
 @RoutePage()
 class PickupFormPage extends StatefulWidget {
@@ -27,7 +27,6 @@ class _PickupFormPageState extends State<PickupFormPage> {
   final TextEditingController _userName = TextEditingController();
   final TextEditingController _commentController = TextEditingController();
   final TextEditingController _timeController = TextEditingController();
-// TODO: full refatoring code
   @override
   void initState() {
     context.read<ProfileCubit>().getUser();
@@ -126,14 +125,24 @@ class _PickupFormPageState extends State<PickupFormPage> {
     final selectedTime = _timeController.text;
 
     if (selectedTime.isEmpty) {
-      showToast('Please select a valid time.');
+      showToast(context.l10n.chooseTime);
       return;
     }
 
-    final hour = int.parse(selectedTime.split(':')[0]);
+    final timeParts = selectedTime.split(':');
+    if (timeParts.length != 2) {
+      showToast("Invalid time format. Please use HH:MM");
+      return;
+    }
+    final hour = int.tryParse(timeParts[0]);
+
+    if (hour == null) {
+      showToast("Invalid time format. Hour is not a number.");
+      return;
+    }
 
     if ((hour >= 23) || (hour < 10)) {
-      showToast('Orders cannot be placed between 23:00 and 10:00.');
+      showToast("Orders can only be placed between 10:00 and 22:59.");
       return;
     }
 
@@ -142,31 +151,54 @@ class _PickupFormPageState extends State<PickupFormPage> {
     if (cartState is CartLoaded) {
       currentTotalItems = cartState.totalItems;
     } else {
-      log("Warning: Cart state is not CartLoaded in _submitOrder");
+      log("Warning: Cart state is not CartLoaded in _submitOrder. Using widget.cart.length as fallback for item count.");
+      currentTotalItems = widget.cart.length;
     }
 
-    context
-        .read<OrderCubit>()
-        .getPickupOrder(PickupOrderModel(
-            userPhone: _phoneController.text,
-            userName: _userName.text,
-            prepareFor: _timeController.text,
-            comment: _commentController.text,
-            price: widget.totalPrice,
-            dishesCount: currentTotalItems,
-            foods: widget.cart
-                .map((e) => OrderFoodItem(
-                      name: e.food?.name ?? '',
-                      price: e.food?.price ?? 0,
-                      quantity: e.quantity ?? 1,
-                    ))
-                .toList()))
-        .then((value) {
-      if (mounted) {
-        context.read<CartBloc>().add(ClearCart());
-      }
-    });
-    context.maybePop();
+    final List<FoodItemOrderEntity> foodEntities = widget.cart
+        .map((cartItem) {
+          final foodEntityFromCart = cartItem.food;
+          if (foodEntityFromCart == null) {
+            log("Error: cartItem.food is null. Skipping this item.");
+            return null;
+          }
+
+          final String? dishId = foodEntityFromCart.id;
+          final String? name = foodEntityFromCart.name;
+          final int? price = foodEntityFromCart.price;
+          final int quantity = cartItem.quantity ?? 1;
+
+          if (dishId == null || name == null || price == null) {
+            log("Error: One of the required fields (dishId, name, price) is null for a food item. Skipping this item. ID: $dishId, Name: $name, Price: $price");
+            return null;
+          }
+          return FoodItemOrderEntity(
+            dishId: dishId,
+            name: name,
+            price: price,
+            quantity: quantity,
+          );
+        })
+        .whereType<FoodItemOrderEntity>()
+        .toList();
+
+    if (foodEntities.isEmpty && widget.cart.isNotEmpty) {
+      log("Error: All cart items had null food entities or missing required fields. Cannot create order.");
+      showToast("Error processing cart items. Please try again.");
+      return;
+    }
+
+    final pickupOrderEntity = PickupOrderEntity(
+      userPhone: _phoneController.text,
+      userName: _userName.text,
+      prepareFor: _timeController.text,
+      comment: _commentController.text,
+      price: widget.totalPrice,
+      dishesCount: currentTotalItems,
+      foods: foodEntities,
+    );
+
+    context.read<OrderCubit>().getPickupOrder(pickupOrderEntity);
   }
 
   @override
@@ -185,8 +217,16 @@ class _PickupFormPageState extends State<PickupFormPage> {
         return BlocConsumer<OrderCubit, OrderState>(
           listener: (context, state) {
             if (state is CreateOrderLoaded) {
+              context.read<CartBloc>().add(ClearCart());
+
+              final currentRoute = ModalRoute.of(context);
+              if (currentRoute is ModalBottomSheetRoute) {
+                if (mounted) Navigator.of(context).pop();
+              }
+
               showDialog(
                 context: context,
+                barrierDismissible: false,
                 builder: (context) {
                   return PopScope(
                     canPop: false,
@@ -205,6 +245,7 @@ class _PickupFormPageState extends State<PickupFormPage> {
                               title: context.l10n.ok,
                               bgColor: AppColors.green,
                               onTap: () {
+                                if (mounted) Navigator.of(context).pop();
                                 context.router.pushAndPopUntil(
                                   const MainRoute(),
                                   predicate: (_) => false,
@@ -217,7 +258,12 @@ class _PickupFormPageState extends State<PickupFormPage> {
                 },
               );
             } else if (state is CreateOrderError) {
-              showToast(context.l10n.someThingIsWrong, isError: true);
+              final currentRoute = ModalRoute.of(context);
+              if (currentRoute is ModalBottomSheetRoute) {
+                if (mounted) Navigator.of(context).pop();
+              }
+              final errorMessage = state.message.isNotEmpty ? state.message : context.l10n.someThingIsWrong;
+              showToast(errorMessage, isError: true);
             }
           },
           builder: (context, state) {
@@ -346,7 +392,7 @@ class _PickupFormPageState extends State<PickupFormPage> {
                   ),
                   const Divider(),
                   const SizedBox(height: 10),
-                  CustomDialogWidgets(title: context.l10n.orderAmount, description: '${widget.totalPrice} сом'),
+                  InfoDialogWidget(title: context.l10n.orderAmount, description: '${widget.totalPrice} сом'),
                   const SizedBox(height: 10),
                   BlocBuilder<OrderCubit, OrderState>(
                     builder: (context, state) {

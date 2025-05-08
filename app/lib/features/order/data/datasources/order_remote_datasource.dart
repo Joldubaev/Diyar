@@ -5,17 +5,15 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/map/map.dart';
-import '../data.dart';
-import '../models/distric_model.dart';
+import 'package:diyar/features/order/data/models/model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 abstract class OrderRemoteDataSource {
-  Future<List<String>> getOrderHistory();
-  Future<void> createOrder(CreateOrderModel order);
-  Future<void> getPickupOrder(PickupOrderModel order);
-  Future<Either<Failure, List<DistricModel>>> getDistricts( {String? search});
-  Future<LocationModel> getGeoSuggestions({required String query});
+  Future<Either<Failure, List<String>>> getOrderHistory();
+  Future<Either<Failure, Unit>> createOrder(CreateOrderModel order);
+  Future<Either<Failure, Unit>> getPickupOrder(PickupOrderModel order);
+  Future<Either<Failure, List<DistrictDataModel>>> getDistricts({String? search});
+  Future<Either<Failure, LocationModel>> getGeoSuggestions({required String query});
 }
 
 class OrderRemoteDataSourceImpl extends OrderRemoteDataSource {
@@ -25,10 +23,10 @@ class OrderRemoteDataSourceImpl extends OrderRemoteDataSource {
   OrderRemoteDataSourceImpl(this._dio, this._prefs);
 
   @override
-  Future<LocationModel> getGeoSuggestions({required String query}) async {
+  Future<Either<Failure, LocationModel>> getGeoSuggestions({required String query}) async {
     try {
       Map<String, dynamic> data = {
-        'apikey': '1d3a039d-6ce6-44a2-9ad1-209ee24e3eb1',
+        'apikey': AppConst.yandexMapKey,
         'geocode': query,
         'format': 'json',
         'lang': 'ru_RU',
@@ -43,57 +41,82 @@ class OrderRemoteDataSourceImpl extends OrderRemoteDataSource {
 
       if (response.statusCode == 200) {
         log('Response: ${response.data}');
-        // Assuming LocationModel.fromJson is your method to parse JSON into your model
-        return LocationModel.fromJson(json.decode(response.data));
+        try {
+          final model = LocationModel.fromJson(response.data is String ? json.decode(response.data) : response.data);
+          return Right(model);
+        } catch (e, stacktrace) {
+          log('Error parsing GeoSuggestions: $e');
+          log('Stacktrace: $stacktrace');
+          return Left(ServerFailure('Failed to parse geo suggestions: ${e.toString()}', null));
+        }
       } else {
-        throw Exception('Failed to load suggestions');
+        log('Failed to load suggestions: ${response.statusCode} ${response.statusMessage}');
+        return Left(ServerFailure(response.statusMessage ?? 'Failed to load suggestions', response.statusCode));
       }
-    } catch (e) {
-      log('Error: $e');
-      rethrow;
+    } catch (e, stacktrace) {
+      log('Error in getGeoSuggestions: $e');
+      log('Stacktrace: $stacktrace');
+      if (e is DioException) {
+        return Left(ServerFailure(e.message ?? 'Network error in geo suggestions', e.response?.statusCode));
+      }
+      return Left(ServerFailure('Exception in geo suggestions: ${e.toString()}', null));
     }
   }
 
   @override
-  Future<void> getPickupOrder(PickupOrderModel order) async {
+  Future<Either<Failure, Unit>> getPickupOrder(PickupOrderModel order) async {
     try {
       var res = await _dio.post(
         ApiConst.getPickupOrder,
         data: order.toJson(),
         options: Options(
-          headers:
-              ApiConst.authMap(_prefs.getString(AppConst.accessToken) ?? ''),
+          headers: ApiConst.authMap(_prefs.getString(AppConst.accessToken) ?? ''),
         ),
       );
-      if (![200, 201].contains(res.statusCode)) {
-        throw Exception('Failed to create order');
+      if ([200, 201].contains(res.statusCode)) {
+        return const Right(unit);
+      } else {
+        log('Failed to pickup order: ${res.statusCode} ${res.data}');
+        return Left(ServerFailure(res.data?['message']?.toString() ?? 'Failed to pickup order', res.statusCode));
       }
-    } catch (e) {
-      throw Exception(e);
+    } catch (e, stacktrace) {
+      log('Error in getPickupOrder: $e');
+      log('Stacktrace: $stacktrace');
+      if (e is DioException) {
+        return Left(ServerFailure(e.message ?? 'Network error during pickup order', e.response?.statusCode));
+      }
+      return Left(ServerFailure('Exception during pickup order: ${e.toString()}', null));
     }
   }
 
   @override
-  Future<void> createOrder(CreateOrderModel order) async {
+  Future<Either<Failure, Unit>> createOrder(CreateOrderModel order) async {
     try {
       var res = await _dio.post(
         ApiConst.createOrder,
         data: order.toJson(),
         options: Options(
-          headers:
-              ApiConst.authMap(_prefs.getString(AppConst.accessToken) ?? ''),
+          headers: ApiConst.authMap(_prefs.getString(AppConst.accessToken) ?? ''),
         ),
       );
-      if (![200, 201].contains(res.statusCode)) {
-        throw Exception('Failed to create order');
+      if ([200, 201].contains(res.statusCode)) {
+        return const Right(unit);
+      } else {
+        log('Failed to create order: ${res.statusCode} ${res.data}');
+        return Left(ServerFailure(res.data?['message']?.toString() ?? 'Failed to create order', res.statusCode));
       }
-    } catch (e) {
-      throw Exception(e);
+    } catch (e, stacktrace) {
+      log('Error in createOrder: $e');
+      log('Stacktrace: $stacktrace');
+      if (e is DioException) {
+        return Left(ServerFailure(e.message ?? 'Network error during order creation', e.response?.statusCode));
+      }
+      return Left(ServerFailure('Exception during order creation: ${e.toString()}', null));
     }
   }
 
   @override
-  Future<List<String>> getOrderHistory() async {
+  Future<Either<Failure, List<String>>> getOrderHistory() async {
     try {
       var res = await _dio.get(
         ApiConst.getOrderHistory,
@@ -104,17 +127,29 @@ class OrderRemoteDataSourceImpl extends OrderRemoteDataSource {
         ),
       );
       if (res.statusCode == 200) {
-        return List<String>.from(res.data['data']);
+        if (res.data != null && res.data['data'] is List) {
+          final history = List<String>.from(res.data['data']);
+          return Right(history);
+        } else {
+          log('Unexpected data format for order history: ${res.data}');
+          return const Left(ServerFailure('Unexpected data format for order history', null));
+        }
       } else {
-        throw Exception('Failed to get order history');
+        log('Failed to get order history: ${res.statusCode} ${res.data}');
+        return Left(ServerFailure(res.data?['message']?.toString() ?? 'Failed to get order history', res.statusCode));
       }
-    } catch (e) {
-      throw Exception(e);
+    } catch (e, stacktrace) {
+      log('Error in getOrderHistory: $e');
+      log('Stacktrace: $stacktrace');
+      if (e is DioException) {
+        return Left(ServerFailure(e.message ?? 'Network error fetching order history', e.response?.statusCode));
+      }
+      return Left(ServerFailure('Exception fetching order history: ${e.toString()}', null));
     }
   }
 
   @override
-  Future<Either<Failure, List<DistricModel>>> getDistricts({String? search}) async {
+  Future<Either<Failure, List<DistrictDataModel>>> getDistricts({String? search}) async {
     try {
       final res = await _dio.get(
         ApiConst.getDistricts,
@@ -130,17 +165,17 @@ class OrderRemoteDataSourceImpl extends OrderRemoteDataSource {
         log('Response: ${res.data}');
 
         if (res.data is List) {
-          final districts = List<DistricModel>.from(
-            res.data.map((x) => DistricModel.fromJson(x)),
+          final districts = List<DistrictDataModel>.from(
+            res.data.map((x) => DistrictDataModel.fromJson(x)),
           );
           return Right(districts);
         } else {
           log('Unexpected data format: ${res.data}');
-          return const Left(ServerFailure('Unexpected data format' , null));
+          return const Left(ServerFailure('Unexpected data format', null));
         }
       } else {
         log('Error Message: ${res.data['message']}');
-        return Left(ServerFailure(res.data['message'] ?? 'Unknown error' , res.statusCode));
+        return Left(ServerFailure(res.data['message'] ?? 'Unknown error', res.statusCode));
       }
     } catch (e, stacktrace) {
       log('Exception: $e');

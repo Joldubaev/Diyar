@@ -1,14 +1,10 @@
-// To parse this JSON data, do
-//
-//     final createOrderModel = createOrderModelFromJson(jsonString);
-
 import 'dart:convert';
+import 'package:diyar/features/order/data/models/model.dart';
+import 'package:diyar/features/order/domain/domain.dart';
 
-CreateOrderModel createOrderModelFromJson(String str) =>
-    CreateOrderModel.fromJson(json.decode(str));
+CreateOrderModel createOrderModelFromJson(String str) => CreateOrderModel.fromJson(json.decode(str));
 
-String createOrderModelToJson(CreateOrderModel data) =>
-    json.encode(data.toJson());
+String createOrderModelToJson(CreateOrderModel data) => json.encode(data.toJson());
 
 class CreateOrderModel {
   String? address;
@@ -16,7 +12,7 @@ class CreateOrderModel {
   int? dishesCount;
   String? entrance;
   String? floor;
-  List<OrderFoodItem>? foods;
+  List<FoodItemOrderModel>? foods;
   String? houseNumber;
   String? intercom;
   String? kvOffice;
@@ -26,29 +22,27 @@ class CreateOrderModel {
   String? userPhone;
   int? deliveryPrice;
   int? sdacha;
-  String ? region;
+  String? region;
 
-  CreateOrderModel({
-    this.address,
-    this.comment,
-    this.dishesCount,
-    this.entrance,
-    this.floor,
-    this.foods,
-    this.houseNumber,
-    this.intercom,
-    this.kvOffice,
-    this.paymentMethod,
-    this.price,
-    this.userName,
-    this.userPhone,
-    this.deliveryPrice,
-    this.sdacha,
-    this.region
-  });
+  CreateOrderModel(
+      {this.address,
+      this.comment,
+      this.dishesCount,
+      this.entrance,
+      this.floor,
+      this.foods,
+      this.houseNumber,
+      this.intercom,
+      this.kvOffice,
+      this.paymentMethod,
+      this.price,
+      this.userName,
+      this.userPhone,
+      this.deliveryPrice,
+      this.sdacha,
+      this.region});
 
-  factory CreateOrderModel.fromJson(Map<String, dynamic> json) =>
-      CreateOrderModel(
+  factory CreateOrderModel.fromJson(Map<String, dynamic> json) => CreateOrderModel(
         address: json["address"],
         comment: json["comment"],
         dishesCount: json["dishesCount"],
@@ -56,8 +50,7 @@ class CreateOrderModel {
         floor: json["floor"],
         foods: json["foods"] == null
             ? []
-            : List<OrderFoodItem>.from(
-                json["foods"]!.map((x) => OrderFoodItem.fromJson(x))),
+            : List<FoodItemOrderModel>.from(json["foods"]!.map((x) => FoodItemOrderModel.fromJson(x))),
         houseNumber: json["houseNumber"],
         intercom: json["intercom"],
         kvOffice: json["kvOffice"],
@@ -76,9 +69,7 @@ class CreateOrderModel {
         "dishesCount": dishesCount,
         "entrance": entrance,
         "floor": floor,
-        "foods": foods == null
-            ? []
-            : List<dynamic>.from(foods!.map((x) => x.toJson())),
+        "foods": foods == null ? [] : List<dynamic>.from(foods!.map((x) => x.toJson())),
         "houseNumber": houseNumber,
         "intercom": intercom,
         "kvOffice": kvOffice,
@@ -90,28 +81,45 @@ class CreateOrderModel {
         "sdacha": sdacha,
         "region": region
       };
-}
 
-class OrderFoodItem {
-  String? name;
-  int? price;
-  int? quantity;
-
-  OrderFoodItem({
-    this.name,
-    this.price,
-    this.quantity,
-  });
-
-  factory OrderFoodItem.fromJson(Map<String, dynamic> json) => OrderFoodItem(
-        name: json["name"],
-        price: json["price"],
-        quantity: json["quantity"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "name": name,
-        "price": price,
-        "quantity": quantity,
-      };
+  factory CreateOrderModel.fromEntity(CreateOrderEntity entity) {
+    return CreateOrderModel(
+      address: entity.address,
+      comment: entity.comment,
+      dishesCount: entity.dishesCount,
+      entrance: entity.entrance,
+      floor: entity.floor,
+      foods: entity.foods.map((food) => FoodItemOrderModel.fromEntity(food)).toList(),
+      houseNumber: entity.houseNumber,
+      intercom: entity.intercom,
+      kvOffice: entity.kvOffice,
+      paymentMethod: entity.paymentMethod,
+      price: entity.price,
+      userName: entity.userName,
+      userPhone: entity.userPhone,
+      deliveryPrice: entity.deliveryPrice,
+      sdacha: entity.sdacha,
+      region: entity.region,
+    );
+  }
+  CreateOrderEntity toEntity() {
+    return CreateOrderEntity(
+      address: address ?? '',
+      comment: comment,
+      dishesCount: dishesCount ?? 0,
+      entrance: entrance,
+      floor: floor,
+      foods: foods?.map((food) => food.toEntity()).toList() ?? [],
+      houseNumber: houseNumber ?? '',
+      intercom: intercom,
+      kvOffice: kvOffice,
+      paymentMethod: paymentMethod ?? '',
+      price: price ?? 0,
+      userName: userName ?? '',
+      userPhone: userPhone ?? '',
+      deliveryPrice: deliveryPrice ?? 0,
+      sdacha: sdacha,
+      region: region,
+    );
+  }
 }
