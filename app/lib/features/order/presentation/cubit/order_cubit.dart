@@ -60,17 +60,4 @@ class OrderCubit extends Cubit<OrderState> {
       emit(CreateOrderError(e.toString()));
     }
   }
-
-  Future<void> getPickupOrder(PickupOrderEntity orderEntity) async {
-    emit(CreateOrderLoading());
-    try {
-      final result = await _orderRepository.getPickupOrder(orderEntity);
-      result.fold(
-        (failure) => emit(CreateOrderError(failure.message)),
-        (_) => emit(CreateOrderLoaded()),
-      );
-    } catch (e) {
-      emit(CreateOrderError(e.toString()));
-    }
-  }
 }

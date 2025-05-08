@@ -4,5 +4,4 @@ export 'widgets/sign_up_form.dart';
 export 'widgets/sign_in_form.dart';
 export 'widgets/auth_bottom_sheet.dart';
 export 'pages/reset_password/reset_password_page.dart';
-export 'widgets/phone_number.dart';
 export 'pages/pin_code/pin_code.dart';

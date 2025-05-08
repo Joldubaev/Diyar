@@ -6,6 +6,7 @@ import 'package:diyar/features/cart/cart_injection.dart';
 import 'package:diyar/features/home_content/home_content_injection.dart';
 import 'package:diyar/features/menu/menu_injection.dart';
 import 'package:diyar/features/order/order_injection.dart';
+import 'package:diyar/features/pick_up/pick_up_injectin.dart';
 import 'package:diyar/features/profile/profile_injection.dart';
 import 'package:local_auth/local_auth.dart';
 import 'features/app/cubit/remote_config_cubit.dart';
@@ -53,6 +54,9 @@ Future<void> init() async {
 
   // orderInjection();
   await orderInjection();
+
+  // pick up
+  await pickUpInjection();
 
   // ✅ Остальная инициализация...
 

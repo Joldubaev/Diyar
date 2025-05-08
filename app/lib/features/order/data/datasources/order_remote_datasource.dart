@@ -11,7 +11,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 abstract class OrderRemoteDataSource {
   Future<Either<Failure, List<String>>> getOrderHistory();
   Future<Either<Failure, Unit>> createOrder(CreateOrderModel order);
-  Future<Either<Failure, Unit>> getPickupOrder(PickupOrderModel order);
   Future<Either<Failure, List<DistrictDataModel>>> getDistricts({String? search});
   Future<Either<Failure, LocationModel>> getGeoSuggestions({required String query});
 }
@@ -63,31 +62,6 @@ class OrderRemoteDataSourceImpl extends OrderRemoteDataSource {
     }
   }
 
-  @override
-  Future<Either<Failure, Unit>> getPickupOrder(PickupOrderModel order) async {
-    try {
-      var res = await _dio.post(
-        ApiConst.getPickupOrder,
-        data: order.toJson(),
-        options: Options(
-          headers: ApiConst.authMap(_prefs.getString(AppConst.accessToken) ?? ''),
-        ),
-      );
-      if ([200, 201].contains(res.statusCode)) {
-        return const Right(unit);
-      } else {
-        log('Failed to pickup order: ${res.statusCode} ${res.data}');
-        return Left(ServerFailure(res.data?['message']?.toString() ?? 'Failed to pickup order', res.statusCode));
-      }
-    } catch (e, stacktrace) {
-      log('Error in getPickupOrder: $e');
-      log('Stacktrace: $stacktrace');
-      if (e is DioException) {
-        return Left(ServerFailure(e.message ?? 'Network error during pickup order', e.response?.statusCode));
-      }
-      return Left(ServerFailure('Exception during pickup order: ${e.toString()}', null));
-    }
-  }
 
   @override
   Future<Either<Failure, Unit>> createOrder(CreateOrderModel order) async {

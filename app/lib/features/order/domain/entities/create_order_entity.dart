@@ -1,5 +1,5 @@
+import 'package:diyar/core/components/components.dart';
 import 'package:equatable/equatable.dart';
-import 'food_item_order_entity.dart';
 
 class CreateOrderEntity extends Equatable {
   final String address; // Полный адрес

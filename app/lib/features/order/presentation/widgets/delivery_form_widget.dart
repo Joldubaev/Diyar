@@ -1,6 +1,6 @@
-
+import 'dart:developer' show log;
+import 'package:diyar/core/components/input/phone_number.dart';
 import 'package:diyar/core/core.dart';
-import 'package:diyar/features/features.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -56,11 +56,11 @@ class _DeliveryFormWidgetState extends State<DeliveryFormWidget> {
   TextEditingController get _commentController => widget.commentController;
   GlobalKey<FormState> get _formKey => widget.formKey;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   log("address2: ${_addressController.text}");
-  // }
+  @override
+  void initState() {
+    super.initState();
+    log("address2: ${_addressController.text}");
+  }
 
   @override
   Widget build(BuildContext context) {

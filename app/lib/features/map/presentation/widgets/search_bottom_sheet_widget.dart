@@ -1,12 +1,10 @@
 import 'dart:developer';
-
 import 'package:auto_route/auto_route.dart';
-import '../../../../l10n/l10n.dart';
-import '../../../../core/components/components.dart';
+import 'package:diyar/core/core.dart';
+import 'package:diyar/l10n/l10n.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
-// import 'package:flutter_bloc/flutter_bloc.dart';
 
 showMapSearchBottom(
   BuildContext context, {
@@ -55,10 +53,8 @@ showMapSearchBottom(
                                 await YandexSuggest.getSuggestions(
                                   text: p0,
                                   boundingBox: const BoundingBox(
-                                    northEast: Point(
-                                        latitude: 42.8764, longitude: 74.6072),
-                                    southWest: Point(
-                                        latitude: 42.7919, longitude: 74.4317),
+                                    northEast: Point(latitude: 42.8764, longitude: 74.6072),
+                                    southWest: Point(latitude: 42.7919, longitude: 74.4317),
                                   ),
                                   suggestOptions: const SuggestOptions(
                                     suggestType: SuggestType.transit,
@@ -83,8 +79,7 @@ showMapSearchBottom(
                       ),
                       const SizedBox(width: 10),
                       ClipRRect(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(8)),
+                        borderRadius: const BorderRadius.all(Radius.circular(8)),
                         child: ColoredBox(
                           color: theme.colorScheme.primary,
                           child: IconButton(

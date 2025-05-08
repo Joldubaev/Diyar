@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:diyar/features/order/domain/entities/entities.dart';
+import 'food_item_order_entity.dart';
 
 class FoodItemOrderModel {
   final String dishId;

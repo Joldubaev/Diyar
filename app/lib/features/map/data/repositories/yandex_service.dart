@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
-import '../../../../injection_container.dart';
-import '../../../../core/constants/constant.dart';
+import 'package:diyar/core/core.dart';
+import 'package:diyar/injection_container.dart';
+
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

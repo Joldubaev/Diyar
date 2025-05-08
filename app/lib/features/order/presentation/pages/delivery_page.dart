@@ -163,7 +163,6 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
               sdachaController: _sdachaController,
               commentController: _commentController,
               totalOrderCost: totalOrderCost,
-              // deliveryPrice: deliveryPrice,
               onConfirm: () => _onSubmit(deliveryPrice, totalOrderCost),
             ),
           );
