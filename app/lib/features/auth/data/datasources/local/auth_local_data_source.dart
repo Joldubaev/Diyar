@@ -44,35 +44,38 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   }
 
   @override
-  @override
   Future<void> setTokenToCache({
     String? refresh,
     required String access,
     String? phone,
   }) async {
     try {
+      log("[CACHE SAVE] Attempting to save tokens.");
+      log("[CACHE SAVE] Access Token to be saved: $access");
       if (refresh != null) {
+        log("[CACHE SAVE] Refresh Token to be saved: $refresh");
         await prefs.setString(AppConst.refreshToken, refresh);
       }
       await prefs.setString(AppConst.accessToken, access);
-      log("setTokenToCache: $access");
+      log("[CACHE SAVE] Access Token WRITTEN to prefs with key ${AppConst.accessToken}");
 
       if (phone != null) {
         await prefs.setString(AppConst.phone, phone);
-        log('[CACHE] phone saved: $phone');
+        log('[CACHE SAVE] Phone saved: $phone');
       }
 
       final payload = JwtDecoder.decode(access);
-      final userId = payload['nameid']; // заменили!
+      final userId = payload['nameid'];
       final role = payload['role'];
 
-      log('[CACHE] userId from token: $userId');
-      log('[CACHE] role from token: $role');
+      log('[CACHE SAVE] UserID from token: $userId');
+      log('[CACHE SAVE] Role from token: $role');
 
       await prefs.setString(AppConst.userId, userId);
       await prefs.setString(AppConst.userRole, role);
+      log("[CACHE SAVE] Tokens and user info saved successfully.");
     } catch (e) {
-      log('[CACHE ERROR] $e');
+      log('[CACHE ERROR] Failed to save tokens: $e');
       throw CacheException();
     }
   }

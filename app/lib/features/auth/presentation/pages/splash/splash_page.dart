@@ -24,6 +24,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   @override
   void initState() {
     super.initState();
+    // _localStorage.delete(AppConst.refreshToken);
     _setupAnimations();
     _startAuthenticationCheck();
   }
@@ -109,6 +110,10 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     try {
       // Все данные читаем из LocalStorage
       final String? accessToken = _localStorage.getString(AppConst.accessToken);
+      // Добавляем подробный лог прочитанного токена
+      log('[Splash _handleUserNavigation] AccessToken READ from localStorage: $accessToken');
+      log('[Splash _handleUserNavigation] Expected AccessToken key: ${AppConst.accessToken}');
+
       final String? pinCode = _localStorage.getString(AppConst.pinCode);
       // final String? role = _localStorage.getString(AppConst.userRole); // Роль здесь не нужна
 

@@ -171,22 +171,56 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<Either<Failure, void>> refreshToken() async {
     try {
+      final currentRefreshToken =
+          _prefs.getString(AppConst.refreshToken); // Можно заменить на метод из _localDataSource, если он есть
+      if (currentRefreshToken == null) {
+        log("[Refresh Token] No refresh token found in prefs. Cannot refresh.");
+        return const Left(Failure("Refresh token не найден"));
+      }
+
+      log("[Refresh Token] Attempting to refresh with token: $currentRefreshToken");
       final res = await _dio.post(
         ApiConst.refreshToken,
-        data: {"refreshToken": _prefs.getString(AppConst.refreshToken)},
+        data: {"refreshToken": currentRefreshToken},
       );
 
-      if (res.statusCode == 200) {
-        await _localDataSource.setTokenToCache(
-          refresh: res.data['refreshToken'],
-          access: res.data['accessToken'],
-        );
-        return const Right(null);
+      final data = res.data; // Для удобства
+      log("[Refresh Token] Response status: ${res.statusCode}");
+      log("[Refresh Token] Response data: $data");
+
+      if (res.statusCode == 200 && data is Map && data['code'] == 200 && data['message'] is Map) {
+        final messageData = data['message'] as Map;
+        final String? newAccessToken = messageData['accessToken'] as String?;
+        // final String? newRefreshToken = messageData['refreshToken'] as String?; // Удаляем ожидание нового refreshToken
+
+        if (newAccessToken != null) {
+          // Убедимся, что новый accessToken есть и старый refreshToken тоже
+          log('[Refresh Token] New Access Token: $newAccessToken');
+          log('[Refresh Token] Keeping Old Refresh Token: $currentRefreshToken'); // Добавим лог для ясности
+          await _localDataSource.setTokenToCache(
+            refresh: currentRefreshToken, // Используем старый refreshToken
+            access: newAccessToken,
+            // Телефон здесь не обновляем, так как это только обновление токена
+          );
+          log('[Refresh Token] Tokens successfully refreshed and saved.');
+          return const Right(null);
+        } else {
+          log('[Refresh Token] Failed: New accessToken is null or original refreshToken was missing.'); // Обновляем сообщение об ошибке
+          return const Left(Failure(
+              "Не удалось получить новый accessToken из ответа сервера или отсутствовал исходный refreshToken"));
+        }
       } else {
-        return Left(Failure(res.data['message'].toString()));
+        String errorMessage = "Ошибка обновления токена";
+        if (data is Map && data['message'] != null) {
+          errorMessage = data['message'].toString();
+        } else if (res.statusMessage != null && res.statusMessage!.isNotEmpty) {
+          errorMessage = res.statusMessage!;
+        }
+        log('[Refresh Token] Failed: Status code ${res.statusCode} or invalid response structure. Message: $errorMessage');
+        return Left(Failure(errorMessage));
       }
     } catch (e) {
-      log("refreshToken error: $e");
+      log("[Refresh Token] Exception: $e");
       return _extractDioError(e);
     }
   }

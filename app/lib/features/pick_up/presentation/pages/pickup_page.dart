@@ -14,7 +14,11 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 class PickupFormPage extends StatefulWidget {
   final List<CartItemEntity> cart;
   final int totalPrice;
-  const PickupFormPage({super.key, required this.cart, required this.totalPrice});
+  const PickupFormPage({
+    super.key,
+    required this.cart,
+    required this.totalPrice,
+  });
 
   @override
   State<PickupFormPage> createState() => _PickupFormPageState();
@@ -102,33 +106,40 @@ class _PickupFormPageState extends State<PickupFormPage> {
                     )),
                 Row(mainAxisAlignment: MainAxisAlignment.end, children: [
                   TextButton(
-                      onPressed: () => Navigator.of(dialogContext).pop(),
-                      child: Text('Отмена',
-                          style: Theme.of(dialogContext)
-                              .textTheme
-                              .bodyMedium!
-                              .copyWith(fontSize: 16, color: Theme.of(dialogContext).colorScheme.primary))),
+                    onPressed: () => Navigator.of(dialogContext).pop(),
+                    child: Text(
+                      'Отмена',
+                      style: Theme.of(dialogContext).textTheme.bodyMedium!.copyWith(
+                            fontSize: 16,
+                            color: Theme.of(dialogContext).colorScheme.primary,
+                          ),
+                    ),
+                  ),
                   TextButton(
-                      onPressed: () {
-                        final minSelectableTime = now.add(const Duration(minutes: 15));
-                        String timeToSet;
-                        if (selectedTime.isAfter(minSelectableTime) ||
-                            selectedTime.isAtSameMomentAs(minSelectableTime)) {
-                          timeToSet =
-                              '${selectedTime.hour.toString().padLeft(2, '0')}:${selectedTime.minute.toString().padLeft(2, '0')}';
-                        } else {
-                          timeToSet =
-                              '${minSelectableTime.hour.toString().padLeft(2, '0')}:${minSelectableTime.minute.toString().padLeft(2, '0')}';
-                        }
-                        _timeController.text = timeToSet;
-                        pickUpCubit.timeChanged(timeToSet);
-                        Navigator.of(dialogContext).pop();
-                      },
-                      child: Text('Подтвердить',
-                          style: Theme.of(dialogContext)
-                              .textTheme
-                              .bodyMedium!
-                              .copyWith(fontSize: 16, color: Theme.of(dialogContext).colorScheme.primary))),
+                    onPressed: () {
+                      final minSelectableTime = now.add(
+                        const Duration(minutes: 15),
+                      );
+                      String timeToSet;
+                      if (selectedTime.isAfter(minSelectableTime) || selectedTime.isAtSameMomentAs(minSelectableTime)) {
+                        timeToSet =
+                            '${selectedTime.hour.toString().padLeft(2, '0')}:${selectedTime.minute.toString().padLeft(2, '0')}';
+                      } else {
+                        timeToSet =
+                            '${minSelectableTime.hour.toString().padLeft(2, '0')}:${minSelectableTime.minute.toString().padLeft(2, '0')}';
+                      }
+                      _timeController.text = timeToSet;
+                      pickUpCubit.timeChanged(timeToSet);
+                      Navigator.of(dialogContext).pop();
+                    },
+                    child: Text(
+                      'Подтвердить',
+                      style: Theme.of(dialogContext).textTheme.bodyMedium!.copyWith(
+                            fontSize: 16,
+                            color: Theme.of(dialogContext).colorScheme.primary,
+                          ),
+                    ),
+                  ),
                 ])
               ])),
         );
