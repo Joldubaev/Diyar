@@ -138,6 +138,7 @@ class _MenuPageState extends State<MenuPage> with SingleTickerProviderStateMixin
                   onTapMenu: (int index) {
                     _scrollToCategory(index);
                   },
+                  categoriesFromPage: categories,
                 ),
                 const SizedBox(height: 10),
                 if (categories.isNotEmpty)
