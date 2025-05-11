@@ -21,12 +21,14 @@ linter:
   # `// ignore_for_file: name_of_lint` syntax on the line or in the file
   # producing the lint.
   rules:
+  
     # avoid_print: false  # Uncomment to disable the `avoid_print` rule
     # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options
 dart_code_metrics:
+
   rules:
     - prefer-define-hero-tag
     - always-remove-listener
@@ -75,3 +77,6 @@ dart_code_metrics:
     - prefer-multi-bloc-provider
     - prefer-correct-bloc-provider
     - check-is-not-closed-after-async-gap
+analyzer:
+      exclude:
+        - "bricks/*/__brick__/**"
