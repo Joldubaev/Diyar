@@ -1,31 +1,5 @@
-
+import 'package:diyar/features/active_order/domain/domain.dart';
 import 'package:diyar/features/menu/menu.dart';
-
-class ActiveOrderModel {
-  final OrderActiveItemModel? order;
-  final String? courierName;
-  final String? courierNumber;
-
-  ActiveOrderModel({this.order, this.courierName, this.courierNumber});
-
-  Map<String, dynamic> toJson() {
-    return {
-      'order': order?.toJson(),
-      'courierName': courierName,
-      'courierNumber': courierNumber,
-    };
-  }
-
-  factory ActiveOrderModel.fromJson(Map<String, dynamic> map) {
-    return ActiveOrderModel(
-      order: map['order'] != null
-          ? OrderActiveItemModel.fromJson(map['order'])
-          : null,
-      courierName: map['courierName'],
-      courierNumber: map['courierNumber'],
-    );
-  }
-}
 
 class OrderActiveItemModel {
   final String? id;
@@ -108,10 +82,7 @@ class OrderActiveItemModel {
       userPhone: map['userPhone'],
       orderNumber: map['orderNumber']?.toInt(),
       dishesCount: map['dishesCount']?.toInt(),
-      foods: map['foods'] != null
-          ? List<FoodModel>.from(
-              map['foods']?.map((x) => FoodModel.fromJson(x)))
-          : null,
+      foods: map['foods'] != null ? List<FoodModel>.from(map['foods']?.map((x) => FoodModel.fromJson(x))) : null,
       address: map['address'],
       houseNumber: map['houseNumber'],
       kvOffice: map['kvOffice'],
@@ -126,6 +97,57 @@ class OrderActiveItemModel {
       status: map['status'],
       deliveryPrice: map['deliveryPrice']?.toInt(),
       sdacha: map['sdacha']?.toInt(),
+    );
+  }
+
+  factory OrderActiveItemModel.fromEntity(OrderActiveItemEntity entity) {
+    return OrderActiveItemModel(
+      id: entity.id,
+      userId: entity.userId,
+      userName: entity.userName,
+      userPhone: entity.userPhone,
+      orderNumber: entity.orderNumber,
+      dishesCount: entity.dishesCount,
+      foods: entity.foods?.map((e) => FoodModel.fromEntity(e)).toList(),
+      address: entity.address,
+      houseNumber: entity.houseNumber,
+      kvOffice: entity.kvOffice,
+      intercom: entity.intercom,
+      floor: entity.floor,
+      entrance: entity.entrance,
+      comment: entity.comment,
+      paymentMethod: entity.paymentMethod,
+      price: entity.price,
+      timeRequest: entity.timeRequest,
+      courierId: entity.courierId,
+      status: entity.status,
+      deliveryPrice: entity.deliveryPrice,
+      sdacha: entity.sdacha,
+    );
+  }
+  OrderActiveItemEntity toEntity() {
+    return OrderActiveItemEntity(
+      id: id,
+      userId: userId,
+      userName: userName,
+      userPhone: userPhone,
+      orderNumber: orderNumber,
+      dishesCount: dishesCount,
+      foods: foods?.map((e) => e.toEntity()).toList(),
+      address: address,
+      houseNumber: houseNumber,
+      kvOffice: kvOffice,
+      intercom: intercom,
+      floor: floor,
+      entrance: entrance,
+      comment: comment,
+      paymentMethod: paymentMethod,
+      price: price,
+      timeRequest: timeRequest,
+      courierId: courierId,
+      status: status,
+      deliveryPrice: deliveryPrice,
+      sdacha: sdacha,
     );
   }
 }

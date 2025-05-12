@@ -23,6 +23,10 @@ import 'package:diyar/features/about_us/presentation/pages/about/vip_page.dart'
     as _i40;
 import 'package:diyar/features/about_us/presentation/pages/contact/contact_page.dart'
     as _i6;
+import 'package:diyar/features/active_order/presentation/pages/order_active_page.dart'
+    as _i2;
+import 'package:diyar/features/active_order/presentation/pages/order_detail_page.dart'
+    as _i15;
 import 'package:diyar/features/auth/auth.dart' as _i48;
 import 'package:diyar/features/auth/domain/domain.dart' as _i50;
 import 'package:diyar/features/auth/presentation/pages/pin_code/pin_code_page.dart'
@@ -51,12 +55,7 @@ import 'package:diyar/features/curier/presentation/pages/curier_page.dart'
     as _i7;
 import 'package:diyar/features/curier/presentation/pages/history_page.dart'
     as _i10;
-import 'package:diyar/features/history/data/model/user_pickup_history_model.dart'
-    as _i51;
-import 'package:diyar/features/history/presentation/pages/order_active/order_active_page.dart'
-    as _i2;
-import 'package:diyar/features/history/presentation/pages/order_active/order_detail_page.dart'
-    as _i15;
+import 'package:diyar/features/history/domain/domain.dart' as _i51;
 import 'package:diyar/features/history/presentation/pages/order_history/user_order_history.dart'
     as _i37;
 import 'package:diyar/features/history/presentation/pages/order_history_page.dart'
@@ -81,10 +80,10 @@ import 'package:diyar/features/menu/presentation/pages/search_menu_page.dart'
 import 'package:diyar/features/order/domain/entities/entities.dart' as _i43;
 import 'package:diyar/features/order/presentation/pages/delivery_page.dart'
     as _i8;
-import 'package:diyar/features/pick_up/presentation/pages/pickup_page.dart'
-    as _i18;
 import 'package:diyar/features/order/presentation/pages/second_order_page.dart'
     as _i27;
+import 'package:diyar/features/pick_up/presentation/pages/pickup_page.dart'
+    as _i18;
 import 'package:diyar/features/profile/presentation/pages/profile/profile_page.dart'
     as _i22;
 import 'package:diyar/features/profile/presentation/pages/profile_info/profile_info_page.dart'
@@ -1163,7 +1162,7 @@ class UserPickupDetailRoute
     extends _i41.PageRouteInfo<UserPickupDetailRouteArgs> {
   UserPickupDetailRoute({
     _i42.Key? key,
-    required _i51.UserPickupHistoryModel order,
+    required _i51.UserPickupHistoryEntity order,
     List<_i41.PageRouteInfo>? children,
   }) : super(
           UserPickupDetailRoute.name,
@@ -1196,7 +1195,7 @@ class UserPickupDetailRouteArgs {
 
   final _i42.Key? key;
 
-  final _i51.UserPickupHistoryModel order;
+  final _i51.UserPickupHistoryEntity order;
 
   @override
   String toString() {

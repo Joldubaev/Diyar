@@ -1,11 +1,11 @@
 import 'package:diyar/core/core.dart';
-import 'package:diyar/features/features.dart';
+import 'package:diyar/features/active_order/active_order.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 
 class OrderStepper extends StatefulWidget {
-  final OrderStatusModel orderStatus;
+  final OrderStatusEntity orderStatus;
 
   const OrderStepper({
     super.key,
@@ -35,7 +35,7 @@ class _OrderStepperState extends State<OrderStepper> {
 
   void _updateStep() {
     setState(() {
-      activeStep = _mapStatusToStep(widget.orderStatus.status);
+      activeStep = _mapStatusToStep(widget.orderStatus.status ?? AppConst.awaits);
     });
   }
 
