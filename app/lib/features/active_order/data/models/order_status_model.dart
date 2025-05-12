@@ -1,3 +1,5 @@
+import 'package:diyar/features/active_order/domain/domain.dart';
+
 class OrderStatusModel {
   final int orderNumber;
   final String status;
@@ -19,5 +21,18 @@ class OrderStatusModel {
       'orderNumber': orderNumber,
       'status': status,
     };
+  }
+
+  factory OrderStatusModel.fromEntity(OrderStatusEntity entity) {
+    return OrderStatusModel(
+      orderNumber: entity.orderNumber ?? 0,
+      status: entity.status ?? '',
+    );
+  }
+  OrderStatusEntity toEntity() {
+    return OrderStatusEntity(
+      orderNumber: orderNumber,
+      status: status,
+    );
   }
 }

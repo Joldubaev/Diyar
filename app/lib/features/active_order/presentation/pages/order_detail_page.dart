@@ -1,11 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
-import '../../../../../l10n/l10n.dart';
-import '../../../../features.dart';
+import 'package:diyar/features/active_order/active_order.dart';
+import 'package:diyar/features/history/history.dart';
+import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../pickup_history/user_pickup_detail_page.dart';
 
 @RoutePage()
 class OrderDetailPage extends StatefulWidget {
@@ -17,21 +16,21 @@ class OrderDetailPage extends StatefulWidget {
 }
 
 class _OrderDetailPageState extends State<OrderDetailPage> {
-  late OrderActiveItemModel order;
+  late OrderActiveItemEntity order;
 
   @override
   void initState() {
     super.initState();
-    context.read<HistoryCubit>().getOrderItem(widget.orderNumber);
+    context.read<ActiveOrderCubit>().getOrderItem(widget.orderNumber);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(context.l10n.orderDetails)),
-      body: BlocConsumer<HistoryCubit, HistoryState>(
+      body: BlocConsumer<ActiveOrderCubit, ActiveOrderState>(
         listener: (context, state) {
-          if (state is GetOrderItemError) {
+          if (state is OrderItemError) {
             SnackBarMessage().showErrorSnackBar(
               message: context.l10n.errorLoadingData,
               context: context,
@@ -39,11 +38,11 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           }
         },
         builder: (context, state) {
-          if (state is GetOrderItemLoading) {
+          if (state is OrderItemLoading) {
             return const Center(child: CircularProgressIndicator());
-          } else if (state is GetOrderItemError) {
+          } else if (state is OrderItemError) {
             return Center(child: Text(context.l10n.errorLoadingData));
-          } else if (state is GetOrderItemLoaded) {
+          } else if (state is OrderItemLoaded) {
             order = state.order;
           }
 
@@ -52,7 +51,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Column(
               children: [
-                DetailCard(children: [
+                DetailCardWidget(children: [
                   DetailItem(
                     icon: 'about',
                     title: context.l10n.name,
@@ -99,13 +98,11 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                     value: order.comment ?? "",
                   ),
                 ]),
-                DetailCard(children: [
+                DetailCardWidget(children: [
                   DetailItem(
                     icon: 'meal',
                     title: 'Ваш заказ',
-                    value: order.foods!
-                        .map((e) => "${e.name} (${e.quantity})")
-                        .join('\n'),
+                    value: order.foods!.map((e) => "${e.name} (${e.quantity})").join('\n'),
                   ),
                   DetailItem(
                     icon: 'cutler',

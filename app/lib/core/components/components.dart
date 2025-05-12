@@ -4,6 +4,7 @@ export 'buttons/confirm_button.dart';
 export 'buttons/custom_text_button.dart';
 export 'buttons/delivery_option_button.dart';
 export 'buttons/text_button.dart';
+export 'buttons/order_button.dart';
 export 'loading/loading_widget.dart';
 export 'lang/app_languages_list.dart';
 export 'input/custom_input_widget.dart';

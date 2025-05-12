@@ -1,34 +1,22 @@
-import '../model/user_pickup_history_model.dart';
-import '../../history.dart';
-
-abstract class HistoryRepository {
-  Future<OrderActiveItemModel> getOrderItem({required int orderNumber});
-  Future<List<ActiveOrderModel>> getActiveOrders();
-  Future<List<OrderActiveItemModel>> getHistoryOrders();
-  Future<List<UserPickupHistoryModel>> getPickupHistory();
-}
+import 'package:diyar/features/active_order/active_order.dart';
+import 'package:diyar/features/active_order/domain/domain.dart';
+import 'package:diyar/features/history/history.dart';
+import 'package:diyar/features/history/domain/domain.dart';
 
 class HistoryRepositoryImpl implements HistoryRepository {
   final HistoryReDatasource historyReDatasource;
   HistoryRepositoryImpl(this.historyReDatasource);
 
   @override
-  Future<OrderActiveItemModel> getOrderItem({required int orderNumber}) {
-    return historyReDatasource.getOrderItem(num: orderNumber);
+  Future<List<OrderActiveItemEntity>> getHistoryOrders() async {
+    final models = await historyReDatasource.getHistoryOrders();
+    // Просто возвращай пустой список, если models.isEmpty
+    return models.map((model) => model.toEntity()).toList();
   }
 
   @override
-  Future<List<ActiveOrderModel>> getActiveOrders() {
-    return historyReDatasource.getActiveOrders();
-  }
-
-  @override
-  Future<List<OrderActiveItemModel>> getHistoryOrders() {
-    return historyReDatasource.getHistoryOrders();
-  }
-
-  @override
-  Future<List<UserPickupHistoryModel>> getPickupHistory() {
-    return historyReDatasource.getPickupHistory();
+  Future<List<UserPickupHistoryEntity>> getPickupHistory() async {
+    final models = await historyReDatasource.getPickupHistory();
+    return models.map((model) => model.toEntity()).toList();
   }
 }

@@ -1,12 +1,12 @@
 import 'package:auto_route/auto_route.dart';
-import '../../../../features.dart';
-import '../../../data/model/user_pickup_history_model.dart';
-import '../../../../../l10n/l10n.dart';
+import 'package:diyar/features/history/domain/domain.dart';
+import 'package:diyar/features/history/history.dart';
+import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
 @RoutePage()
 class UserPickupDetailPage extends StatefulWidget {
-  final UserPickupHistoryModel order;
+  final UserPickupHistoryEntity order;
   const UserPickupDetailPage({super.key, required this.order});
 
   @override
@@ -14,7 +14,7 @@ class UserPickupDetailPage extends StatefulWidget {
 }
 
 class _UserPickupDetailPageState extends State<UserPickupDetailPage> {
-  UserPickupHistoryModel get order => widget.order;
+  UserPickupHistoryEntity get order => widget.order;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class _UserPickupDetailPageState extends State<UserPickupDetailPage> {
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Column(
           children: [
-            DetailCard(
+            DetailCardWidget(
               children: [
                 DetailItem(
                   title: context.l10n.name,
@@ -48,13 +48,11 @@ class _UserPickupDetailPageState extends State<UserPickupDetailPage> {
                 ),
               ],
             ),
-            DetailCard(
+            DetailCardWidget(
               children: [
                 DetailItem(
                   title: 'Ваш заказ',
-                  value: order.foods!
-                      .map((e) => "${e.name} (${e.quantity})")
-                      .join('\n'),
+                  value: order.foods!.map((e) => "${e.name} (${e.quantity})").join('\n'),
                   icon: 'meal',
                 ),
                 DetailItem(
@@ -76,27 +74,4 @@ class _UserPickupDetailPageState extends State<UserPickupDetailPage> {
   }
 }
 
-class DetailCard extends StatelessWidget {
-  final List<Widget> children;
-  const DetailCard({super.key, required this.children});
 
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-        side: BorderSide(
-          color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: children,
-        ),
-      ),
-    );
-  }
-}

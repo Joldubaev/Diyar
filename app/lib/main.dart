@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:diyar/features/active_order/active_order.dart';
+
 import 'core/core.dart';
 import 'features/app/cubit/remote_config_cubit.dart';
 import 'features/curier/curier.dart';
@@ -72,6 +74,7 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => di.sl<RemoteConfigCubit>()),
         BlocProvider(create: (context) => ThemeCubit()),
         BlocProvider(create: (context) => di.sl<PickUpCubit>()),
+        BlocProvider(create: (context) => di.sl<ActiveOrderCubit>()),
       ],
       child: AppListener(
         navigationKey: appRoute.navigatorKey,

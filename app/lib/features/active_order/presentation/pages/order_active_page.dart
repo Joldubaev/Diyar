@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
+import 'package:diyar/features/active_order/active_order.dart';
 import 'package:diyar/features/curier/curier.dart';
 import 'package:diyar/features/features.dart';
 import 'package:diyar/injection_container.dart';
@@ -21,17 +22,16 @@ class ActiveOrderPage extends StatefulWidget {
 }
 
 class _ActiveOrderPageState extends State<ActiveOrderPage> {
-  List<ActiveOrderModel> orders = [];
+  List<ActiveOrderEntity> orders = [];
   late final IOWebSocketChannel _channel;
-  final StreamController<List<OrderStatusModel>> _controller =
-      StreamController.broadcast();
+  final StreamController<List<OrderStatusEntity>> _controller = StreamController.broadcast();
   bool _isControllerClosed = false;
 
   @override
   void initState() {
     super.initState();
     _initializeWebSocket();
-    context.read<HistoryCubit>().getActiveOrders();
+    context.read<ActiveOrderCubit>().getActiveOrders();
     debugPrint('ActiveOrderPage initialized.');
   }
 
@@ -43,8 +43,7 @@ class _ActiveOrderPageState extends State<ActiveOrderPage> {
       return;
     }
 
-    _channel = IOWebSocketChannel.connect(
-        'ws://176.126.164.230:8088/ws/get-status-with-websocket?token=$token');
+    _channel = IOWebSocketChannel.connect('ws://176.126.164.230:8088/ws/get-status-with-websocket?token=$token');
     debugPrint('WebSocket connected.');
 
     _channel.stream.listen((data) {
@@ -52,9 +51,8 @@ class _ActiveOrderPageState extends State<ActiveOrderPage> {
       if (!_isControllerClosed) {
         try {
           final List<dynamic> jsonData = jsonDecode(data as String);
-          final List<OrderStatusModel> orderStatuses = jsonData
-              .map((dynamic json) => OrderStatusModel.fromJson(json))
-              .toList();
+          final List<OrderStatusEntity> orderStatuses =
+              jsonData.map((dynamic json) => OrderStatusModel.fromJson(json).toEntity()).toList();
           _controller.add(orderStatuses);
           debugPrint('Order statuses updated.');
         } catch (e) {
@@ -92,15 +90,14 @@ class _ActiveOrderPageState extends State<ActiveOrderPage> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(title: Text(context.l10n.activeOrders)),
-      body: BlocBuilder<HistoryCubit, HistoryState>(
+      body: BlocBuilder<ActiveOrderCubit, ActiveOrderState>(
         builder: (context, state) {
-          debugPrint('Current HistoryCubit state: $state');
-          if (state is GetActiveOrdersError) {
-            return EmptyActiveOrders(
-                text: context.l10n.errorLoadingActiveOrders);
-          } else if (state is GetActiveOrdersLoading) {
+          debugPrint('Current ActiveOrderCubit state: $state');
+          if (state is ActiveOrdersError) {
+            return EmptyActiveOrders(text: context.l10n.errorLoadingActiveOrders);
+          } else if (state is ActiveOrdersLoading) {
             return const Center(child: CircularProgressIndicator());
-          } else if (state is GetActiveOrdersLoaded) {
+          } else if (state is ActiveOrdersLoaded) {
             orders = state.orders;
             debugPrint('Orders loaded: ${orders.length}');
             if (orders.isEmpty) {
@@ -109,7 +106,7 @@ class _ActiveOrderPageState extends State<ActiveOrderPage> {
             }
           }
 
-          return StreamBuilder<List<OrderStatusModel>>(
+          return StreamBuilder<List<OrderStatusEntity>>(
             stream: _controller.stream,
             builder: (context, snapshot) {
               debugPrint('StreamBuilder snapshot state: $snapshot');
@@ -126,20 +123,16 @@ class _ActiveOrderPageState extends State<ActiveOrderPage> {
               return ListView.separated(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 itemCount: orders.length,
-                separatorBuilder: (context, index) =>
-                    const SizedBox(height: 10),
+                separatorBuilder: (context, index) => const SizedBox(height: 10),
                 itemBuilder: (context, index) {
                   final order = orders[index];
                   final orderNumber = order.order?.orderNumber;
                   final orderStatus = orderStatuses.firstWhere(
                     (element) => element.orderNumber == orderNumber,
-                    orElse: () => OrderStatusModel(
-                        orderNumber: orderNumber!,
-                        status: context.l10n.unknown),
+                    orElse: () => OrderStatusEntity(orderNumber: orderNumber!, status: context.l10n.unknown),
                   );
 
-                  debugPrint(
-                      'Order $orderNumber with status: ${orderStatus.status}');
+                  debugPrint('Order $orderNumber with status: ${orderStatus.status}');
 
                   return Card(
                     child: ListTile(
@@ -156,8 +149,7 @@ class _ActiveOrderPageState extends State<ActiveOrderPage> {
                           children: [
                             OrderStepper(orderStatus: orderStatus),
                             CustomTextButton(
-                              textStyle: theme.textTheme.bodyLarge!
-                                  .copyWith(color: AppColors.primary),
+                              textStyle: theme.textTheme.bodyLarge!.copyWith(color: AppColors.primary),
                               onPressed: () => context.pushRoute(
                                 OrderDetailRoute(orderNumber: "$orderNumber"),
                               ),

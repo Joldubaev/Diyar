@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/about_us/about_us_injection.dart';
+import 'package:diyar/features/active_order/active_order_injection.dart';
 import 'package:diyar/features/auth/auth_injection.dart';
 import 'package:diyar/features/cart/cart_injection.dart';
+import 'package:diyar/features/history/history_injection.dart';
 import 'package:diyar/features/home_content/home_content_injection.dart';
 import 'package:diyar/features/menu/menu_injection.dart';
 import 'package:diyar/features/order/order_injection.dart';
@@ -11,7 +13,6 @@ import 'package:diyar/features/profile/profile_injection.dart';
 import 'package:local_auth/local_auth.dart';
 import 'features/app/cubit/remote_config_cubit.dart';
 import 'features/curier/curier.dart';
-import 'features/features.dart';
 import 'shared/presentation/bloc/internet_bloc.dart';
 import 'shared/presentation/cubit/popular_cubit.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -58,12 +59,18 @@ Future<void> init() async {
   // pick up
   await pickUpInjection();
 
+  // active order
+  await activeOrderInjection();
+
+  // historyInjection();
+   await historyInjection();
+
   // ✅ Остальная инициализация...
 
   // sl.registerFactory(() => Cart(sl()));
   sl.registerFactory(() => PopularCubit(sl()));
 
-  sl.registerFactory(() => HistoryCubit(sl()));
+
   sl.registerFactory(() => CurierCubit(sl()));
   sl.registerFactory(() => InternetBloc());
   sl.registerFactory(() => RemoteConfigCubit(packageInfo: sl(), remoteConfig: sl<DiyarRemoteConfig>()));
@@ -82,8 +89,7 @@ Future<void> init() async {
   sl.registerLazySingleton<CurierRepository>(() => CurierRepositoryImpl(sl()));
   sl.registerLazySingleton<CurierDataSource>(() => CurierDataSourceImpl(sl(), sl()));
 
-  sl.registerLazySingleton<HistoryRepository>(() => HistoryRepositoryImpl(sl()));
-  sl.registerLazySingleton<HistoryReDatasource>(() => HistoryReDatasourceImpl(sl(), sl()));
+ 
 
   //! External
   sl.registerLazySingleton(() => InternetConnection());
