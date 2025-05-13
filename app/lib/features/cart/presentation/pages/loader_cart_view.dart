@@ -4,7 +4,7 @@ import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
-Future<dynamic> showDeliveryOptionsDialog(
+Future<dynamic> showDeliveryOptionsBottomSheet(
   BuildContext context,
   List<CartItemEntity> carts,
   int totalPrice,
@@ -12,53 +12,133 @@ Future<dynamic> showDeliveryOptionsDialog(
   final router = context.router;
   final l10n = context.l10n;
 
-  return showDialog(
+  return showModalBottomSheet(
     context: context,
-    builder: (dialogContext) {
-      final navigator = Navigator.of(dialogContext);
-      return AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        contentPadding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
-        titlePadding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-        title: Text(
-          'Выберите способ Заказа',
-          textAlign: TextAlign.center,
-          style: Theme.of(dialogContext).textTheme.titleMedium?.copyWith(
-                color: Theme.of(dialogContext).colorScheme.onSurface,
-                fontWeight: FontWeight.bold,
-              ),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: DeliveryOptionButton(
-                    icon: Icons.delivery_dining,
-                    label: l10n.delivery,
-                    onTap: () async {
-                      navigator.pop();
-                      await router.push(OrderMapRoute(cart: carts, totalPrice: totalPrice));
-                    },
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: DeliveryOptionButton(
-                    icon: Icons.store,
-                    label: l10n.pickup,
-                    onTap: () async {
-                      navigator.pop();
-                      await router.push(PickupFormRoute(cart: carts, totalPrice: totalPrice));
-                    },
-                  ),
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    builder: (context) {
+      return DraggableScrollableSheet(
+        initialChildSize: 0.38,
+        minChildSize: 0.25,
+        maxChildSize: 0.5,
+        expand: false,
+        builder: (context, scrollController) {
+          return Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.08),
+                  blurRadius: 16,
+                  offset: const Offset(0, -4),
                 ),
               ],
             ),
-          ],
-        ),
-        actions: const [],
+            child: ListView(
+              controller: scrollController,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+              children: [
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 5,
+                    margin: const EdgeInsets.only(bottom: 18),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(2.5),
+                    ),
+                  ),
+                ),
+                // Можно добавить SVG или PNG иллюстрацию сверху
+                // Center(child: Image.asset('assets/images/order_type.png', height: 60)),
+                Text(
+                  'Как оформить заказ?',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Выберите удобный способ получения заказа',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                      ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 28),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          elevation: 6,
+                          backgroundColor: Theme.of(context).colorScheme.primary,
+                          foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                          padding: const EdgeInsets.symmetric(vertical: 20),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          router.push(OrderMapRoute(cart: carts, totalPrice: totalPrice));
+                        },
+                        child: Column(
+                          children: [
+                            Icon(Icons.delivery_dining, size: 32, color: Theme.of(context).colorScheme.onPrimary),
+                            const SizedBox(height: 8),
+                            Text(
+                              l10n.delivery,
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    color: Theme.of(context).colorScheme.onPrimary,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 18),
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          elevation: 6,
+                          backgroundColor: Theme.of(context).colorScheme.secondary,
+                          foregroundColor: Theme.of(context).colorScheme.onSecondary,
+                          padding: const EdgeInsets.symmetric(vertical: 20),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          router.push(PickupFormRoute(cart: carts, totalPrice: totalPrice));
+                        },
+                        child: Column(
+                          children: [
+                            Icon(Icons.store, size: 32, color: Theme.of(context).colorScheme.onSecondary),
+                            const SizedBox(height: 8),
+                            Text(
+                              l10n.pickup,
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    color: Theme.of(context).colorScheme.onSecondary,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+              ],
+            ),
+          );
+        },
       );
     },
   );
@@ -96,7 +176,7 @@ class _LoadedCartViewState extends State<LoadedCartView> {
     if (isShopClosed) {
       _showClosedAlertDialog(context, startWorkTime, endWorkTime);
     } else {
-      showDeliveryOptionsDialog(context, carts, totalPrice);
+      showDeliveryOptionsBottomSheet(context, carts, totalPrice);
     }
   }
 

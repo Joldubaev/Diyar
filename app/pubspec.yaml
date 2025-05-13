@@ -65,6 +65,7 @@ dependencies:
   hive_flutter: ^1.1.0
   local_auth: ^2.3.0
   signalr_netcore: ^1.4.3
+  collection: ^1.19.1
 
   # dgis_mobile_sdk_full: ^12.5.0
  

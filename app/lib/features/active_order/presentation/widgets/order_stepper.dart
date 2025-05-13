@@ -3,7 +3,6 @@ import 'package:diyar/features/active_order/active_order.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-
 class OrderStepper extends StatefulWidget {
   final OrderStatusEntity orderStatus;
 
@@ -39,16 +38,24 @@ class _OrderStepperState extends State<OrderStepper> {
     });
   }
 
+  final List<StepData> _steps = [
+    StepData(icon: Icons.timer, title: 'Ожидает'),
+    StepData(icon: Icons.restaurant_menu, title: 'Готовится'),
+    StepData(icon: CupertinoIcons.car, title: 'В пути'),
+    StepData(icon: Icons.check_circle_outline, title: 'Доставлен'),
+  ];
+
   int _mapStatusToStep(String status) {
     switch (status) {
-      case AppConst.awaits:
+      case 'Awaits':
         return 0;
-      case AppConst.cooked:
+      case 'Processing':
         return 1;
-      case AppConst.delivered:
+      case 'OnTheWay':
         return 2;
-      case AppConst.finished:
+      case 'Delivered':
         return 3;
+
       default:
         return 0;
     }
@@ -89,9 +96,7 @@ class _OrderStepperState extends State<OrderStepper> {
                 _steps[index].title,
                 style: TextStyle(
                   fontSize: 12,
-                  color: isActive || isCompleted
-                      ? AppColors.primary
-                      : AppColors.grey.withValues(alpha: 0.5),
+                  color: isActive || isCompleted ? AppColors.primary : AppColors.grey.withValues(alpha: 0.5),
                 ),
               ),
             ],
@@ -111,10 +116,3 @@ class StepData {
     required this.title,
   });
 }
-
-final List<StepData> _steps = [
-  StepData(icon: Icons.timer, title: 'Ожидается'),
-  StepData(icon: Icons.restaurant_menu, title: 'Кухня'),
-  StepData(icon: CupertinoIcons.car, title: 'Доставка'),
-  StepData(icon: Icons.check_circle_outline, title: 'Доставлен'),
-];

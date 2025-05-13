@@ -13,6 +13,7 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:logging/logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:signalr_netcore/signalr_client.dart';
+import 'package:collection/collection.dart';
 
 @RoutePage()
 class ActiveOrderPage extends StatefulWidget {
@@ -135,36 +136,41 @@ class _ActiveOrderPageState extends State<ActiveOrderPage> {
                   if (orderNumber == null) {
                     return const SizedBox.shrink();
                   }
-                  final orderStatus = orderStatuses.firstWhere(
+                  OrderStatusEntity? statusFromSignalR = orderStatuses.firstWhereOrNull(
                     (element) => element.orderNumber == orderNumber,
-                    orElse: () => OrderStatusEntity(orderNumber: orderNumber, status: context.l10n.unknown),
                   );
+                  final orderStatus = statusFromSignalR ??
+                      OrderStatusEntity(
+                        orderNumber: orderNumber,
+                        status: order.status ?? context.l10n.unknown,
+                      );
 
-                  debugPrint('Order $orderNumber with status: ${orderStatus.status}');
+                  debugPrint('Order $orderNumber with status: [33m${orderStatus.status}[0m');
 
                   return Card(
                     child: ListTile(
-                        shape: const Border(
-                          bottom: BorderSide(color: Colors.transparent),
+                      shape: const Border(
+                        bottom: BorderSide(color: Colors.transparent),
+                      ),
+                      title: Text(
+                        '${context.l10n.orderNumber} $orderNumber',
+                        style: theme.textTheme.bodyLarge!.copyWith(
+                          color: AppColors.primary,
                         ),
-                        title: Text(
-                          '${context.l10n.orderNumber} $orderNumber',
-                          style: theme.textTheme.bodyLarge!.copyWith(
-                            color: AppColors.primary,
-                          ),
-                        ),
-                        subtitle: Column(
-                          children: [
-                            OrderStepper(orderStatus: orderStatus),
-                            CustomTextButton(
-                              textStyle: theme.textTheme.bodyLarge!.copyWith(color: AppColors.primary),
-                              onPressed: () => context.pushRoute(
-                                OrderDetailRoute(orderNumber: "$orderNumber"),
-                              ),
-                              textButton: context.l10n.orderDetails,
+                      ),
+                      subtitle: Column(
+                        children: [
+                          OrderStepper(orderStatus: orderStatus),
+                          CustomTextButton(
+                            textStyle: theme.textTheme.bodyLarge!.copyWith(color: AppColors.primary),
+                            onPressed: () => context.pushRoute(
+                              OrderDetailRoute(orderNumber: "$orderNumber"),
                             ),
-                          ],
-                        )),
+                            textButton: context.l10n.orderDetails,
+                          ),
+                        ],
+                      ),
+                    ),
                   );
                 },
               );

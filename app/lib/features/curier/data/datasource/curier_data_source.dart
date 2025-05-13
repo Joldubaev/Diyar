@@ -27,8 +27,8 @@ class CurierDataSourceImpl extends CurierDataSource {
           options: Options(
             headers: ApiConst.authMap(prefs.getString(AppConst.accessToken) ?? ''),
           ));
-      if (res.statusCode == 200) {
-        return Right(GetUserModel.fromJson(res.data));
+      if (res.data['code'] == 200) {
+        return Right(GetUserModel.fromJson(res.data['message']));
       } else {
         return Left(ServerFailure('Ошибка получения данных пользователя', res.statusCode));
       }
@@ -45,13 +45,13 @@ class CurierDataSourceImpl extends CurierDataSource {
         ApiConst.getCuriersAllOrder,
         options: Options(headers: ApiConst.authMap(token)),
       );
-      if ([200, 201].contains(res.statusCode)) {
+      if ([200, 201].contains(res.data['code'])) {
         final orders = List<CurierOrderModel>.from(
-          res.data['orders'].map((x) => CurierOrderModel.fromJson(x)),
+          (res.data['message'] as List).map((x) => CurierOrderModel.fromJson(x)),
         );
         return Right(orders);
       } else {
-        return Left(ServerFailure('Ошибка получения заказов курьера', res.statusCode));
+        return Left(ServerFailure('Ошибка получения истории заказов курьера', res.statusCode));
       }
     } catch (e) {
       log(e.toString());
@@ -63,14 +63,14 @@ class CurierDataSourceImpl extends CurierDataSource {
   Future<Either<Failure, Unit>> getFinishOrder(int orderId) async {
     try {
       var token = prefs.getString(AppConst.accessToken) ?? '';
-      final res = await dio.post(
+      final res = await dio.get(
         ApiConst.getCuriersFinis,
         options: Options(
           headers: ApiConst.authMap(token),
         ),
-        data: {'orderNumber': orderId},
+        queryParameters: {'orderNumber': orderId},
       );
-      if ([200, 201].contains(res.statusCode)) {
+      if ([200, 201].contains(res.data['code'])) {
         return const Right(unit);
       } else {
         return Left(ServerFailure('Ошибка завершения заказа', res.statusCode));
@@ -90,9 +90,9 @@ class CurierDataSourceImpl extends CurierDataSource {
           headers: ApiConst.authMap(token),
         ),
       );
-      if ([200, 201].contains(res.statusCode)) {
+      if ([200, 201].contains(res.data['code'])) {
         final orders = List<CurierOrderModel>.from(
-          res.data['orders'].map((x) => CurierOrderModel.fromJson(x)),
+          (res.data['message'] as List).map((x) => CurierOrderModel.fromJson(x)),
         );
         return Right(orders);
       } else {

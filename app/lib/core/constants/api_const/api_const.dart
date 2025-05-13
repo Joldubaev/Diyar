@@ -2,7 +2,7 @@ class ApiConst {
   ApiConst._();
   // static const baseUrl = "https://api.diyar.kg";
   // static const baseUrl = "http://176.126.164.230:8088";
-  static const baseUrl = "http://20.127.235.82";
+  static const baseUrl = "http://20.127.235.82/api/v1";
   // static const baseUrl = "https://20.127.235.82/";
 
   // AUTH
@@ -71,7 +71,7 @@ class ApiConst {
   static const getOrderHistory = "$baseUrl/orders/get-history";
 
   // COURIER
-  static const getCuriersFinis = "$baseUrl/courier/finished-order";
+  static const getCuriersFinis = "$baseUrl/courier/finished-orders";
   static const getCuriersAllOrder = "$baseUrl/courier/get-actual-orders-by-courier";
   static const getCuriereOrderHistory = "$baseUrl/courier/get-closed-orders-by-courier";
 
