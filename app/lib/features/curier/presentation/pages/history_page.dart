@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
-import '../../curier.dart';
-import '../../../../l10n/l10n.dart';
-import '../../../../core/theme/theme.dart';
+import 'package:diyar/core/core.dart';
+import 'package:diyar/features/curier/curier.dart';
+import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,7 +14,7 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
-  List<CurierOrderModel> orders = [];
+  List<CurierEntity> orders = [];
 
   @override
   void initState() {
@@ -75,12 +75,8 @@ class _HistoryPageState extends State<HistoryPage> {
                   ],
                 ),
                 child: ListTile(
-                  title: Text(
-                      '${context.l10n.orderNumber} ${order.orderNumber ?? ""}',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge!
-                          .copyWith(color: theme.colorScheme.onSurface)),
+                  title: Text('${context.l10n.orderNumber} ${order.orderNumber ?? ""}',
+                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: theme.colorScheme.onSurface)),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

@@ -1,3 +1,5 @@
+import 'package:diyar/features/curier/domain/domain.dart';
+
 class GetUserModel {
   final String? id;
   final String? userName;
@@ -30,6 +32,25 @@ class GetUserModel {
       email: map['email'],
       phone: map['phone'],
       role: map['role'],
+    );
+  }
+
+  factory GetUserModel.fromEntity(GetUserEntity entity) {
+    return GetUserModel(
+      id: entity.id,
+      userName: entity.userName,
+      email: entity.email,
+      phone: entity.phone,
+      role: entity.role,
+    );
+  }
+  GetUserEntity toEntity() {
+    return GetUserEntity(
+      id: id,
+      userName: userName,
+      email: email,
+      phone: phone,
+      role: role,
     );
   }
 }

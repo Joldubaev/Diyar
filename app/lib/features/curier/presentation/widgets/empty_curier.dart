@@ -1,4 +1,4 @@
-import '../../../../l10n/l10n.dart';
+import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 

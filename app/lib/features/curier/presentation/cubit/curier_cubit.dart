@@ -1,7 +1,7 @@
 import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
-import '../../curier.dart';
+import 'package:diyar/features/curier/curier.dart';
+import 'package:diyar/features/curier/domain/domain.dart';
 import 'package:meta/meta.dart';
 
 part 'curier_state.dart';
@@ -10,52 +10,50 @@ class CurierCubit extends Cubit<CurierState> {
   CurierCubit(this.curierRepository) : super(CurierInitial());
 
   final CurierRepository curierRepository;
-  GetUserModel? user;
+  GetUserEntity? user;
 
   Future getUser() async {
     emit(GetUserLoading());
-    try {
-      user = await curierRepository.getUser();
-      if (user != null) {
+    final result = await curierRepository.getUser();
+    result.fold(
+      (failure) => emit(GetUserError(failure.message)),
+      (userEntity) {
+        user = userEntity;
         emit(GetUserLoaded(user!));
-      } else {
-        emit(GetUserError('User data is null'));
-      }
-    } catch (e) {
-      emit(GetUserError(e.toString()));
-    }
+      },
+    );
   }
 
   void getCurierOrders() async {
     emit(GetCourierOrdersLoading());
-    try {
-      final curiers = await curierRepository.getCurierOrders();
-      log('Orders fetched successfully');
-      emit(GetCourierOrdersLoaded(curiers));
-    } catch (e) {
-      log('Error fetching orders: ${e.toString()}');
-      emit(GetCourierOrdersError(e.toString()));
-    }
+    final result = await curierRepository.getCurierOrders();
+    result.fold(
+      (failure) => emit(GetCourierOrdersError(failure.message)),
+      (curiers) {
+        log('Orders fetched successfully');
+        emit(GetCourierOrdersLoaded(curiers));
+      },
+    );
   }
 
   Future getFinishOrder(int orderId) async {
     emit(GetFinishedOrdersLoading());
-    try {
-      await curierRepository.getFinishOrder(orderId);
-      emit(GetFinishedOrdersLoaded());
-    } catch (e) {
-      emit(GetFinishedOrdersError());
-      log('Error finishing order: ${e.toString()}');
-    }
+    final result = await curierRepository.getFinishOrder(orderId);
+    result.fold(
+      (failure) {
+        emit(GetFinishedOrdersError());
+        log('Error finishing order: ${failure.message}');
+      },
+      (_) => emit(GetFinishedOrdersLoaded()),
+    );
   }
 
   void getCurierHistory() async {
     emit(GetCurierHistoryLoading());
-    try {
-      final curiers = await curierRepository.getCurierHistory();
-      emit(GetCurierHistoryLoaded(curiers));
-    } catch (e) {
-      emit(GetCurierHistoryError(e.toString()));
-    }
+    final result = await curierRepository.getCurierHistory();
+    result.fold(
+      (failure) => emit(GetCurierHistoryError(failure.message)),
+      (curiers) => emit(GetCurierHistoryLoaded(curiers)),
+    );
   }
 }
