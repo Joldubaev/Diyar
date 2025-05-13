@@ -8,7 +8,7 @@ final class CurierInitial extends CurierState {}
 final class GetCourierOrdersLoading extends CurierState {}
 
 final class GetCourierOrdersLoaded extends CurierState {
-  final List<CurierOrderModel> curiers;
+  final List<CurierEntity> curiers;
 
   GetCourierOrdersLoaded(this.curiers);
 }
@@ -22,7 +22,7 @@ final class GetCourierOrdersError extends CurierState {
 class GetCurierHistoryLoading extends CurierState {}
 
 class GetCurierHistoryLoaded extends CurierState {
-  final List<CurierOrderModel> curiers;
+  final List<CurierEntity> curiers;
 
   GetCurierHistoryLoaded(this.curiers);
 }
@@ -36,7 +36,7 @@ class GetCurierHistoryError extends CurierState {
 class GetUserLoading extends CurierState {}
 
 class GetUserLoaded extends CurierState {
-  final GetUserModel user;
+  final GetUserEntity user;
 
   GetUserLoaded(this.user);
 }

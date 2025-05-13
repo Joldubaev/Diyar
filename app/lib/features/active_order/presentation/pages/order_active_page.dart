@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
@@ -10,8 +9,10 @@ import 'package:diyar/injection_container.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:logging/logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:web_socket_channel/io.dart';
+import 'package:signalr_netcore/signalr_client.dart';
 
 @RoutePage()
 class ActiveOrderPage extends StatefulWidget {
@@ -22,20 +23,20 @@ class ActiveOrderPage extends StatefulWidget {
 }
 
 class _ActiveOrderPageState extends State<ActiveOrderPage> {
-  List<ActiveOrderEntity> orders = [];
-  late final IOWebSocketChannel _channel;
+  List<OrderActiveItemEntity> orders = [];
+  late final HubConnection _hubConnection;
   final StreamController<List<OrderStatusEntity>> _controller = StreamController.broadcast();
   bool _isControllerClosed = false;
 
   @override
   void initState() {
     super.initState();
-    _initializeWebSocket();
+    _initializeSignalR();
     context.read<ActiveOrderCubit>().getActiveOrders();
     debugPrint('ActiveOrderPage initialized.');
   }
 
-  void _initializeWebSocket() async {
+  void _initializeSignalR() async {
     var token = sl<SharedPreferences>().getString(AppConst.accessToken);
     debugPrint('Access Token: $token');
     if (token == null) {
@@ -43,40 +44,44 @@ class _ActiveOrderPageState extends State<ActiveOrderPage> {
       return;
     }
 
-    _channel = IOWebSocketChannel.connect('ws://176.126.164.230:8088/ws/get-status-with-websocket?token=$token');
-    debugPrint('WebSocket connected.');
+    final Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+    final nameId = decodedToken['nameid'];
+    debugPrint('Decoded nameid: $nameId');
 
-    _channel.stream.listen((data) {
-      debugPrint('Data received from WebSocket: $data');
-      if (!_isControllerClosed) {
+    final serverUrl = "http://20.127.235.82/order-status-hub";
+    _hubConnection = HubConnectionBuilder().withUrl(serverUrl).configureLogging(Logger("SignalR")).build();
+
+    // Подписка на событие получения статусов
+    _hubConnection.on("ReceiveStatus", (data) {
+      debugPrint("📦 Order statuses: $data");
+      if (!_isControllerClosed && data != null && data.isNotEmpty) {
         try {
-          final List<dynamic> jsonData = jsonDecode(data as String);
-          final List<OrderStatusEntity> orderStatuses =
-              jsonData.map((dynamic json) => OrderStatusModel.fromJson(json).toEntity()).toList();
+          final List<dynamic> list = data;
+          final orderStatuses =
+              list.map((json) => OrderStatusModel.fromJson(Map<String, dynamic>.from(json)).toEntity()).toList();
+          debugPrint('Parsed orderStatuses: $orderStatuses');
           _controller.add(orderStatuses);
-          debugPrint('Order statuses updated.');
-        } catch (e) {
-          debugPrint('Error parsing WebSocket data: $e');
+        } catch (e, s) {
+          debugPrint('Error parsing SignalR data: $e\n$s');
         }
       }
-    }, onError: (error) {
-      debugPrint('WebSocket error: $error');
-      if (!_isControllerClosed) {
-        _controller.addError(error);
-      }
-    }, onDone: () {
-      debugPrint('WebSocket closed.');
-      if (!_isControllerClosed) {
-        _controller.close();
-        _isControllerClosed = true;
-      }
     });
+
+    await _hubConnection.start();
+    debugPrint('SignalR connected.');
+
+    // Подписка на группу и запрос статусов
+    await _hubConnection.invoke("Subscribe", args: [nameId]);
+    debugPrint("✅ Subscribed to group with nameId: $nameId");
+
+    await _hubConnection.invoke("RequestStatus", args: [nameId]);
+    debugPrint("✅ Requested initial status for nameId: $nameId");
   }
 
   @override
   void dispose() {
     debugPrint('Disposing ActiveOrderPage...');
-    _channel.sink.close();
+    _hubConnection.stop();
     if (!_isControllerClosed) {
       _controller.close();
       _isControllerClosed = true;
@@ -101,7 +106,7 @@ class _ActiveOrderPageState extends State<ActiveOrderPage> {
             orders = state.orders;
             debugPrint('Orders loaded: ${orders.length}');
             if (orders.isEmpty) {
-              _channel.sink.close();
+              _hubConnection.stop();
               return EmptyActiveOrders(text: context.l10n.noActiveOrders);
             }
           }
@@ -126,10 +131,13 @@ class _ActiveOrderPageState extends State<ActiveOrderPage> {
                 separatorBuilder: (context, index) => const SizedBox(height: 10),
                 itemBuilder: (context, index) {
                   final order = orders[index];
-                  final orderNumber = order.order?.orderNumber;
+                  final orderNumber = order.orderNumber;
+                  if (orderNumber == null) {
+                    return const SizedBox.shrink();
+                  }
                   final orderStatus = orderStatuses.firstWhere(
                     (element) => element.orderNumber == orderNumber,
-                    orElse: () => OrderStatusEntity(orderNumber: orderNumber!, status: context.l10n.unknown),
+                    orElse: () => OrderStatusEntity(orderNumber: orderNumber, status: context.l10n.unknown),
                   );
 
                   debugPrint('Order $orderNumber with status: ${orderStatus.status}');

@@ -15,10 +15,11 @@ class CurierPage extends StatefulWidget {
   @override
   State<CurierPage> createState() => _CurierPageState();
 }
+
 // TODO: full refatoring code curier page
 class _CurierPageState extends State<CurierPage> {
   final mapControllerCompleter = Completer<YandexMapController>();
-  List<CurierOrderModel> orders = [];
+  List<CurierEntity> orders = [];
 
   @override
   void initState() {
@@ -52,10 +53,7 @@ class _CurierPageState extends State<CurierPage> {
         backgroundColor: theme.colorScheme.primary,
         title: Text(
           context.l10n.activeOrders,
-          style: Theme.of(context)
-              .textTheme
-              .titleMedium!
-              .copyWith(color: theme.colorScheme.onPrimary),
+          style: Theme.of(context).textTheme.titleMedium!.copyWith(color: theme.colorScheme.onPrimary),
         ),
         actions: [
           IconButton(
@@ -122,13 +120,11 @@ class _CurierPageState extends State<CurierPage> {
               : RefreshIndicator(
                   onRefresh: _refresh,
                   child: ListView.separated(
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: 10),
+                    separatorBuilder: (context, index) => const SizedBox(height: 10),
                     padding: const EdgeInsets.all(20),
                     itemCount: orders.length,
                     itemBuilder: (context, index) {
-                      final totalPrice = (orders[index].price ?? 0) +
-                          (orders[index].deliveryPrice ?? 0);
+                      final totalPrice = (orders[index].price ?? 0) + (orders[index].deliveryPrice ?? 0);
                       return Card(
                         margin: const EdgeInsets.all(0),
                         shape: const RoundedRectangleBorder(
@@ -142,21 +138,16 @@ class _CurierPageState extends State<CurierPage> {
                               width: 0,
                             ),
                           ),
-                          childrenPadding:
-                              const EdgeInsets.fromLTRB(10, 10, 10, 8),
+                          childrenPadding: const EdgeInsets.fromLTRB(10, 10, 10, 8),
                           title: Text(
                             '${context.l10n.orderNumber} ${orders[index].orderNumber}',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyLarge!
-                                .copyWith(color: theme.colorScheme.onSurface),
+                            style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: theme.colorScheme.onSurface),
                           ),
                           children: [
                             Padding(
                               padding: const EdgeInsets.symmetric(vertical: 10),
                               child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     orders[index].address.toString(),
@@ -170,51 +161,40 @@ class _CurierPageState extends State<CurierPage> {
                                   ),
                                   Text(
                                     '${context.l10n.orderAmount} $totalPrice сом',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .copyWith(
+                                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                                           color: theme.colorScheme.primary,
                                           fontWeight: FontWeight.bold,
                                         ),
                                   ),
                                   TextButton.icon(
-                                      onPressed: () => makePhoneCall(
-                                          orders[index].userPhone.toString()),
+                                      onPressed: () => makePhoneCall(orders[index].userPhone.toString()),
                                       icon: const Icon(Icons.phone),
                                       label: const Text('Позвонить')),
                                 ],
                               ),
                             ),
-                            Divider(
-                                color: theme.colorScheme.onSurface
-                                    .withValues(alpha: 0.6),
-                                thickness: 1),
+                            Divider(color: theme.colorScheme.onSurface.withValues(alpha: 0.6), thickness: 1),
                             Row(
                               children: [
                                 Expanded(
                                   child: Container(
                                     decoration: BoxDecoration(
                                       color: theme.colorScheme.surface,
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(5)),
+                                      borderRadius: const BorderRadius.all(Radius.circular(5)),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: theme.colorScheme.onSurface
-                                              .withValues(alpha: 0.2),
+                                          color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
                                           blurRadius: 5,
                                           offset: const Offset(0, 2),
                                         ),
                                       ],
                                     ),
                                     child: CustomTextButton(
-                                      textStyle: theme.textTheme.bodySmall!
-                                          .copyWith(color: AppColors.primary),
+                                      textStyle: theme.textTheme.bodySmall!.copyWith(color: AppColors.primary),
                                       onPressed: () {
                                         context.router.push(
                                           OrderDetailRoute(
-                                            orderNumber:
-                                                "${orders[index].orderNumber}",
+                                            orderNumber: "${orders[index].orderNumber}",
                                           ),
                                         );
                                       },
@@ -227,24 +207,19 @@ class _CurierPageState extends State<CurierPage> {
                                     margin: const EdgeInsets.only(left: 5),
                                     decoration: BoxDecoration(
                                       color: theme.colorScheme.surface,
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(5)),
+                                      borderRadius: const BorderRadius.all(Radius.circular(5)),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: theme.colorScheme.onSurface
-                                              .withValues(alpha: 0.2),
+                                          color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
                                           blurRadius: 5,
                                           offset: const Offset(0, 2),
                                         ),
                                       ],
                                     ),
                                     child: CustomTextButton(
-                                      textStyle: theme.textTheme.bodySmall!
-                                          .copyWith(color: AppColors.primary),
+                                      textStyle: theme.textTheme.bodySmall!.copyWith(color: AppColors.primary),
                                       onPressed: () {
-                                        _finishOrder(
-                                            context: context,
-                                            orders[index].orderNumber ?? 0);
+                                        _finishOrder(context: context, orders[index].orderNumber ?? 0);
                                       },
                                       textButton: context.l10n.finishOrder,
                                     ),
@@ -255,24 +230,20 @@ class _CurierPageState extends State<CurierPage> {
                                     margin: const EdgeInsets.only(left: 5),
                                     decoration: BoxDecoration(
                                       color: theme.colorScheme.surface,
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(5)),
+                                      borderRadius: const BorderRadius.all(Radius.circular(5)),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: theme.colorScheme.onSurface
-                                              .withValues(alpha: 0.2),
+                                          color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
                                           blurRadius: 5,
                                           offset: const Offset(0, 2),
                                         ),
                                       ],
                                     ),
                                     child: CustomTextButton(
-                                      textStyle: theme.textTheme.bodySmall!
-                                          .copyWith(color: AppColors.primary),
+                                      textStyle: theme.textTheme.bodySmall!.copyWith(color: AppColors.primary),
                                       onPressed: () {
                                         final address = orders[index].address;
-                                        _openAddressIn2GIS(address!,
-                                            context: context);
+                                        _openAddressIn2GIS(address!, context: context);
                                       },
                                       textButton: context.l10n.openOnMap,
                                     ),
@@ -294,17 +265,13 @@ class _CurierPageState extends State<CurierPage> {
           onTap: () => _refresh(),
           title: 'Обновить',
           bgColor: AppColors.primary,
-          textStyle: Theme.of(context)
-              .textTheme
-              .bodyLarge!
-              .copyWith(color: AppColors.white),
+          textStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(color: AppColors.white),
         ),
       ),
     );
   }
 
-  Future<void> _finishOrder(int orderNumber,
-      {required BuildContext context}) async {
+  Future<void> _finishOrder(int orderNumber, {required BuildContext context}) async {
     // Capture the context and the current state
     final cubit = context.read<CurierCubit>();
     final snackBar = ScaffoldMessenger.of(context);
@@ -333,8 +300,7 @@ class _CurierPageState extends State<CurierPage> {
     }
   }
 
-  void _openAddressIn2GIS(String address,
-      {required BuildContext context}) async {
+  void _openAddressIn2GIS(String address, {required BuildContext context}) async {
     final encodedAddress = Uri.encodeComponent(address);
     final url = 'https://2gis.kg/kyrgyzstan/search/$encodedAddress';
     if (await canLaunchUrl(Uri.parse(url))) {

@@ -1,3 +1,6 @@
+import 'package:diyar/features/curier/data/data.dart';
+import 'package:diyar/features/curier/domain/domain.dart';
+
 class CurierOrderModel {
   final String? id;
   final String? userId;
@@ -5,7 +8,7 @@ class CurierOrderModel {
   final String? userPhone;
   final int? orderNumber;
   final int? dishesCount;
-  final List<Food>? foods;
+  final List<CurierFoodModel>? foods;
   final String? address;
   final String? houseNumber;
   final String? kvOffice;
@@ -80,7 +83,7 @@ class CurierOrderModel {
       orderNumber: map['orderNumber'],
       dishesCount: map['dishesCount'],
       foods: map['foods'] != null
-          ? List<Food>.from(map['foods']?.map((x) => Food.fromJson(x)))
+          ? List<CurierFoodModel>.from(map['foods']?.map((x) => CurierFoodModel.fromJson(x)))
           : null,
       address: map['address'],
       houseNumber: map['houseNumber'],
@@ -98,32 +101,55 @@ class CurierOrderModel {
       sdacha: map['sdacha'],
     );
   }
-}
 
-class Food {
-  final int? quantity;
-  final String? name;
-  final int? price;
-
-  Food({
-    this.quantity,
-    this.name,
-    this.price,
-  });
-
-  Map<String, dynamic> toJson() {
-    return {
-      'quantity': quantity,
-      'name': name,
-      'price': price,
-    };
-  }
-
-  factory Food.fromJson(Map<String, dynamic> map) {
-    return Food(
-      quantity: map['quantity']?.toInt(),
-      name: map['name'],
-      price: map['price']?.toInt(),
+  factory CurierOrderModel.fromEntity(CurierEntity entity) {
+    return CurierOrderModel(
+      id: entity.id,
+      userId: entity.userId,
+      userName: entity.userName,
+      userPhone: entity.userPhone,
+      orderNumber: entity.orderNumber,
+      dishesCount: entity.dishesCount,
+      foods: entity.foods?.map((x) => CurierFoodModel.fromEntity(x)).toList(),
+      address: entity.address,
+      houseNumber: entity.houseNumber,
+      kvOffice: entity.kvOffice,
+      intercom: entity.intercom,
+      floor: entity.floor,
+      entrance: entity.entrance,
+      comment: entity.comment,
+      paymentMethod: entity.paymentMethod,
+      price: entity.price,
+      timeRequest: entity.timeRequest,
+      courierId: entity.courierId,
+      status: entity.status,
+      deliveryPrice: entity.deliveryPrice,
+      sdacha: entity.sdacha,
+    );
+  } 
+  CurierEntity toEntity() {
+    return CurierEntity(
+      id: id,
+      userId: userId,
+      userName: userName,
+      userPhone: userPhone,
+      orderNumber: orderNumber,
+      dishesCount: dishesCount,
+      foods: foods?.map((x) => x.toEntity()).toList(),
+      address: address,
+      houseNumber: houseNumber,
+      kvOffice: kvOffice,
+      intercom: intercom,
+      floor: floor,
+      entrance: entrance,
+      comment: comment,
+      paymentMethod: paymentMethod,
+      price: price,
+      timeRequest: timeRequest,
+      courierId: courierId,
+      status: status,
+      deliveryPrice: deliveryPrice,
+      sdacha: sdacha,
     );
   }
 }

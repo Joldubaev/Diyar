@@ -14,7 +14,7 @@ class ActiveOrderRepositoryImpl implements ActiveOrderRepository {
   }
 
   @override
-  Future<List<ActiveOrderEntity>> getActiveOrders() async {
+  Future<List<OrderActiveItemEntity>> getActiveOrders() async {
     final models = await dataSource.getActiveOrders();
     return models.map((model) => model.toEntity()).toList();
   }

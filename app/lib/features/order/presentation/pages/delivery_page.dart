@@ -1,9 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/cart.dart';
-import 'package:diyar/features/order/domain/entities/entities.dart';
-import 'package:diyar/features/order/presentation/cubit/order_cubit.dart';
-import 'package:diyar/features/order/presentation/widgets/widgets.dart';
+import 'package:diyar/features/order/order.dart';
 import 'package:diyar/features/profile/prof.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
@@ -14,16 +12,16 @@ class DeliveryFormPage extends StatefulWidget {
   final List<CartItemEntity> cart;
   final int totalPrice;
   final int dishCount;
-  final DistrictEntity? distric;
   final String? address;
+  final double deliveryPrice;
 
   const DeliveryFormPage({
     super.key,
-    this.distric,
     this.address,
     required this.cart,
     required this.dishCount,
     required this.totalPrice,
+    required this.deliveryPrice,
   });
   @override
   State<DeliveryFormPage> createState() => _DeliveryFormPageState();
@@ -133,8 +131,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
           }
         },
         builder: (context, orderState) {
-          int deliveryPrice = widget.distric?.price ?? 550;
-          final totalOrderCost = widget.totalPrice + deliveryPrice;
+          final totalOrderCost = widget.totalPrice + widget.deliveryPrice.toInt();
 
           return Scaffold(
             appBar: AppBar(
@@ -163,7 +160,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
               sdachaController: _sdachaController,
               commentController: _commentController,
               totalOrderCost: totalOrderCost,
-              onConfirm: () => _onSubmit(deliveryPrice, totalOrderCost),
+              onConfirm: () => _onSubmit(widget.deliveryPrice.toInt(), totalOrderCost),
             ),
           );
         },
@@ -198,7 +195,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
         isScrollControlled: true,
         builder: (bottomSheetContext) {
           return CustomBottomSheet(
-            region: widget.distric?.name ?? '',
+            region: '',
             theme: theme,
             widget: widget,
             deliveryPrice: calculatedDeliveryPrice,

@@ -40,7 +40,6 @@ class MenuHeaderWidget extends StatelessWidget {
                 IconButton(
                   onPressed: () => context.pushRoute(
                     const SearchMenuRoute(),
-                    // predicate: (route) => false,
                   ),
                   icon: const Icon(Icons.search),
                 )

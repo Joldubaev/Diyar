@@ -34,7 +34,7 @@ class _ProductsListState extends State<ProductsList> {
     // Combine BlocBuilders: First for Menu, then for Cart inside
     return BlocBuilder<MenuBloc, MenuState>(
       builder: (context, menuState) {
-        if (menuState is GetProductsLoading || menuState is MenuInitial) {
+        if (menuState is GetProductsLoading) {
           return const Center(child: CircularProgressIndicator());
         }
         if (menuState is GetProductsFailure) {

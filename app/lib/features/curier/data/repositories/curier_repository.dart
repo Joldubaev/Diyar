@@ -1,11 +1,7 @@
-import '../../curier.dart';
+import 'package:dartz/dartz.dart';
+import 'package:diyar/core/network/error/failures.dart';
+import 'package:diyar/features/curier/curier.dart';
 
-abstract class CurierRepository {
-  Future<List<CurierOrderModel>> getCurierOrders();
-  Future<void> getFinishOrder(int orderId);
-  Future<List<CurierOrderModel>> getCurierHistory();
-  Future<GetUserModel> getUser();
-}
 
 class CurierRepositoryImpl extends CurierRepository {
   final CurierDataSource dataSource;
@@ -13,22 +9,34 @@ class CurierRepositoryImpl extends CurierRepository {
   CurierRepositoryImpl(this.dataSource);
 
   @override
-  Future<List<CurierOrderModel>> getCurierOrders() async {
-    return await dataSource.getCurierOrders();
+  Future<Either<Failure, List<CurierEntity>>> getCurierOrders() async {
+    final result = await dataSource.getCurierOrders();
+    return result.fold(
+      (failure) => Left(failure),
+      (models) => Right(models.map((model) => model.toEntity()).toList()),
+    );
   }
 
   @override
-  Future<void> getFinishOrder(int orderId) async {
+  Future<Either<Failure, Unit>> getFinishOrder(int orderId) async {
     return await dataSource.getFinishOrder(orderId);
   }
 
   @override
-  Future<List<CurierOrderModel>> getCurierHistory() async {
-    return await dataSource.getCurierHistory();
+  Future<Either<Failure, List<CurierEntity>>> getCurierHistory() async {
+    final result = await dataSource.getCurierHistory();
+    return result.fold(
+      (failure) => Left(failure),
+      (models) => Right(models.map((model) => model.toEntity()).toList()),
+    );
   }
 
   @override
-  Future<GetUserModel> getUser() async {
-    return await dataSource.getUser();
+  Future<Either<Failure, GetUserEntity>> getUser() async {
+    final result = await dataSource.getUser();
+    return result.fold(
+      (failure) => Left(failure),
+      (model) => Right(model.toEntity()),
+    );
   }
 }

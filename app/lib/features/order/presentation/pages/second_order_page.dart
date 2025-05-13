@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
-import 'package:diyar/features/order/domain/entities/entities.dart';
 import 'package:diyar/features/order/data/models/model.dart';
 import 'package:diyar/features/order/presentation/cubit/order_cubit.dart';
 import 'package:diyar/features/order/presentation/widgets/search_bottom_widget.dart';
@@ -104,12 +103,13 @@ class _SecondOrderPageState extends State<SecondOrderPage> {
                       const SnackBar(content: Text('Заполните все поля')),
                     );
                   } else {
-                    final DistrictEntity? districtEntity = selectedDistrict?.toEntity();
+                    // final DistrictEntity? districtEntity = selectedDistrict?.toEntity();
                     context.router.push(DeliveryFormRoute(
                       cart: widget.cart,
                       dishCount: widget.dishCount,
                       totalPrice: widget.totalPrice,
-                      distric: districtEntity,
+                      deliveryPrice: 0,
+                      // distric: districtEntity,
                       address: addressController.text,
                     ));
                   }

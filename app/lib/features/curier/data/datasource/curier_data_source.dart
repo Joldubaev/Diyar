@@ -1,16 +1,16 @@
 import 'dart:developer';
 
+import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:diyar/core/core.dart';
-import '../model/curier_model.dart';
-import '../model/get_user_moderl.dart';
+import 'package:diyar/features/curier/data/data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class CurierDataSource {
-  Future<List<CurierOrderModel>> getCurierOrders();
-  Future<void> getFinishOrder(int orderId);
-  Future<List<CurierOrderModel>> getCurierHistory();
-  Future<GetUserModel> getUser();
+  Future<Either<Failure, List<CurierOrderModel>>> getCurierOrders();
+  Future<Either<Failure, Unit>> getFinishOrder(int orderId);
+  Future<Either<Failure, List<CurierOrderModel>>> getCurierHistory();
+  Future<Either<Failure, GetUserModel>> getUser();
 }
 
 class CurierDataSourceImpl extends CurierDataSource {
@@ -20,32 +20,25 @@ class CurierDataSourceImpl extends CurierDataSource {
   CurierDataSourceImpl(this.dio, this.prefs);
 
   @override
-  Future<GetUserModel> getUser() async {
+  Future<Either<Failure, GetUserModel>> getUser() async {
     try {
       var res = await dio.post(ApiConst.getUser,
           data: {"phone": prefs.getString(AppConst.phone)},
           options: Options(
-            headers:
-                ApiConst.authMap(prefs.getString(AppConst.accessToken) ?? ''),
+            headers: ApiConst.authMap(prefs.getString(AppConst.accessToken) ?? ''),
           ));
       if (res.statusCode == 200) {
-        return GetUserModel.fromJson(res.data);
+        return Right(GetUserModel.fromJson(res.data));
       } else {
-        throw ServerException(
-          'Ошибка получения данных пользователя',
-          res.statusCode,
-        );
+        return Left(ServerFailure('Ошибка получения данных пользователя', res.statusCode));
       }
     } catch (e) {
-      throw ServerException(
-        'Ошибка получения данных пользователя',
-        null,
-      );
+      return Left(ServerFailure('Ошибка получения данных пользователя', null));
     }
   }
 
   @override
-  Future<List<CurierOrderModel>> getCurierOrders() async {
+  Future<Either<Failure, List<CurierOrderModel>>> getCurierOrders() async {
     try {
       var token = prefs.getString(AppConst.accessToken) ?? '';
       final res = await dio.get(
@@ -53,20 +46,21 @@ class CurierDataSourceImpl extends CurierDataSource {
         options: Options(headers: ApiConst.authMap(token)),
       );
       if ([200, 201].contains(res.statusCode)) {
-        return List<CurierOrderModel>.from(
+        final orders = List<CurierOrderModel>.from(
           res.data['orders'].map((x) => CurierOrderModel.fromJson(x)),
         );
+        return Right(orders);
       } else {
-        throw Exception('Error getting active orders');
+        return Left(ServerFailure('Ошибка получения заказов курьера', res.statusCode));
       }
     } catch (e) {
       log(e.toString());
-      throw Exception();
+      return Left(ServerFailure('Ошибка получения заказов курьера', null));
     }
   }
 
   @override
-  Future<void> getFinishOrder(int orderId) async {
+  Future<Either<Failure, Unit>> getFinishOrder(int orderId) async {
     try {
       var token = prefs.getString(AppConst.accessToken) ?? '';
       final res = await dio.post(
@@ -77,17 +71,17 @@ class CurierDataSourceImpl extends CurierDataSource {
         data: {'orderNumber': orderId},
       );
       if ([200, 201].contains(res.statusCode)) {
-        return;
+        return const Right(unit);
       } else {
-        throw Exception('Error getting active orders');
+        return Left(ServerFailure('Ошибка завершения заказа', res.statusCode));
       }
     } catch (e) {
-      throw Exception();
+      return Left(ServerFailure('Ошибка завершения заказа', null));
     }
   }
 
   @override
-  Future<List<CurierOrderModel>> getCurierHistory() async {
+  Future<Either<Failure, List<CurierOrderModel>>> getCurierHistory() async {
     try {
       var token = prefs.getString(AppConst.accessToken) ?? '';
       final res = await dio.get(
@@ -97,14 +91,15 @@ class CurierDataSourceImpl extends CurierDataSource {
         ),
       );
       if ([200, 201].contains(res.statusCode)) {
-        return List<CurierOrderModel>.from(
+        final orders = List<CurierOrderModel>.from(
           res.data['orders'].map((x) => CurierOrderModel.fromJson(x)),
         );
+        return Right(orders);
       } else {
-        throw Exception('Error getting active orders');
+        return Left(ServerFailure('Ошибка получения истории заказов курьера', res.statusCode));
       }
     } catch (e) {
-      throw Exception();
+      return Left(ServerFailure('Ошибка получения истории заказов курьера', null));
     }
   }
 }

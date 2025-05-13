@@ -256,11 +256,11 @@ class _OrderMapPageState extends State<OrderMapPage> {
       ..selectDeliveryPrice(_calculateDeliveryPrice());
 
     context.router.push(DeliveryFormRoute(
-      totalPrice: widget.totalPrice,
-      cart: widget.cart,
-      dishCount: currentTotalItems,
-      address: _address!,
-    ));
+        totalPrice: widget.totalPrice,
+        cart: widget.cart,
+        dishCount: currentTotalItems,
+        address: _address!,
+        deliveryPrice: _calculateDeliveryPrice()));
   }
 
   double _calculateDeliveryPrice() {

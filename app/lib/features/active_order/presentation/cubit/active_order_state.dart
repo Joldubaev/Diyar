@@ -12,7 +12,7 @@ final class ActiveOrderInitial extends ActiveOrderState {}
 final class ActiveOrdersLoading extends ActiveOrderState {}
 
 final class ActiveOrdersLoaded extends ActiveOrderState {
-  final List<ActiveOrderEntity> orders;
+  final List<OrderActiveItemEntity> orders;
 
   const ActiveOrdersLoaded(this.orders);
 
