@@ -84,7 +84,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       if (refreshToken == null) {
         log("[Splash] Refresh token missing. Navigating to Sign In.");
         // Если нет рефреш токена, пользователь точно не аутентифицирован
-        _navigateTo(const SignInRoute());
+        _navigateTo(const MainRoute());
         return;
       }
 

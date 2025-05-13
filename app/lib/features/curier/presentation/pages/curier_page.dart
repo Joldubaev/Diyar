@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'curier_order_card.dart';
 
 @RoutePage()
 class CurierPage extends StatefulWidget {
@@ -16,7 +17,6 @@ class CurierPage extends StatefulWidget {
   State<CurierPage> createState() => _CurierPageState();
 }
 
-// TODO: full refatoring code curier page
 class _CurierPageState extends State<CurierPage> {
   final mapControllerCompleter = Completer<YandexMapController>();
   List<CurierEntity> orders = [];
@@ -91,12 +91,8 @@ class _CurierPageState extends State<CurierPage> {
       body: BlocConsumer<CurierCubit, CurierState>(
         listener: (context, state) {
           if (state is GetUserError) {
-            // Use a local variable to store the context before the async operation
             final cubit = context.read<SignInCubit>();
-
-            // Use the cubit to handle the logout process
             cubit.logout().then((value) {
-              // Check if the widget is still mounted before navigating
               if (context.mounted) {
                 context.router.pushAndPopUntil(
                   const MainRoute(),
@@ -114,7 +110,6 @@ class _CurierPageState extends State<CurierPage> {
           } else if (state is GetCourierOrdersLoaded) {
             orders = state.curiers;
           }
-
           return orders.isEmpty
               ? const EmptyCurierOrder()
               : RefreshIndicator(
@@ -124,135 +119,15 @@ class _CurierPageState extends State<CurierPage> {
                     padding: const EdgeInsets.all(20),
                     itemCount: orders.length,
                     itemBuilder: (context, index) {
-                      final totalPrice = (orders[index].price ?? 0) + (orders[index].deliveryPrice ?? 0);
-                      return Card(
-                        margin: const EdgeInsets.all(0),
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                      final order = orders[index];
+                      return CurierOrderCard(
+                        order: order,
+                        onFinish: () => _finishOrder(order.orderNumber ?? 0, context: context),
+                        onOpenMap: () => _openAddressIn2GIS(order.address!, context: context),
+                        onDetails: () => context.router.push(
+                          OrderDetailRoute(orderNumber: "${order.orderNumber}"),
                         ),
-                        elevation: 4,
-                        child: ExpansionTile(
-                          shape: const Border(
-                            bottom: BorderSide(
-                              color: AppColors.transparent,
-                              width: 0,
-                            ),
-                          ),
-                          childrenPadding: const EdgeInsets.fromLTRB(10, 10, 10, 8),
-                          title: Text(
-                            '${context.l10n.orderNumber} ${orders[index].orderNumber}',
-                            style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: theme.colorScheme.onSurface),
-                          ),
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    orders[index].address.toString(),
-                                    maxLines: 3,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      color: theme.colorScheme.onSurface,
-                                      fontSize: 14,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  Text(
-                                    '${context.l10n.orderAmount} $totalPrice сом',
-                                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                          color: theme.colorScheme.primary,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                  ),
-                                  TextButton.icon(
-                                      onPressed: () => makePhoneCall(orders[index].userPhone.toString()),
-                                      icon: const Icon(Icons.phone),
-                                      label: const Text('Позвонить')),
-                                ],
-                              ),
-                            ),
-                            Divider(color: theme.colorScheme.onSurface.withValues(alpha: 0.6), thickness: 1),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: theme.colorScheme.surface,
-                                      borderRadius: const BorderRadius.all(Radius.circular(5)),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
-                                          blurRadius: 5,
-                                          offset: const Offset(0, 2),
-                                        ),
-                                      ],
-                                    ),
-                                    child: CustomTextButton(
-                                      textStyle: theme.textTheme.bodySmall!.copyWith(color: AppColors.primary),
-                                      onPressed: () {
-                                        context.router.push(
-                                          OrderDetailRoute(
-                                            orderNumber: "${orders[index].orderNumber}",
-                                          ),
-                                        );
-                                      },
-                                      textButton: context.l10n.orderDetails,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Container(
-                                    margin: const EdgeInsets.only(left: 5),
-                                    decoration: BoxDecoration(
-                                      color: theme.colorScheme.surface,
-                                      borderRadius: const BorderRadius.all(Radius.circular(5)),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
-                                          blurRadius: 5,
-                                          offset: const Offset(0, 2),
-                                        ),
-                                      ],
-                                    ),
-                                    child: CustomTextButton(
-                                      textStyle: theme.textTheme.bodySmall!.copyWith(color: AppColors.primary),
-                                      onPressed: () {
-                                        _finishOrder(context: context, orders[index].orderNumber ?? 0);
-                                      },
-                                      textButton: context.l10n.finishOrder,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Container(
-                                    margin: const EdgeInsets.only(left: 5),
-                                    decoration: BoxDecoration(
-                                      color: theme.colorScheme.surface,
-                                      borderRadius: const BorderRadius.all(Radius.circular(5)),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
-                                          blurRadius: 5,
-                                          offset: const Offset(0, 2),
-                                        ),
-                                      ],
-                                    ),
-                                    child: CustomTextButton(
-                                      textStyle: theme.textTheme.bodySmall!.copyWith(color: AppColors.primary),
-                                      onPressed: () {
-                                        final address = orders[index].address;
-                                        _openAddressIn2GIS(address!, context: context);
-                                      },
-                                      textButton: context.l10n.openOnMap,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                        onCall: () => makePhoneCall(order.userPhone.toString()),
                       );
                     },
                   ),
@@ -272,26 +147,19 @@ class _CurierPageState extends State<CurierPage> {
   }
 
   Future<void> _finishOrder(int orderNumber, {required BuildContext context}) async {
-    // Capture the context and the current state
     final cubit = context.read<CurierCubit>();
     final snackBar = ScaffoldMessenger.of(context);
-
     try {
       await cubit.getFinishOrder(orderNumber);
-
-      // Check if the widget is still mounted before showing the SnackBar
       if (context.mounted) {
         snackBar.showSnackBar(
           SnackBar(content: Text(context.l10n.orderCompleted)),
         );
       }
-
-      // Refresh the orders only if the widget is still mounted
       if (context.mounted) {
         cubit.getCurierOrders();
       }
     } catch (error) {
-      // Check if the widget is still mounted before showing the SnackBar
       if (context.mounted) {
         snackBar.showSnackBar(
           SnackBar(content: Text(context.l10n.errorCompletingOrder)),

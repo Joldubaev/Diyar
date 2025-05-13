@@ -2,7 +2,6 @@ import 'package:dartz/dartz.dart';
 import 'package:diyar/core/network/error/failures.dart';
 import 'package:diyar/features/curier/curier.dart';
 
-
 class CurierRepositoryImpl extends CurierRepository {
   final CurierDataSource dataSource;
 

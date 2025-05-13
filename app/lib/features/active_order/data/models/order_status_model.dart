@@ -12,7 +12,7 @@ class OrderStatusModel {
   factory OrderStatusModel.fromJson(Map<String, dynamic> json) {
     return OrderStatusModel(
       orderNumber: json['orderNumber'] as int,
-      status: json['status'] as String,
+      status: (json['status'] ?? json['orderStatus']) as String,
     );
   }
 
