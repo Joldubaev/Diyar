@@ -41,7 +41,13 @@ class SelectDeliveryPriceError extends OrderState {
 
 class CreateOrderLoading extends OrderState {}
 
-class CreateOrderLoaded extends OrderState {}
+class CreateOrderLoaded extends OrderState {
+  final String? res;
+  const CreateOrderLoaded( this.res);
+
+  @override
+  List<Object?> get props => [res];
+}
 
 class CreateOrderError extends OrderState {
   final String message;

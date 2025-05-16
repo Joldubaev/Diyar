@@ -17,10 +17,15 @@ class OrderRepositoryImpl implements OrderRepository {
   }
 
   @override
-  Future<Either<Failure, Unit>> createOrder(CreateOrderEntity orderEntity) async {
+  Future<Either<Failure, String>> createOrder(CreateOrderEntity orderEntity) async {
     try {
       final orderModel = CreateOrderModel.fromEntity(orderEntity);
-      return await _orderDataSource.createOrder(orderModel);
+      final result = await _orderDataSource.createOrder(orderModel);
+      return  result.fold(
+        (failure) => Left(failure),
+        (response) => Right(response),
+      );
+
     } catch (e) {
       return Left(ServerFailure(
           'Repository Error: Failed to map CreateOrderEntity or during datasource call: ${e.toString()}', null));

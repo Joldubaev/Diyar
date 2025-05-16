@@ -1,10 +1,10 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/order/order.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'info_dialog_widget.dart';
 
 class CustomBottomSheet extends StatelessWidget {
@@ -47,42 +47,94 @@ class CustomBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DraggableScrollableSheet(
-      initialChildSize: 0.35,
-      minChildSize: 0.35,
-      maxChildSize: 0.35,
-      expand: false,
-      builder: (context, scrollController) {
-        return Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surface,
-            borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(16),
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeader(context),
-              const SizedBox(height: 15),
-              _buildDetails(context),
-              const Divider(),
-              BlocBuilder<OrderCubit, OrderState>(
-                builder: (context, state) {
-                  return SubmitButtonWidget(
-                    textStyle: theme.textTheme.bodyMedium!.copyWith(color: theme.colorScheme.onPrimary),
-                    title: context.l10n.confirm,
-                    bgColor: AppColors.green,
-                    isLoading: state is CreateOrderLoading,
-                    onTap: () => _onConfirmOrder(context),
-                  );
-                },
-              ),
-            ],
-          ),
-        );
+    return BlocListener<OrderCubit, OrderState>(
+      listener: (context, state) {
+        if (state is CreateOrderLoaded) {
+          if (paymentType == PaymentTypeDelivery.online) {
+            context.router.push(PaymentsRoute(
+              orderNumber: state.res,
+              amount: totalOrderCost.toString(),
+            ));
+            Navigator.of(context).pop();
+          } else {
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (dialogContext) {
+                return PopScope(
+                  canPop: false,
+                  child: AlertDialog(
+                    title: Text(
+                      context.l10n.yourOrdersConfirm,
+                      style: theme.textTheme.bodyLarge!.copyWith(color: theme.colorScheme.onSurface),
+                    ),
+                    content: Text(
+                      context.l10n.operatorContact,
+                      style: theme.textTheme.bodyMedium!.copyWith(color: theme.colorScheme.onSurface),
+                      maxLines: 2,
+                    ),
+                    actions: [
+                      SubmitButtonWidget(
+                        textStyle: theme.textTheme.bodyMedium!.copyWith(color: theme.colorScheme.onPrimary),
+                        title: context.l10n.ok,
+                        bgColor: AppColors.green,
+                        onTap: () {
+                          Navigator.of(dialogContext).pop();
+                          Navigator.of(context).pop();
+                          context.router.pushAndPopUntil(
+                            const MainRoute(),
+                            predicate: (route) => false,
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
+          }
+          context.read<CartBloc>().add(ClearCart());
+        } else if (state is CreateOrderError) {
+          showToast(state.message, isError: true);
+        }
       },
+      child: DraggableScrollableSheet(
+        initialChildSize: 0.35,
+        minChildSize: 0.35,
+        maxChildSize: 0.35,
+        expand: false,
+        builder: (context, scrollController) {
+          return Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surface,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(16),
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildHeader(context),
+                const SizedBox(height: 15),
+                _buildDetails(context),
+                const Divider(),
+                BlocBuilder<OrderCubit, OrderState>(
+                  builder: (context, state) {
+                    return SubmitButtonWidget(
+                      textStyle: theme.textTheme.bodyMedium!.copyWith(color: theme.colorScheme.onPrimary),
+                      title: context.l10n.confirm,
+                      bgColor: AppColors.green,
+                      isLoading: state is CreateOrderLoading,
+                      onTap: () => _onConfirmOrder(context),
+                    );
+                  },
+                ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -124,9 +176,7 @@ class CustomBottomSheet extends StatelessWidget {
 
   void _onConfirmOrder(BuildContext context) {
     final orderCubit = context.read<OrderCubit>();
-
-    orderCubit
-        .createOrder(
+    orderCubit.createOrder(
       CreateOrderEntity(
         userPhone: phoneController.text,
         userName: userName.text,
@@ -154,11 +204,6 @@ class CustomBottomSheet extends StatelessWidget {
             )
             .toList(),
       ),
-    )
-        .then((value) {
-      if (context.mounted) {
-        context.read<CartBloc>().add(ClearCart());
-      }
-    });
+    );
   }
 }

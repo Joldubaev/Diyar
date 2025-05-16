@@ -5,6 +5,7 @@ import 'package:diyar/features/active_order/active_order.dart';
 import 'core/core.dart';
 import 'features/app/cubit/remote_config_cubit.dart';
 import 'features/curier/curier.dart';
+import 'features/payments/presentation/presentation.dart';
 import 'features/pick_up/pick_up.dart';
 import 'firebase_options.dart';
 import 'injection_container.dart';
@@ -75,6 +76,7 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => ThemeCubit()),
         BlocProvider(create: (context) => di.sl<PickUpCubit>()),
         BlocProvider(create: (context) => di.sl<ActiveOrderCubit>()),
+        BlocProvider(create: (context) => di.sl<PaymentBloc>()),
       ],
       child: AppListener(
         navigationKey: appRoute.navigatorKey,

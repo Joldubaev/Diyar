@@ -10,7 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class OrderRemoteDataSource {
   Future<Either<Failure, List<String>>> getOrderHistory();
-  Future<Either<Failure, Unit>> createOrder(CreateOrderModel order);
+  Future<Either<Failure, String>> createOrder(CreateOrderModel order);
   Future<Either<Failure, List<DistrictDataModel>>> getDistricts({String? search});
   Future<Either<Failure, LocationModel>> getGeoSuggestions({required String query});
 }
@@ -64,7 +64,7 @@ class OrderRemoteDataSourceImpl extends OrderRemoteDataSource {
 
 
   @override
-  Future<Either<Failure, Unit>> createOrder(CreateOrderModel order) async {
+  Future<Either<Failure, String>> createOrder(CreateOrderModel order) async {
     try {
       var res = await _dio.post(
         ApiConst.createOrder,
@@ -73,8 +73,8 @@ class OrderRemoteDataSourceImpl extends OrderRemoteDataSource {
           headers: ApiConst.authMap(_prefs.getString(AppConst.accessToken) ?? ''),
         ),
       );
-      if ([200, 201].contains(res.statusCode)) {
-        return const Right(unit);
+      if ([200, 201].contains(res.data['code'])) {
+        return  Right(res.data['message'] ?? 'Order created successfully');
       } else {
         log('Failed to create order: ${res.statusCode} ${res.data}');
         return Left(ServerFailure(res.data?['message']?.toString() ?? 'Failed to create order', res.statusCode));

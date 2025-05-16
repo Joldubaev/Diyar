@@ -54,7 +54,7 @@ class OrderCubit extends Cubit<OrderState> {
       final result = await _orderRepository.createOrder(orderEntity);
       result.fold(
         (failure) => emit(CreateOrderError(failure.message)),
-        (_) => emit(CreateOrderLoaded()),
+        (res) => emit(CreateOrderLoaded(res)),
       );
     } catch (e) {
       emit(CreateOrderError(e.toString()));
