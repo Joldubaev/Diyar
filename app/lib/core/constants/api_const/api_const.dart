@@ -2,7 +2,7 @@ class ApiConst {
   ApiConst._();
   // static const baseUrl = "https://api.diyar.kg";
   // static const baseUrl = "http://176.126.164.230:8088";
-  static const baseUrl = "http://20.127.235.82/api/v1";
+  static const baseUrl = "http://20.127.235.82/api/api/v1";
   // static const baseUrl = "https://20.127.235.82/";
 
   // AUTH
@@ -77,4 +77,17 @@ class ApiConst {
 
   // DISTRICTS
   static const getDistricts = "$baseUrl/districts/get-all-districts";
+
+  //payment
+  static const finipayCallBack = "$baseUrl/payment/finipay-callback";
+  static const checkPaymentMega = "$baseUrl/payment/check-payment-mega";
+  static const megaInitiate = "$baseUrl/payment/mega-initiate";
+  static const megaStatus = "$baseUrl/payment/mega-status";
+  static const mbankInitiate = "$baseUrl/payment/mbank-initiate";
+  static const mbankConfirm = "$baseUrl/payment/mbank-confirm";
+  static const mbankStatus = "$baseUrl/payment/mbank-status";
+
+  //qr code
+  static const generateQRCode = "$baseUrl/payment/qr-generate";
+  static const checkQRCodeStatus = "$baseUrl/payment/qr-status";
 }

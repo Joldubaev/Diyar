@@ -1,6 +1,7 @@
 import 'dart:developer' show log;
 import 'package:diyar/core/components/input/phone_number.dart';
 import 'package:diyar/core/core.dart';
+import 'package:diyar/features/order/presentation/presentation.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -22,6 +23,8 @@ class DeliveryFormWidget extends StatefulWidget {
     required this.intercomController,
     required this.sdachaController,
     required this.commentController,
+    required this.paymentType,
+    required this.onPaymentTypeChanged,
   });
 
   final ThemeData theme;
@@ -38,6 +41,8 @@ class DeliveryFormWidget extends StatefulWidget {
   final TextEditingController intercomController;
   final TextEditingController sdachaController;
   final TextEditingController commentController;
+  final PaymentTypeDelivery paymentType;
+  final Function(PaymentTypeDelivery) onPaymentTypeChanged;
 
   @override
   State<DeliveryFormWidget> createState() => _DeliveryFormWidgetState();
@@ -70,18 +75,19 @@ class _DeliveryFormWidgetState extends State<DeliveryFormWidget> {
         padding: const EdgeInsets.all(20),
         children: [
           CustomInputWidget(
-              titleColor: widget.theme.colorScheme.onSurface,
-              filledColor: widget.theme.colorScheme.surface,
-              controller: _userName,
-              hintText: context.l10n.yourName,
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return context.l10n.pleaseEnterName;
-                } else if (value.length < 3) {
-                  return context.l10n.pleaseEnterCorrectName;
-                }
-                return null;
-              }),
+            titleColor: widget.theme.colorScheme.onSurface,
+            filledColor: widget.theme.colorScheme.surface,
+            controller: _userName,
+            hintText: context.l10n.yourName,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return context.l10n.pleaseEnterName;
+              } else if (value.length < 3) {
+                return context.l10n.pleaseEnterCorrectName;
+              }
+              return null;
+            },
+          ),
           const SizedBox(height: 10),
           PhoneNumberMask(
             hintText: '+996 (___) __-__-__',
@@ -117,17 +123,18 @@ class _DeliveryFormWidgetState extends State<DeliveryFormWidget> {
           ),
           const SizedBox(height: 10),
           CustomInputWidget(
-              titleColor: widget.theme.colorScheme.onSurface,
-              filledColor: widget.theme.colorScheme.surface,
-              inputType: TextInputType.text,
-              controller: _houseController,
-              hintText: context.l10n.houseNumber,
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return context.l10n.pleaseEnterHouseNumber;
-                }
-                return null;
-              }),
+            titleColor: widget.theme.colorScheme.onSurface,
+            filledColor: widget.theme.colorScheme.surface,
+            inputType: TextInputType.text,
+            controller: _houseController,
+            hintText: context.l10n.houseNumber,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return context.l10n.pleaseEnterHouseNumber;
+              }
+              return null;
+            },
+          ),
           const SizedBox(height: 10),
           Row(
             children: [
@@ -194,22 +201,33 @@ class _DeliveryFormWidgetState extends State<DeliveryFormWidget> {
           ),
           const SizedBox(height: 10),
           CustomInputWidget(
-              titleColor: widget.theme.colorScheme.onSurface,
-              filledColor: widget.theme.colorScheme.surface,
-              controller: _commentController,
-              hintText: context.l10n.comment,
-              validator: (val) => null,
-              maxLines: 3),
+            titleColor: widget.theme.colorScheme.onSurface,
+            filledColor: widget.theme.colorScheme.surface,
+            controller: _commentController,
+            hintText: context.l10n.comment,
+            validator: (val) => null,
+            maxLines: 3,
+          ),
+          const SizedBox(height: 20),
+         PaymentTypeSelector(
+  currentPaymentType: widget.paymentType,
+  onChanged: widget.onPaymentTypeChanged,
+),
           const SizedBox(height: 20),
           Card(
             color: widget.theme.colorScheme.primary,
             child: ListTile(
-              title: Text('Сумма заказа ${widget.totalOrderCost} сом',
-                  style: widget.theme.textTheme.bodyMedium?.copyWith(
-                      color: widget.theme.colorScheme.onTertiaryFixed,
-                      fontWeight: FontWeight.w500)),
-              trailing: Icon(Icons.arrow_forward_ios,
-                  color: widget.theme.colorScheme.onTertiaryFixed),
+              title: Text(
+                'Сумма заказа ${widget.totalOrderCost} сом',
+                style: widget.theme.textTheme.bodyMedium?.copyWith(
+                  color: widget.theme.colorScheme.onTertiaryFixed,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              trailing: Icon(
+                Icons.arrow_forward_ios,
+                color: widget.theme.colorScheme.onTertiaryFixed,
+              ),
               onTap: widget.onConfirm,
             ),
           ),

@@ -1,0 +1,139 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:diyar/core/core.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:diyar/features/payments/presentation/bloc/payment_bloc.dart';
+import 'package:diyar/features/payments/domain/entities/payments_entity.dart';
+
+@RoutePage()
+class MegaCheckUserPage extends StatefulWidget {
+  final String? orderNumber;
+  final String? amount;
+  const MegaCheckUserPage({
+    super.key,
+    this.orderNumber,
+    this.amount,
+  });
+
+  @override
+  State<MegaCheckUserPage> createState() => _MegaCheckUserPageState();
+}
+
+class _MegaCheckUserPageState extends State<MegaCheckUserPage> {
+  final _phoneController = TextEditingController(text: '996555002108');
+  final _amountController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _amountController.text = widget.amount ?? '';
+  }
+
+  @override
+  void dispose() {
+    _phoneController.dispose();
+    _amountController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Оплата'),
+        centerTitle: true,
+        leading: const BackButton(),
+        elevation: 0,
+      ),
+      body: BlocConsumer<PaymentBloc, PaymentState>(
+        listener: (context, state) {
+          if (state is PaymentError) {
+            showToast(state.message, isError: true);
+          }
+          if (state is PaymentCheckSuccess) {
+            context.router.push(
+              MegaOtpRoute(
+                phone: _phoneController.text,
+                amount: double.tryParse(_amountController.text.trim()) ?? 0,
+                orderNumber: widget.orderNumber,
+              ),
+            );
+          } else if (state is PaymentLoading) {
+            Center(child: CircularProgressIndicator());
+          }
+        },
+        builder: (context, state) {
+          final isLoading = state is PaymentLoading;
+          return Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 8),
+                Text(
+                  'Оплата через Mbank',
+                  style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                ),
+                const SizedBox(height: 32),
+                CustomInputWidget(
+                  title: 'Номер телефона',
+                  hintText: '',
+                  controller: _phoneController,
+                  inputType: TextInputType.phone,
+                  inputFormatters: [
+                    phoneFormatter,
+                  ],
+                  onChanged: (value) {
+                    if (value.length > 13) {
+                      _phoneController.text = value.substring(0, 13);
+                      _phoneController.selection = TextSelection.fromPosition(
+                        TextPosition(offset: _phoneController.text.length),
+                      );
+                    }
+                  },
+                ),
+                const SizedBox(height: 24),
+                CustomInputWidget(
+                  isReadOnly: true,
+                  title: 'Сумма',
+                  hintText: '',
+                  controller: _amountController,
+                ),
+                const Spacer(),
+                SizedBox(
+                  width: double.infinity,
+                  height: 56,
+                  child: SubmitButtonWidget(
+                    bgColor: Theme.of(context).primaryColor,
+                    onTap: isLoading
+                        ? null
+                        : () {
+                            final phone = _phoneController.text.trim();
+                            final amount = double.tryParse(_amountController.text.trim());
+                            if (phone.isEmpty || amount == null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Заполните все поля корректно!')),
+                              );
+                              return;
+                            }
+                            final entity = PaymentsEntity(
+                              user: _phoneController.text,
+                              amount: amount,
+                              orderNumber: widget.orderNumber,
+                            );
+                            context.read<PaymentBloc>().add(CheckPaymentMegaEvent(entity));
+                          },
+                    title: isLoading ? 'Проверка...' : 'Проверить',
+                  ),
+                ),
+                const SizedBox(height: 24),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}

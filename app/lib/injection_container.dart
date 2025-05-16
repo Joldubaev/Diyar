@@ -9,6 +9,7 @@ import 'package:diyar/features/history/history_injection.dart';
 import 'package:diyar/features/home_content/home_content_injection.dart';
 import 'package:diyar/features/menu/menu_injection.dart';
 import 'package:diyar/features/order/order_injection.dart';
+import 'package:diyar/features/payments/payments_injection.dart';
 import 'package:diyar/features/pick_up/pick_up_injectin.dart';
 import 'package:diyar/features/profile/profile_injection.dart';
 import 'package:local_auth/local_auth.dart';
@@ -41,6 +42,7 @@ Future<void> init() async {
   await activeOrderInjection();
   await historyInjection();
   await curierInjection();
+  await paymentsInjection();
 
   sl.registerFactory(() => PopularCubit(sl()));
   sl.registerFactory(() => InternetBloc());

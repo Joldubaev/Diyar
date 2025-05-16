@@ -23,6 +23,7 @@ class DeliveryFormPage extends StatefulWidget {
     required this.totalPrice,
     required this.deliveryPrice,
   });
+
   @override
   State<DeliveryFormPage> createState() => _DeliveryFormPageState();
 }
@@ -40,11 +41,16 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
   final _userName = TextEditingController();
   final _sdachaController = TextEditingController();
 
-  final PaymentTypeDelivery _paymentType = PaymentTypeDelivery.cash;
+  PaymentTypeDelivery _paymentType = PaymentTypeDelivery.cash;
 
   @override
   void initState() {
     super.initState();
+    _initializeAddress();
+    _initializeUserData();
+  }
+
+  void _initializeAddress() {
     if (widget.address != null) {
       final parts = widget.address!.split(', ');
       if (parts.isNotEmpty) {
@@ -56,8 +62,10 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
         _addressController.text = widget.address!;
       }
     }
-    context.read<ProfileCubit>().getUser();
+  }
 
+  void _initializeUserData() {
+    context.read<ProfileCubit>().getUser();
     if (_phoneController.text.isEmpty) {
       _phoneController.text = '+996';
     }
@@ -78,9 +86,66 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
     super.dispose();
   }
 
+  void _onSubmit(int calculatedDeliveryPrice, int calculatedTotalOrderCost) {
+    if (!_formKey.currentState!.validate()) return;
+
+    final sdachaValue = int.tryParse(_sdachaController.text) ?? 0;
+    if (sdachaValue != 0 && sdachaValue < calculatedTotalOrderCost) {
+      showToast("Change cannot be less than the total order amount", isError: true);
+      return;
+    }
+
+    _showOrderConfirmationSheet(
+      calculatedDeliveryPrice,
+      calculatedTotalOrderCost,
+      sdachaValue,
+    );
+  }
+
+  void _showOrderConfirmationSheet(
+    int calculatedDeliveryPrice,
+    int calculatedTotalOrderCost,
+    int sdachaValue,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+      ),
+      useSafeArea: true,
+      isScrollControlled: true,
+      builder: (bottomSheetContext) {
+        return CustomBottomSheet(
+          region: '',
+          theme: Theme.of(context),
+          widget: widget,
+          deliveryPrice: calculatedDeliveryPrice,
+          totalOrderCost: calculatedTotalOrderCost,
+          phoneController: _phoneController,
+          userName: _userName,
+          addressController: _addressController,
+          commentController: _commentController,
+          houseController: _houseController,
+          apartmentController: _apartmentController,
+          intercomController: _intercomController,
+          floorController: _floorController,
+          entranceController: _entranceController,
+          paymentType: _paymentType,
+          sdacha: sdachaValue,
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final totalOrderCost = widget.totalPrice + widget.deliveryPrice.toInt();
+
     return BlocListener<ProfileCubit, ProfileState>(
       listener: (context, profileState) {
         if (profileState is ProfileGetLoaded) {
@@ -92,128 +157,45 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
           }
         }
       },
-      child: BlocConsumer<OrderCubit, OrderState>(
-        listener: (context, orderState) {
-          if (orderState is CreateOrderLoaded) {
-            context.read<CartBloc>().add(ClearCart());
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (dialogContext) {
-                return PopScope(
-                  canPop: false,
-                  child: AlertDialog(
-                    title: Text(context.l10n.yourOrdersConfirm,
-                        style: theme.textTheme.bodyLarge!.copyWith(color: theme.colorScheme.onSurface)),
-                    content: Text(context.l10n.operatorContact,
-                        style: theme.textTheme.bodyMedium!.copyWith(color: theme.colorScheme.onSurface), maxLines: 2),
-                    actions: [
-                      SubmitButtonWidget(
-                        textStyle: theme.textTheme.bodyMedium!.copyWith(color: theme.colorScheme.onPrimary),
-                        title: context.l10n.ok,
-                        bgColor: AppColors.green,
-                        onTap: () {
-                          Navigator.of(dialogContext).pop();
-                          context.router.pushAndPopUntil(
-                            const MainRoute(),
-                            predicate: (route) => false,
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                );
-              },
-            );
-          } else if (orderState is CreateOrderError) {
-            showToast(orderState.message.isNotEmpty ? orderState.message : context.l10n.someThingIsWrong,
-                isError: true);
-          }
-        },
-        builder: (context, orderState) {
-          final totalOrderCost = widget.totalPrice + widget.deliveryPrice.toInt();
-
-          return Scaffold(
-            appBar: AppBar(
-              backgroundColor: theme.colorScheme.primary,
-              title: Text(context.l10n.orderDetails,
-                  style: theme.textTheme.titleSmall!.copyWith(color: theme.colorScheme.onTertiaryFixed)),
-              centerTitle: true,
-              leading: IconButton(
-                icon: Icon(Icons.arrow_back_ios_sharp, color: theme.colorScheme.onTertiaryFixed),
-                onPressed: () {
-                  context.router.maybePop();
-                },
-              ),
-            ),
-            body: DeliveryFormWidget(
-              formKey: _formKey,
-              theme: theme,
-              userName: _userName,
-              phoneController: _phoneController,
-              addressController: _addressController,
-              houseController: _houseController,
-              entranceController: _entranceController,
-              floorController: _floorController,
-              apartmentController: _apartmentController,
-              intercomController: _intercomController,
-              sdachaController: _sdachaController,
-              commentController: _commentController,
-              totalOrderCost: totalOrderCost,
-              onConfirm: () => _onSubmit(widget.deliveryPrice.toInt(), totalOrderCost),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  void _onSubmit(int calculatedDeliveryPrice, int calculatedTotalOrderCost) {
-    final theme = Theme.of(context);
-
-    if (_formKey.currentState!.validate()) {
-      final sdachaValue = int.tryParse(_sdachaController.text) ?? 0;
-      int sdachaToSend = 0;
-      if (sdachaValue != 0) {
-        if (sdachaValue < calculatedTotalOrderCost) {
-          showToast("Change cannot be less than the total order amount", isError: true);
-          return;
-        }
-        sdachaToSend = sdachaValue;
-      }
-
-      showModalBottomSheet(
-        context: context,
-        backgroundColor: theme.colorScheme.surface,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: theme.colorScheme.primary,
+          title: Text(
+            context.l10n.orderDetails,
+            style: theme.textTheme.titleSmall!.copyWith(color: theme.colorScheme.onTertiaryFixed),
+          ),
+          centerTitle: true,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios_sharp, color: theme.colorScheme.onTertiaryFixed),
+            onPressed: () => context.router.maybePop(),
           ),
         ),
-        useSafeArea: true,
-        isScrollControlled: true,
-        builder: (bottomSheetContext) {
-          return CustomBottomSheet(
-            region: '',
-            theme: theme,
-            widget: widget,
-            deliveryPrice: calculatedDeliveryPrice,
-            totalOrderCost: calculatedTotalOrderCost,
-            phoneController: _phoneController,
-            userName: _userName,
-            addressController: _addressController,
-            commentController: _commentController,
-            houseController: _houseController,
-            apartmentController: _apartmentController,
-            intercomController: _intercomController,
-            floorController: _floorController,
-            entranceController: _entranceController,
-            paymentType: _paymentType,
-            sdacha: sdachaToSend,
-          );
-        },
-      );
-    }
+        body: DeliveryFormWidget(
+          paymentType: _paymentType,
+          onPaymentTypeChanged: (type) {
+            setState(() {
+              _paymentType = type;
+            });
+          },
+          formKey: _formKey,
+          theme: theme,
+          userName: _userName,
+          phoneController: _phoneController,
+          addressController: _addressController,
+          houseController: _houseController,
+          entranceController: _entranceController,
+          floorController: _floorController,
+          apartmentController: _apartmentController,
+          intercomController: _intercomController,
+          sdachaController: _sdachaController,
+          commentController: _commentController,
+          totalOrderCost: totalOrderCost,
+          onConfirm: () => _onSubmit(
+            widget.deliveryPrice.toInt(),
+            totalOrderCost,
+          ),
+        ),
+      ),
+    );
   }
 }

@@ -1,0 +1,15 @@
+enum PaymentStatusEnum {
+  success,
+  pending,
+  failed,
+  badRequest,
+  insufficientFunds,
+  userBlocked,
+  notFound,
+  accessDenied,
+  otpError,
+  limitExceeded,
+  internalError,
+  unknown,
+  alreadyExists,
+}

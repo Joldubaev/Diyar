@@ -35,7 +35,7 @@ class BottomSheetWidget extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 18),
               margin: const EdgeInsets.only(bottom: 14),
               decoration: BoxDecoration(
-                color: theme.colorScheme.primary.withOpacity(0.07),
+                color: theme.colorScheme.primary.withValues(alpha:  0.07),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Row(
