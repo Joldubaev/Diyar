@@ -60,7 +60,7 @@ class SalesSection extends StatelessWidget {
           ),
           child: Text(
             'Акции',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
           ),
@@ -209,7 +209,10 @@ class SaleCard extends StatelessWidget {
         ),
         child: Text(
           'Подробнее',
-          style: theme.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.bold),
+          style: theme.textTheme.labelLarge?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: theme.colorScheme.primary, // Orange text
+          ),
         ),
       ),
     );

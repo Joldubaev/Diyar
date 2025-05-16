@@ -20,9 +20,8 @@ class MbankInitiatePage extends StatefulWidget {
 }
 
 class _MbankInitiatePageState extends State<MbankInitiatePage> {
-  final _phoneController = TextEditingController(text: '996772140014');
+  final _phoneController = TextEditingController(text: '996');
   final _amountController = TextEditingController();
-
 
   @override
   void initState() {
