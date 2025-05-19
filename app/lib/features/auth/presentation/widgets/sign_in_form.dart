@@ -53,7 +53,7 @@ class _LoginFormState extends State<LoginForm> {
                       filledColor: theme.colorScheme.surface,
                       controller: _phoneController,
                       inputType: TextInputType.phone,
-                      inputFormatters: [phoneFormatter],
+                     phoneFormatType: PhoneFormatType.withPlus,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return context.l10n.pleaseEnterPhone;

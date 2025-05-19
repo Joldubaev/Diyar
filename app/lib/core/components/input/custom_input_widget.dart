@@ -3,6 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
+// Добавляем enum PhoneFormatType
+enum PhoneFormatType { withPlus, withoutPlus }
+
+// Добавляем форматтеры для телефона
+final phoneFormatterWithPlus = MaskTextInputFormatter(
+  mask: "+996#########",
+  filter: {"#": RegExp(r'[0-9]')},
+  type: MaskAutoCompletionType.lazy,
+);
+
+final phoneFormatterWithoutPlus = MaskTextInputFormatter(
+  mask: "996#########",
+  filter: {"#": RegExp(r'[0-9]')},
+  type: MaskAutoCompletionType.lazy,
+);
+
 class CustomInputWidget extends StatefulWidget {
   const CustomInputWidget({
     super.key,
@@ -21,6 +37,7 @@ class CustomInputWidget extends StatefulWidget {
     this.isReadOnly = false,
     this.trailing,
     this.inputFormatters,
+    this.phoneFormatType, // новый параметр
   });
 
   final String hintText;
@@ -38,16 +55,11 @@ class CustomInputWidget extends StatefulWidget {
   final Widget? leading;
   final bool? isReadOnly;
   final List<TextInputFormatter>? inputFormatters;
+  final PhoneFormatType? phoneFormatType; // новый параметр
 
   @override
   State<CustomInputWidget> createState() => _CustomInputWidgetState();
 }
-
-final phoneFormatter = MaskTextInputFormatter(
-  mask: "996#########",
-  filter: {"#": RegExp(r'[0-9]')},
-  type: MaskAutoCompletionType.lazy,
-);
 
 class _CustomInputWidgetState extends State<CustomInputWidget> {
   bool _obsecureText = true;
@@ -61,6 +73,12 @@ class _CustomInputWidgetState extends State<CustomInputWidget> {
 
   @override
   Widget build(BuildContext context) {
+    List<TextInputFormatter>? inputFormatters = widget.inputFormatters;
+    if (widget.phoneFormatType != null) {
+      inputFormatters = [
+        widget.phoneFormatType == PhoneFormatType.withPlus ? phoneFormatterWithPlus : phoneFormatterWithoutPlus
+      ];
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -86,7 +104,7 @@ class _CustomInputWidgetState extends State<CustomInputWidget> {
           style: Theme.of(context).textTheme.bodyMedium,
           readOnly: isReadOnly,
           validator: widget.validator,
-          inputFormatters: widget.inputFormatters,
+          inputFormatters: inputFormatters, // используем подставленный форматтер
           onChanged: widget.onChanged,
           maxLines: widget.maxLines,
           decoration: InputDecoration(

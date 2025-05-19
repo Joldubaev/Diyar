@@ -28,7 +28,7 @@ class AuthBottomSheet extends StatelessWidget {
             filledColor: Theme.of(context).colorScheme.surface,
             controller: resetPasswordPhone,
             inputType: TextInputType.phone,
-            inputFormatters: [phoneFormatter],
+           phoneFormatType: PhoneFormatType.withPlus,
             validator: (value) {
               if (value!.isEmpty) {
                 return context.l10n.pleaseEnterPhone;

@@ -90,7 +90,7 @@ class _CheckPhoneNumberPageState extends State<CheckPhoneNumberPage> {
                     filledColor: theme.colorScheme.surface,
                     controller: _phoneController,
                     inputType: TextInputType.phone,
-                    inputFormatters: [phoneFormatter],
+                    phoneFormatType: PhoneFormatType.withPlus,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Введите номер телефона';

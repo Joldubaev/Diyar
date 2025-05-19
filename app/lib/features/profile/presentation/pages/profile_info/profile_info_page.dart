@@ -141,7 +141,7 @@ class _ProfileInfoPageState extends State<ProfileInfoPage> {
       filledColor: Theme.of(context).colorScheme.surface,
       controller: _phoneController,
       inputType: TextInputType.phone,
-      inputFormatters: [phoneFormatter],
+      phoneFormatType: PhoneFormatType.withPlus,
       validator: (value) {
         if (value?.isEmpty ?? true) {
           return context.l10n.pleaseEnterPhone;

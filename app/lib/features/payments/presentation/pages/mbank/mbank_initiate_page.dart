@@ -80,9 +80,7 @@ class _MbankInitiatePageState extends State<MbankInitiatePage> {
                   hintText: '',
                   controller: _phoneController,
                   inputType: TextInputType.phone,
-                  inputFormatters: [
-                    phoneFormatter,
-                  ],
+                 phoneFormatType: PhoneFormatType.withoutPlus,
                   onChanged: (value) {
                     if (value.length > 13) {
                       _phoneController.text = value.substring(0, 13);
