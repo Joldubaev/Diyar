@@ -167,7 +167,7 @@ class _QrCodePageState extends State<QrCodePage> {
                         ),
                         icon: const Icon(Icons.share),
                         label: Text('Поделиться', style: TextStyle(fontSize: size.width * 0.04)),
-                        onPressed: _lastQrBytes == null ? null : () => _qrService.sharePdf(_lastQrBytes!),
+                        onPressed: _lastQrBytes == null ? null : () => _qrService.sharePng(_lastQrBytes!),
                       ),
                       SizedBox(width: size.width * 0.04),
                       ElevatedButton.icon(
@@ -211,7 +211,7 @@ class _QrCodePageState extends State<QrCodePage> {
                       border: Border.all(color: Colors.grey[300]!),
                     ),
                     child: CustomInputWidget(
-                      isReadOnly: true,
+                      // isReadOnly: true,
                       hintText: 'Введите сумму',
                       controller: _amountController,
                     ),

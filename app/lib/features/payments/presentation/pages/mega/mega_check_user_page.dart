@@ -9,10 +9,12 @@ import 'package:diyar/features/payments/domain/entities/payments_entity.dart';
 class MegaCheckUserPage extends StatefulWidget {
   final String? orderNumber;
   final String? amount;
+  final String? provider;
   const MegaCheckUserPage({
     super.key,
     this.orderNumber,
     this.amount,
+    this.provider,
   });
 
   @override
@@ -71,7 +73,7 @@ class _MegaCheckUserPageState extends State<MegaCheckUserPage> {
               children: [
                 const SizedBox(height: 8),
                 Text(
-                  'Оплата через Mbank',
+                  'Оплата через ${widget.provider}',
                   style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -82,7 +84,7 @@ class _MegaCheckUserPageState extends State<MegaCheckUserPage> {
                   hintText: '',
                   controller: _phoneController,
                   inputType: TextInputType.phone,
-                 phoneFormatType: PhoneFormatType.withoutPlus,
+                  phoneFormatType: PhoneFormatType.withoutPlus,
                   onChanged: (value) {
                     if (value.length > 13) {
                       _phoneController.text = value.substring(0, 13);
@@ -94,7 +96,7 @@ class _MegaCheckUserPageState extends State<MegaCheckUserPage> {
                 ),
                 const SizedBox(height: 24),
                 CustomInputWidget(
-                  isReadOnly: true,
+                  // isReadOnly: true,
                   title: 'Сумма',
                   hintText: '',
                   controller: _amountController,

@@ -63,10 +63,13 @@ class RemotePaymentsDatasourceImpl implements RemotePaymentsDatasource {
           "otp": model.otp,
         },
       );
-      if (response.data['code'].toString() == '120') {
+      final code = response.data['code'].toString();
+      final status = PaymentStatusMapper.fromCode(code);
+      final message = PaymentStatusMapper.message(status, response.data['message']);
+      if (status == PaymentStatusEnum.success) {
         return Right(MbankModel.fromJson(response.data['data']));
       } else {
-        return Left(ServerFailure(response.statusMessage ?? 'Ошибка', response.statusCode));
+        return Left(ServerFailure(message, response.statusCode));
       }
     } on DioException catch (e) {
       return Left(ServerFailure(e.message ?? 'Ошибка сети', e.response?.statusCode));

@@ -55,9 +55,7 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: PinCodeRoute.page),
         AutoRoute(page: SetNewPinCodeRoute.page),
         AutoRoute(page: SecurityRoute.page),
-        AutoRoute(
-          page: PaymentsRoute.page,
-        ),
+        AutoRoute(page: PaymentsRoute.page),
         AutoRoute(page: MegaCheckUserRoute.page),
         AutoRoute(page: MegaOtpRoute.page),
         AutoRoute(page: MegaPaymentStatusRoute.page),
@@ -66,6 +64,9 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: MbankConfirmRoute.page),
         AutoRoute(page: MbankCheckStatusRoute.page),
         AutoRoute(page: MbankInitiateRoute.page),
+        AutoRoute(
+          page: PaymentStatusRoute.page,
+        ),
       ];
 }
 

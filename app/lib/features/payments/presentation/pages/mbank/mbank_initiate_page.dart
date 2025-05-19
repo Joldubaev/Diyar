@@ -9,10 +9,12 @@ import 'package:diyar/features/payments/domain/entities/payments_entity.dart';
 class MbankInitiatePage extends StatefulWidget {
   final String? orderNumber;
   final String? amount;
+  final String? provider;
   const MbankInitiatePage({
     super.key,
     this.orderNumber,
     this.amount,
+    this.provider,
   });
 
   @override
@@ -69,7 +71,7 @@ class _MbankInitiatePageState extends State<MbankInitiatePage> {
               children: [
                 const SizedBox(height: 8),
                 Text(
-                  'Оплата через MBank',
+                  'Оплата через ${widget.provider}',
                   style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -92,7 +94,7 @@ class _MbankInitiatePageState extends State<MbankInitiatePage> {
                 ),
                 const SizedBox(height: 24),
                 CustomInputWidget(
-                  isReadOnly: true,
+                  // isReadOnly: true,
                   title: 'Сумма',
                   hintText: '',
                   controller: _amountController,

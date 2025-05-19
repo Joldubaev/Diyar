@@ -209,10 +209,7 @@ class _DeliveryFormWidgetState extends State<DeliveryFormWidget> {
             maxLines: 3,
           ),
           const SizedBox(height: 20),
-         PaymentTypeSelector(
-  currentPaymentType: widget.paymentType,
-  onChanged: widget.onPaymentTypeChanged,
-),
+          PaymentTypeSelector(currentPaymentType: widget.paymentType, onChanged: widget.onPaymentTypeChanged),
           const SizedBox(height: 20),
           Card(
             color: widget.theme.colorScheme.primary,

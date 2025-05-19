@@ -8,7 +8,7 @@ export 'app_colors.dart';
 final lightTheme = ThemeData(
   primaryColor: AppColors.primary,
   primarySwatch: AppColors.primary,
-  fontFamily: "Roboto",
+  fontFamily: "Inter",
   scaffoldBackgroundColor: AppColors.grey2,
   colorScheme: const ColorScheme(
     primary: AppColors.primary,
@@ -141,7 +141,7 @@ final lightTheme = ThemeData(
 final darkTheme = ThemeData(
   primaryColor: AppColors.primary,
   primarySwatch: AppColors.primary,
-  fontFamily: "Roboto",
+  fontFamily: "Inter",
   scaffoldBackgroundColor: const Color(0xff121212),
   colorScheme: const ColorScheme(
     primary: AppColors.primary,
