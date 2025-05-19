@@ -77,9 +77,9 @@ class _MbankConfirmPageState extends State<MbankConfirmPage> {
         }
         if (state is PaymentMbankSuccess) {
           context.router.push(
-            MbankCheckStatusRoute(
+            PaymentStatusRoute(
               amount: widget.amount ?? 0,
-              orderNumber: widget.orderNumber,
+              orderNumber: widget.orderNumber.toString(),
             ),
           );
         }

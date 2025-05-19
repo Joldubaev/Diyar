@@ -91,7 +91,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
 
     final sdachaValue = int.tryParse(_sdachaController.text) ?? 0;
     if (sdachaValue != 0 && sdachaValue < calculatedTotalOrderCost) {
-      showToast("Change cannot be less than the total order amount", isError: true);
+      showToast("Сдача не может быть меньше суммы", isError: true);
       return;
     }
 

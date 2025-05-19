@@ -7,9 +7,10 @@ import 'package:share_plus/share_plus.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:permission_handler/permission_handler.dart';
+// import 'package:image/image.dart' as img;
 
 class QrService {
-  static const String _tempPrefix = 'finipay_qr_';
+  // static const String _tempPrefix = 'finipay_qr_';
   Future<Uint8List> _generatePdf(Uint8List qrData) async {
     final pdf = pw.Document();
     pdf.addPage(
@@ -66,63 +67,63 @@ class QrService {
     return pdf.save();
   }
 
-  Future<void> sharePdf(Uint8List qrData) async {
-    try {
-      log("📄 Генерация PDF с QR-кодом...");
-      final pdfData = await _generatePdf(qrData);
+  // Future<void> sharePdf(Uint8List qrData) async {
+  //   try {
+  //     log("📄 Генерация PDF с QR-кодом...");
+  //     final pdfData = await _generatePdf(qrData);
 
-      // Сохраняем PDF во временный файл
-      final tempFile = await _savePdfTemp(pdfData);
+  //     // Сохраняем PDF во временный файл
+  //     final tempFile = await _savePdfTemp(pdfData);
 
-      if (tempFile != null) {
-        // Делимся файлом через SharePlus 11.x
-        final params = ShareParams(
-          text: 'QR-код для оплаты',
-          subject: 'QR-код Finipay',
-          files: [XFile(tempFile.path)],
-        );
-        final result = await SharePlus.instance.share(params);
-        if (result.status == ShareResultStatus.success) {
-          log('✅ Пользователь поделился QR-кодом!');
-        }
+  //     if (tempFile != null) {
+  //       // Делимся файлом через SharePlus 11.x
+  //       final params = ShareParams(
+  //         text: 'QR-код для оплаты',
+  //         subject: 'QR-код Finipay',
+  //         files: [XFile(tempFile.path)],
+  //       );
+  //       final result = await SharePlus.instance.share(params);
+  //       if (result.status == ShareResultStatus.success) {
+  //         log('✅ Пользователь поделился QR-кодом!');
+  //       }
 
-        // Удаляем временный файл
-        await _cleanupTempFiles();
-      }
-    } catch (e) {
-      log("❌ Ошибка при создании PDF: $e");
-      rethrow;
-    }
-  }
+  //       // Удаляем временный файл
+  //       await _cleanupTempFiles();
+  //     }
+  //   } catch (e) {
+  //     log("❌ Ошибка при создании PDF: $e");
+  //     rethrow;
+  //   }
+  // }
 
-  Future<File?> _savePdfTemp(Uint8List pdfData) async {
-    try {
-      final tempDir = await getTemporaryDirectory();
-      final timestamp = DateTime.now().millisecondsSinceEpoch;
-      final tempFile = File(
-        '${tempDir.path}/${_tempPrefix}qr_$timestamp.pdf',
-      );
+  // Future<File?> _savePdfTemp(Uint8List pdfData) async {
+  //   try {
+  //     final tempDir = await getTemporaryDirectory();
+  //     final timestamp = DateTime.now().millisecondsSinceEpoch;
+  //     final tempFile = File(
+  //       '${tempDir.path}/${_tempPrefix}qr_$timestamp.pdf',
+  //     );
 
-      await tempFile.writeAsBytes(pdfData);
-      return tempFile;
-    } catch (e) {
-      log("❌ Ошибка при сохранении временного файла: $e");
-      return null;
-    }
-  }
+  //     await tempFile.writeAsBytes(pdfData);
+  //     return tempFile;
+  //   } catch (e) {
+  //     log("❌ Ошибка при сохранении временного файла: $e");
+  //     return null;
+  //   }
+  // }
 
-  Future<void> _cleanupTempFiles() async {
-    try {
-      final tempDir = await getTemporaryDirectory();
-      final tempFiles = tempDir.listSync().whereType<File>().where((file) => file.path.contains(_tempPrefix));
+  // Future<void> _cleanupTempFiles() async {
+  //   try {
+  //     final tempDir = await getTemporaryDirectory();
+  //     final tempFiles = tempDir.listSync().whereType<File>().where((file) => file.path.contains(_tempPrefix));
 
-      for (final file in tempFiles) {
-        await file.delete();
-      }
-    } catch (e) {
-      log("⚠️ Ошибка при очистке временных файлов: $e");
-    }
-  }
+  //     for (final file in tempFiles) {
+  //       await file.delete();
+  //     }
+  //   } catch (e) {
+  //     log("⚠️ Ошибка при очистке временных файлов: $e");
+  //   }
+  // }
 
   Future<String?> savePdfToDownloads(Uint8List qrData) async {
     try {
@@ -179,6 +180,32 @@ class QrService {
     } catch (e) {
       log("❌ Ошибка при декодировании QR: $e");
       return null;
+    }
+  }
+
+  Future<void> sharePng(Uint8List qrData) async {
+    try {
+      log("📄 Генерация PNG с QR-кодом...");
+      final tempDir = await getTemporaryDirectory();
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      final tempFile = File('${tempDir.path}/finipay_qr_$timestamp.png');
+      await tempFile.writeAsBytes(qrData);
+
+      final params = ShareParams(
+        text: 'QR-код для оплаты',
+        subject: 'QR-код Finipay',
+        files: [XFile(tempFile.path)],
+      );
+      final result = await SharePlus.instance.share(params);
+      if (result.status == ShareResultStatus.success) {
+        log('✅ Пользователь поделился PNG QR-кодом!');
+      }
+
+      // Удаляем временный файл
+      await tempFile.delete();
+    } catch (e) {
+      log("❌ Ошибка при создании PNG: $e");
+      rethrow;
     }
   }
 }

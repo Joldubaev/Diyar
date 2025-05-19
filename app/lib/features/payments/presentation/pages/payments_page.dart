@@ -49,14 +49,16 @@ class PaymentsPage extends StatelessWidget {
               onTap: () => context.router.push(MbankInitiateRoute(
                 amount: amount ?? '0',
                 orderNumber: orderNumber ?? '0',
+                provider: 'Mbank',
               )),
             ),
             PaymentMethodTileWidget(
               icon: SvgPicture.asset('assets/icons/mega.svg', height: 28),
-              title: 'Megapay',
+              title: 'MegaPay',
               onTap: () => context.router.push(MegaCheckUserRoute(
                 amount: amount ?? '0',
                 orderNumber: orderNumber ?? '0',
+                provider: 'MegaPay',
               )),
             ),
             PaymentMethodTileWidget(

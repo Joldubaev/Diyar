@@ -185,25 +185,21 @@ class CustomBottomNavigationBar extends StatelessWidget {
       selectedItemColor: theme.colorScheme.primary,
       unselectedItemColor: unselectedColor,
       items: [
-        _buildBottomNavItem(context, "assets/icons/home_icon.svg", "Главная"),
-        _buildBottomNavItem(context, "assets/icons/menu_icon.svg", "Меню"),
-        _buildBottomNavItem(context, "assets/icons/orders_icon.svg", "История"),
-        _buildBottomNavItem(context, "assets/icons/profile_icon.svg", "Профиль"),
+        _buildBottomNavItem(context, "assets/icons/home_icon.svg", "Главная", currentIndex == 0),
+        _buildBottomNavItem(context, "assets/icons/menu_icon.svg", "Меню", currentIndex == 1),
+        _buildBottomNavItem(context, "assets/icons/orders_icon.svg", "История", currentIndex == 2),
+        _buildBottomNavItem(context, "assets/icons/profile_icon.svg", "Профиль", currentIndex == 3),
       ],
     );
   }
 
-  BottomNavigationBarItem _buildBottomNavItem(
-    BuildContext context,
-    String iconPath,
-    String label,
-  ) {
+  BottomNavigationBarItem _buildBottomNavItem(BuildContext context, String iconPath, String label, bool isSelected) {
     return BottomNavigationBarItem(
       icon: SvgPicture.asset(
         iconPath,
         height: 24,
         colorFilter: ColorFilter.mode(
-          Theme.of(context).colorScheme.onSurface,
+          isSelected ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurface,
           BlendMode.srcIn,
         ),
       ),
