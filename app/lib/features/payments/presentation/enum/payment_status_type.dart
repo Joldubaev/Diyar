@@ -30,11 +30,11 @@ extension PaymentStatusTypeExtension on PaymentStatusType {
   String get iconPath {
     switch (this) {
       case PaymentStatusType.success:
-        return 'assets/icons/succes.svg';
+        return 'assets/icons/success.svg';
       case PaymentStatusType.pending:
         return 'assets/icons/await.svg';
       case PaymentStatusType.error:
-      return 'assets/icons/concel.svg';
+      return 'assets/icons/cancel.svg';
     }
   }
 }
