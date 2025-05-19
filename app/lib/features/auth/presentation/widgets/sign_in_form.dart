@@ -33,7 +33,7 @@ class _LoginFormState extends State<LoginForm> {
                   MediaQuery.of(context).size.height - MediaQuery.of(context).viewInsets.bottom - kToolbarHeight - 40,
             ),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 Column(
                   children: [
@@ -53,7 +53,7 @@ class _LoginFormState extends State<LoginForm> {
                       filledColor: theme.colorScheme.surface,
                       controller: _phoneController,
                       inputType: TextInputType.phone,
-                     phoneFormatType: PhoneFormatType.withPlus,
+                      phoneFormatType: PhoneFormatType.withPlus,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return context.l10n.pleaseEnterPhone;

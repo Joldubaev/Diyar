@@ -2,7 +2,7 @@ class ApiConst {
   ApiConst._();
   // static const baseUrl = "https://api.diyar.kg";
   // static const baseUrl = "http://176.126.164.230:8088";
-  static const baseUrl = "http://20.127.235.82/api/api/v1";
+  static const baseUrl = "http://20.127.235.82/api/v1";
   // static const baseUrl = "https://20.127.235.82/";
 
   // AUTH

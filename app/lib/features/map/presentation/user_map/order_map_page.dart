@@ -32,6 +32,7 @@ class _OrderMapPageState extends State<OrderMapPage> {
   double _lat = 0;
   double _long = 0;
   bool _firstLaunch = true;
+  double _currentZoom = 14.0;
 
   static const _kyrgyzstanBounds = BoundingBox(
     northEast: Point(latitude: 43.0019, longitude: 80.2754),
@@ -82,11 +83,14 @@ class _OrderMapPageState extends State<OrderMapPage> {
         address: _address,
         deliveryPrice: _calculateDeliveryPrice(),
         onAddressCardTap: _onAddressCardTap,
+        onSearchPressed: () => showMapSearchBottom(context, onSearch: _searchMap),
       ),
       floatingActionButton: FloatingActionButtonsWidget(
         theme: theme,
         onNavigationPressed: _fetchCurrentLocation,
-        onSearchPressed: () => showMapSearchBottom(context, onSearch: _searchMap),
+        onZoomInPressed: _zoomIn,
+        onZoomOutPressed: _zoomOut,
+        // onSearchPressed: () => showMapSearchBottom(context, onSearch: _searchMap),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
     );
@@ -185,7 +189,7 @@ class _OrderMapPageState extends State<OrderMapPage> {
       CameraUpdate.newCameraPosition(
         CameraPosition(
           target: Point(latitude: latitude, longitude: longitude),
-          zoom: 16.0,
+          zoom: 14.0,
           azimuth: 0.0,
           tilt: 0.0,
         ),
@@ -265,5 +269,35 @@ class _OrderMapPageState extends State<OrderMapPage> {
 
   double _calculateDeliveryPrice() {
     return MapHelper.isCoordinateInsidePolygons(_lat, _long, polygons: Polygons.getPolygons());
+  }
+
+  Future<void> _zoomIn() async {
+    final controller = await _mapControllerCompleter.future;
+    _currentZoom += 1;
+    controller.moveCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: Point(latitude: _lat, longitude: _long),
+          zoom: _currentZoom,
+          azimuth: 0.0,
+          tilt: 0.0,
+        ),
+      ),
+    );
+  }
+
+  Future<void> _zoomOut() async {
+    final controller = await _mapControllerCompleter.future;
+    _currentZoom -= 1;
+    controller.moveCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+          target: Point(latitude: _lat, longitude: _long),
+          zoom: _currentZoom,
+          azimuth: 0.0,
+          tilt: 0.0,
+        ),
+      ),
+    );
   }
 }
