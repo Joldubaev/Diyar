@@ -184,22 +184,23 @@ class _DeliveryFormWidgetState extends State<DeliveryFormWidget> {
             ],
           ),
           const SizedBox(height: 10),
-          CustomInputWidget(
-            titleColor: widget.theme.colorScheme.onSurface,
-            filledColor: widget.theme.colorScheme.surface,
-            inputType: TextInputType.number,
-            controller: _sdachaController,
-            hintText: context.l10n.change,
-            validator: (value) {
-              if (value!.isEmpty) {
-                return context.l10n.confirmOrder;
-              } else if (value.length < 2) {
-                return context.l10n.confirmOrder;
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: 10),
+          if (widget.paymentType == PaymentTypeDelivery.cash)
+            CustomInputWidget(
+              titleColor: widget.theme.colorScheme.onSurface,
+              filledColor: widget.theme.colorScheme.surface,
+              inputType: TextInputType.number,
+              controller: _sdachaController,
+              hintText: context.l10n.change,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return context.l10n.confirmOrder;
+                } else if (value.length < 2) {
+                  return context.l10n.confirmOrder;
+                }
+                return null;
+              },
+            ),
+          if (widget.paymentType == PaymentTypeDelivery.cash) const SizedBox(height: 10),
           CustomInputWidget(
             titleColor: widget.theme.colorScheme.onSurface,
             filledColor: widget.theme.colorScheme.surface,

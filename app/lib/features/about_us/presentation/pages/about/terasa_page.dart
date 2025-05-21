@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/about_us/domain/domain.dart';
 import 'package:diyar/features/features.dart';
-import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -30,8 +29,7 @@ class TerasaPageState extends State<TerasaPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: theme.colorScheme.primary,
-        title: Text(context.l10n.restaurant,
-            style: Theme.of(context).textTheme.titleMedium!.copyWith(color: AppColors.white)),
+        title: Text('Терасса', style: Theme.of(context).textTheme.titleMedium!.copyWith(color: AppColors.white)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: AppColors.white),
           onPressed: () {

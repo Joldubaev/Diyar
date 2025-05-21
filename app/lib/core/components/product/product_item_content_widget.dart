@@ -127,6 +127,20 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> wit
     );
   }
 
+  void _handleQuantityChanged(int newQuantity) {
+    if (!UserHelper.isAuth()) {
+      _showRegisterDialog(context);
+      return;
+    }
+    final cartBloc = context.read<CartBloc>();
+    final foodId = widget.food.id;
+    if (foodId == null) return;
+
+    if (newQuantity > 0) {
+      cartBloc.add(SetItemCount(CartItemEntity(food: widget.food, quantity: newQuantity)));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -148,6 +162,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> wit
               quantity: widget.quantity,
               onDecrement: () => _handleCartAction(isIncrement: false),
               onIncrement: () => _handleCartAction(isIncrement: true),
+              onQuantityChanged: _handleQuantityChanged,
             ),
           const SizedBox(height: 8),
         ],
@@ -210,7 +225,7 @@ class _ProductImageSection extends StatelessWidget {
                 memCacheWidth: ProductItemContentWidget._memCacheWidth,
                 memCacheHeight: ProductItemContentWidget._memCacheHeight,
                 cacheManager: DefaultCacheManager(),
-                fit: BoxFit.contain,
+                fit: BoxFit.fill,
               ),
               _buildQuantityOverlay(theme),
             ],
@@ -335,16 +350,52 @@ class _ProductInfoSection extends StatelessWidget {
 }
 
 // Widget for Counter (Buttons and Quantity Text)
-class _ProductCounterSection extends StatelessWidget {
+class _ProductCounterSection extends StatefulWidget {
   final int quantity;
   final VoidCallback? onDecrement;
   final VoidCallback? onIncrement;
+  final ValueChanged<int>? onQuantityChanged;
 
   const _ProductCounterSection({
     required this.quantity,
     this.onDecrement,
     this.onIncrement,
+    this.onQuantityChanged,
   });
+
+  @override
+  State<_ProductCounterSection> createState() => _ProductCounterSectionState();
+}
+
+class _ProductCounterSectionState extends State<_ProductCounterSection> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.quantity.toString());
+  }
+
+  @override
+  void didUpdateWidget(covariant _ProductCounterSection oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.quantity != widget.quantity) {
+      _controller.text = widget.quantity.toString();
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _onFieldChanged(String value) {
+    final int? newValue = int.tryParse(value);
+    if (newValue != null && newValue > 0 && widget.onQuantityChanged != null) {
+      widget.onQuantityChanged!(newValue);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -360,22 +411,33 @@ class _ProductCounterSection extends StatelessWidget {
         ),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           _CounterButton(
             icon: Icons.remove,
-            onPressed: quantity > 0 ? onDecrement : null, // Disable if quantity is 0
+            onPressed: widget.quantity > 0 ? widget.onDecrement : null,
           ),
-          Flexible(
-            child: Text(
-              '$quantity',
-              style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500),
+          const SizedBox(width: 8),
+          SizedBox(
+            width: 36,
+            child: TextField(
+              controller: _controller,
               textAlign: TextAlign.center,
+              keyboardType: TextInputType.number,
+              style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500),
+              decoration: const InputDecoration(
+                border: InputBorder.none,
+                isDense: true,
+                contentPadding: EdgeInsets.zero,
+              ),
+              onChanged: _onFieldChanged,
             ),
           ),
+          const SizedBox(width: 8),
           _CounterButton(
             icon: Icons.add,
-            onPressed: onIncrement,
+            onPressed: widget.onIncrement,
           ),
         ],
       ),

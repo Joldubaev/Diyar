@@ -34,8 +34,21 @@ class PaymentStatusMapper {
     PaymentStatusEnum.alreadyExists: "Платёж уже существует.",
   };
 
-  static PaymentStatusEnum fromCode(String code) {
-    return codeToStatus[code] ?? PaymentStatusEnum.unknown;
+  /// Универсальный маппер: code, message, data
+  static PaymentStatusEnum fromCode(dynamic code, {String? message, String? data}) {
+    final codeStr = code?.toString() ?? '';
+    final msg = message?.toLowerCase() ?? '';
+    final dataStr = data?.toUpperCase() ?? '';
+    if (codeStr == '100' || msg == 'success' || dataStr == 'SUCCESSFUL') {
+      return PaymentStatusEnum.success;
+    }
+    if (codeStr == '101' || msg == 'pending') {
+      return PaymentStatusEnum.pending;
+    }
+    if (codeStr == '102' || msg == 'failed') {
+      return PaymentStatusEnum.failed;
+    }
+    return codeToStatus[codeStr] ?? PaymentStatusEnum.unknown;
   }
 
   static String message(PaymentStatusEnum status, [String? serverMessage]) {
