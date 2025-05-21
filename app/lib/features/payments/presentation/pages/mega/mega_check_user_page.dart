@@ -22,13 +22,13 @@ class MegaCheckUserPage extends StatefulWidget {
 }
 
 class _MegaCheckUserPageState extends State<MegaCheckUserPage> {
-  final _phoneController = TextEditingController(text: '996');
+  final _phoneController = TextEditingController(text: '996550667567');
   final _amountController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _amountController.text = widget.amount ?? '';
+    _amountController.text = '1' ;
   }
 
   @override

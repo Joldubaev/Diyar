@@ -199,7 +199,7 @@ class _LoadedCartViewState extends State<LoadedCartView> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Мы работаем с  ${startWorkTime.hour} утро до  ${endWorkTime.hour} вечера. Пожалуйста, сделайте заказ позже.',
+                'Мы работаем с  ${startWorkTime.hour} утра  до  ${endWorkTime.hour} вечера. Пожалуйста, сделайте заказ позже.',
                 style: Theme.of(dialogContext).textTheme.bodyMedium,
                 textAlign: TextAlign.center,
               ),

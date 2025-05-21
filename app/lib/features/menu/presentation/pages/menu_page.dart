@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'dart:developer';
+import 'package:shimmer/shimmer.dart';
 
 @RoutePage()
 class MenuPage extends StatefulWidget {
@@ -150,16 +151,36 @@ class _MenuPageState extends State<MenuPage> with SingleTickerProviderStateMixin
                   ),
                 const SizedBox(height: 10),
                 Expanded(
-                  child: RefreshIndicator(
-                    onRefresh: () async {
-                      context.read<MenuBloc>().add(GetFoodsByCategoryEvent());
-                      if (categories.isNotEmpty &&
-                          _activeIndex.value < categories.length &&
-                          categories[_activeIndex.value].name != null) {
-                        context.read<MenuBloc>().add(GetProductsEvent(foodName: categories[_activeIndex.value].name!));
+                  child: GestureDetector(
+                    onHorizontalDragEnd: (details) {
+                      // Свайп вправо — следующая категория
+                      if (details.primaryVelocity != null && details.primaryVelocity! > 0) {
+                        final nextIndex = _activeIndex.value + 1;
+                        if (nextIndex < categories.length) {
+                          _scrollToCategory(nextIndex);
+                        }
+                      }
+                      // Свайп влево — предыдущая категория
+                      if (details.primaryVelocity != null && details.primaryVelocity! < 0) {
+                        final prevIndex = _activeIndex.value - 1;
+                        if (prevIndex >= 0) {
+                          _scrollToCategory(prevIndex);
+                        }
                       }
                     },
-                    child: _buildProductSection(state, isProductsLoading, hasProductsLoadingFailed),
+                    child: RefreshIndicator(
+                      onRefresh: () async {
+                        context.read<MenuBloc>().add(GetFoodsByCategoryEvent());
+                        if (categories.isNotEmpty &&
+                            _activeIndex.value < categories.length &&
+                            categories[_activeIndex.value].name != null) {
+                          context
+                              .read<MenuBloc>()
+                              .add(GetProductsEvent(foodName: categories[_activeIndex.value].name!));
+                        }
+                      },
+                      child: _buildProductSection(state, isProductsLoading, hasProductsLoadingFailed),
+                    ),
                   ),
                 ),
               ],
@@ -172,29 +193,69 @@ class _MenuPageState extends State<MenuPage> with SingleTickerProviderStateMixin
 
   /// Строит секцию продуктов в зависимости от текущего состояния Bloc
   Widget _buildProductSection(MenuState state, bool isProductsLoading, bool hasProductsLoadingFailed) {
-    // Показываем загрузку, если грузятся именно продукты
+    Widget child;
     if (isProductsLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    // Показываем ошибку, если была ошибка загрузки ПРОДУКТОВ
-    // и локальный список `menu` пуст (т.е. нет старых данных для показа)
-    if (hasProductsLoadingFailed && menu.isEmpty) {
-      String errorMessage = "Неизвестная ошибка"; // Сообщение по умолчанию
+      child = _ShimmerProductsList();
+    } else if (hasProductsLoadingFailed && menu.isEmpty) {
+      String errorMessage = "Неизвестная ошибка";
       if (state is GetProductsFailure) {
-        // Проверяем тип перед доступом к message
         errorMessage = state.message;
       }
-      return Center(child: Text("Ошибка загрузки продуктов: $errorMessage"));
+      child = Center(child: Text("Ошибка загрузки продуктов: $errorMessage"));
+    } else {
+      child = ProductsList(
+        activeIndex: _activeIndex,
+        itemScrollController: _itemScrollController,
+        itemPositionsListener: _itemPositionsListener,
+      );
     }
 
-    // Во всех остальных случаях (включая Search*, GetProductsLoaded, или GetProductsFailure с непустым `menu`)
-    return ProductsList(
-      activeIndex: _activeIndex,
-      itemScrollController: _itemScrollController,
-      itemPositionsListener: _itemPositionsListener,
-      // Передаем список продуктов, если ProductsList его ожидает
-      // foods: menu,
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 350),
+      transitionBuilder: (Widget child, Animation<double> animation) {
+        return FadeTransition(
+          opacity: animation,
+          child: SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0.1, 0),
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          ),
+        );
+      },
+      child: KeyedSubtree(
+        key: ValueKey(_activeIndex.value.toString() + isProductsLoading.toString()),
+        child: child,
+      ),
+    );
+  }
+}
+
+class _ShimmerProductsList extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      itemCount: 6,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: 16,
+        crossAxisSpacing: 16,
+        childAspectRatio: 0.8,
+      ),
+      itemBuilder: (context, index) {
+        return Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+            ),
+          ),
+        );
+      },
     );
   }
 }

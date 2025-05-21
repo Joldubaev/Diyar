@@ -7,6 +7,7 @@ class PaymentStatusTypeMapper {
       case 'Successful':
         return PaymentStatusType.success;
       case "Await":
+      case "New":
         return PaymentStatusType.pending;
       case "Reject":
       default:
@@ -23,7 +24,7 @@ extension PaymentStatusTypeExtension on PaymentStatusType {
       case PaymentStatusType.pending:
         return 'Платеж в обработке';
       case PaymentStatusType.error:
-      return 'Ошибка оплаты';
+        return 'Ошибка оплаты';
     }
   }
 
@@ -34,7 +35,7 @@ extension PaymentStatusTypeExtension on PaymentStatusType {
       case PaymentStatusType.pending:
         return 'assets/icons/await.svg';
       case PaymentStatusType.error:
-      return 'assets/icons/cancel.svg';
+        return 'assets/icons/cancel.svg';
     }
   }
 }

@@ -23,20 +23,17 @@ class PaymentStatusWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    Color color;
     Color iconBg;
+    PaymentStatusType status = this.status;
 
     switch (status) {
       case PaymentStatusType.success:
-        color = Colors.green;
         iconBg = Colors.green.withValues(alpha: 0.15);
         break;
       case PaymentStatusType.pending:
-        color = Colors.grey;
         iconBg = Colors.grey.withValues(alpha: 0.15);
         break;
       case PaymentStatusType.error:
-        color = Colors.red;
         iconBg = Colors.red.withValues(alpha: 0.15);
         break;
     }
@@ -55,14 +52,20 @@ class PaymentStatusWidget extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               child: Center(
-                child: SvgPicture.asset(
-                  'assets/icons/${status == PaymentStatusType.success ? 'check' : status == PaymentStatusType.pending ? 'pending' : 'error'}.svg',
-                  colorFilter: ColorFilter.mode(
-                    color,
-                    BlendMode.srcIn,
-                  ),
-                  height: 50,
-                ),
+                child: status == PaymentStatusType.success
+                    ? SvgPicture.asset(
+                        'assets/icons/success.svg',
+                        colorFilter: ColorFilter.mode(Colors.green, BlendMode.srcIn),
+                      )
+                    : status == PaymentStatusType.pending
+                        ? SvgPicture.asset(
+                            'assets/icons/await.svg',
+                            colorFilter: ColorFilter.mode(Colors.grey, BlendMode.srcIn),
+                          )
+                        : SvgPicture.asset(
+                            'assets/icons/cancel.svg',
+                            colorFilter: ColorFilter.mode(Colors.red, BlendMode.srcIn),
+                          ),
               ),
             ),
             const SizedBox(height: 24),

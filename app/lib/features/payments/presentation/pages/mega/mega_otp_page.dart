@@ -76,9 +76,9 @@ class _MegaOtpPageState extends State<MegaOtpPage> {
         }
         if (state is PaymentInitiateSuccess) {
           context.router.push(
-            MegaPaymentStatusRoute(
+            PaymentStatusRoute(
               amount: widget.amount ?? 0,
-              orderNumber: widget.orderNumber,
+              orderNumber: widget.orderNumber.toString(),
             ),
           );
         }

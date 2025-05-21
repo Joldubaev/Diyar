@@ -1,16 +1,12 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:diyar/core/components/components.dart';
 import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/core/theme/theme.dart';
-import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/features.dart';
 import 'package:diyar/features/profile/prof.dart';
 import 'package:diyar/l10n/l10n.dart';
-import 'package:diyar/shared/presentation/pages/widgets/news_widget.dart';
 import 'package:diyar/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../widgets/sales_section_page.dart';
 
 @RoutePage()
 class HomePage extends StatefulWidget {
@@ -53,17 +49,22 @@ class _HomePageState extends State<HomePage> {
             return SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
+                spacing: 20,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SalesSection(),
-                  const SizedBox(height: 10),
-                  if (menu.isNotEmpty) _PopularSection(menu: menu),
-                  const SizedBox(height: 20),
-                  const _AboutUsSection(),
-                  const SizedBox(height: 10),
-                  const _NewsSection(),
-                  const SizedBox(height: 20),
-                  const _ContactTile(),
+                  const SalesSectionWidget(),
+                  if (menu.isNotEmpty) PopularFoodSectionWidget(menu: menu),
+                  AboutUsWidget(
+                    image: 'assets/images/about.png',
+                    onTap: () => context.router.push(const AboutUsRoute()),
+                  ),
+                  NewsWidgets(
+                    subtitle: context.l10n.news,
+                    title: 'Дияр',
+                    image: 'assets/images/news_da.png',
+                    onTap: () => context.router.push(const NewsRoute()),
+                  ),
+                  const ContactTileWidget(),
                 ],
               ),
             );
@@ -114,109 +115,4 @@ class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
-}
-
-class _PopularSection extends StatelessWidget {
-  final List<FoodEntity> menu;
-
-  const _PopularSection({required this.menu});
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    final theme = Theme.of(context);
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          l10n.popularFood,
-          style: theme.textTheme.titleSmall?.copyWith(color: theme.colorScheme.onSurface),
-        ),
-        const SizedBox(height: 10),
-        SizedBox(
-          width: double.infinity,
-          height: 220,
-          child: BlocBuilder<CartBloc, CartState>(
-            builder: (context, cartState) {
-              List<CartItemEntity> cartItems = [];
-              if (cartState is CartLoaded) {
-                cartItems = cartState.items;
-              }
-              return ListView.separated(
-                scrollDirection: Axis.horizontal,
-                separatorBuilder: (context, index) => const SizedBox(width: 10),
-                itemCount: menu.length,
-                itemBuilder: (context, index) {
-                  final food = menu[index];
-                  final cartItem = cartItems.firstWhere(
-                    (element) => element.food?.id == food.id,
-                    orElse: () => CartItemEntity(food: food, quantity: 0),
-                  );
-                  return SizedBox(
-                    width: 200,
-                    child: ProductItemWidget(
-                      food: food,
-                      quantity: cartItem.quantity ?? 0,
-                    ),
-                  );
-                },
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _AboutUsSection extends StatelessWidget {
-  const _AboutUsSection();
-
-  @override
-  Widget build(BuildContext context) {
-    return AboutUsWidget(
-      image: 'assets/images/about.png',
-      onTap: () => context.router.push(const AboutUsRoute()),
-    );
-  }
-}
-
-class _NewsSection extends StatelessWidget {
-  const _NewsSection();
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = context.l10n;
-
-    return NewsWidgets(
-      subtitle: l10n.news,
-      title: 'Дияр',
-      image: 'assets/images/news_da.png',
-      onTap: () => context.router.push(const NewsRoute()),
-    );
-  }
-}
-
-class _ContactTile extends StatelessWidget {
-  const _ContactTile();
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final l10n = context.l10n;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: const BorderRadius.all(Radius.circular(12)),
-      ),
-      child: SettingsTile(
-        leading: const Icon(Icons.phone),
-        text: l10n.contact,
-        onPressed: () => context.router.push(const ContactRoute()),
-      ),
-    );
-  }
 }

@@ -1,8 +1,10 @@
+import 'package:diyar/core/components/components.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class RegistrationAlertDialog extends StatelessWidget {
-  final VoidCallback onRegister; // Функция для кнопки "Да"
-  final VoidCallback onCancel; // Функция для кнопки "Нет"
+  final VoidCallback onRegister;
+  final VoidCallback onCancel;
 
   const RegistrationAlertDialog({
     super.key,
@@ -12,62 +14,69 @@ class RegistrationAlertDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(8)),
+    final theme = Theme.of(context);
+    return Dialog(
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(24),
       ),
-      title: Row(
-        children: [
-          Icon(Icons.person_add, color: Theme.of(context).colorScheme.primary),
-          const SizedBox(width: 10),
-          Text(
-            "Регистрация",
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-        ],
-      ),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Вы не авторизованы.",
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  fontWeight: FontWeight.bold,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SvgPicture.asset(
+              "assets/icons/user.svg",
+              width: 80,
+              height: 80,
+            ),
+            const SizedBox(height: 18),
+            Text(
+              "Регистрация",
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 12),
+            Text(
+              "Создайте аккаунт или войдите, чтобы разблокировать все функции",
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: Colors.grey[600],
+                fontWeight: FontWeight.normal,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 28),
+            SizedBox(
+              width: double.infinity,
+              child: SubmitButtonWidget(
+                onTap: onRegister,
+                bgColor: theme.colorScheme.primary,
+                title: "Зарегистрироваться",
+                textStyle: theme.textTheme.bodyLarge?.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
                 ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            "Для продолжения вам необходимо зарегистрироваться или войти в систему. Хотите зарегистрироваться сейчас?",
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-        ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: SubmitButtonWidget(
+                onTap: onCancel,
+                bgColor: theme.colorScheme.onPrimary,
+                title: "Отмена",
+                textStyle: theme.textTheme.bodyLarge?.copyWith(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
-      actionsPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-      actions: <Widget>[
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.grey[300],
-            foregroundColor: Colors.black,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8.0)),
-            ),
-          ),
-          onPressed: onCancel, // Вызываем функцию отмены
-          child: const Text("Нет"),
-        ),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Theme.of(context).colorScheme.primary,
-            foregroundColor: Colors.white,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8.0)),
-            ),
-          ),
-          onPressed: onRegister, // Вызываем функцию регистрации
-          child: const Text("Да"),
-        ),
-      ],
     );
   }
 }

@@ -40,7 +40,7 @@ class HistoryReDatasourceImpl implements HistoryReDatasource {
   Future<List<UserPickupHistoryModel>> getPickupHistory() async {
     try {
       var token = prefs.getString(AppConst.accessToken) ?? '';
-      final res = await dio.post(
+      final res = await dio.get(
         ApiConst.getPickupHistoryOrders,
         options: Options(headers: ApiConst.authMap(token)),
       );

@@ -22,13 +22,13 @@ class MbankInitiatePage extends StatefulWidget {
 }
 
 class _MbankInitiatePageState extends State<MbankInitiatePage> {
-  final _phoneController = TextEditingController(text: '996');
+  final _phoneController = TextEditingController(text: '996703182859');
   final _amountController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _amountController.text = widget.amount ?? '';
+    _amountController.text = '1';
   }
 
   @override
@@ -82,7 +82,7 @@ class _MbankInitiatePageState extends State<MbankInitiatePage> {
                   hintText: '',
                   controller: _phoneController,
                   inputType: TextInputType.phone,
-                 phoneFormatType: PhoneFormatType.withoutPlus,
+                  phoneFormatType: PhoneFormatType.withoutPlus,
                   onChanged: (value) {
                     if (value.length > 13) {
                       _phoneController.text = value.substring(0, 13);
