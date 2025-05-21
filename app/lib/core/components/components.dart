@@ -11,7 +11,7 @@ export 'input/custom_input_widget.dart';
 export 'tile/custom_tile.dart';
 export 'product/product_item_content_widget.dart';
 export 'product/product_item_widget.dart';
-export 'custom_dialog/resgister_dialog.dart';
+export 'custom_dialog/register_dialog.dart';
 export 'custom_dialog/custom_dialog.dart';
 export 'models/food_item_order_model.dart';
 export 'models/food_item_order_entity.dart';
