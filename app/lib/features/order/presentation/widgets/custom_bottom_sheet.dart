@@ -51,10 +51,12 @@ class CustomBottomSheet extends StatelessWidget {
       listener: (context, state) {
         if (state is CreateOrderLoaded) {
           if (paymentType == PaymentTypeDelivery.online) {
-            context.router.push(PaymentsRoute(
-              orderNumber: state.res,
-              amount: totalOrderCost.toString(),
-            ));
+            context.router.push(
+              PaymentsRoute(
+                orderNumber: state.res,
+                amount: totalOrderCost.toString(),
+              ),
+            );
             Navigator.of(context).pop();
           } else {
             showDialog(

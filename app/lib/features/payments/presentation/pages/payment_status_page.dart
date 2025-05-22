@@ -127,6 +127,7 @@ class _PaymentStatusPageState extends State<PaymentStatusPage> {
       );
     }
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.onPrimary,
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),

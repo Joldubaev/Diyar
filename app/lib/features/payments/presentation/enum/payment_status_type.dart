@@ -22,7 +22,7 @@ extension PaymentStatusTypeExtension on PaymentStatusType {
       case PaymentStatusType.success:
         return 'Платеж осуществлен';
       case PaymentStatusType.pending:
-        return 'Платеж в обработке';
+        return 'Платеж в обработке \nожидайте';
       case PaymentStatusType.error:
         return 'Ошибка оплаты';
     }
@@ -33,7 +33,7 @@ extension PaymentStatusTypeExtension on PaymentStatusType {
       case PaymentStatusType.success:
         return 'assets/icons/success.svg';
       case PaymentStatusType.pending:
-        return 'assets/icons/await.svg';
+        return 'assets/images/loading.gif';
       case PaymentStatusType.error:
         return 'assets/icons/cancel.svg';
     }
