@@ -1,6 +1,5 @@
 import 'package:diyar/features/features.dart';
 import 'package:flutter/material.dart';
-import 'package:diyar/features/payments/presentation/widgets/payment_method_tile_widget.dart';
 import 'package:diyar/l10n/l10n.dart';
 
 class PaymentMethodBottomSheet extends StatelessWidget {

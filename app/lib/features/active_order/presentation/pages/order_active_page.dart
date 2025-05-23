@@ -2,8 +2,6 @@ import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
-import 'package:diyar/features/active_order/active_order.dart';
-import 'package:diyar/features/curier/curier.dart';
 import 'package:diyar/features/features.dart';
 import 'package:diyar/injection_container.dart';
 import 'package:diyar/l10n/l10n.dart';

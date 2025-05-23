@@ -1,4 +1,3 @@
-export 'card_hall.dart';
 export 'contact_card.dart';
 export 'profile_tile.dart';
 export 'settings_tile.dart';

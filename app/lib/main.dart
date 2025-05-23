@@ -1,11 +1,6 @@
 import 'dart:developer';
-
-import 'package:diyar/features/active_order/active_order.dart';
-
 import 'core/core.dart';
 import 'features/app/cubit/remote_config_cubit.dart';
-import 'features/curier/curier.dart';
-import 'features/payments/presentation/presentation.dart';
 import 'features/pick_up/pick_up.dart';
 import 'firebase_options.dart';
 import 'injection_container.dart';
@@ -16,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'injection_container.dart' as di;
 import 'features/cart/cart.dart';
 import 'features/features.dart';
-import 'features/profile/presentation/cubit/profile_cubit.dart';
 import 'l10n/l10n.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

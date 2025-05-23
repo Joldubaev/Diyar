@@ -70,7 +70,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       if (isFirstLaunch) {
         log("[Splash] First launch detected. Setting flag and navigating to Sign In.");
         await prefs.setBool(AppConst.firstLaunch, false);
-        _navigateTo(const SignInRoute());
+        _navigateTo(const MainRoute());
         return;
       }
 

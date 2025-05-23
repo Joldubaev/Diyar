@@ -1,12 +1,13 @@
 import 'dart:developer';
+import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/auth/auth.dart';
 
 abstract class ProfileRemoteDataSource {
-  Future<UserModel> getUser();
-  Future<void> updateUser(String name, String phone);
-  Future<void> deleteUser();
+  Future<Either<Failure, UserModel>> getUser();
+  Future<Either<Failure, String>> updateUser(String name, String phone);
+  Future<Either<Failure, String>> deleteUser();
 }
 
 class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
@@ -16,7 +17,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   ProfileRemoteDataSourceImpl(this._dio, this._prefs);
 
   @override
-  Future<UserModel> getUser() async {
+  Future<Either<Failure, UserModel>> getUser() async {
     try {
       log('get user phone: ${_prefs.getString(AppConst.phone)}');
 
@@ -31,18 +32,18 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
       if (res.statusCode == 200) {
         final json = res.data['message'];
         log('[GET USER] message: $json');
-        return UserModel.fromJson(json);
+        return Right(UserModel.fromJson(json));
       } else {
-        throw ServerException('Error fetching user data', res.statusCode);
+        return Left(ServerFailure('Error fetching user data', res.statusCode));
       }
     } catch (e) {
       log('[GET USER ERROR] $e');
-      throw ServerException('Error fetching user data', null);
+      return Left(ServerFailure('Error fetching user data', null));
     }
   }
 
   @override
-  Future<void> deleteUser() async {
+  Future<Either<Failure, String>> deleteUser() async {
     try {
       final token = _prefs.getString(AppConst.accessToken);
       var res = await _dio.delete(
@@ -50,35 +51,35 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
         options: Options(headers: ApiConst.authMap(token ?? '')),
       );
 
-      if (res.statusCode != 200) {
-        throw ServerException(
+      if (res.data['code'] == 200) {
+        return Right(res.data['message']);
+      } else {
+        return Left(ServerFailure(
           'Error deleting user',
           res.statusCode,
-        );
+        ));
       }
     } on DioException catch (e) {
       if (e.response != null) {
-        // Check the status code and handle different scenarios
         if (e.response!.statusCode == 404) {
           log('Error: User not found (404). $e');
-          throw Exception('User not found.');
+          return Left(ServerFailure('User not found.', e.response!.statusCode));
         } else {
           log('Error: ${e.response!.statusCode} - ${e.response!.statusMessage}');
-          throw Exception('Server error: ${e.response!.statusCode}');
+          return Left(ServerFailure('Server error: ${e.response!.statusCode}', e.response!.statusCode));
         }
       } else {
-        // If there's no response, it might be a network issue
         log('Network error: ${e.message}');
-        throw Exception('Network error: ${e.message}');
+        return Left(ServerFailure('Network error: ${e.message}', null));
       }
     } catch (e) {
       log('Unexpected error: $e');
-      throw Exception('Unexpected error: $e');
+      return Left(ServerFailure('Unexpected error: $e', null));
     }
   }
 
   @override
-  Future<void> updateUser(String name, String phone) async {
+  Future<Either<Failure, String>> updateUser(String name, String phone) async {
     try {
       var res = await _dio.post(
         ApiConst.updateUser,
@@ -87,17 +88,19 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
           headers: ApiConst.authMap(_prefs.getString(AppConst.accessToken) ?? ''),
         ),
       );
-      if (res.statusCode != 200) {
-        throw ServerException(
+      if (res.data['code'] == 200) {
+        return Right(res.data['message']);
+      } else {
+        return Left(ServerFailure(
           'Error updating user',
           res.statusCode,
-        );
+        ));
       }
     } catch (e) {
-      throw ServerException(
+      return Left(ServerFailure(
         'Error updating user',
         null,
-      );
+      ));
     }
   }
 }

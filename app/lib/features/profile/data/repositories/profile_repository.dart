@@ -1,10 +1,12 @@
+import 'package:dartz/dartz.dart';
+import 'package:diyar/core/core.dart';
 import 'package:diyar/features/auth/auth.dart';
-import 'package:diyar/features/profile/prof.dart';
+import 'package:diyar/features/profile/profile.dart';
 
 abstract class ProfileRepository {
-  Future<UserModel> getUser();
-  Future<void> updateUser(String name, String phone);
-  Future<void> deleteUser();
+  Future<Either<Failure, UserModel>> getUser();
+  Future<Either<Failure, String>> updateUser(String name, String phone);
+  Future<Either<Failure, String>> deleteUser();
 }
 
 class ProfileRepositoryImpl implements ProfileRepository {
@@ -13,17 +15,29 @@ class ProfileRepositoryImpl implements ProfileRepository {
   ProfileRepositoryImpl(this._remoteDataSource);
 
   @override
-  Future<UserModel> getUser() async {
-    return _remoteDataSource.getUser();
+  Future<Either<Failure, UserModel>> getUser() async {
+    try {
+      return await _remoteDataSource.getUser();
+    } catch (e) {
+      return Left(ServerFailure(e.toString(), null));
+    }
   }
 
   @override
-  Future<void> updateUser(name, phone) async {
-    return _remoteDataSource.updateUser(name, phone);
+  Future<Either<Failure, String>> updateUser(String name, String phone) async {
+    try {
+      return await _remoteDataSource.updateUser(name, phone);
+    } catch (e) {
+      return Left(ServerFailure(e.toString(), null));
+    }
   }
 
   @override
-  Future<void> deleteUser() async {
-    return _remoteDataSource.deleteUser();
+  Future<Either<Failure, String>> deleteUser() async {
+    try {
+      return await _remoteDataSource.deleteUser();
+    } catch (e) {
+      return Left(ServerFailure(e.toString(), null));
+    }
   }
 }

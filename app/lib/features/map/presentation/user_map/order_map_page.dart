@@ -76,6 +76,73 @@ class _OrderMapPageState extends State<OrderMapPage> {
             bottom: 0,
             child: Icon(Icons.location_on, size: 30, color: Colors.red),
           ),
+          Align(
+            alignment: const Alignment(0.95, -0.3), // x: 0.95 (справа), y: -0.3 (немного выше центра)
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Zoom Controls
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(28.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withValues(alpha: 0.3),
+                        spreadRadius: 1,
+                        blurRadius: 3,
+                        offset: const Offset(0, 1),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.add, color: Colors.black87),
+                        onPressed: _zoomIn,
+                        iconSize: 28,
+                        padding: const EdgeInsets.all(12),
+                      ),
+                      Container(
+                        height: 1,
+                        width: 40,
+                        color: Colors.grey[300],
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.remove, color: Colors.black87),
+                        onPressed: _zoomOut,
+                        iconSize: 28,
+                        padding: const EdgeInsets.all(12),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16), // Space between zoom controls and location button
+                // Location Button
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withValues(alpha: 0.3),
+                        spreadRadius: 1,
+                        blurRadius: 3,
+                        offset: const Offset(0, 1),
+                      ),
+                    ],
+                  ),
+                  child: IconButton(
+                    icon: const Icon(Icons.navigation_outlined, color: Colors.black87),
+                    onPressed: _fetchCurrentLocation,
+                    iconSize: 28,
+                    padding: const EdgeInsets.all(16),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
       bottomSheet: BottomSheetWidget(
@@ -85,14 +152,6 @@ class _OrderMapPageState extends State<OrderMapPage> {
         onAddressCardTap: _onAddressCardTap,
         onSearchPressed: () => showMapSearchBottom(context, onSearch: _searchMap),
       ),
-      floatingActionButton: FloatingActionButtonsWidget(
-        theme: theme,
-        onNavigationPressed: _fetchCurrentLocation,
-        onZoomInPressed: _zoomIn,
-        onZoomOutPressed: _zoomOut,
-        // onSearchPressed: () => showMapSearchBottom(context, onSearch: _searchMap),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
     );
   }
 
@@ -164,7 +223,7 @@ class _OrderMapPageState extends State<OrderMapPage> {
     await _fetchCurrentLocation();
   }
 
-  final LocationSettings locationSettings = LocationSettings(
+  final LocationSettings locationSettings = const LocationSettings(
     accuracy: LocationAccuracy.high,
     distanceFilter: 100,
   );
