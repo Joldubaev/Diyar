@@ -4,11 +4,12 @@ import 'package:equatable/equatable.dart';
 class PickupOrderEntity extends Equatable {
   final int dishesCount;
   final List<FoodItemOrderEntity> foods;
-  final String prepareFor; // Время подготовки, например, "14:30"
+  final String prepareFor;
   final int price;
   final String userName;
   final String userPhone;
   final String? comment;
+  final String? paymentMethod;
 
   const PickupOrderEntity({
     required this.dishesCount,
@@ -18,6 +19,7 @@ class PickupOrderEntity extends Equatable {
     required this.userName,
     required this.userPhone,
     this.comment,
+    this.paymentMethod,
   });
 
   @override
@@ -29,5 +31,6 @@ class PickupOrderEntity extends Equatable {
         userName,
         userPhone,
         comment,
+        paymentMethod,
       ];
 }

@@ -7,7 +7,7 @@ import 'package:diyar/features/pick_up/pick_up.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class RemotePickUpDataSource {
-  Future<Either<Failure, Unit>> getPickupOrder(PickupOrderModel order);
+  Future<Either<Failure, String>> getPickupOrder(PickupOrderModel order);
 }
 
 class RemotePickUpDataSourceImpl implements RemotePickUpDataSource {
@@ -16,7 +16,7 @@ class RemotePickUpDataSourceImpl implements RemotePickUpDataSource {
   RemotePickUpDataSourceImpl(this._dio, this._prefs);
 
   @override
-  Future<Either<Failure, Unit>> getPickupOrder(PickupOrderModel order) async {
+  Future<Either<Failure, String>> getPickupOrder(PickupOrderModel order) async {
     try {
       var res = await _dio.post(
         ApiConst.getPickupOrder,
@@ -26,7 +26,7 @@ class RemotePickUpDataSourceImpl implements RemotePickUpDataSource {
         ),
       );
       if ([200, 201].contains(res.statusCode)) {
-        return const Right(unit);
+        return  Right(res.data['message'] );
       } else {
         log('Failed to pickup order: ${res.statusCode} ${res.data}');
         return Left(ServerFailure(res.data?['message']?.toString() ?? 'Failed to pickup order', res.statusCode));

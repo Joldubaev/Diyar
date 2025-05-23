@@ -15,6 +15,7 @@ class PickupOrderModel {
   final String? userName;
   final String? userPhone;
   final String? comment;
+  final String? paymentMethod;
 
   PickupOrderModel({
     this.dishesCount,
@@ -24,6 +25,7 @@ class PickupOrderModel {
     this.userName,
     this.userPhone,
     this.comment,
+    this.paymentMethod,
   });
 
   Map<String, dynamic> toJson() => {
@@ -34,6 +36,7 @@ class PickupOrderModel {
         "userName": userName,
         "userPhone": userPhone,
         "comment": comment,
+        "paymentMethod": paymentMethod,
       };
 
   factory PickupOrderModel.fromJson(Map<String, dynamic> json) => PickupOrderModel(
@@ -46,6 +49,7 @@ class PickupOrderModel {
         userName: json["userName"],
         userPhone: json["userPhone"],
         comment: json["comment"],
+        paymentMethod: json["paymentMethod"],
       );
 
   factory PickupOrderModel.fromEntity(PickupOrderEntity entity) {
@@ -57,6 +61,7 @@ class PickupOrderModel {
       userName: entity.userName,
       userPhone: entity.userPhone,
       comment: entity.comment,
+      paymentMethod: entity.paymentMethod,
     );
   }
 
@@ -76,6 +81,7 @@ class PickupOrderModel {
       userName: userName!,
       userPhone: userPhone!,
       comment: comment, // comment может быть nullable и в модели, и в сущности
+      paymentMethod: paymentMethod, // paymentMethod может быть nullable и в модели, и в сущности
     );
   }
 }

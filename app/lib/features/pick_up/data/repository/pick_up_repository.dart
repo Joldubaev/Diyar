@@ -8,13 +8,13 @@ class PickUpRepository extends PickUpRepositories {
   PickUpRepository(this.remoteDataSource);
 
   @override
-  Future<Either<Failure, Unit>> getPickupOrder(PickupOrderEntity orderEntity) async {
+  Future<Either<Failure, String>> getPickupOrder(PickupOrderEntity orderEntity) async {
     try {
-      final orderModel = PickupOrderModel.fromEntity(orderEntity);
-      return await remoteDataSource.getPickupOrder(orderModel);
+      final model = PickupOrderModel.fromEntity(orderEntity);
+      final result = await remoteDataSource.getPickupOrder(model);
+      return result;
     } catch (e) {
-      return Left(ServerFailure(
-          'Repository Error: Failed to map PickupOrderEntity or during datasource call: ${e.toString()}', null));
+      return Left(ServerFailure('Error fetching pickup order: $e', null));
     }
   }
 }

@@ -3,6 +3,7 @@ class ApiConst {
   // static const baseUrl = "https://api.diyar.kg";
   // static const baseUrl = "http://176.126.164.230:8088";
   static const baseUrl = "http://20.127.235.82/api/v1";
+  static const baseUrl2 = "http://20.127.235.82/api/v2";
   // static const baseUrl = "https://20.127.235.82/";
 
   // AUTH
@@ -65,7 +66,7 @@ class ApiConst {
   // ORDER
   static const createOrder = "$baseUrl/orders/create-order";
   static const getActualOrders = "$baseUrl/orders/get-all-actual-orders-by-user";
-  static const getPickupOrder = "$baseUrl/pickup-orders/create-pickup-order";
+  static const getPickupOrder = "$baseUrl2/pickup-orders/create-pickup-order";
   static const getPickupHistoryOrders = "$baseUrl/pickup-orders/get-all-pickup-orders-by-user";
   static const getOrderItem = "$baseUrl/orders/get-order";
   static const getOrderHistory = "$baseUrl/orders/get-history";
