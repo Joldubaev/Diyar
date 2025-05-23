@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/router/routes.gr.dart';
-import 'package:diyar/features/profile/prof.dart';
+import 'package:diyar/features/profile/profile.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 

@@ -28,15 +28,13 @@ class BottomSheetWidget extends StatelessWidget {
           color: theme.colorScheme.surface,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+        padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Добавляем строку поиска
-              Container(
+              SizedBox(
                 width: double.infinity,
-                margin: const EdgeInsets.only(bottom: 14),
                 child: CustomInputWidget(
                   filledColor: theme.colorScheme.surface,
                   hintText: 'Поиск адреса',
@@ -45,16 +43,16 @@ class BottomSheetWidget extends StatelessWidget {
                   isReadOnly: true,
                 ),
               ),
-              // Карточка стоимости доставки
+              const SizedBox(height: 16.0),
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 18),
-                margin: const EdgeInsets.only(bottom: 14),
+                padding: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
                   color: theme.colorScheme.primary.withValues(alpha: 0.07),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Icon(Icons.local_shipping, color: theme.colorScheme.primary, size: 28),
                     const SizedBox(width: 12),
@@ -77,7 +75,7 @@ class BottomSheetWidget extends StatelessWidget {
                   ],
                 ),
               ),
-              // Карточка адреса
+              const SizedBox(height: 16.0),
               Material(
                 color: Colors.transparent,
                 child: InkWell(
@@ -85,23 +83,28 @@ class BottomSheetWidget extends StatelessWidget {
                   onTap: onAddressCardTap,
                   child: Ink(
                     width: double.infinity,
-                    padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 18),
+                    padding: const EdgeInsets.all(16.0),
                     decoration: BoxDecoration(
                       color: theme.colorScheme.primary,
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Icon(Icons.place, color: theme.colorScheme.onPrimary, size: 26),
                         const SizedBox(width: 12),
                         Expanded(
                           child: isLoadingAddress
                               ? Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    const SizedBox(
+                                    SizedBox(
                                       width: 18,
                                       height: 18,
-                                      child: CircularProgressIndicator(strokeWidth: 2),
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: theme.colorScheme.onPrimary,
+                                      ),
                                     ),
                                     const SizedBox(width: 10),
                                     Text(
@@ -130,7 +133,7 @@ class BottomSheetWidget extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 16.0),
             ],
           ),
         ),

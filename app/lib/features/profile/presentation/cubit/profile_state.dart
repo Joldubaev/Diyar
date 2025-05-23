@@ -29,3 +29,22 @@ class ProfileDeleteLoading extends ProfileState {}
 class ProfileDeleteLoaded extends ProfileState {}
 
 class ProfileDeleteError extends ProfileState {}
+
+// Update user
+class ProfileUpdateLoading extends ProfileState {}
+class ProfileUpdateLoaded extends ProfileState {
+  final String message;
+
+  const ProfileUpdateLoaded(this.message);
+
+  @override
+  List<Object> get props => [message];
+}
+class ProfileUpdateError extends ProfileState {
+  final String message;
+
+  const ProfileUpdateError(this.message);
+
+  @override
+  List<Object> get props => [message];
+}

@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/auth/auth.dart';
-import 'package:diyar/features/profile/prof.dart';
+import 'package:diyar/features/profile/profile.dart';
 import 'package:equatable/equatable.dart';
 
 part 'profile_state.dart';
@@ -17,21 +17,35 @@ class ProfileCubit extends Cubit<ProfileState> {
     if (!isAuth) return;
 
     emit(ProfileGetLoading());
-    try {
-      user = await _userRepository.getUser();
-      emit(ProfileGetLoaded(user!));
-    } catch (e) {
-      emit(ProfileGetError());
-    }
+    final result = await _userRepository.getUser();
+    result.fold(
+      (failure) => emit(ProfileGetError()),
+      (loadedUser) {
+        user = loadedUser;
+        emit(ProfileGetLoaded(loadedUser));
+      },
+    );
   }
 
-  deleteUser() async {
+  Future<void> deleteUser() async {
     emit(ProfileDeleteLoading());
-    try {
-      await _userRepository.deleteUser();
-      emit(ProfileDeleteLoaded());
-    } catch (e) {
-      emit(ProfileDeleteError());
-    }
+    final result = await _userRepository.deleteUser();
+    result.fold(
+      (failure) => emit(ProfileDeleteError()),
+      (_) => emit(ProfileDeleteLoaded()),
+    );
+  }
+
+  Future<void> updateUser(String name, String phone) async {
+    emit(ProfileUpdateLoading());
+    final result = await _userRepository.updateUser(name, phone);
+    result.fold(
+      (failure) => emit(ProfileUpdateError(failure.message)),
+      (message) {
+        emit(ProfileUpdateLoaded(message));
+
+        getUser();
+      },
+    );
   }
 }

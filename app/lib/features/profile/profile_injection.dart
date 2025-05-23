@@ -1,4 +1,4 @@
-import 'package:diyar/features/profile/prof.dart';
+import 'package:diyar/features/profile/profile.dart';
 import 'package:diyar/injection_container.dart';
 
 profileInjection() {

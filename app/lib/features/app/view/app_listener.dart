@@ -1,7 +1,6 @@
 import 'dart:io';
-
-import '../../../core/launch/launch.dart';
-import '../cubit/remote_config_cubit.dart';
+import 'package:diyar/core/launch/launch.dart';
+import 'package:diyar/features/app/cubit/remote_config_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

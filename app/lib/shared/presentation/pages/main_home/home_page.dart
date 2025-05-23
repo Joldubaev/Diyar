@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/router/routes.gr.dart';
 import 'package:diyar/core/theme/theme.dart';
 import 'package:diyar/features/features.dart';
-import 'package:diyar/features/profile/prof.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:diyar/shared/shared.dart';
 import 'package:flutter/material.dart';
