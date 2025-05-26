@@ -153,16 +153,16 @@ class _MenuPageState extends State<MenuPage> with SingleTickerProviderStateMixin
                 Expanded(
                   child: GestureDetector(
                     onHorizontalDragEnd: (details) {
-                      // Свайп вправо — следующая категория
+                      // Свайп влево  — следующая категория
                       if (details.primaryVelocity != null && details.primaryVelocity! > 0) {
-                        final nextIndex = _activeIndex.value + 1;
+                        final nextIndex = _activeIndex.value - 1;
                         if (nextIndex < categories.length) {
                           _scrollToCategory(nextIndex);
                         }
                       }
-                      // Свайп влево — предыдущая категория
+                      // Свайп вправо— предыдущая категория
                       if (details.primaryVelocity != null && details.primaryVelocity! < 0) {
-                        final prevIndex = _activeIndex.value - 1;
+                        final prevIndex = _activeIndex.value + 1;
                         if (prevIndex >= 0) {
                           _scrollToCategory(prevIndex);
                         }

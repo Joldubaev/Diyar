@@ -2,6 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/app/cubit/remote_config_cubit.dart';
 import 'package:diyar/features/cart/cart.dart';
+import 'package:diyar/l10n/l10n.dart';
+import 'package:diyar/shared/presentation/pages/widgets/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,30 +18,12 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  int currentIndex = 0;
-
   @override
   void initState() {
     super.initState();
     context.read<CartBloc>().add(LoadCart());
     SchedulerBinding.instance.addPostFrameCallback((_) {
       context.read<RemoteConfigCubit>().init();
-    });
-  }
-
-  // Check authentication and handle tab changes
-  void _onTabTapped(int index) async {
-    if (index == 3 && !UserHelper.isAuth()) {
-      // If the user tries to access Profile (index 3), show registration dialog if not authenticated
-      await _showRegisterDialog(context);
-      if (!UserHelper.isAuth()) {
-        // User is still not authenticated, prevent accessing Profile
-        return;
-      }
-    }
-    // If the user is authenticated or it's not the Profile tab, update the current index
-    setState(() {
-      currentIndex = index;
     });
   }
 
@@ -61,10 +45,16 @@ class _MainPageState extends State<MainPage> {
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
           bottomNavigationBar: CustomBottomNavigationBar(
             currentIndex: tabsRouter.activeIndex,
-            onTap: (index) {
-              _onTabTapped(index);
-              // Set active tab index only if the user is authenticated or trying to access non-restricted tabs
-              if (index != 3 || UserHelper.isAuth()) {
+            onTap: (index) async {
+              final restrictedTabs = [2, 3];
+              bool allowNavigation = true;
+              if (restrictedTabs.contains(index) && !UserHelper.isAuth()) {
+                await _showRegisterDialog(context);
+                if (!UserHelper.isAuth()) {
+                  allowNavigation = false;
+                }
+              }
+              if (allowNavigation) {
                 tabsRouter.setActiveIndex(index);
               }
             },
@@ -74,7 +64,6 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  // Build Floating Action Button for the cart with authentication check
   Widget _buildFloatingActionButton(BuildContext context, ThemeData theme) {
     return BlocBuilder<CartBloc, CartState>(
       builder: (context, state) {
@@ -82,19 +71,20 @@ class _MainPageState extends State<MainPage> {
         if (state is CartLoaded) {
           cartCount = state.totalItems;
         }
-
         return Stack(
           children: [
             FloatingActionButton(
-              onPressed: () {
-                // Check if the user is authenticated before opening the cart
+              onPressed: () async {
                 if (!UserHelper.isAuth()) {
-                  _showRegisterDialog(context);
+                  await _showRegisterDialog(context);
+                  if (UserHelper.isAuth() && context.mounted) {
+                    context.router.push(const CartRoute());
+                  }
                 } else {
                   context.router.push(const CartRoute());
                 }
               },
-              tooltip: 'Корзина',
+              tooltip: context.l10n.cart,
               child: SvgPicture.asset(
                 "assets/icons/cart_icon.svg",
                 height: 40,
@@ -116,7 +106,6 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  // Helper method to build badge for cart item count
   Widget _buildBadge(ThemeData theme, int cartCount) {
     return Container(
       padding: const EdgeInsets.all(4),
@@ -139,7 +128,6 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  // Dialog to show registration prompt if user is not authenticated
   Future<void> _showRegisterDialog(BuildContext context) async {
     await showDialog(
       context: context,
@@ -156,54 +144,6 @@ class _MainPageState extends State<MainPage> {
           },
         );
       },
-    );
-  }
-}
-
-// Custom Bottom Navigation Bar with selected and unselected states
-class CustomBottomNavigationBar extends StatelessWidget {
-  final int currentIndex;
-  final Function(int) onTap;
-
-  const CustomBottomNavigationBar({
-    super.key,
-    required this.currentIndex,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final unselectedColor =
-        Theme.of(context).brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.8) : Colors.grey;
-
-    return BottomNavigationBar(
-      currentIndex: currentIndex,
-      onTap: onTap,
-      backgroundColor: theme.colorScheme.surface,
-      type: BottomNavigationBarType.fixed,
-      selectedItemColor: theme.colorScheme.primary,
-      unselectedItemColor: unselectedColor,
-      items: [
-        _buildBottomNavItem(context, "assets/icons/home_icon.svg", "Главная", currentIndex == 0),
-        _buildBottomNavItem(context, "assets/icons/menu_icon.svg", "Меню", currentIndex == 1),
-        _buildBottomNavItem(context, "assets/icons/orders_icon.svg", "История", currentIndex == 2),
-        _buildBottomNavItem(context, "assets/icons/profile_icon.svg", "Профиль", currentIndex == 3),
-      ],
-    );
-  }
-
-  BottomNavigationBarItem _buildBottomNavItem(BuildContext context, String iconPath, String label, bool isSelected) {
-    return BottomNavigationBarItem(
-      icon: SvgPicture.asset(
-        iconPath,
-        height: 24,
-        colorFilter: ColorFilter.mode(
-          isSelected ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurface,
-          BlendMode.srcIn,
-        ),
-      ),
-      label: label,
     );
   }
 }
