@@ -1,5 +1,6 @@
+
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart' show SvgPicture;
+import 'package:flutter_svg/svg.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
   final int currentIndex;
@@ -14,9 +15,8 @@ class CustomBottomNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final unselectedColor = Theme.of(context).brightness == Brightness.dark
-        ? Colors.white.withValues(alpha: 0.8)
-        : Colors.grey;
+    final unselectedColor =
+        Theme.of(context).brightness == Brightness.dark ? Colors.white.withValues(alpha: 0.8) : Colors.grey;
 
     return BottomNavigationBar(
       currentIndex: currentIndex,
@@ -26,11 +26,14 @@ class CustomBottomNavigationBar extends StatelessWidget {
       selectedItemColor: theme.colorScheme.primary,
       unselectedItemColor: unselectedColor,
       items: [
-        _buildBottomNavItem(context, "assets/icons/home_icon.svg", "Главная"),
-        _buildBottomNavItem(context, "assets/icons/menu_icon.svg", "Меню"),
-        _buildBottomNavItem(context, "assets/icons/orders_icon.svg", "История"),
-        _buildBottomNavItem(
-            context, "assets/icons/profile_icon.svg", "Профиль"),
+        _buildBottomNavItem(context, "assets/icons/home_icon.svg", "Главная", currentIndex == 0, unselectedColor,
+            theme.colorScheme.primary),
+        _buildBottomNavItem(context, "assets/icons/menu_icon.svg", "Меню", currentIndex == 1, unselectedColor,
+            theme.colorScheme.primary),
+        _buildBottomNavItem(context, "assets/icons/orders_icon.svg", "История", currentIndex == 2, unselectedColor,
+            theme.colorScheme.primary),
+        _buildBottomNavItem(context, "assets/icons/profile_icon.svg", "Профиль", currentIndex == 3, unselectedColor,
+            theme.colorScheme.primary),
       ],
     );
   }
@@ -39,13 +42,16 @@ class CustomBottomNavigationBar extends StatelessWidget {
     BuildContext context,
     String iconPath,
     String label,
+    bool isSelected,
+    Color unselectedIconColor,
+    Color selectedIconColor,
   ) {
     return BottomNavigationBarItem(
       icon: SvgPicture.asset(
         iconPath,
         height: 24,
         colorFilter: ColorFilter.mode(
-          Theme.of(context).colorScheme.onSurface,
+          isSelected ? selectedIconColor : unselectedIconColor,
           BlendMode.srcIn,
         ),
       ),
