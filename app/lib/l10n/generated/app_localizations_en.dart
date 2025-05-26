@@ -87,7 +87,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get passwordRecovery => 'Password recovery';
 
   @override
-  String get passwordRecoveryText => 'Enter your E-Mail and recovery code, as well as the new password we sent to your email.';
+  String get passwordRecoveryText =>
+      'Enter your E-Mail and recovery code, as well as the new password we sent to your email.';
 
   @override
   String get newPassword => 'New password';
@@ -96,7 +97,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pleaseEnterPassword => 'Please enter your password';
 
   @override
-  String get pleaseEnterCorrectPassword => 'Password must be at least 5 characters long';
+  String get pleaseEnterCorrectPassword =>
+      'Password must be at least 5 characters long';
 
   @override
   String get codeUpdate => 'Code update';
@@ -105,7 +107,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pleaseEnterCode => 'Please enter your recovery code';
 
   @override
-  String get pleaseEnterCorrectCode => 'Recovery code must be 5 characters long';
+  String get pleaseEnterCorrectCode =>
+      'Recovery code must be 5 characters long';
 
   @override
   String get resgisterIsFailed => 'Registration failed. Please try again.';
@@ -135,7 +138,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pleaseEnterName => 'Please enter your name';
 
   @override
-  String get pleaseEnterCorrectName => 'Name must be at least 3 characters long';
+  String get pleaseEnterCorrectName =>
+      'Name must be at least 3 characters long';
 
   @override
   String get emailExample => 'asanov@example.com';
@@ -147,7 +151,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get phone => 'Phone number';
 
   @override
-  String get pleaseEnterCorrectPhone => 'Phone number must be 10 characters long';
+  String get pleaseEnterCorrectPhone =>
+      'Phone number must be 10 characters long';
 
   @override
   String get confirmPassword => 'Confirm password';
@@ -258,7 +263,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get yourAddress => 'Your address';
 
   @override
-  String get areYouSureAddress => 'Are you sure you want to change the address?';
+  String get areYouSureAddress =>
+      'Are you sure you want to change the address?';
 
   @override
   String get loadedWrong => 'Data is loaded incorrectly';
@@ -312,7 +318,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pleaseEnterHouseNumber => 'Please enter your house number';
 
   @override
-  String get pleaseEnterCorrectHouseNumber => 'House number must be at least 1 character long';
+  String get pleaseEnterCorrectHouseNumber =>
+      'House number must be at least 1 character long';
 
   @override
   String get ofice => 'Office';
@@ -348,7 +355,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pleaseEnterChange => 'Please enter the change';
 
   @override
-  String get pleaseEnterCorrectChange => 'Change must be at least 1 character long';
+  String get pleaseEnterCorrectChange =>
+      'Change must be at least 1 character long';
 
   @override
   String get cabinet => 'Cabinet';
@@ -375,7 +383,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get createTemplate => 'Create template';
 
   @override
-  String get templateDescription => 'Having created a template, you can select it so that all order fields are automatically filled in as you specified';
+  String get templateDescription =>
+      'Having created a template, you can select it so that all order fields are automatically filled in as you specified';
 
   @override
   String get templateName => 'Template name';
@@ -408,13 +417,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get orderIsCanceled => 'Order cancelled';
 
   @override
-  String get orderIsCanceledText => 'Your order has been successfully cancelled';
+  String get orderIsCanceledText =>
+      'Your order has been successfully cancelled';
 
   @override
   String get orderCancelText => 'Are you sure you want to cancel the order?';
 
   @override
-  String get orderCancelText2 => 'You can cancel an order only before the start of preparation within:';
+  String get orderCancelText2 =>
+      'You can cancel an order only before the start of preparation within:';
 
   @override
   String get orderRepeatText => 'Are you sure you want to repeat the order?';
@@ -615,7 +626,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get confirm => 'Confirm';
 
   @override
-  String get operatorContact => 'An operator will contact you within 5 minutes to confirm the order';
+  String get operatorContact =>
+      'An operator will contact you within 5 minutes to confirm the order';
 
   @override
   String get ok => 'OK';

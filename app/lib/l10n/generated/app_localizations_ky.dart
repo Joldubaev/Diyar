@@ -78,7 +78,8 @@ class AppLocalizationsKy extends AppLocalizations {
   String get pleaseEnterEmail => 'Сураныч, электрондук почтаны киргизиңиз';
 
   @override
-  String get pleaseEnterCorrectEmail => 'Сураныч, туура электрондук почтаны киргизиңиз';
+  String get pleaseEnterCorrectEmail =>
+      'Сураныч, туура электрондук почтаны киргизиңиз';
 
   @override
   String get send => 'Жөнөтүү';
@@ -87,7 +88,8 @@ class AppLocalizationsKy extends AppLocalizations {
   String get passwordRecovery => 'Сыр сөздү кайра киргизүү';
 
   @override
-  String get passwordRecoveryText => 'Электрондук почтанызды жана кайра киргизүү кодун, алардан кийинги жаңы сыр сөздү, биз сизге почта жөнөткөнбүздү киргизиңиз.';
+  String get passwordRecoveryText =>
+      'Электрондук почтанызды жана кайра киргизүү кодун, алардан кийинги жаңы сыр сөздү, биз сизге почта жөнөткөнбүздү киргизиңиз.';
 
   @override
   String get newPassword => 'Жаңы сыр сөз';
@@ -96,7 +98,8 @@ class AppLocalizationsKy extends AppLocalizations {
   String get pleaseEnterPassword => 'Сураныч, сыр сөздү киргизиңиз';
 
   @override
-  String get pleaseEnterCorrectPassword => 'Сыр сөз 5 символдон аз болбошуу керек';
+  String get pleaseEnterCorrectPassword =>
+      'Сыр сөз 5 символдон аз болбошуу керек';
 
   @override
   String get codeUpdate => 'Код жаңыртылды';
@@ -105,10 +108,12 @@ class AppLocalizationsKy extends AppLocalizations {
   String get pleaseEnterCode => 'Сураныч, жаны кодду киргизиңиз';
 
   @override
-  String get pleaseEnterCorrectCode => 'Кайра киргизүү коду 5 символдон турушу керек';
+  String get pleaseEnterCorrectCode =>
+      'Кайра киргизүү коду 5 символдон турушу керек';
 
   @override
-  String get resgisterIsFailed => 'Тизмелүү ийгиликтүү эмес. Сураныч, кайталап көрүү.';
+  String get resgisterIsFailed =>
+      'Тизмелүү ийгиликтүү эмес. Сураныч, кайталап көрүү.';
 
   @override
   String get password => 'Сыр сөз';
@@ -147,7 +152,8 @@ class AppLocalizationsKy extends AppLocalizations {
   String get phone => 'Телефон номери';
 
   @override
-  String get pleaseEnterCorrectPhone => 'Сураныч, телефон номерин туура киргизиңиз';
+  String get pleaseEnterCorrectPhone =>
+      'Сураныч, телефон номерин туура киргизиңиз';
 
   @override
   String get confirmPassword => 'Сыр сөздү бекемдениз';
@@ -156,7 +162,8 @@ class AppLocalizationsKy extends AppLocalizations {
   String get passwordsDoNotMatch => 'Сыр сөздөр дал келмейт';
 
   @override
-  String get notAvailableTry => 'Бул кызмат жеткирилбеген. Сураныч, кайталап көрүү';
+  String get notAvailableTry =>
+      'Бул кызмат жеткирилбеген. Сураныч, кайталап көрүү';
 
   @override
   String get alreadyHaveAccount => 'Аккаунтунуз барбы?';
@@ -174,7 +181,8 @@ class AppLocalizationsKy extends AppLocalizations {
   String get deleteOrder => 'Тапшырууну жок кылуу';
 
   @override
-  String get deleteOrderText => 'Тапшырууну жок кылуу жактыгын кабыл кыласызбы?';
+  String get deleteOrderText =>
+      'Тапшырууну жок кылуу жактыгын кабыл кыласызбы?';
 
   @override
   String get costOfMeal => 'Тамактын баасы';
@@ -375,7 +383,8 @@ class AppLocalizationsKy extends AppLocalizations {
   String get createTemplate => 'Шаблон түзүү';
 
   @override
-  String get templateDescription => 'Шаблонду түзүп, сиз аны тандай аласыз, ошону менен бардык заказ талаалары сиз белгилегендей автоматтык түрдө толтурулат';
+  String get templateDescription =>
+      'Шаблонду түзүп, сиз аны тандай аласыз, ошону менен бардык заказ талаалары сиз белгилегендей автоматтык түрдө толтурулат';
 
   @override
   String get templateName => 'Шаблондун аты';
@@ -414,7 +423,8 @@ class AppLocalizationsKy extends AppLocalizations {
   String get orderCancelText => 'Буйрутманы чын эле жокко чыгаргыңыз келеби?';
 
   @override
-  String get orderCancelText2 => 'Сиз буйрутманы даярдоо башталганга чейин гана жокко чыгара аласыз:';
+  String get orderCancelText2 =>
+      'Сиз буйрутманы даярдоо башталганга чейин гана жокко чыгара аласыз:';
 
   @override
   String get orderRepeatText => 'Чын эле буйрутманы кайталагыңыз келеби?';
@@ -504,7 +514,8 @@ class AppLocalizationsKy extends AppLocalizations {
   String get pleaseTryLater => 'Кайрадан аракет кылып көрүңүз';
 
   @override
-  String get receiveCode => 'Биз сизге белгиленген телефон номери боюнча код жибердик';
+  String get receiveCode =>
+      'Биз сизге белгиленген телефон номери боюнча код жибердик';
 
   @override
   String get regenerateAvailable => 'Кайра генерациялоо жеткиликтүү';
@@ -564,7 +575,8 @@ class AppLocalizationsKy extends AppLocalizations {
   String get noPhoneNumber => 'Телефон номери жок';
 
   @override
-  String get errorLoadingActiveOrders => 'Активдүү заказдарды жүктөөдө ката кетти';
+  String get errorLoadingActiveOrders =>
+      'Активдүү заказдарды жүктөөдө ката кетти';
 
   @override
   String get noActiveOrders => 'Азырынча активдүү заказдарыңыз жок';

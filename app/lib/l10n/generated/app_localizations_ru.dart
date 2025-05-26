@@ -87,7 +87,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get passwordRecovery => 'Восстановление пароля';
 
   @override
-  String get passwordRecoveryText => 'Введите номер телефона и новый пароль. Код восстановления был отправлен вам на телефон.';
+  String get passwordRecoveryText =>
+      'Введите номер телефона и новый пароль. Код восстановления был отправлен вам на телефон.';
 
   @override
   String get newPassword => 'Новый пароль';
@@ -96,7 +97,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get pleaseEnterPassword => 'Пожалуйста, введите ваш пароль';
 
   @override
-  String get pleaseEnterCorrectPassword => 'Пароль должен содержать не менее 5 символов';
+  String get pleaseEnterCorrectPassword =>
+      'Пароль должен содержать не менее 5 символов';
 
   @override
   String get codeUpdate => 'Код обновления';
@@ -105,10 +107,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get pleaseEnterCode => 'Пожалуйста, введите ваш код восстановления';
 
   @override
-  String get pleaseEnterCorrectCode => 'Код восстановления должен содержать 6 символов';
+  String get pleaseEnterCorrectCode =>
+      'Код восстановления должен содержать 6 символов';
 
   @override
-  String get resgisterIsFailed => 'Регистрация не удалась. Пожалуйста, попробуйте еще раз.';
+  String get resgisterIsFailed =>
+      'Регистрация не удалась. Пожалуйста, попробуйте еще раз.';
 
   @override
   String get password => 'Пароль';
@@ -135,7 +139,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get pleaseEnterName => 'Пожалуйста, введите ваше имя';
 
   @override
-  String get pleaseEnterCorrectName => 'Имя должно содержать не менее 3 символов';
+  String get pleaseEnterCorrectName =>
+      'Имя должно содержать не менее 3 символов';
 
   @override
   String get emailExample => 'asanov@example.com';
@@ -147,7 +152,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get phone => 'Номер телефона';
 
   @override
-  String get pleaseEnterCorrectPhone => 'Номер телефона должен содержать более 10 символов.';
+  String get pleaseEnterCorrectPhone =>
+      'Номер телефона должен содержать более 10 символов.';
 
   @override
   String get confirmPassword => 'Подтвердите пароль';
@@ -156,7 +162,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get passwordsDoNotMatch => 'Пароли не совпадают';
 
   @override
-  String get notAvailableTry => 'Пока не доступно. Пожалуйста, попробуйте позже';
+  String get notAvailableTry =>
+      'Пока не доступно. Пожалуйста, попробуйте позже';
 
   @override
   String get alreadyHaveAccount => 'У вас уже есть аккаунт?';
@@ -258,7 +265,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get yourAddress => 'Ваш адрес';
 
   @override
-  String get areYouSureAddress => 'Вы уверены, что хотите использовать этот адрес?';
+  String get areYouSureAddress =>
+      'Вы уверены, что хотите использовать этот адрес?';
 
   @override
   String get loadedWrong => 'Ошибка загрузки данных';
@@ -303,7 +311,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get pleaseEnterAddress => 'Пожалуйста, введите адрес';
 
   @override
-  String get pleaseEnterCorrectAddress => 'Пожалуйста, введите корректный адрес';
+  String get pleaseEnterCorrectAddress =>
+      'Пожалуйста, введите корректный адрес';
 
   @override
   String get houseNumber => 'Номер дома';
@@ -312,7 +321,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get pleaseEnterHouseNumber => 'Пожалуйста, введите номер дома';
 
   @override
-  String get pleaseEnterCorrectHouseNumber => 'Пожалуйста, введите корректный номер дома';
+  String get pleaseEnterCorrectHouseNumber =>
+      'Пожалуйста, введите корректный номер дома';
 
   @override
   String get ofice => 'Кв/Офис';
@@ -375,7 +385,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get createTemplate => 'Создать шаблон заказа';
 
   @override
-  String get templateDescription => 'Создав шаблон, вы можете выбрать его, чтобы автоматически все поле для заказа заполнялись так, как вы указывали';
+  String get templateDescription =>
+      'Создав шаблон, вы можете выбрать его, чтобы автоматически все поле для заказа заполнялись так, как вы указывали';
 
   @override
   String get templateName => 'Название шаблона';
@@ -414,7 +425,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get orderCancelText => 'Вы уверены, что хотите отменить заказ?';
 
   @override
-  String get orderCancelText2 => 'Вы можете отменить заказ только за время до начала приготовления в течении:';
+  String get orderCancelText2 =>
+      'Вы можете отменить заказ только за время до начала приготовления в течении:';
 
   @override
   String get orderRepeatText => 'Вы уверены, что хотите повторить заказ?';
@@ -513,10 +525,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get resendCode => 'Переотправить код';
 
   @override
-  String get termsAccept => 'Пожалуйста, примите условия пользовательского соглашения';
+  String get termsAccept =>
+      'Пожалуйста, примите условия пользовательского соглашения';
 
   @override
-  String get termsAgree => 'Я согласен(на) с условиями использования пользовательского соглашения';
+  String get termsAgree =>
+      'Я согласен(на) с условиями использования пользовательского соглашения';
 
   @override
   String get welcome => 'Добро пожаловать';
@@ -564,7 +578,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get noPhoneNumber => 'Нет номер телефона';
 
   @override
-  String get errorLoadingActiveOrders => 'Произошла ошибка при загрузке активных заказов';
+  String get errorLoadingActiveOrders =>
+      'Произошла ошибка при загрузке активных заказов';
 
   @override
   String get noActiveOrders => 'У вас пока нет активных заказов';
@@ -588,7 +603,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get totalWithDelivery => 'Общая сумма с доставкой';
 
   @override
-  String get errorLoadingOrderHistory => 'Произошла ошибка при загрузке истории заказов';
+  String get errorLoadingOrderHistory =>
+      'Произошла ошибка при загрузке истории заказов';
 
   @override
   String get noOrderHistory => 'У вас пока нет истории заказов';
@@ -615,7 +631,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get confirm => 'Подтвердить';
 
   @override
-  String get operatorContact => 'В течение 5 минут с вами свяжется оператор для подтверждения заказа';
+  String get operatorContact =>
+      'В течение 5 минут с вами свяжется оператор для подтверждения заказа';
 
   @override
   String get ok => 'Ок';

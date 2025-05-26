@@ -79,7 +79,7 @@ final lightTheme = ThemeData(
     ),
   ),
   // Стили для карточек
-  cardTheme: const CardTheme(
+  cardTheme:  CardThemeData(
     color: Colors.white,
     elevation: 0,
     shape: RoundedRectangleBorder(
