@@ -10,11 +10,13 @@ class MegaCheckUserPage extends StatefulWidget {
   final String? orderNumber;
   final String? amount;
   final String? provider;
+  final String? phone;
   const MegaCheckUserPage({
     super.key,
     this.orderNumber,
     this.amount,
     this.provider,
+    this.phone,
   });
 
   @override
@@ -22,12 +24,13 @@ class MegaCheckUserPage extends StatefulWidget {
 }
 
 class _MegaCheckUserPageState extends State<MegaCheckUserPage> {
-  final _phoneController = TextEditingController(text: '996550667567');
+  final _phoneController = TextEditingController(text: '996');
   final _amountController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+      _phoneController.text = widget.phone?.isNotEmpty == true ? widget.phone! : '996';
     _amountController.text = '1' ;
   }
 
@@ -81,7 +84,7 @@ class _MegaCheckUserPageState extends State<MegaCheckUserPage> {
                 const SizedBox(height: 32),
                 CustomInputWidget(
                   title: 'Номер телефона',
-                  hintText: '',
+                  hintText: '996',
                   controller: _phoneController,
                   inputType: TextInputType.phone,
                   phoneFormatType: PhoneFormatType.withoutPlus,

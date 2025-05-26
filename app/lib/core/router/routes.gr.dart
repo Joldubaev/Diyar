@@ -517,6 +517,7 @@ class MbankInitiateRoute extends _i51.PageRouteInfo<MbankInitiateRouteArgs> {
     String? orderNumber,
     String? amount,
     String? provider,
+    String? phone,
     List<_i51.PageRouteInfo>? children,
   }) : super(
           MbankInitiateRoute.name,
@@ -525,6 +526,7 @@ class MbankInitiateRoute extends _i51.PageRouteInfo<MbankInitiateRouteArgs> {
             orderNumber: orderNumber,
             amount: amount,
             provider: provider,
+            phone: phone,
           ),
           initialChildren: children,
         );
@@ -541,6 +543,7 @@ class MbankInitiateRoute extends _i51.PageRouteInfo<MbankInitiateRouteArgs> {
         orderNumber: args.orderNumber,
         amount: args.amount,
         provider: args.provider,
+        phone: args.phone,
       );
     },
   );
@@ -552,6 +555,7 @@ class MbankInitiateRouteArgs {
     this.orderNumber,
     this.amount,
     this.provider,
+    this.phone,
   });
 
   final _i52.Key? key;
@@ -562,9 +566,11 @@ class MbankInitiateRouteArgs {
 
   final String? provider;
 
+  final String? phone;
+
   @override
   String toString() {
-    return 'MbankInitiateRouteArgs{key: $key, orderNumber: $orderNumber, amount: $amount, provider: $provider}';
+    return 'MbankInitiateRouteArgs{key: $key, orderNumber: $orderNumber, amount: $amount, provider: $provider, phone: $phone}';
   }
 }
 
@@ -576,6 +582,7 @@ class MegaCheckUserRoute extends _i51.PageRouteInfo<MegaCheckUserRouteArgs> {
     String? orderNumber,
     String? amount,
     String? provider,
+    String? phone,
     List<_i51.PageRouteInfo>? children,
   }) : super(
           MegaCheckUserRoute.name,
@@ -584,6 +591,7 @@ class MegaCheckUserRoute extends _i51.PageRouteInfo<MegaCheckUserRouteArgs> {
             orderNumber: orderNumber,
             amount: amount,
             provider: provider,
+            phone: phone,
           ),
           initialChildren: children,
         );
@@ -600,6 +608,7 @@ class MegaCheckUserRoute extends _i51.PageRouteInfo<MegaCheckUserRouteArgs> {
         orderNumber: args.orderNumber,
         amount: args.amount,
         provider: args.provider,
+        phone: args.phone,
       );
     },
   );
@@ -611,6 +620,7 @@ class MegaCheckUserRouteArgs {
     this.orderNumber,
     this.amount,
     this.provider,
+    this.phone,
   });
 
   final _i52.Key? key;
@@ -621,9 +631,11 @@ class MegaCheckUserRouteArgs {
 
   final String? provider;
 
+  final String? phone;
+
   @override
   String toString() {
-    return 'MegaCheckUserRouteArgs{key: $key, orderNumber: $orderNumber, amount: $amount, provider: $provider}';
+    return 'MegaCheckUserRouteArgs{key: $key, orderNumber: $orderNumber, amount: $amount, provider: $provider, phone: $phone}';
   }
 }
 

@@ -1,11 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/router/routes.gr.dart';
-import 'package:diyar/features/payments/presentation/presentation.dart';
+import 'package:diyar/features/features.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 @RoutePage()
-class PaymentsPage extends StatelessWidget {
+class PaymentsPage extends StatefulWidget {
   final String? orderNumber;
   final String? amount;
   const PaymentsPage({
@@ -13,6 +14,17 @@ class PaymentsPage extends StatelessWidget {
     this.orderNumber,
     this.amount,
   });
+
+  @override
+  State<PaymentsPage> createState() => _PaymentsPageState();
+}
+
+class _PaymentsPageState extends State<PaymentsPage> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<ProfileCubit>().getUser();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,49 +39,60 @@ class PaymentsPage extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 24),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                'Выберите способ оплаты',
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                  fontSize: 24,
+        child: BlocBuilder<ProfileCubit, ProfileState>(
+          builder: (context, state) {
+            UserModel? currentUser;
+            if (state is ProfileGetLoaded) {
+              currentUser = state.userModel;
+            }
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 24),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    'Выберите способ оплаты',
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: 24,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            const SizedBox(height: 24),
-            PaymentMethodTileWidget(
-              icon: SvgPicture.asset('assets/icons/mbank.svg', height: 28),
-              title: 'Mbank',
-              onTap: () => context.router.push(MbankInitiateRoute(
-                amount: amount ?? '0',
-                orderNumber: orderNumber ?? '0',
-                provider: 'Mbank',
-              )),
-            ),
-            PaymentMethodTileWidget(
-              icon: SvgPicture.asset('assets/icons/mega.svg', height: 28),
-              title: 'MegaPay',
-              onTap: () => context.router.push(MegaCheckUserRoute(
-                amount: amount ?? '0',
-                orderNumber: orderNumber ?? '0',
-                provider: 'MegaPay',
-              )),
-            ),
-            PaymentMethodTileWidget(
-              icon: SvgPicture.asset('assets/icons/qr_code.svg', height: 28),
-              title: 'Оплата через QR',
-              onTap: () => context.router.push(QrCodeRoute(
-                initialAmount: int.parse(amount ?? '0'),
-                orderNumber: orderNumber ?? '0',
-              )),
-            ),
-          ],
+                const SizedBox(height: 24),
+                PaymentMethodTileWidget(
+                  icon: SvgPicture.asset('assets/icons/mbank.svg', height: 28),
+                  title: 'Mbank',
+                  onTap: () => context.router.push(MbankInitiateRoute(
+                    amount: widget.amount ?? '0',
+                    orderNumber: widget.orderNumber ?? '0',
+                    provider: 'Mbank',
+                    phone: currentUser?.phone ?? '996',
+                  )),
+                ),
+                PaymentMethodTileWidget(
+                  icon: SvgPicture.asset('assets/icons/mega.svg', height: 28),
+                  title: 'MegaPay',
+                  onTap: () => context.router.push(MegaCheckUserRoute(
+                    amount: widget.amount ?? '0',
+                    orderNumber: widget.orderNumber ?? '0',
+                    provider: 'MegaPay',
+                    phone: currentUser?.phone ?? '996',
+                  )),
+                ),
+                PaymentMethodTileWidget(
+                  icon: SvgPicture.asset('assets/icons/qr_code.svg', height: 28),
+                  title: 'Оплата через QR',
+                  onTap: () => context.router.push(QrCodeRoute(
+                    initialAmount: int.parse(widget.amount ?? '0'),
+                    orderNumber: widget.orderNumber ?? '0',
+                  )),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
