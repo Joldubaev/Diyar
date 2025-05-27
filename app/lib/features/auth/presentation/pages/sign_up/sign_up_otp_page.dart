@@ -130,7 +130,7 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
                     decoration: BoxDecoration(
                       border: Border.fromBorderSide(
                         BorderSide(
-                          color: Color.fromRGBO(234, 239, 243, 1),
+                          color: Colors.grey,
                           width: 1,
                         ),
                       ),
@@ -169,7 +169,7 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> {
                             _start = 59;
                           });
                           startTimer();
-                          // context.read<SignUpCubit>().sendVerificationCode(widget.user.phone);
+                          context.read<SignUpCubit>().sendVerificationCode(widget.user.phone);
                         },
                         child: const Text(
                           'Отправить код повторно',

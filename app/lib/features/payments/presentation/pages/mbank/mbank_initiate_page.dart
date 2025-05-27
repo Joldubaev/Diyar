@@ -10,11 +10,13 @@ class MbankInitiatePage extends StatefulWidget {
   final String? orderNumber;
   final String? amount;
   final String? provider;
+  final String? phone;
   const MbankInitiatePage({
     super.key,
     this.orderNumber,
     this.amount,
     this.provider,
+    this.phone,
   });
 
   @override
@@ -22,12 +24,13 @@ class MbankInitiatePage extends StatefulWidget {
 }
 
 class _MbankInitiatePageState extends State<MbankInitiatePage> {
-  final _phoneController = TextEditingController(text: '996703182859');
+  final _phoneController = TextEditingController(text: '996');
   final _amountController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    _phoneController.text = widget.phone?.isNotEmpty == true ? widget.phone! : '996';
     _amountController.text = '1';
   }
 
