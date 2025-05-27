@@ -54,7 +54,7 @@ class RegistrationAlertDialog extends StatelessWidget {
               child: SubmitButtonWidget(
                 onTap: onRegister,
                 bgColor: theme.colorScheme.primary,
-                title: "Зарегистрироваться",
+                title: "Авторизации",
                 textStyle: theme.textTheme.bodyLarge?.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.w500,

@@ -153,21 +153,29 @@ class _MenuPageState extends State<MenuPage> with SingleTickerProviderStateMixin
                 Expanded(
                   child: GestureDetector(
                     onHorizontalDragEnd: (details) {
+                      if (details.primaryVelocity == null) {
+                        return; // Если скорость не определена, ничего не делаем
+                      }
                       // Свайп влево  — следующая категория
-                      if (details.primaryVelocity != null && details.primaryVelocity! > 0) {
-                        final nextIndex = _activeIndex.value - 1;
-                        if (nextIndex < categories.length) {
-                          _scrollToCategory(nextIndex);
+                      if (details.primaryVelocity! < 0) {
+                        // Свайп пальцем справа налево
+                        final targetIndex = _activeIndex.value + 1; // Определяем индекс следующей категории
+                        if (targetIndex < categories.length) {
+                          // Проверяем, что не вышли за пределы списка
+                          _scrollToCategory(targetIndex);
                         }
                       }
                       // Свайп вправо— предыдущая категория
-                      if (details.primaryVelocity != null && details.primaryVelocity! < 0) {
-                        final prevIndex = _activeIndex.value + 1;
-                        if (prevIndex >= 0) {
-                          _scrollToCategory(prevIndex);
+                      else if (details.primaryVelocity! > 0) {
+                        // Свайп пальцем слева направо
+                        final targetIndex = _activeIndex.value - 1; // Определяем индекс предыдущей категории
+                        if (targetIndex >= 0) {
+                          // Проверяем, что не вышли за пределы списка (в начало)
+                          _scrollToCategory(targetIndex);
                         }
                       }
                     },
+                    // ... остальной код вашего виджета
                     child: RefreshIndicator(
                       onRefresh: () async {
                         context.read<MenuBloc>().add(GetFoodsByCategoryEvent());

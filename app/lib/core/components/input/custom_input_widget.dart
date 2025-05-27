@@ -8,14 +8,14 @@ enum PhoneFormatType { withPlus, withoutPlus }
 
 // Добавляем форматтеры для телефона
 final phoneFormatterWithPlus = MaskTextInputFormatter(
-  mask: "+996#########",
+  mask: "996#########",
   filter: {"#": RegExp(r'[0-9]')},
   type: MaskAutoCompletionType.lazy,
 );
 
 final phoneFormatterWithoutPlus = MaskTextInputFormatter(
   mask: "996#########",
-  filter: {"#": RegExp(r'[0-9]')},
+  filter: {"#": RegExp(r'^[a-zA-Zа-яА-ЯёЁ0-9_]+$')},
   type: MaskAutoCompletionType.lazy,
 );
 
@@ -107,6 +107,7 @@ class _CustomInputWidgetState extends State<CustomInputWidget> {
           inputFormatters: inputFormatters, // используем подставленный форматтер
           onChanged: widget.onChanged,
           maxLines: widget.maxLines,
+          
           decoration: InputDecoration(
             enabled: true,
             prefixIcon: widget.leading,

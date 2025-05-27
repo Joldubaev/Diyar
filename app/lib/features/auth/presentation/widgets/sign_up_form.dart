@@ -100,6 +100,7 @@ class _SignUpFormState extends State<SignUpForm> {
 
             /// Пароль
             CustomInputWidget(
+              phoneFormatType: PhoneFormatType.withoutPlus,
               filledColor: theme.colorScheme.surface,
               hintText: 'Пароль',
               controller: _passwordController,
@@ -117,6 +118,7 @@ class _SignUpFormState extends State<SignUpForm> {
 
             /// Подтверждение пароля
             CustomInputWidget(
+              phoneFormatType: PhoneFormatType.withoutPlus,
               filledColor: theme.colorScheme.surface,
               hintText: 'Подтвердите пароль',
               controller: _confirmPasswordController,

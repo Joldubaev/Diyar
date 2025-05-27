@@ -26,7 +26,7 @@ class PaymentStatusMapper {
     PaymentStatusEnum.userBlocked: "Пользователь заблокирован.",
     PaymentStatusEnum.notFound: "Платёж или пользователь не найден.",
     PaymentStatusEnum.accessDenied: "Доступ запрещён.",
-    PaymentStatusEnum.otpError: "Ошибка OTP-кода.",
+    PaymentStatusEnum.otpError: "Неверный OTP код",
     PaymentStatusEnum.limitExceeded: "Превышен лимит транзакций.",
     PaymentStatusEnum.internalError: "Внутренняя ошибка сервера.",
     PaymentStatusEnum.failed: "Платёж не прошёл.",
