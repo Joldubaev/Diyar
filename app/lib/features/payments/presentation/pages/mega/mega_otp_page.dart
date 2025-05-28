@@ -12,8 +12,15 @@ class MegaOtpPage extends StatefulWidget {
   final String? phone;
   final double? amount;
   final String? orderNumber;
+  final String? paymentId;
 
-  const MegaOtpPage({super.key, this.phone, this.amount, this.orderNumber});
+  const MegaOtpPage({
+    super.key,
+    this.phone,
+    this.amount,
+    this.orderNumber,
+    this.paymentId,
+  });
 
   @override
   State<MegaOtpPage> createState() => _MegaOtpPageState();
@@ -146,7 +153,7 @@ class _MegaOtpPageState extends State<MegaOtpPage> {
                       user: widget.phone,
                       amount: widget.amount,
                       pinCode: enteredCode,
-                      orderNumber: widget.orderNumber,
+                      orderNumber: widget.paymentId,
                     );
                     context.read<PaymentBloc>().add(InitiatePaymentMegaEvent(entity));
                   },

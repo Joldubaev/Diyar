@@ -458,6 +458,7 @@ class MbankConfirmRoute extends _i51.PageRouteInfo<MbankConfirmRouteArgs> {
     String? phone,
     double? amount,
     String? orderNumber,
+    String? paymentId,
     List<_i51.PageRouteInfo>? children,
   }) : super(
           MbankConfirmRoute.name,
@@ -466,6 +467,7 @@ class MbankConfirmRoute extends _i51.PageRouteInfo<MbankConfirmRouteArgs> {
             phone: phone,
             amount: amount,
             orderNumber: orderNumber,
+            paymentId: paymentId,
           ),
           initialChildren: children,
         );
@@ -482,6 +484,7 @@ class MbankConfirmRoute extends _i51.PageRouteInfo<MbankConfirmRouteArgs> {
         phone: args.phone,
         amount: args.amount,
         orderNumber: args.orderNumber,
+        paymentId: args.paymentId,
       );
     },
   );
@@ -493,6 +496,7 @@ class MbankConfirmRouteArgs {
     this.phone,
     this.amount,
     this.orderNumber,
+    this.paymentId,
   });
 
   final _i52.Key? key;
@@ -503,9 +507,11 @@ class MbankConfirmRouteArgs {
 
   final String? orderNumber;
 
+  final String? paymentId;
+
   @override
   String toString() {
-    return 'MbankConfirmRouteArgs{key: $key, phone: $phone, amount: $amount, orderNumber: $orderNumber}';
+    return 'MbankConfirmRouteArgs{key: $key, phone: $phone, amount: $amount, orderNumber: $orderNumber, paymentId: $paymentId}';
   }
 }
 
@@ -647,6 +653,7 @@ class MegaOtpRoute extends _i51.PageRouteInfo<MegaOtpRouteArgs> {
     String? phone,
     double? amount,
     String? orderNumber,
+    String? paymentId,
     List<_i51.PageRouteInfo>? children,
   }) : super(
           MegaOtpRoute.name,
@@ -655,6 +662,7 @@ class MegaOtpRoute extends _i51.PageRouteInfo<MegaOtpRouteArgs> {
             phone: phone,
             amount: amount,
             orderNumber: orderNumber,
+            paymentId: paymentId,
           ),
           initialChildren: children,
         );
@@ -671,6 +679,7 @@ class MegaOtpRoute extends _i51.PageRouteInfo<MegaOtpRouteArgs> {
         phone: args.phone,
         amount: args.amount,
         orderNumber: args.orderNumber,
+        paymentId: args.paymentId,
       );
     },
   );
@@ -682,6 +691,7 @@ class MegaOtpRouteArgs {
     this.phone,
     this.amount,
     this.orderNumber,
+    this.paymentId,
   });
 
   final _i52.Key? key;
@@ -692,9 +702,11 @@ class MegaOtpRouteArgs {
 
   final String? orderNumber;
 
+  final String? paymentId;
+
   @override
   String toString() {
-    return 'MegaOtpRouteArgs{key: $key, phone: $phone, amount: $amount, orderNumber: $orderNumber}';
+    return 'MegaOtpRouteArgs{key: $key, phone: $phone, amount: $amount, orderNumber: $orderNumber, paymentId: $paymentId}';
   }
 }
 

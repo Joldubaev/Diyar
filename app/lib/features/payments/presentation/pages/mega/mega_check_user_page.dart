@@ -56,11 +56,13 @@ class _MegaCheckUserPageState extends State<MegaCheckUserPage> {
             showToast(state.message, isError: true);
           }
           if (state is PaymentCheckSuccess) {
+            final paymentId = state.checkResult;
             context.router.push(
               MegaOtpRoute(
                 phone: _phoneController.text,
                 amount: double.tryParse(_amountController.text.trim()) ?? 0,
                 orderNumber: widget.orderNumber,
+                paymentId: paymentId,
               ),
             );
           } else if (state is PaymentLoading) {

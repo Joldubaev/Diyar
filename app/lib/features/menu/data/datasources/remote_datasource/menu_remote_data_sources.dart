@@ -71,7 +71,7 @@ class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
           'pageSize': 10,
         },
       );
-      if (res.data['code'] == 200 && res.data != null) {
+      if (res.data['code'] == 200) {
         final list = res.data['message']['foods'] as List;
         final foods = list.map((e) => FoodModel.fromJson(e as Map<String, dynamic>)).toList();
         return Right(foods);

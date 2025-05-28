@@ -56,11 +56,14 @@ class _MbankInitiatePageState extends State<MbankInitiatePage> {
             showToast(state.message, isError: true);
           }
           if (state is PaymentMbankSuccess) {
+            final paymentId = state.mbank?.quid;
             context.router.push(
               MbankConfirmRoute(
                 phone: _phoneController.text,
                 amount: double.tryParse(_amountController.text.trim()) ?? 0,
                 orderNumber: widget.orderNumber,
+                paymentId: paymentId,
+                
               ),
             );
           }

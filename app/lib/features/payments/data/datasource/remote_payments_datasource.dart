@@ -5,7 +5,7 @@ import 'package:diyar/features/payments/data/models/model.dart';
 import 'package:diyar/features/payments/presentation/presentation.dart';
 
 abstract class RemotePaymentsDatasource {
-  Future<Either<Failure, MegaCheckModel>> checkPaymentMega(PaymentsModel model);
+  Future<Either<Failure, String>> checkPaymentMega(PaymentsModel model);
   Future<Either<Failure, String>> megaInitiate(PaymentsModel model);
   Future<Either<Failure, String>> megaStatus(String orderNumber);
   Future<Either<Failure, MbankModel>> mbankInitiate(PaymentsModel model);
@@ -104,7 +104,7 @@ class RemotePaymentsDatasourceImpl implements RemotePaymentsDatasource {
   }
 
   @override
-  Future<Either<Failure, MegaCheckModel>> checkPaymentMega(PaymentsModel model) async {
+  Future<Either<Failure, String>> checkPaymentMega(PaymentsModel model) async {
     try {
       final response = await dio.post(
         ApiConst.checkPaymentMega,
@@ -121,7 +121,7 @@ class RemotePaymentsDatasourceImpl implements RemotePaymentsDatasource {
       final status = PaymentStatusMapper.fromCode(code);
       final message = PaymentStatusMapper.message(status, response.data['message']);
       if (status == PaymentStatusEnum.success) {
-        return Right(MegaCheckModel.fromJson(response.data['data']));
+        return Right(response.data['orderNumber']);
       } else {
         return Left(ServerFailure(message, response.statusCode));
       }

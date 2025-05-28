@@ -13,8 +13,15 @@ class MbankConfirmPage extends StatefulWidget {
   final String? phone;
   final double? amount;
   final String? orderNumber;
+  final String? paymentId;
 
-  const MbankConfirmPage({super.key, this.phone, this.amount, this.orderNumber});
+  const MbankConfirmPage({
+    super.key,
+    this.phone,
+    this.amount,
+    this.orderNumber,
+    this.paymentId,
+  });
 
   @override
   State<MbankConfirmPage> createState() => _MbankConfirmPageState();
@@ -145,7 +152,7 @@ class _MbankConfirmPageState extends State<MbankConfirmPage> {
                     }
                     log('enteredCode: $enteredCode');
                     final entity = PaymentsEntity(
-                      orderNumber: widget.orderNumber,
+                      orderNumber: widget.paymentId,
                       otp: enteredCode,
                     );
                     context.read<PaymentBloc>().add(ConfirmMbankEvent(entity));
