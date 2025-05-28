@@ -61,6 +61,11 @@ class _UserPickupDetailPageState extends State<UserPickupDetailPage> {
                   icon: 'cutler',
                 ),
                 DetailItem(
+                  icon: 'del',
+                  title: 'Оплата',
+                  value: order.paymentMethod == 'cash' ? 'Наличные' : 'Онлайн оплата',
+                ),
+                DetailItem(
                   title: context.l10n.total,
                   value: "${order.price} сом",
                   icon: 'del',
@@ -73,5 +78,3 @@ class _UserPickupDetailPageState extends State<UserPickupDetailPage> {
     );
   }
 }
-
-

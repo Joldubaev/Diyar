@@ -31,7 +31,7 @@ class _MbankInitiatePageState extends State<MbankInitiatePage> {
   void initState() {
     super.initState();
     _phoneController.text = widget.phone?.isNotEmpty == true ? widget.phone! : '996';
-    _amountController.text = '1';
+    _amountController.text = widget.amount.toString();
   }
 
   @override
@@ -63,7 +63,6 @@ class _MbankInitiatePageState extends State<MbankInitiatePage> {
                 amount: double.tryParse(_amountController.text.trim()) ?? 0,
                 orderNumber: widget.orderNumber,
                 paymentId: paymentId,
-                
               ),
             );
           }
@@ -100,7 +99,7 @@ class _MbankInitiatePageState extends State<MbankInitiatePage> {
                 ),
                 const SizedBox(height: 24),
                 CustomInputWidget(
-                  // isReadOnly: true,
+                  isReadOnly: true,
                   title: 'Сумма',
                   hintText: '',
                   controller: _amountController,

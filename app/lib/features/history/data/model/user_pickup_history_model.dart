@@ -20,6 +20,7 @@ class UserPickupHistoryModel {
   String? userId;
   String? userName;
   String? userPhone;
+  String? paymentMethod;
 
   UserPickupHistoryModel({
     this.comment,
@@ -34,6 +35,7 @@ class UserPickupHistoryModel {
     this.userId,
     this.userName,
     this.userPhone,
+    this.paymentMethod,
   });
 
   UserPickupHistoryModel copyWith({
@@ -49,6 +51,7 @@ class UserPickupHistoryModel {
     String? userId,
     String? userName,
     String? userPhone,
+    String? paymentMethod,
   }) =>
       UserPickupHistoryModel(
         comment: comment ?? this.comment,
@@ -63,6 +66,7 @@ class UserPickupHistoryModel {
         userId: userId ?? this.userId,
         userName: userName ?? this.userName,
         userPhone: userPhone ?? this.userPhone,
+        paymentMethod: paymentMethod ?? this.paymentMethod,
       );
 
   factory UserPickupHistoryModel.fromJson(Map<String, dynamic> json) => UserPickupHistoryModel(
@@ -80,6 +84,7 @@ class UserPickupHistoryModel {
         userId: json["userId"],
         userName: json["userName"],
         userPhone: json["userPhone"],
+        paymentMethod: json["paymentMethod"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -95,6 +100,7 @@ class UserPickupHistoryModel {
         "userId": userId,
         "userName": userName,
         "userPhone": userPhone,
+        "paymentMethod": paymentMethod,
       };
 
   factory UserPickupHistoryModel.fromEntity(UserPickupHistoryEntity entity) {
@@ -111,6 +117,7 @@ class UserPickupHistoryModel {
       userId: entity.userId,
       userName: entity.userName,
       userPhone: entity.userPhone,
+      paymentMethod: entity.paymentMethod,
     );
   }
   UserPickupHistoryEntity toEntity() {
@@ -127,6 +134,7 @@ class UserPickupHistoryModel {
       userId: userId,
       userName: userName,
       userPhone: userPhone,
+      paymentMethod: paymentMethod,
     );
   }
 }

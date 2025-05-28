@@ -116,6 +116,11 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                   ),
                   DetailItem(
                     icon: 'del',
+                    title: 'Оплата',
+                    value: order.paymentMethod == 'cash' ? 'Наличные' : 'Онлайн оплата',
+                  ),
+                  DetailItem(
+                    icon: 'del',
                     title: context.l10n.total,
                     value: "$totalPriceсом",
                   ),

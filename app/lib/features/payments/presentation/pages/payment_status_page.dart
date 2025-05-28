@@ -129,10 +129,6 @@ class _PaymentStatusPageState extends State<PaymentStatusPage> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.onPrimary,
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
         title: const Text('Статус платежа'),
       ),
       body: Center(
@@ -141,7 +137,12 @@ class _PaymentStatusPageState extends State<PaymentStatusPage> {
           amount: widget.amount,
           title: _status.title,
           buttonText: 'Готово',
-          onButtonTap: _status == PaymentStatusType.success ? () => context.pushRoute(MainRoute()) : null,
+          onButtonTap: _status == PaymentStatusType.success
+              ? () => context.router.pushAndPopUntil(
+                    MainRoute(),
+                    predicate: (route) => false,
+                  )
+              : null,
         ),
       ),
     );

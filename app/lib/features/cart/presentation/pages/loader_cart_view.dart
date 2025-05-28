@@ -18,12 +18,24 @@ class _LoadedCartViewState extends State<LoadedCartView> {
   int _selectedCutleryCount = 0;
   double _dynamicFinalTotalPrice = 0.0;
   double _discountPercentageForDisplay = 0.0;
+  double _calculatedMonetaryDiscount = 0.0;
 
   @override
   void initState() {
     super.initState();
     context.read<HomeContentCubit>().getSales();
     _calculatePrices(null);
+  }
+
+  @override
+  void didUpdateWidget(LoadedCartView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Проверяем, изменилась ли общая стоимость товаров в корзине
+    if (widget.cartState.totalPrice != oldWidget.cartState.totalPrice) {
+      // Пересчитываем цены, используя текущий процент скидки (передаем null,
+      // чтобы _calculatePrices использовал _discountPercentageForDisplay)
+      _calculatePrices(null);
+    }
   }
 
   void _calculatePrices(double? saleDiscountValue) {
@@ -39,15 +51,21 @@ class _LoadedCartViewState extends State<LoadedCartView> {
     if (saleDiscountValue != null) {
       newDiscountPercentageForDisplay = saleDiscountValue.toDouble();
       currentDiscountRate = newDiscountPercentageForDisplay / 100.0;
+    } else {
+      // Если saleDiscountValue равен null (например, при обновлении корзины),
+      // используем уже установленный процент скидки
+      newDiscountPercentageForDisplay = _discountPercentageForDisplay;
+      currentDiscountRate = _discountPercentageForDisplay / 100.0;
     }
 
-    final double discountAmount = itemsPrice * currentDiscountRate;
-    final double discountedItemsPrice = itemsPrice - discountAmount;
+    final double actualMonetaryDiscount = itemsPrice * currentDiscountRate;
+    final double discountedItemsPrice = itemsPrice - actualMonetaryDiscount;
 
     if (mounted) {
       setState(() {
         _dynamicFinalTotalPrice = containerPrice + discountedItemsPrice;
         _discountPercentageForDisplay = newDiscountPercentageForDisplay;
+        _calculatedMonetaryDiscount = actualMonetaryDiscount;
       });
     }
   }
@@ -146,7 +164,8 @@ class _LoadedCartViewState extends State<LoadedCartView> {
               child: TotalPriceWidget(
                 itemsPrice: itemsPriceForWidget,
                 containerPrice: containerPriceForWidget,
-                discountPercentage: _discountPercentageForDisplay,
+                discountRatePercentage: _discountPercentageForDisplay,
+                monetaryDiscountAmount: _calculatedMonetaryDiscount,
                 finalTotalPrice: _dynamicFinalTotalPrice,
               ),
             ),
