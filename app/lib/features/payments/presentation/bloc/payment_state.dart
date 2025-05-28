@@ -23,7 +23,7 @@ class PaymentError extends PaymentState {
 /// Mega
 
 class PaymentCheckSuccess extends PaymentState {
-  final MegaCheckEntity checkResult;
+  final String checkResult;
 
   const PaymentCheckSuccess(this.checkResult);
 

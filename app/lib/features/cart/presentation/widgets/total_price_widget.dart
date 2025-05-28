@@ -38,7 +38,7 @@ class TotalPriceWidget extends StatelessWidget {
       child: Column(
         children: [
           PriceRowWidget(label: l10n.costOfMeal, value: itemsPrice),
-          if (containerPrice > 0) PriceRowWidget(label: 'dishCountLabelCost', value: containerPrice),
+          if (containerPrice > 0) PriceRowWidget(label: 'Стоимость контейнера', value: containerPrice),
           PriceRowWidget(
             label: "Скидка (${(discountPercentage * 100).toInt()}%)",
             value: -discountAmount,

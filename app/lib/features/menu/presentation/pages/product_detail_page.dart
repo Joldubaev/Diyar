@@ -175,7 +175,7 @@ class CartControls extends StatelessWidget {
             Navigator.of(context).pop();
             context.router.push(const SignInRoute());
           },
-          onCancel: () => Navigator.of(context).pop(),
+          onLogin: () => Navigator.of(context).pop(),
         ),
       );
       return;

@@ -3,7 +3,7 @@ import 'package:diyar/core/network/error/failures.dart';
 import 'package:diyar/features/payments/domain/domain.dart';
 
 abstract interface class PaymentsRepository {
-  Future<Either<Failure, MegaCheckEntity>> checkPaymentMega(PaymentsEntity entity);
+  Future<Either<Failure, String>> checkPaymentMega(PaymentsEntity entity);
   Future<Either<Failure, String>> megaInitiate(PaymentsEntity entity);
   Future<Either<Failure, String>> megaStatus(String orderNumber);
   Future<Either<Failure, MbankEntity>> mbankConfirm(PaymentsEntity entity);

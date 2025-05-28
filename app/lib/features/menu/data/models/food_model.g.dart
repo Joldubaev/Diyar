@@ -29,7 +29,7 @@ class FoodModelAdapter extends TypeAdapter<FoodModel> {
       containerName: fields[9] as String?,
       containerCount: fields[10] as int?,
       quantity: fields[11] as int?,
-      containerPrice: fields[12] as int?,
+      containerPrice: fields[12] as num?,
     );
   }
 

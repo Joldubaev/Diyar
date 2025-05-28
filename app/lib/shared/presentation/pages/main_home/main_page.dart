@@ -134,11 +134,14 @@ class _MainPageState extends State<MainPage> {
       builder: (BuildContext context) {
         return RegistrationAlertDialog(
           onRegister: () async {
-            await context.router.push(const SignInRoute());
+            await context.router.pushAndPopUntil(
+              CheckPhoneNumberRoute(),
+              predicate: (route) => false,
+            );
           },
-          onCancel: () {
+          onLogin: () {
             context.router.pushAndPopUntil(
-              const MainRoute(),
+              const SignInRoute(),
               predicate: (route) => false,
             );
           },

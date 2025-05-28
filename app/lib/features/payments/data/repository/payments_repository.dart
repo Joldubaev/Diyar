@@ -10,12 +10,12 @@ class PaymentsRepositoryImpl implements PaymentsRepository {
   PaymentsRepositoryImpl(this.remotePaymentsDatasource);
 
   @override
-  Future<Either<Failure, MegaCheckEntity>> checkPaymentMega(PaymentsEntity entity) async {
+  Future<Either<Failure, String>> checkPaymentMega(PaymentsEntity entity) async {
     final model = PaymentsModel.fromEntity(entity);
     final result = await remotePaymentsDatasource.checkPaymentMega(model);
     return result.fold(
       (failure) => Left(failure),
-      (model) => Right(model.toEntity()),
+      (model) => Right(model),
     );
   }
 

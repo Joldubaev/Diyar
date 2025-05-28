@@ -122,7 +122,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> wit
           Navigator.of(context).pop();
           context.router.push(const SignInRoute());
         },
-        onCancel: () => Navigator.of(context).pop(),
+        onLogin: () => Navigator.of(context).pop(),
       ),
     );
   }

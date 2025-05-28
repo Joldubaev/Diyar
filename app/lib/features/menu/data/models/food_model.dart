@@ -1,11 +1,9 @@
 import 'package:hive/hive.dart';
 import 'dart:convert';
 import 'package:diyar/features/menu/domain/domain.dart';
-
 part 'food_model.g.dart';
 
 FoodModel foodModelFromJson(String str) => FoodModel.fromJson(json.decode(str));
-
 String foodModelToJson(FoodModel data) => json.encode(data.toJson());
 
 @HiveType(typeId: 1)
@@ -35,7 +33,7 @@ class FoodModel {
   @HiveField(11)
   int? quantity;
   @HiveField(12)
-  int? containerPrice;
+  num? containerPrice;
 
   FoodModel({
     this.id,
@@ -62,7 +60,7 @@ class FoodModel {
         weight: json["weight"],
         urlPhoto: json["urlPhoto"],
         stopList: json["stopList"],
-        iDctMax: json["iDCTMax"],
+        iDctMax: json["idctMax"],
         containerName: json["containerName"],
         containerCount: json["containerCount"],
         quantity: json["quantity"],
@@ -76,9 +74,9 @@ class FoodModel {
         "categoryId": categoryId,
         "price": price,
         "weight": weight,
-        "URLPhoto": urlPhoto,
+        "urlPhoto": urlPhoto,
         "stopList": stopList,
-        "iDCTMax": iDctMax,
+        "idctMax": iDctMax,
         "containerName": containerName,
         "containerCount": containerCount,
         "containerPrice": containerPrice,
@@ -117,7 +115,7 @@ class FoodModel {
       containerName: containerName,
       containerCount: containerCount,
       quantity: quantity,
-      containerPrice: containerPrice,
+      containerPrice: containerPrice?.toInt(),
     );
   }
 }

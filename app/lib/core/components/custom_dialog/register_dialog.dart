@@ -4,12 +4,12 @@ import 'package:flutter_svg/svg.dart';
 
 class RegistrationAlertDialog extends StatelessWidget {
   final VoidCallback onRegister;
-  final VoidCallback onCancel;
+  final VoidCallback onLogin;
 
   const RegistrationAlertDialog({
     super.key,
     required this.onRegister,
-    required this.onCancel,
+    required this.onLogin,
   });
 
   @override
@@ -54,7 +54,7 @@ class RegistrationAlertDialog extends StatelessWidget {
               child: SubmitButtonWidget(
                 onTap: onRegister,
                 bgColor: theme.colorScheme.primary,
-                title: "Авторизации",
+                title: "Зарегистрироваться",
                 textStyle: theme.textTheme.bodyLarge?.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.w500,
@@ -65,9 +65,9 @@ class RegistrationAlertDialog extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: SubmitButtonWidget(
-                onTap: onCancel,
+                onTap: onLogin,
                 bgColor: theme.colorScheme.onPrimary,
-                title: "Отмена",
+                title: "Авторизоваться",
                 textStyle: theme.textTheme.bodyLarge?.copyWith(
                   color: Colors.black,
                   fontWeight: FontWeight.w500,

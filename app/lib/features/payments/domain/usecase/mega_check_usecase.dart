@@ -6,7 +6,7 @@ class MegaCheckUseCase {
   final PaymentsRepository repository;
   MegaCheckUseCase(this.repository);
 
-  Future<Either<Failure, MegaCheckEntity>> call(PaymentsEntity entity) {
+  Future<Either<Failure, String>> call(PaymentsEntity entity) {
     return repository.checkPaymentMega(entity);
   }
 }
