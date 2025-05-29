@@ -14,6 +14,7 @@ import 'package:diyar/features/pick_up/pick_up_injectin.dart';
 import 'package:diyar/features/profile/profile_injection.dart';
 import 'package:local_auth/local_auth.dart';
 import 'features/app/cubit/remote_config_cubit.dart';
+import 'features/settings/settings_injection.dart';
 import 'shared/presentation/bloc/internet_bloc.dart';
 import 'shared/presentation/cubit/popular_cubit.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -43,6 +44,7 @@ Future<void> init() async {
   await historyInjection();
   await curierInjection();
   await paymentsInjection();
+  await settingsInjection();
 
   sl.registerFactory(() => PopularCubit(sl()));
   sl.registerFactory(() => InternetBloc());

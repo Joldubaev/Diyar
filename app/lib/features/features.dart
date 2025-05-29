@@ -9,3 +9,4 @@ export 'profile/profile.dart';
 export 'active_order/active_order.dart';
 export 'curier/curier.dart';
 export 'payments/payments.dart';
+export 'settings/settings.dart';

@@ -30,6 +30,7 @@ class CartContentsWidget extends StatelessWidget {
           if (state.items.isEmpty) {
             return const CartEmptyWidget();
           }
+
           return LoadedCartView(cartState: state);
         } else {
           return const Center(
