@@ -91,4 +91,7 @@ class ApiConst {
   //qr code
   static const generateQRCode = "$baseUrl/payment/qr-generate";
   static const checkQRCodeStatus = "$baseUrl/payment/qr-status";
+
+  // timer
+  static const getTimer = "$baseUrl/work-time/get-work-time";
 }

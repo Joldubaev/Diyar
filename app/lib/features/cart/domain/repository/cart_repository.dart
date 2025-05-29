@@ -1,4 +1,4 @@
-import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
+import 'package:diyar/features/cart/domain/domain.dart';
 
 abstract class CartRepository {
   Future<void> init();

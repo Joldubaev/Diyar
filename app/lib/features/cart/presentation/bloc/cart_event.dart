@@ -69,3 +69,5 @@ class SetItemCount extends CartEvent {
 
 // Event to clear the entire cart
 class ClearCart extends CartEvent {}
+
+

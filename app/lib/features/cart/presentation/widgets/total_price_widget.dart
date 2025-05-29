@@ -5,14 +5,16 @@ import 'package:flutter/material.dart';
 class TotalPriceWidget extends StatelessWidget {
   final double itemsPrice;
   final double containerPrice;
-  final double discountPercentage;
+  final double discountRatePercentage;
+  final double monetaryDiscountAmount;
   final double finalTotalPrice;
 
   const TotalPriceWidget({
     super.key,
     required this.itemsPrice,
     required this.containerPrice,
-    required this.discountPercentage,
+    required this.discountRatePercentage,
+    required this.monetaryDiscountAmount,
     required this.finalTotalPrice,
   });
 
@@ -20,7 +22,6 @@ class TotalPriceWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = context.l10n;
-    final discountAmount = itemsPrice * discountPercentage;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -40,8 +41,8 @@ class TotalPriceWidget extends StatelessWidget {
           PriceRowWidget(label: l10n.costOfMeal, value: itemsPrice),
           if (containerPrice > 0) PriceRowWidget(label: 'Стоимость контейнера', value: containerPrice),
           PriceRowWidget(
-            label: "Скидка (${(discountPercentage * 100).toInt()}%)",
-            value: -discountAmount,
+            label: "Скидка (${(discountRatePercentage).toInt()}%)",
+            value: -monetaryDiscountAmount,
             valueColor: theme.colorScheme.error,
           ),
           const Divider(height: 20, thickness: 1),

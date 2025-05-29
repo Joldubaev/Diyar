@@ -91,76 +91,78 @@ class _MegaOtpPageState extends State<MegaOtpPage> {
         }
       },
       builder: (context, state) {
-        return Scaffold(
-          appBar: AppBar(),
-          body: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              children: [
-                const SizedBox(height: 24),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Введите код',
-                    style: theme.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
+        return SafeArea(
+          child: Scaffold(
+            body: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                children: [
+                  const SizedBox(height: 24),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Введите код',
+                      style: theme.textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 8),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Введите код который мы отправили на номер который вы ввели',
-                    style: theme.textTheme.bodyLarge?.copyWith(color: Colors.grey[600]),
-                  ),
-                ),
-                const SizedBox(height: 32),
-                Pinput(
-                  length: 4,
-                  onChanged: (value) {
-                    setState(() => enteredCode = value);
-                  },
-                  onCompleted: (value) => setState(() => enteredCode = value),
-                  defaultPinTheme: PinTheme(
-                    width: 60,
-                    height: 70,
-                    textStyle: const TextStyle(
-                      fontSize: 20,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[300]!),
-                      borderRadius: BorderRadius.circular(15),
+                  const SizedBox(height: 8),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Введите код который мы отправили на номер который вы ввели',
+                      style: theme.textTheme.bodyLarge?.copyWith(color: Colors.grey[600]),
                     ),
                   ),
-                ),
-                const SizedBox(height: 10),
-                Spacer(),
-                SubmitButtonWidget(
-                  bgColor: theme.primaryColor,
-                  textStyle: theme.textTheme.bodyMedium!.copyWith(color: Colors.white),
-                  title: 'Подтвердить',
-                  onTap: () {
-                    if (enteredCode.length < 4) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Введите код')),
+                  const SizedBox(height: 32),
+                  Pinput(
+                    length: 4,
+                    onChanged: (value) {
+                      setState(() => enteredCode = value);
+                    },
+                    onCompleted: (value) => setState(() => enteredCode = value),
+                    defaultPinTheme: PinTheme(
+                      width: 60,
+                      height: 70,
+                      textStyle: const TextStyle(
+                        fontSize: 20,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey[300]!),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Spacer(),
+                  SubmitButtonWidget(
+                    isLoading: state is PaymentLoading,
+                    bgColor: theme.primaryColor,
+                    textStyle: theme.textTheme.bodyMedium!.copyWith(color: Colors.white),
+                    title: 'Подтвердить',
+                    onTap: () {
+                      if (enteredCode.length < 4) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Введите код')),
+                        );
+                        return;
+                      }
+                      final entity = PaymentsEntity(
+                        user: widget.phone,
+                        amount: widget.amount,
+                        pinCode: enteredCode,
+                        orderNumber: widget.paymentId,
                       );
-                      return;
-                    }
-                    final entity = PaymentsEntity(
-                      user: widget.phone,
-                      amount: widget.amount,
-                      pinCode: enteredCode,
-                      orderNumber: widget.paymentId,
-                    );
-                    context.read<PaymentBloc>().add(InitiatePaymentMegaEvent(entity));
-                  },
-                  height: 55,
-                ),
-                const SizedBox(height: 16),
-              ],
+                      context.read<PaymentBloc>().add(InitiatePaymentMegaEvent(entity));
+                    },
+                    height: 55,
+                  ),
+                  const SizedBox(height: 16),
+                ],
+              ),
             ),
           ),
         );
