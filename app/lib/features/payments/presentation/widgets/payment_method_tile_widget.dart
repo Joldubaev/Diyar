@@ -1,4 +1,3 @@
-
 import 'package:diyar/core/core.dart';
 import 'package:flutter/material.dart';
 
@@ -37,12 +36,12 @@ class PaymentMethodTileWidget extends StatelessWidget {
                     title,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           fontWeight: FontWeight.w600,
-                          color: Colors.black,
+                          color: Theme.of(context).colorScheme.onSurface,
                           fontSize: 17,
                         ),
                   ),
                 ),
-                const Icon(Icons.chevron_right, color: Colors.black38, size: 26),
+                Icon(Icons.chevron_right, color: Theme.of(context).colorScheme.onSurface, size: 26),
               ],
             ),
           ),

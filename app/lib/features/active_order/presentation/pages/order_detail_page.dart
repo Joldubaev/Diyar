@@ -117,7 +117,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                   DetailItem(
                     icon: 'del',
                     title: 'Оплата',
-                    value: order.paymentMethod == 'cash' ? 'Наличные' : 'Онлайн оплата',
+                    value: order.status == 'UnPaid' ? 'Не Оплачено' : 'Оплачено',
                   ),
                   DetailItem(
                     icon: 'del',

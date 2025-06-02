@@ -211,6 +211,7 @@ class _QrCodePageState extends State<QrCodePage> {
                       border: Border.all(color: Colors.grey[300]!),
                     ),
                     child: CustomInputWidget(
+                      filledColor: Theme.of(context).colorScheme.surface,
                       isReadOnly: true,
                       hintText: 'Введите сумму',
                       controller: _amountController,

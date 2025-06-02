@@ -163,12 +163,33 @@ class _LoadedCartViewState extends State<LoadedCartView> {
                       bgColor: theme.colorScheme.primary,
                       title: context.l10n.confirmOrder,
                       onTap: () {
+                        if (timerFromState == null && timerErrorMsg != null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(timerErrorMsg),
+                              backgroundColor: theme.colorScheme.error,
+                            ),
+                          );
+                          return;
+                        }
+
+                        if (timerFromState == null || timerFromState.serverTime == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("Не удалось получить актуальное время работы магазина. Попробуйте позже."),
+                              backgroundColor: theme.colorScheme.error,
+                            ),
+                          );
+                          return;
+                        }
+
                         showOrderDialogs(
                           context: context,
                           cartItems: carts,
                           totalPrice: _dynamicFinalTotalPrice.toInt(),
-                          startWorkTimeString: timerFromState?.startTime.toString(),
-                          endWorkTimeString: timerFromState?.endTime.toString(),
+                          startWorkTimeString: timerFromState.startTime.toString(),
+                          endWorkTimeString: timerFromState.endTime.toString(),
+                          serverTimeString: timerFromState.serverTime,
                         );
                       },
                     ),

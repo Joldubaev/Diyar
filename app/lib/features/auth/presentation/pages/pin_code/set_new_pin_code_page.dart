@@ -89,8 +89,17 @@ class _SetNewPinCodePageState extends State<SetNewPinCodePage> {
 
   void _navigateToHome() {
     final role = sl<LocalStorage>().getString(AppConst.userRole);
-    log("Navigating home with role: $role");
-    final targetRoute = (role?.toLowerCase() == "user".toLowerCase()) ? const MainRoute() : const CurierRoute();
+    log("Navigating home with role: $role"); // Этот лог у вас выводит "admin"
+
+    PageRouteInfo targetRoute;
+    if (role?.toLowerCase() == "courier".toLowerCase()) {
+      // Если роль "courier" (регистронезависимо), то идем на CurierRoute
+      targetRoute = const CurierRoute();
+    } else {
+      // Во всех остальных случаях (включая "admin", "user" или null), идем на MainRoute
+      targetRoute = const MainRoute();
+    }
+
     context.router.pushAndPopUntil(targetRoute, predicate: (_) => false);
   }
 

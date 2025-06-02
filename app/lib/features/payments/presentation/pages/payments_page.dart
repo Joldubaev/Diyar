@@ -56,7 +56,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
                     'Выберите способ оплаты',
                     style: theme.textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontSize: 24,
                     ),
                   ),
@@ -83,7 +83,14 @@ class _PaymentsPageState extends State<PaymentsPage> {
                   )),
                 ),
                 PaymentMethodTileWidget(
-                  icon: SvgPicture.asset('assets/icons/qr_code.svg', height: 28),
+                  icon: SvgPicture.asset(
+                    'assets/icons/qr_code.svg',
+                    height: 28,
+                    colorFilter: ColorFilter.mode(
+                      Theme.of(context).colorScheme.onSurface,
+                      BlendMode.srcIn,
+                    ),
+                  ),
                   title: 'Оплата через QR',
                   onTap: () => context.router.push(QrCodeRoute(
                     initialAmount: int.parse(widget.amount ?? '0'),
