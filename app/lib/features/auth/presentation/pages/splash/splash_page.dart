@@ -47,12 +47,10 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
         curve: Curves.easeIn,
       ),
     );
-
     _animationController.forward();
   }
 
   void _startAuthenticationCheck() {
-    // Небольшая задержка для показа сплэш-скрина
     Future.delayed(const Duration(milliseconds: 800), () {
       if (mounted) {
         _checkAuthentication();
@@ -64,71 +62,51 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     try {
       final prefs = await SharedPreferences.getInstance();
       final bool isFirstLaunch = prefs.getBool(AppConst.firstLaunch) ?? true;
-
       log('[Splash] Is first launch: $isFirstLaunch');
-
       if (isFirstLaunch) {
         log("[Splash] First launch detected. Setting flag and navigating to Sign In.");
         await prefs.setBool(AppConst.firstLaunch, false);
         _navigateTo(const MainRoute());
         return;
       }
-
-      // Проверяем токены из LocalStorage
       final String? refreshToken = _localStorage.getString(AppConst.refreshToken);
       final String? accessToken = _localStorage.getString(AppConst.accessToken);
-
       log('[Splash] Refresh Token: ${refreshToken != null ? 'Present' : 'Absent'}');
       log('[Splash] Access Token: ${accessToken != null ? 'Present' : 'Absent'}');
-
       if (refreshToken == null) {
         log("[Splash] Refresh token missing. Navigating to Sign In.");
         // Если нет рефреш токена, пользователь точно не аутентифицирован
-        _navigateTo(const MainRoute());
+        _navigateTo(const SignInRoute());
         return;
       }
 
       if (accessToken == null || JwtDecoder.isExpired(accessToken)) {
-        log("[Splash] Access token missing or expired. Attempting to refresh...");
-        // Токен нужно обновить
         if (mounted) {
           context.read<SignInCubit>().refreshToken();
         }
       } else {
-        // Access токен валиден, переходим к проверке PIN и роли
         log("[Splash] Access token is valid. Proceeding to user navigation.");
         _handleUserNavigation();
       }
     } catch (e, s) {
       log("[Splash] Error during authentication check: $e\n$s");
-      // При любой ошибке чтения/проверки переводим на вход
       _navigateTo(const SignInRoute());
     }
   }
 
   Future<void> _handleUserNavigation() async {
     try {
-      // Все данные читаем из LocalStorage
       final String? accessToken = _localStorage.getString(AppConst.accessToken);
-      // Добавляем подробный лог прочитанного токена
       log('[Splash _handleUserNavigation] AccessToken READ from localStorage: $accessToken');
       log('[Splash _handleUserNavigation] Expected AccessToken key: ${AppConst.accessToken}');
-
       final String? pinCode = _localStorage.getString(AppConst.pinCode);
-      // final String? role = _localStorage.getString(AppConst.userRole); // Роль здесь не нужна
-
       log('[Splash] Handling navigation. AccessToken: ${accessToken != null ? 'Present' : 'Absent'}, PinCode: ${pinCode != null && pinCode.isNotEmpty ? 'Present' : 'Absent'}');
-
       if (!mounted) return;
-
       if (accessToken == null) {
-        // Если токен внезапно пропал (маловероятно, но возможно)
         log('[Splash] Access token missing during navigation handling. Navigating to Sign In.');
         _navigateTo(const SignInRoute());
         return;
       }
-
-      // Есть токен, проверяем PIN
       if (pinCode != null && pinCode.isNotEmpty) {
         log('[Splash] PIN code found. Navigating to PinCodeRoute.');
         _navigateTo(const PinCodeRoute());
@@ -147,38 +125,8 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   void _navigateTo(PageRouteInfo route) {
     if (mounted) {
       log('[Splash] Navigating to ${route.routeName}');
-      // Используем replace, чтобы пользователь не мог вернуться на сплэш-скрин
       context.router.replace(route);
     }
-  }
-
-  Widget _buildBody(BuildContext context) {
-    return FadeTransition(
-      opacity: _fadeAnimation,
-      child: SafeArea(
-        child: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                "assets/images/app_logo.png", // Убедитесь, что путь к логотипу верный
-                width: 150,
-              ),
-              const SizedBox(height: 20),
-              const SizedBox(
-                width: 30,
-                height: 30,
-                child: CircularProgressIndicator(
-                  color: AppColors.white, // Используем цвет из вашей темы
-                  strokeCap: StrokeCap.round,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 
   @override
@@ -188,18 +136,40 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
         log("[Splash] Received Cubit State: ${state.runtimeType}");
         if (state is RefreshTokenLoaded) {
           log("[Splash] Token refresh successful. Proceeding to user navigation.");
-          // После успешного обновления токена снова проверяем навигацию (PIN/роль)
           _handleUserNavigation();
         } else if (state is RefreshTokenFailure) {
           log("[Splash] Token refresh failed. Navigating to Sign In.");
-          // Ошибка обновления токена, перенаправляем на вход
           _navigateTo(const SignInRoute());
         }
-        // Другие состояния SignInCubit здесь не обрабатываем
       },
       child: Scaffold(
-        backgroundColor: AppColors.primary, // Используем цвет из вашей темы
-        body: _buildBody(context), // Используем вынесенный метод
+        backgroundColor: AppColors.primary, 
+        body: FadeTransition(
+          opacity: _fadeAnimation,
+          child: SafeArea(
+            child: Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    "assets/images/app_logo.png", 
+                    width: 150,
+                  ),
+                  const SizedBox(height: 20),
+                  const SizedBox(
+                    width: 30,
+                    height: 30,
+                    child: CircularProgressIndicator(
+                      color: AppColors.white,
+                      strokeCap: StrokeCap.round,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

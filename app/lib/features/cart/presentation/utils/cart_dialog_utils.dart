@@ -33,24 +33,42 @@ void showOrderDialogs({
   required int totalPrice,
   required String? startWorkTimeString,
   required String? endWorkTimeString,
+  required String? serverTimeString, // Новое поле
 }) {
-  final currentTime = DateTime.now();
+  // // Сначала проверяем флаг технических работ
+  // if (isTechnicalWork) {
+  //   _showTechnicalWorkDialog(context);
+  //   return;
+  // }
+
   // Используем значения по умолчанию для строк времени, если они null
   final TimeOfDay startWorkTime = _parseTimeOfDay(startWorkTimeString ?? '10:00');
   final TimeOfDay endWorkTime = _parseTimeOfDay(endWorkTimeString ?? '22:00');
 
+  // Парсим серверное время. Если оно null или некорректно, считаем магазин закрытым по умолчанию.
+  final TimeOfDay currentTimeOfDay;
+  if (serverTimeString != null) {
+    currentTimeOfDay = _parseTimeOfDay(serverTimeString);
+  } else {
+    log("Ошибка: serverTimeString is null. Магазин будет считаться закрытым.");
+    // Показываем диалог о закрытии, если серверное время недоступно
+    _showClosedAlertDialog(context, startWorkTime, endWorkTime);
+    return;
+  }
+
   int timeOfDayToMinutes(TimeOfDay time) => time.hour * 60 + time.minute;
 
-  final currentTimeOfDay = TimeOfDay.fromDateTime(currentTime);
   final currentTimeInMinutes = timeOfDayToMinutes(currentTimeOfDay);
   final startWorkTimeInMinutes = timeOfDayToMinutes(startWorkTime);
   final endWorkTimeInMinutes = timeOfDayToMinutes(endWorkTime);
 
   bool isShopClosed;
   if (startWorkTimeInMinutes < endWorkTimeInMinutes) {
-    isShopClosed = currentTimeInMinutes < startWorkTimeInMinutes || currentTimeInMinutes > endWorkTimeInMinutes;
+    // Обычный случай (например, 10:00 - 22:00)
+    isShopClosed = currentTimeInMinutes < startWorkTimeInMinutes || currentTimeInMinutes >= endWorkTimeInMinutes;
   } else {
-    isShopClosed = currentTimeInMinutes < startWorkTimeInMinutes && currentTimeInMinutes > endWorkTimeInMinutes;
+    // Случай, когда время работы переходит через полночь (например, 22:00 - 02:00)
+    isShopClosed = currentTimeInMinutes < startWorkTimeInMinutes && currentTimeInMinutes >= endWorkTimeInMinutes;
   }
 
   if (isShopClosed) {
@@ -59,6 +77,46 @@ void showOrderDialogs({
     _showDeliveryOptionsBottomSheet(context, cartItems, totalPrice);
   }
 }
+
+// Диалоговое окно для технических работ
+// Future<dynamic> _showTechnicalWorkDialog(BuildContext context) {
+//   return showDialog(
+//     context: context,
+//     builder: (dialogContext) {
+//       return AlertDialog(
+//         contentPadding: const EdgeInsets.all(16),
+//         titlePadding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+//         title: Text(
+//           context.l10n.attention,
+//           style: Theme.of(dialogContext).textTheme.titleMedium?.copyWith(
+//                 color: Theme.of(dialogContext).colorScheme.error,
+//                 fontWeight: FontWeight.bold,
+//               ),
+//           textAlign: TextAlign.center,
+//         ),
+//         content: Column(
+//           mainAxisSize: MainAxisSize.min,
+//           children: [
+//             Text(
+//               "Магазин временно закрыт на техническое обслуживание. Пожалуйста, попробуйте позже.", // TODO: Заменить на l10n
+//               style: Theme.of(dialogContext).textTheme.bodyMedium,
+//               textAlign: TextAlign.center,
+//             ),
+//             const SizedBox(height: 15),
+//             SubmitButtonWidget(
+//               textStyle: Theme.of(dialogContext).textTheme.bodyLarge?.copyWith(
+//                     color: Theme.of(dialogContext).colorScheme.onPrimary,
+//                   ),
+//               bgColor: Theme.of(dialogContext).colorScheme.primary,
+//               title: context.l10n.close,
+//               onTap: () => Navigator.of(dialogContext).pop(),
+//             ),
+//           ],
+//         ),
+//       );
+//     },
+//   );
+// }
 
 // Вспомогательные функции, сделаны приватными для этого файла
 Future<dynamic> _showClosedAlertDialog(

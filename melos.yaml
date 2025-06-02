@@ -96,3 +96,8 @@ scripts:
   integration-test:
     run: cd app && fvm flutter drive --target=test_driver/app.dart --no-enable-impeller
     description: "Run integration tests for the my_quran"
+  
+  # pod install
+  pod-install:
+    run: cd app/ios && pod install
+    description: "Run pod install for iOS dependencies"

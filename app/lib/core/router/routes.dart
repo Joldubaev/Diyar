@@ -4,7 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/auth/auth.dart';
 import 'package:diyar/injection_container.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 @AutoRouterConfig()
 class AppRouter extends RootStackRouter {
@@ -64,14 +64,12 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: MbankConfirmRoute.page),
         AutoRoute(page: MbankCheckStatusRoute.page),
         AutoRoute(page: MbankInitiateRoute.page),
-        AutoRoute(
-          page: PaymentStatusRoute.page,
-        ),
+        AutoRoute(page: PaymentStatusRoute.page),
       ];
 }
 
 class AuthGuard extends AutoRouteGuard {
-  final prefs = sl<SharedPreferences>();
+  final prefs = sl<LocalStorage>();
   final authDataSource = sl<AuthRemoteDataSource>();
 
   @override
@@ -84,20 +82,25 @@ class AuthGuard extends AutoRouteGuard {
     log('AuthGuard: Role - $role');
 
     // Проверка на наличие токена и его срок действия
-    // if (token == null || JwtDecoder.isExpired(token)) {
-    //   log('AuthGuard: Token отсутствует или истек');
-    //   resolver.next(false);
-    //   router.push(const SignInRoute());
-    //   return;
-    // }
+    if (token == null || JwtDecoder.isExpired(token)) {
+      log('AuthGuard: Token отсутствует или истек. Навигация на SignInRoute.');
+      resolver.next(false); // Не разрешаем текущую навигацию
+      router.pushAndPopUntil(const SignInRoute(),
+          predicate: (route) => false); // Очищаем стек и переходим на SignInRoute
+      return;
+    }
 
     // Перенаправление в зависимости от роли
     if (role == 'Courier') {
-      log('AuthGuard: Redirecting to CurierRoute');
+      log('AuthGuard: Роль Courier. Перенаправление на CurierRoute.');
       resolver.next(false);
-      router.replace(const CurierRoute()); // Заменяем стек, чтобы нельзя было вернуться назад
+       router.replace(const CurierRoute()); // Заменяем стек, чтобы нельзя было вернуться назад
+    } else if (role == 'admin') {
+      log('AuthGuard: Роль Admin. Перенаправление на MainRoute.');
+      resolver.next(false);
+      router.replace(const MainRoute()); // Заменяем стек
     } else {
-      log('AuthGuard: Redirecting to MainRoute');
+      log('AuthGuard: Роль User или другая (не Courier/Admin, роль: ${role ?? "null"}). Перенаправление на MainRoute.');
       resolver.next(false);
       router.replace(const MainRoute()); // Заменяем стек
     }

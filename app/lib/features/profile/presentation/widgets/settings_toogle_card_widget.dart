@@ -33,7 +33,7 @@ class SettingsToggleCard extends StatelessWidget {
         const SizedBox(height: 5),
         Container(
           decoration: BoxDecoration(
-            color: AppColors.white,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(12),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -46,7 +46,7 @@ class SettingsToggleCard extends StatelessWidget {
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontSize: 16,
                       fontWeight: FontWeight.w400,
-                      color: AppColors.black,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
