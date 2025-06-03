@@ -70,7 +70,6 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       final String? refreshToken = _localStorage.getString(AppConst.refreshToken);
       final String? accessToken = _localStorage.getString(AppConst.accessToken);
       log('[Splash] Refresh Token: ${refreshToken != null ? 'Present' : 'Absent'}');
-      log('[Splash] Access Token: ${accessToken != null ? 'Present' : 'Absent'}');
       if (refreshToken == null) {
         log("[Splash] Refresh token missing. Navigating to Sign In.");
         _navigateTo(const SignInRoute());
