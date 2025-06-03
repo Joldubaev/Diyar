@@ -5,20 +5,17 @@ import 'package:diyar/features/auth/domain/domain.dart';
 import 'package:diyar/injection_container.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:meta/meta.dart';
-import 'package:flutter/services.dart'; // Для PlatformException
-import 'package:local_auth/local_auth.dart'; // Импорт local_auth
-
+import 'package:flutter/services.dart';
+import 'package:local_auth/local_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 part 'sign_in_state.dart';
-
-// Ключ для сохранения настройки биометрии в LocalStorage
-const String _biometricPrefKey = 'biometric_enabled';
 
 class SignInCubit extends Cubit<SignInState> {
   SignInCubit(this._authRepository) : super(SignInInitial());
 
   final AuthRepository _authRepository;
   final LocalStorage _localStorage = sl<LocalStorage>();
-  final LocalAuthentication _localAuth = LocalAuthentication(); // Экземпляр LocalAuthentication
+  final LocalAuthentication _localAuth = LocalAuthentication();
 
   // 🔐 Вход
   Future<void> signIn(UserEntities model) async {
@@ -27,7 +24,15 @@ class SignInCubit extends Cubit<SignInState> {
     final res = await _authRepository.login(model);
     res.fold(
       (failure) => emit(SignInFailure(failure.message)),
-      (_) => emit(SignInSuccessWithUser()),
+      (_) async {
+        final prefs = await SharedPreferences.getInstance();
+        final bool isCurrentlyFirstLaunch = prefs.getBool(AppConst.firstLaunch) ?? true;
+        if (isCurrentlyFirstLaunch) {
+          await prefs.setBool(AppConst.firstLaunch, false);
+          log("[SignInCubit] First launch flag has been set to false after successful login.");
+        }
+        emit(SignInSuccessWithUser());
+      },
     );
   }
 
@@ -107,7 +112,7 @@ class SignInCubit extends Cubit<SignInState> {
       final bool isDeviceSupported = await _localAuth.isDeviceSupported();
 
       if (canCheckBiometrics && isDeviceSupported) {
-        final bool isEnabled = _localStorage.getBool(_biometricPrefKey) ?? false;
+        final bool isEnabled = _localStorage.getBool(AppConst.biometricPrefKey) ?? false;
         emit(BiometricAvailable(isEnabled));
       } else {
         emit(BiometricNotAvailable());
@@ -129,7 +134,7 @@ class SignInCubit extends Cubit<SignInState> {
       return;
     }
 
-    final bool isEnabled = _localStorage.getBool(_biometricPrefKey) ?? false;
+    final bool isEnabled = _localStorage.getBool(AppConst.biometricPrefKey) ?? false;
     if (!isEnabled) {
       emit(BiometricAuthenticationFailure("Вход по биометрии не включен в настройках."));
       return;
@@ -163,7 +168,7 @@ class SignInCubit extends Cubit<SignInState> {
   /// Сохраняет настройку использования биометрии
   Future<void> saveBiometricPreference(bool isEnabled) async {
     try {
-      await _localStorage.setBool(_biometricPrefKey, isEnabled);
+      await _localStorage.setBool(AppConst.biometricPrefKey, isEnabled);
       emit(BiometricPreferenceSaved(isEnabled));
       // После сохранения снова проверяем доступность, чтобы обновить состояние BiometricAvailable
       await checkBiometricsAvailability();
@@ -175,14 +180,14 @@ class SignInCubit extends Cubit<SignInState> {
 
   /// Получает текущую настройку биометрии (для инициализации UI)
   bool getBiometricPreference() {
-    return _localStorage.getBool(_biometricPrefKey) ?? false;
+    return _localStorage.getBool(AppConst.biometricPrefKey) ?? false;
   }
 
   // 🚪 Выход
   Future<void> logout() async {
     // Добавляем async, так как удаляем настройку
     // При выходе сбрасываем настройку биометрии
-    await _localStorage.delete(_biometricPrefKey);
+    await _localStorage.delete(AppConst.biometricPrefKey);
     await _authRepository.logout();
     emit(LogoutSuccess()); // Эмитим успех после очистки
   }
