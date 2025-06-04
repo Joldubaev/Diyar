@@ -24,7 +24,6 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   @override
   void initState() {
     super.initState();
-    // _localStorage.delete(AppConst.refreshToken);
     _setupAnimations();
     _startAuthenticationCheck();
   }
@@ -64,18 +63,15 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       final bool isFirstLaunch = prefs.getBool(AppConst.firstLaunch) ?? true;
       log('[Splash] Is first launch: $isFirstLaunch');
       if (isFirstLaunch) {
-        log("[Splash] First launch detected. Setting flag and navigating to Sign In.");
-        await prefs.setBool(AppConst.firstLaunch, false);
+        log("[Splash] First launch detected. Navigating to SignInRoute.");
         _navigateTo(const MainRoute());
         return;
       }
       final String? refreshToken = _localStorage.getString(AppConst.refreshToken);
       final String? accessToken = _localStorage.getString(AppConst.accessToken);
       log('[Splash] Refresh Token: ${refreshToken != null ? 'Present' : 'Absent'}');
-      log('[Splash] Access Token: ${accessToken != null ? 'Present' : 'Absent'}');
       if (refreshToken == null) {
         log("[Splash] Refresh token missing. Navigating to Sign In.");
-        // Если нет рефреш токена, пользователь точно не аутентифицирован
         _navigateTo(const SignInRoute());
         return;
       }
@@ -114,10 +110,8 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
         log('[Splash] PIN code missing. Navigating to SetNewPinCodeRoute.');
         _navigateTo(const SetNewPinCodeRoute());
       }
-      // Навигацию по роли (MainRoute/CurierRoute) теперь делает PinCodePage после успешного ввода PIN
     } catch (e, s) {
       log("[Splash] Error during user navigation handling: $e\n$s");
-      // При ошибке чтения переводим на вход
       _navigateTo(const SignInRoute());
     }
   }
@@ -143,7 +137,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.primary, 
+        backgroundColor: AppColors.primary,
         body: FadeTransition(
           opacity: _fadeAnimation,
           child: SafeArea(
@@ -153,7 +147,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
-                    "assets/images/app_logo.png", 
+                    "assets/images/app_logo.png",
                     width: 150,
                   ),
                   const SizedBox(height: 20),

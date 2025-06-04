@@ -1,17 +1,15 @@
 import 'dart:developer';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:diyar/core/core.dart'; // Предполагается, что SubmitButtonWidget и маршруты доступны через это
+import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/domain/domain.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
-// Вспомогательная функция для парсинга времени из строки "ЧЧ:ММ" или "ЧЧ:ММ:СС"
 TimeOfDay _parseTimeOfDay(String timeString) {
   try {
     final parts = timeString.split(':');
     if (parts.length >= 2) {
-      // Должно быть как минимум 2 части (часы и минуты)
       final hour = int.tryParse(parts[0]);
       final minute = int.tryParse(parts[1]);
       if (hour != null && minute != null && hour >= 0 && hour <= 23 && minute >= 0 && minute <= 59) {
@@ -21,37 +19,26 @@ TimeOfDay _parseTimeOfDay(String timeString) {
   } catch (e) {
     log("Ошибка парсинга времени: $timeString, $e");
   }
-  // Возвращаем значение по умолчанию в случае ошибки
   log("Не удалось распарсить время '$timeString', используется полночь по умолчанию.");
   return const TimeOfDay(hour: 0, minute: 0);
 }
 
-// Основная функция, которую будет вызывать LoadedCartView
 void showOrderDialogs({
   required BuildContext context,
   required List<CartItemEntity> cartItems,
   required int totalPrice,
   required String? startWorkTimeString,
   required String? endWorkTimeString,
-  required String? serverTimeString, // Новое поле
+  required String? serverTimeString,
 }) {
-  // // Сначала проверяем флаг технических работ
-  // if (isTechnicalWork) {
-  //   _showTechnicalWorkDialog(context);
-  //   return;
-  // }
-
-  // Используем значения по умолчанию для строк времени, если они null
   final TimeOfDay startWorkTime = _parseTimeOfDay(startWorkTimeString ?? '10:00');
   final TimeOfDay endWorkTime = _parseTimeOfDay(endWorkTimeString ?? '22:00');
 
-  // Парсим серверное время. Если оно null или некорректно, считаем магазин закрытым по умолчанию.
   final TimeOfDay currentTimeOfDay;
   if (serverTimeString != null) {
     currentTimeOfDay = _parseTimeOfDay(serverTimeString);
   } else {
     log("Ошибка: serverTimeString is null. Магазин будет считаться закрытым.");
-    // Показываем диалог о закрытии, если серверное время недоступно
     _showClosedAlertDialog(context, startWorkTime, endWorkTime);
     return;
   }
@@ -64,10 +51,8 @@ void showOrderDialogs({
 
   bool isShopClosed;
   if (startWorkTimeInMinutes < endWorkTimeInMinutes) {
-    // Обычный случай (например, 10:00 - 22:00)
     isShopClosed = currentTimeInMinutes < startWorkTimeInMinutes || currentTimeInMinutes >= endWorkTimeInMinutes;
   } else {
-    // Случай, когда время работы переходит через полночь (например, 22:00 - 02:00)
     isShopClosed = currentTimeInMinutes < startWorkTimeInMinutes && currentTimeInMinutes >= endWorkTimeInMinutes;
   }
 
@@ -78,47 +63,6 @@ void showOrderDialogs({
   }
 }
 
-// Диалоговое окно для технических работ
-// Future<dynamic> _showTechnicalWorkDialog(BuildContext context) {
-//   return showDialog(
-//     context: context,
-//     builder: (dialogContext) {
-//       return AlertDialog(
-//         contentPadding: const EdgeInsets.all(16),
-//         titlePadding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-//         title: Text(
-//           context.l10n.attention,
-//           style: Theme.of(dialogContext).textTheme.titleMedium?.copyWith(
-//                 color: Theme.of(dialogContext).colorScheme.error,
-//                 fontWeight: FontWeight.bold,
-//               ),
-//           textAlign: TextAlign.center,
-//         ),
-//         content: Column(
-//           mainAxisSize: MainAxisSize.min,
-//           children: [
-//             Text(
-//               "Магазин временно закрыт на техническое обслуживание. Пожалуйста, попробуйте позже.", // TODO: Заменить на l10n
-//               style: Theme.of(dialogContext).textTheme.bodyMedium,
-//               textAlign: TextAlign.center,
-//             ),
-//             const SizedBox(height: 15),
-//             SubmitButtonWidget(
-//               textStyle: Theme.of(dialogContext).textTheme.bodyLarge?.copyWith(
-//                     color: Theme.of(dialogContext).colorScheme.onPrimary,
-//                   ),
-//               bgColor: Theme.of(dialogContext).colorScheme.primary,
-//               title: context.l10n.close,
-//               onTap: () => Navigator.of(dialogContext).pop(),
-//             ),
-//           ],
-//         ),
-//       );
-//     },
-//   );
-// }
-
-// Вспомогательные функции, сделаны приватными для этого файла
 Future<dynamic> _showClosedAlertDialog(
   BuildContext context,
   TimeOfDay startWorkTime,
@@ -131,7 +75,7 @@ Future<dynamic> _showClosedAlertDialog(
         contentPadding: const EdgeInsets.all(16),
         titlePadding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
         title: Text(
-          'Внимание!', // Используйте l10n, если доступно: context.l10n.attention
+          'Внимание!',
           style: Theme.of(dialogContext).textTheme.titleMedium?.copyWith(
                 color: Theme.of(dialogContext).colorScheme.error,
                 fontWeight: FontWeight.bold,
@@ -152,7 +96,7 @@ Future<dynamic> _showClosedAlertDialog(
                     color: Theme.of(dialogContext).colorScheme.onPrimary,
                   ),
               bgColor: Theme.of(dialogContext).colorScheme.primary,
-              title: 'Закрыть', // Используйте l10n: context.l10n.close
+              title: 'Закрыть',
               onTap: () => Navigator.of(dialogContext).pop(),
             ),
           ],
@@ -209,7 +153,7 @@ Future<dynamic> _showDeliveryOptionsBottomSheet(
                   ),
                 ),
                 Text(
-                  "Как оформить заказ?", // Замените на строковую заглушку, если l10n недоступен здесь
+                  "Как оформить заказ?",
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: Theme.of(context).colorScheme.onSurface,
@@ -218,7 +162,7 @@ Future<dynamic> _showDeliveryOptionsBottomSheet(
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  "Выберите удобный способ получения заказа", // Замените на строковую заглушку
+                  "Выберите удобный способ получения заказа",
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                       ),
