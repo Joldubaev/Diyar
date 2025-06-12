@@ -22,7 +22,7 @@ class QrPaymentStatusModel {
     return QrPaymentStatusModel(
       code: map['code'] ?? '',
       message: map['message'] ?? '',
-      status: PaymentStatusMapper.fromCode(map['code'] ?? ''),
+      status: PaymentStatusMapper.fromCode(map['data'] ?? ''),
     );
   }
 

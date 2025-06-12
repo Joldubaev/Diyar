@@ -222,7 +222,19 @@ class RemotePaymentsDatasourceImpl implements RemotePaymentsDatasource {
       );
       final code = response.data['code'].toString();
       final message = response.data['message'] ?? '';
-      final status = PaymentStatusMapper.fromCode(code);
+
+      PaymentStatusEnum status;
+      if (code == '100') {
+        final dataStatus = response.data['data']?.toString();
+        if (dataStatus == 'SUCCESSFUL') {
+          status = PaymentStatusEnum.success;
+        } else {
+          status = PaymentStatusEnum.pending;
+        }
+      } else {
+        status = PaymentStatusMapper.fromCode(code);
+      }
+
       return Right(QrPaymentStatusModel(code: code, message: message, status: status));
     } on DioException catch (e) {
       return Left(ServerFailure(e.message ?? 'Ошибка сети', e.response?.statusCode));
