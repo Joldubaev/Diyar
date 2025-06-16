@@ -57,7 +57,7 @@ class _QrCheckStatusPageState extends State<QrCheckStatusPage> {
             return const Center(child: CircularProgressIndicator());
           }
           if (state is PaymentQrCodeStatusSuccess) {
-            final status = PaymentStatusMapper.fromCode(state.status.code);
+            final status = state.status.status;
             final isSuccess = status == PaymentStatusEnum.success;
             return Center(
               child: PaymentStatusWidget(

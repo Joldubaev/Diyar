@@ -67,7 +67,11 @@ class SignInCubit extends Cubit<SignInState> {
 
       final res = await _authRepository.refreshToken();
       res.fold(
-        (failure) => emit(RefreshTokenFailure()),
+        (failure) async {
+          log('[SignInCubit] Token refresh failed: ${failure.message}');
+          // await _localStorage.clear(); // Очищаем все токены при ошибке
+          emit(RefreshTokenFailure());
+        },
         (_) => emit(RefreshTokenLoaded()),
       );
 
