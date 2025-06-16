@@ -88,10 +88,10 @@ class PickupFormWidget extends StatelessWidget {
             },
           ),
           const SizedBox(height: 16),
-          PaymentTypeSelector(
-            currentPaymentType: currentPaymentType,
-            onChanged: onPaymentTypeChanged,
-          ),
+          // PaymentTypeSelector(
+          //   currentPaymentType: currentPaymentType,
+          //   onChanged: onPaymentTypeChanged,
+          // ),
           const SizedBox(height: 16),
           Text(l10n.orderPickupAd, style: theme.textTheme.bodyMedium!.copyWith(fontSize: 16)),
           Text(l10n.address, style: theme.textTheme.bodyMedium!.copyWith(fontSize: 16)),
