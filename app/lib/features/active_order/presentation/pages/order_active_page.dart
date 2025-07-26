@@ -47,7 +47,7 @@ class _ActiveOrderPageState extends State<ActiveOrderPage> {
     final nameId = decodedToken['nameid'];
     debugPrint('Decoded nameid: $nameId');
 
-    final serverUrl = "http://20.127.235.82/api/order-status-hub";
+    final serverUrl = "https://api.diyar.kg/order-status-hub";
     _hubConnection = HubConnectionBuilder().withUrl(serverUrl).configureLogging(Logger("SignalR")).build();
 
     // Подписка на событие получения статусов
