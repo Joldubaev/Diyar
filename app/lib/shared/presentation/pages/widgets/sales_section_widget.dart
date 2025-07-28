@@ -96,7 +96,7 @@ class SaleCard extends StatelessWidget {
           left: _defaultPadding,
           bottom: _defaultPadding,
           child: Container(
-            width: MediaQuery.of(context).size.width * 0.55,
+            width: MediaQuery.of(context).size.width * 0.6,
             padding: const EdgeInsets.all(_defaultPadding / 2),
             decoration: BoxDecoration(
               color: Colors.black.withValues(alpha: 0.3),
@@ -115,7 +115,7 @@ class SaleCard extends StatelessWidget {
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 2),
                 Text(
                   '${sale.discount ?? 0}% скидка',
                   style: theme.textTheme.titleMedium?.copyWith(color: Colors.white),
