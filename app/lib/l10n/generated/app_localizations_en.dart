@@ -557,7 +557,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get restaurant => 'Restaurant';
 
   @override
-  String get sale => 'Sale';
+  String get sale => 'Акции';
 
   @override
   String get sales => 'Sales';

@@ -31,6 +31,9 @@ class ProductItemContentWidget extends StatefulWidget {
   final bool isShadowVisible;
   final int quantity;
   final FoodEntity food;
+  final double? width;
+  final double? height;
+  final bool isCompact;
 
   const ProductItemContentWidget({
     super.key,
@@ -39,6 +42,9 @@ class ProductItemContentWidget extends StatefulWidget {
     required this.food,
     required this.quantity,
     this.isCounter = true,
+    this.width,
+    this.height,
+    this.isCompact = false,
   });
 
   @override
@@ -144,28 +150,46 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> wit
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return DecoratedBox(
-      decoration: _buildCardDecoration(context, theme),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          _ProductImageSection(
-            food: widget.food,
-            onTap: widget.onTap,
-            overlayOpacityAnimation: _overlayOpacityAnimation,
-            quantity: widget.quantity,
-          ),
-          _ProductInfoSection(food: widget.food),
-          const Spacer(),
-          if (widget.isCounter)
-            _ProductCounterSection(
+
+    // Адаптивные размеры
+    final cardWidth = widget.width ?? (widget.isCompact ? 140.0 : 170.0);
+    final cardHeight = widget.height ?? (widget.isCompact ? 180.0 : 220.0);
+    final imageHeight = widget.isCompact ? 80.0 : ProductItemContentWidget._imageHeight;
+    final imageWidth = widget.isCompact ? 120.0 : ProductItemContentWidget._imageWidth;
+
+    return SizedBox(
+      width: cardWidth,
+      height: cardHeight,
+      child: DecoratedBox(
+        decoration: _buildCardDecoration(context, theme),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            _ProductImageSection(
+              food: widget.food,
+              onTap: widget.onTap,
+              overlayOpacityAnimation: _overlayOpacityAnimation,
               quantity: widget.quantity,
-              onDecrement: () => _handleCartAction(isIncrement: false),
-              onIncrement: () => _handleCartAction(isIncrement: true),
-              onQuantityChanged: _handleQuantityChanged,
+              imageWidth: imageWidth,
+              imageHeight: imageHeight,
+              isCompact: widget.isCompact,
             ),
-          const SizedBox(height: 8),
-        ],
+            _ProductInfoSection(
+              food: widget.food,
+              isCompact: widget.isCompact,
+            ),
+            const Spacer(),
+            if (widget.isCounter)
+              _ProductCounterSection(
+                quantity: widget.quantity,
+                onDecrement: () => _handleCartAction(isIncrement: false),
+                onIncrement: () => _handleCartAction(isIncrement: true),
+                onQuantityChanged: _handleQuantityChanged,
+                isCompact: widget.isCompact,
+              ),
+            SizedBox(height: widget.isCompact ? 4 : 8),
+          ],
+        ),
       ),
     );
   }
@@ -196,12 +220,18 @@ class _ProductImageSection extends StatelessWidget {
   final VoidCallback? onTap;
   final Animation<double> overlayOpacityAnimation;
   final int quantity;
+  final double imageWidth;
+  final double imageHeight;
+  final bool isCompact;
 
   const _ProductImageSection({
     required this.food,
     this.onTap,
     required this.overlayOpacityAnimation,
     required this.quantity,
+    required this.imageWidth,
+    required this.imageHeight,
+    this.isCompact = false,
   });
 
   @override
@@ -220,8 +250,8 @@ class _ProductImageSection extends StatelessWidget {
                 imageUrl: food.urlPhoto ?? 'https://via.placeholder.com/150',
                 placeholder: (context, url) => _buildImagePlaceholder(theme),
                 errorWidget: (context, url, error) => _buildImageError(theme),
-                width: ProductItemContentWidget._imageWidth,
-                height: ProductItemContentWidget._imageHeight,
+                width: imageWidth,
+                height: imageHeight,
                 memCacheWidth: ProductItemContentWidget._memCacheWidth,
                 memCacheHeight: ProductItemContentWidget._memCacheHeight,
                 cacheManager: DefaultCacheManager(),
@@ -302,8 +332,12 @@ class _ProductImageSection extends StatelessWidget {
 // Widget for Text Info (Name, Weight, Price)
 class _ProductInfoSection extends StatelessWidget {
   final FoodEntity food;
+  final bool isCompact;
 
-  const _ProductInfoSection({required this.food});
+  const _ProductInfoSection({
+    required this.food,
+    this.isCompact = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -355,12 +389,14 @@ class _ProductCounterSection extends StatefulWidget {
   final VoidCallback? onDecrement;
   final VoidCallback? onIncrement;
   final ValueChanged<int>? onQuantityChanged;
+  final bool isCompact;
 
   const _ProductCounterSection({
     required this.quantity,
     this.onDecrement,
     this.onIncrement,
     this.onQuantityChanged,
+    this.isCompact = false,
   });
 
   @override
