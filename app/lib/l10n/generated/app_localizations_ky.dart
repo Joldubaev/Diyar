@@ -557,7 +557,7 @@ class AppLocalizationsKy extends AppLocalizations {
   String get restaurant => 'Restaurant';
 
   @override
-  String get sale => 'Скидка';
+  String get sale => 'Акции';
 
   @override
   String get sales => 'Акции';

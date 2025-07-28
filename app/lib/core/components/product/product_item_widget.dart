@@ -7,11 +7,17 @@ import 'package:flutter/material.dart';
 class ProductItemWidget extends StatelessWidget {
   final FoodEntity food;
   final int quantity;
+  final double? width;
+  final double? height;
+  final bool isCompact;
 
   const ProductItemWidget({
     super.key,
     required this.food,
     required this.quantity,
+    this.width,
+    this.height,
+    this.isCompact = false,
   });
 
   @override
@@ -19,6 +25,9 @@ class ProductItemWidget extends StatelessWidget {
     return ProductItemContentWidget(
       food: food,
       quantity: quantity,
+      width: width,
+      height: height,
+      isCompact: isCompact,
       onTap: () => context.pushRoute(
         ProductDetailRoute(
           food: food,

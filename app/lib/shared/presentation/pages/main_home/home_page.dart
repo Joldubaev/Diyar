@@ -52,17 +52,16 @@ class _HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SalesSectionWidget(),
+                  RowTextWidget(text: context.l10n.popularFood, theme: Theme.of(context)),
                   if (menu.isNotEmpty) PopularFoodSectionWidget(menu: menu),
-                  AboutUsWidget(
-                    image: 'assets/images/about.png',
-                    onTap: () => context.router.push(const AboutUsRoute()),
-                  ),
+                  RowTextWidget(text: 'Анонсы', theme: Theme.of(context)),
                   NewsWidgets(
                     subtitle: context.l10n.news,
                     title: 'Дияр',
                     image: 'assets/images/news_da.png',
                     onTap: () => context.router.push(const NewsRoute()),
                   ),
+                  RowTextWidget(text: 'Инфоцентр', theme: Theme.of(context)),
                   const ContactTileWidget(),
                 ],
               ),

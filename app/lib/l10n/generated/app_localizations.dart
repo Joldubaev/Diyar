@@ -1177,7 +1177,7 @@ abstract class AppLocalizations {
   /// No description provided for @sale.
   ///
   /// In en, this message translates to:
-  /// **'Sale'**
+  /// **'Акции'**
   String get sale;
 
   /// No description provided for @sales.

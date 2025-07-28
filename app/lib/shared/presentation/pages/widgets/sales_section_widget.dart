@@ -44,11 +44,7 @@ class _SalesSectionWidgetState extends State<SalesSectionWidget> with RouteAware
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Акции',
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 10),
               ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(SalesSectionWidget._borderRadius)),
                 child: SizedBox(
