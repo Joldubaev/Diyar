@@ -132,7 +132,7 @@ class Polygons {
             longitude: 74.65001565643277,
           ),
         ],
-        deliveryPrice: 120,
+        deliveryPrice: 150,
       ),
       DeliveryPolygon(
         id: 2,
@@ -390,30 +390,25 @@ class Polygons {
             longitude: 74.63419062324456,
           ),
         ],
-        deliveryPrice: 160,
+        deliveryPrice: 190,
       ),
       DeliveryPolygon(
         id: 3,
         coordinates: [
-          Coordinate(
-              latitude: 42.895886076076785, longitude: 74.61157517835974),
+          Coordinate(latitude: 42.895886076076785, longitude: 74.61157517835974),
           Coordinate(latitude: 42.88511293339427, longitude: 74.61183406082856),
           Coordinate(latitude: 42.87779087810609, longitude: 74.61200572220551),
-          Coordinate(
-              latitude: 42.867184970515986, longitude: 74.61123324600919),
+          Coordinate(latitude: 42.867184970515986, longitude: 74.61123324600919),
           Coordinate(latitude: 42.86282844094365, longitude: 74.61063243118988),
           Coordinate(latitude: 42.86257587900871, longitude: 74.61380816666349),
           Coordinate(latitude: 42.86314414189891, longitude: 74.61638308731779),
-          Coordinate(
-              latitude: 42.865480278431136, longitude: 74.62573863236173),
+          Coordinate(latitude: 42.865480278431136, longitude: 74.62573863236173),
           Coordinate(latitude: 42.86689765314075, longitude: 74.63635878965711),
           Coordinate(latitude: 42.86771841774837, longitude: 74.64322524473523),
           Coordinate(latitude: 42.86677138068704, longitude: 74.64931922361703),
-          Coordinate(
-              latitude: 42.867023925334294, longitude: 74.66039138243053),
+          Coordinate(latitude: 42.867023925334294, longitude: 74.66039138243053),
           Coordinate(latitude: 42.86809722847531, longitude: 74.66330962583874),
-          Coordinate(
-              latitude: 42.867023925334294, longitude: 74.69129043028208),
+          Coordinate(latitude: 42.867023925334294, longitude: 74.69129043028208),
           Coordinate(latitude: 42.86664510797316, longitude: 74.70124679014538),
           Coordinate(latitude: 42.86866544015058, longitude: 74.70083909437511),
           Coordinate(latitude: 42.87104871516628, longitude: 74.70032411024422),
@@ -422,34 +417,28 @@ class Polygons {
           Coordinate(latitude: 42.87202725157586, longitude: 74.69811397001598),
           Coordinate(latitude: 42.87216929583521, longitude: 74.69723420545914),
           Coordinate(latitude: 42.87352659151553, longitude: 74.69096856520034),
-          Coordinate(
-              latitude: 42.871822075831815, longitude: 74.69105439588881),
+          Coordinate(latitude: 42.871822075831815, longitude: 74.69105439588881),
           Coordinate(latitude: 42.87207459966578, longitude: 74.68985276625014),
           Coordinate(latitude: 42.8732109440403, longitude: 74.6853466551051),
           Coordinate(latitude: 42.8743157030648, longitude: 74.67702107832295),
           Coordinate(latitude: 42.87504167671231, longitude: 74.6667213957058),
-          Coordinate(
-              latitude: 42.874852293030855, longitude: 74.63685231611605),
+          Coordinate(latitude: 42.874852293030855, longitude: 74.63685231611605),
           Coordinate(latitude: 42.87785079806615, longitude: 74.63771062300079),
           Coordinate(latitude: 42.88804461742116, longitude: 74.6353717367398),
           Coordinate(latitude: 42.89194180589048, longitude: 74.63432031080602),
           Coordinate(latitude: 42.89430839848216, longitude: 74.63427739546181),
           Coordinate(latitude: 42.8943715063665, longitude: 74.63329034254434),
           Coordinate(latitude: 42.89487636709948, longitude: 74.63174539015176),
-          Coordinate(
-              latitude: 42.895097242361125, longitude: 74.63050084516883),
+          Coordinate(latitude: 42.895097242361125, longitude: 74.63050084516883),
           Coordinate(latitude: 42.89519190294364, longitude: 74.62925630018594),
           Coordinate(latitude: 42.89399285808486, longitude: 74.62745385572795),
-          Coordinate(
-              latitude: 42.893487990066845, longitude: 74.62646680281043),
-          Coordinate(
-              latitude: 42.893361772411886, longitude: 74.62517934248328),
+          Coordinate(latitude: 42.893487990066845, longitude: 74.62646680281043),
+          Coordinate(latitude: 42.893361772411886, longitude: 74.62517934248328),
           Coordinate(latitude: 42.89399285808486, longitude: 74.62183194563272),
           Coordinate(latitude: 42.89490792075707, longitude: 74.61638169691444),
-          Coordinate(
-              latitude: 42.895886076076785, longitude: 74.61157517835974),
+          Coordinate(latitude: 42.895886076076785, longitude: 74.61157517835974),
         ],
-        deliveryPrice: 220,
+        deliveryPrice: 250,
       ),
       DeliveryPolygon(
         id: 4,
@@ -460,26 +449,17 @@ class Polygons {
           Coordinate(latitude: 42.867794543978, longitude: 74.66870648888816),
           Coordinate(latitude: 42.86766827337246, longitude: 74.66402871636639),
           Coordinate(latitude: 42.86700534842377, longitude: 74.66175420312157),
-          Coordinate(
-              latitude: 42.866973780390225, longitude: 74.65677602318998),
-          Coordinate(
-              latitude: 42.866784371822604, longitude: 74.65085370568511),
-          Coordinate(
-              latitude: 42.867731408682985, longitude: 74.64433057336095),
-          Coordinate(
-              latitude: 42.867131620370536, longitude: 74.63905198601967),
+          Coordinate(latitude: 42.866973780390225, longitude: 74.65677602318998),
+          Coordinate(latitude: 42.866784371822604, longitude: 74.65085370568511),
+          Coordinate(latitude: 42.867731408682985, longitude: 74.64433057336095),
+          Coordinate(latitude: 42.867131620370536, longitude: 74.63905198601967),
           Coordinate(latitude: 42.8663108479046, longitude: 74.63274343041644),
-          Coordinate(
-              latitude: 42.864842901353256, longitude: 74.62431056527309),
-          Coordinate(
-              latitude: 42.862569881180775, longitude: 74.61379630593484),
-          Coordinate(
-              latitude: 42.862790872952345, longitude: 74.61079223183823),
+          Coordinate(latitude: 42.864842901353256, longitude: 74.62431056527309),
+          Coordinate(latitude: 42.862569881180775, longitude: 74.61379630593484),
+          Coordinate(latitude: 42.862790872952345, longitude: 74.61079223183823),
           Coordinate(latitude: 42.85698168160625, longitude: 74.61014850167476),
-          Coordinate(
-              latitude: 42.856287067534595, longitude: 74.62744338540305),
-          Coordinate(
-              latitude: 42.856199752525164, longitude: 74.63991011958676),
+          Coordinate(latitude: 42.856287067534595, longitude: 74.62744338540305),
+          Coordinate(latitude: 42.856199752525164, longitude: 74.63991011958676),
           Coordinate(latitude: 42.85594716327946, longitude: 74.64664782863208),
           Coordinate(latitude: 42.855426194648466, longitude: 74.649651902729),
           Coordinate(latitude: 42.85559985121769, longitude: 74.65900744777299),
@@ -493,44 +473,35 @@ class Polygons {
           Coordinate(latitude: 42.85843479761439, longitude: 74.70269619929117),
           Coordinate(latitude: 42.858734735032684, longitude: 74.7022885035207),
           Coordinate(latitude: 42.86193923817293, longitude: 74.70192372309441),
-          Coordinate(
-              latitude: 42.862491721792075, longitude: 74.70226704584886),
-          Coordinate(
-              latitude: 42.864101788508115, longitude: 74.70235287653759),
+          Coordinate(latitude: 42.862491721792075, longitude: 74.70226704584886),
+          Coordinate(latitude: 42.864101788508115, longitude: 74.70235287653759),
           Coordinate(latitude: 42.86340725506202, longitude: 74.70776020991089),
           Coordinate(latitude: 42.86639053599513, longitude: 74.70797478663276),
           Coordinate(latitude: 42.86638264385988, longitude: 74.70999180781176),
           Coordinate(latitude: 42.86568813615999, longitude: 74.71855341898733),
           Coordinate(latitude: 42.86647734867613, longitude: 74.71863924967586),
           Coordinate(latitude: 42.86816622929065, longitude: 74.71314608561316),
-          Coordinate(
-              latitude: 42.870691571454884, longitude: 74.70366179453617),
-          Coordinate(
-              latitude: 42.870849401884996, longitude: 74.70037877070224),
+          Coordinate(latitude: 42.870691571454884, longitude: 74.70366179453617),
+          Coordinate(latitude: 42.870849401884996, longitude: 74.70037877070224),
           Coordinate(latitude: 42.86668254224075, longitude: 74.70119416224291),
         ],
-        deliveryPrice: 230,
+        deliveryPrice: 250,
       ),
       DeliveryPolygon(
         id: 5,
         coordinates: [
           Coordinate(latitude: 42.86376165006396, longitude: 74.70267436273505),
-          Coordinate(
-              latitude: 42.863831999244006, longitude: 74.70251569753246),
-          Coordinate(
-              latitude: 42.861858863740274, longitude: 74.70212945943462),
+          Coordinate(latitude: 42.863831999244006, longitude: 74.70251569753246),
+          Coordinate(latitude: 42.861858863740274, longitude: 74.70212945943462),
           Coordinate(latitude: 42.8586701425097, longitude: 74.70240840917239),
           Coordinate(latitude: 42.85805447918349, longitude: 74.7030092239911),
           Coordinate(latitude: 42.85170805098338, longitude: 74.7040821075975),
-          Coordinate(
-              latitude: 42.854707688469055, longitude: 74.69522008901188),
-          Coordinate(
-              latitude: 42.854944495680215, longitude: 74.68985567098274),
+          Coordinate(latitude: 42.854707688469055, longitude: 74.69522008901188),
+          Coordinate(latitude: 42.854944495680215, longitude: 74.68985567098274),
           Coordinate(latitude: 42.85537074637487, longitude: 74.68045721059428),
           Coordinate(latitude: 42.85565491185004, longitude: 74.67271099095959),
           Coordinate(latitude: 42.85576542030011, longitude: 74.6683550835192),
-          Coordinate(
-              latitude: 42.855812781003785, longitude: 74.66612348561894),
+          Coordinate(latitude: 42.855812781003785, longitude: 74.66612348561894),
           Coordinate(latitude: 42.85489713425656, longitude: 74.66517934804568),
           Coordinate(latitude: 42.85464453964426, longitude: 74.66374168401344),
           Coordinate(latitude: 42.85241850440449, longitude: 74.67758188253082),
@@ -539,37 +510,32 @@ class Polygons {
           Coordinate(latitude: 42.85068182517535, longitude: 74.6909929276051),
           Coordinate(latitude: 42.8495924285877, longitude: 74.6940399170468),
           Coordinate(latitude: 42.84758725671533, longitude: 74.70082054143623),
-          Coordinate(
-              latitude: 42.845983908191414, longitude: 74.70486270581243),
+          Coordinate(latitude: 42.845983908191414, longitude: 74.70486270581243),
           Coordinate(latitude: 42.84467337186496, longitude: 74.70866071377756),
           Coordinate(latitude: 42.843915458558634, longitude: 74.7097121397111),
           Coordinate(latitude: 42.84448389441656, longitude: 74.71039878521898),
           Coordinate(latitude: 42.85049951759455, longitude: 74.71273767147981),
           Coordinate(latitude: 42.84980483008611, longitude: 74.71526967679061),
-          Coordinate(
-              latitude: 42.853972837092535, longitude: 74.71698629055948),
+          Coordinate(latitude: 42.853972837092535, longitude: 74.71698629055948),
           Coordinate(latitude: 42.85801427029276, longitude: 74.71672879849456),
           Coordinate(latitude: 42.85829842354042, longitude: 74.71479760800383),
-          Coordinate(
-              latitude: 42.858708864720874, longitude: 74.71475469265957),
+          Coordinate(latitude: 42.858708864720874, longitude: 74.71475469265957),
           Coordinate(latitude: 42.86541903682826, longitude: 74.71490523584329),
           Coordinate(latitude: 42.86538746792809, longitude: 74.71878907449674),
           Coordinate(latitude: 42.86606619463389, longitude: 74.70838210351927),
           Coordinate(latitude: 42.86576629298849, longitude: 74.7082962728306),
-          Coordinate(
-              latitude: 42.863146037896975, longitude: 74.70827481515879),
+          Coordinate(latitude: 42.863146037896975, longitude: 74.70827481515879),
           Coordinate(latitude: 42.86313025288871, longitude: 74.7076525426668),
           Coordinate(latitude: 42.86376165006396, longitude: 74.70267436273505),
         ],
-        deliveryPrice: 250,
+        deliveryPrice: 280,
       ),
       DeliveryPolygon(
         id: 6,
         coordinates: [
           Coordinate(latitude: 42.87060767155539, longitude: 74.70562705999154),
           Coordinate(latitude: 42.86667755738769, longitude: 74.71893081670541),
-          Coordinate(
-              latitude: 42.864420390008235, longitude: 74.72322235112911),
+          Coordinate(latitude: 42.864420390008235, longitude: 74.72322235112911),
           Coordinate(latitude: 42.86085294886724, longitude: 74.7310758591247),
           Coordinate(latitude: 42.86407312609878, longitude: 74.73141918187864),
           Coordinate(latitude: 42.86416783463285, longitude: 74.74171886449578),
@@ -578,11 +544,9 @@ class Polygons {
           Coordinate(latitude: 42.87886166918227, longitude: 74.73163375859974),
           Coordinate(latitude: 42.87559492360395, longitude: 74.72976694112539),
           Coordinate(latitude: 42.87665229510312, longitude: 74.72710618978262),
-          Coordinate(
-              latitude: 42.877599179464895, longitude: 74.72794303899529),
+          Coordinate(latitude: 42.877599179464895, longitude: 74.72794303899529),
           Coordinate(latitude: 42.87889323109186, longitude: 74.72268590932607),
-          Coordinate(
-              latitude: 42.880124132956944, longitude: 74.72335109716175),
+          Coordinate(latitude: 42.880124132956944, longitude: 74.72335109716175),
           Coordinate(latitude: 42.88028193909014, longitude: 74.72493896489858),
           Coordinate(latitude: 42.88653073517069, longitude: 74.73086128240344),
           Coordinate(latitude: 42.88791926994876, longitude: 74.73159084325549),
@@ -595,52 +559,41 @@ class Polygons {
           Coordinate(latitude: 42.87755972644045, longitude: 74.709907865579),
           Coordinate(latitude: 42.87060767155539, longitude: 74.70562705999154),
         ],
-        deliveryPrice: 230,
+        deliveryPrice: 280,
       ),
       DeliveryPolygon(
         id: 7,
         coordinates: [
-          Coordinate(
-              latitude: 42.878001601259385, longitude: 74.73724493985871),
+          Coordinate(latitude: 42.878001601259385, longitude: 74.73724493985871),
           Coordinate(latitude: 42.86423616395654, longitude: 74.74151584452046),
           Coordinate(latitude: 42.86751929900543, longitude: 74.76220104044333),
-          Coordinate(
-              latitude: 42.869602735796875, longitude: 74.76683589762104),
+          Coordinate(latitude: 42.869602735796875, longitude: 74.76683589762104),
           Coordinate(latitude: 42.86726675639947, longitude: 74.77275821512595),
-          Coordinate(
-              latitude: 42.868655727854076, longitude: 74.77593395059955),
+          Coordinate(latitude: 42.868655727854076, longitude: 74.77593395059955),
           Coordinate(latitude: 42.87193862615236, longitude: 74.78262874430072),
           Coordinate(latitude: 42.87149670777934, longitude: 74.78855106180563),
           Coordinate(latitude: 42.87440068440966, longitude: 74.79370090311423),
           Coordinate(latitude: 42.87589996632225, longitude: 74.79531022852316),
-          Coordinate(
-              latitude: 42.878724829369226, longitude: 74.80247709101101),
+          Coordinate(latitude: 42.878724829369226, longitude: 74.80247709101101),
           Coordinate(latitude: 42.8870908870327, longitude: 74.799815511758),
-          Coordinate(
-              latitude: 42.886743751569355, longitude: 74.79736933713639),
+          Coordinate(latitude: 42.886743751569355, longitude: 74.79736933713639),
           Coordinate(latitude: 42.89236079243166, longitude: 74.79612479215349),
-          Coordinate(
-              latitude: 42.892534344477255, longitude: 74.78792796140398),
-          Coordinate(
-              latitude: 42.890057236870554, longitude: 74.78829274183002),
+          Coordinate(latitude: 42.892534344477255, longitude: 74.78792796140398),
+          Coordinate(latitude: 42.890057236870554, longitude: 74.78829274183002),
           Coordinate(latitude: 42.88923677144644, longitude: 74.78719840055197),
-          Coordinate(
-              latitude: 42.884471543598835, longitude: 74.78809962278108),
-          Coordinate(
-              latitude: 42.877275662709124, longitude: 74.78835711484649),
+          Coordinate(latitude: 42.884471543598835, longitude: 74.78809962278108),
+          Coordinate(latitude: 42.877275662709124, longitude: 74.78835711484649),
           Coordinate(latitude: 42.87560281490075, longitude: 74.77634081845979),
           Coordinate(latitude: 42.88396659705484, longitude: 74.7749246120999),
-          Coordinate(
-              latitude: 42.883272288793925, longitude: 74.76865897184109),
+          Coordinate(latitude: 42.883272288793925, longitude: 74.76865897184109),
           Coordinate(latitude: 42.8873749052749, longitude: 74.76694235807157),
           Coordinate(latitude: 42.88604947461588, longitude: 74.7594750881741),
           Coordinate(latitude: 42.88216769124954, longitude: 74.76162085538603),
           Coordinate(latitude: 42.88153648368445, longitude: 74.75857386594515),
           Coordinate(latitude: 42.87948501425819, longitude: 74.75076327329379),
-          Coordinate(
-              latitude: 42.878001601259385, longitude: 74.73724493985871),
+          Coordinate(latitude: 42.878001601259385, longitude: 74.73724493985871),
         ],
-        deliveryPrice: 270,
+        deliveryPrice: 300,
       ),
       DeliveryPolygon(
         id: 8,
@@ -648,32 +601,26 @@ class Polygons {
           Coordinate(latitude: 42.9095308222485, longitude: 74.68731376474734),
           Coordinate(latitude: 42.90934154550349, longitude: 74.69001743143433),
           Coordinate(latitude: 42.91520885927726, longitude: 74.69113323038454),
-          Coordinate(
-              latitude: 42.914609535820276, longitude: 74.69911548441286),
+          Coordinate(latitude: 42.914609535820276, longitude: 74.69911548441286),
           Coordinate(latitude: 42.91473570966751, longitude: 74.7018620664441),
           Coordinate(latitude: 42.918615428455354, longitude: 74.7033641034924),
-          Coordinate(
-              latitude: 42.921769490025525, longitude: 74.70791312998169),
+          Coordinate(latitude: 42.921769490025525, longitude: 74.70791312998169),
           Coordinate(latitude: 42.93059999731518, longitude: 74.69194862192505),
-          Coordinate(
-              latitude: 42.937095913630706, longitude: 74.67855903452272),
+          Coordinate(latitude: 42.937095913630706, longitude: 74.67855903452272),
           Coordinate(latitude: 42.94239304321265, longitude: 74.64328262155884),
-          Coordinate(
-              latitude: 42.932807424904645, longitude: 74.63641616648069),
+          Coordinate(latitude: 42.932807424904645, longitude: 74.63641616648069),
           Coordinate(latitude: 42.923283381778454, longitude: 74.6316954786145),
           Coordinate(latitude: 42.91924625370986, longitude: 74.62963554209104),
           Coordinate(latitude: 42.91236990658633, longitude: 74.63062259500856),
           Coordinate(latitude: 42.91486188308141, longitude: 74.63495704477658),
           Coordinate(latitude: 42.91483033970904, longitude: 74.64023563211792),
           Coordinate(latitude: 42.915492747113696, longitude: 74.6475312406384),
-          Coordinate(
-              latitude: 42.914357187147424, longitude: 74.66302367990845),
-          Coordinate(
-              latitude: 42.916754455614445, longitude: 74.66993305033083),
+          Coordinate(latitude: 42.914357187147424, longitude: 74.66302367990845),
+          Coordinate(latitude: 42.916754455614445, longitude: 74.66993305033083),
           Coordinate(latitude: 42.91454644857651, longitude: 74.67967483347293),
           Coordinate(latitude: 42.9095308222485, longitude: 74.68731376474734),
         ],
-        deliveryPrice: 320,
+        deliveryPrice: 350,
       ),
       DeliveryPolygon(
         id: 9,
@@ -681,31 +628,23 @@ class Polygons {
           Coordinate(latitude: 42.90356831733949, longitude: 74.61204025095306),
           Coordinate(latitude: 42.903189725937345, longitude: 74.597620695289),
           Coordinate(latitude: 42.8964377860308, longitude: 74.59744903391204),
-          Coordinate(
-              latitude: 42.891894005495516, longitude: 74.59732028787931),
+          Coordinate(latitude: 42.891894005495516, longitude: 74.59732028787931),
           Coordinate(latitude: 42.88891196623738, longitude: 74.59695550745326),
-          Coordinate(
-              latitude: 42.883483966566025, longitude: 74.59656926935516),
-          Coordinate(
-              latitude: 42.876051244924646, longitude: 74.59603282755216),
+          Coordinate(latitude: 42.883483966566025, longitude: 74.59656926935516),
+          Coordinate(latitude: 42.876051244924646, longitude: 74.59603282755216),
           Coordinate(latitude: 42.86988029625542, longitude: 74.59556075876549),
-          Coordinate(
-              latitude: 42.869754029947174, longitude: 74.59886524027183),
+          Coordinate(latitude: 42.869754029947174, longitude: 74.59886524027183),
           Coordinate(latitude: 42.86299283656113, longitude: 74.59830607726535),
           Coordinate(latitude: 42.86024617703202, longitude: 74.59804858519988),
           Coordinate(latitude: 42.8602935342739, longitude: 74.59753360106905),
           Coordinate(latitude: 42.85716787783449, longitude: 74.5973833973642),
           Coordinate(latitude: 42.85320532674737, longitude: 74.59706153228237),
           Coordinate(latitude: 42.85260539629016, longitude: 74.59961499526456),
-          Coordinate(
-              latitude: 42.852573821163844, longitude: 74.60229720427913),
-          Coordinate(
-              latitude: 42.843037291388775, longitude: 74.60182513549255),
+          Coordinate(latitude: 42.852573821163844, longitude: 74.60229720427913),
+          Coordinate(latitude: 42.843037291388775, longitude: 74.60182513549255),
           Coordinate(latitude: 42.84289517959144, longitude: 74.60886325194761),
-          Coordinate(
-              latitude: 42.842074082640956, longitude: 74.62542857482356),
-          Coordinate(
-              latitude: 42.841568786756284, longitude: 74.65023364379329),
+          Coordinate(latitude: 42.842074082640956, longitude: 74.62542857482356),
+          Coordinate(latitude: 42.841568786756284, longitude: 74.65023364379329),
           Coordinate(latitude: 42.85543133359689, longitude: 74.64976157500666),
           Coordinate(latitude: 42.85539186612603, longitude: 74.64835609748283),
           Coordinate(latitude: 42.85592072848312, longitude: 74.64535202338607),
@@ -715,8 +654,7 @@ class Polygons {
           Coordinate(latitude: 42.85666863676185, longitude: 74.61627295736798),
           Coordinate(latitude: 42.85696068957159, longitude: 74.60878422979835),
           Coordinate(latitude: 42.86277887834191, longitude: 74.60946503054227),
-          Coordinate(
-              latitude: 42.862782824617064, longitude: 74.61064520250883),
+          Coordinate(latitude: 42.862782824617064, longitude: 74.61064520250883),
           Coordinate(latitude: 42.86437709902438, longitude: 74.61076321970548),
           Coordinate(latitude: 42.87056438504125, longitude: 74.61132111918057),
           Coordinate(latitude: 42.87892010599868, longitude: 74.6118044376145),
@@ -725,24 +663,22 @@ class Polygons {
           Coordinate(latitude: 42.90291821927204, longitude: 74.61199755666345),
           Coordinate(latitude: 42.90356831733949, longitude: 74.61204025095306),
         ],
-        deliveryPrice: 280,
+        deliveryPrice: 310,
       ),
       DeliveryPolygon(
         id: 10,
         coordinates: [
           Coordinate(latitude: 42.85450551308609, longitude: 74.66389293668287),
           Coordinate(latitude: 42.85013229398216, longitude: 74.66249818799515),
-          Coordinate(
-              latitude: 42.845253497449626, longitude: 74.66179008481515),
+          Coordinate(latitude: 42.845253497449626, longitude: 74.66179008481515),
           Coordinate(latitude: 42.84237972044283, longitude: 74.66157550809395),
-          Coordinate(
-              latitude: 42.843169233034594, longitude: 74.66520185468208),
+          Coordinate(latitude: 42.843169233034594, longitude: 74.66520185468208),
           Coordinate(latitude: 42.84369030577832, longitude: 74.67530841825022),
           Coordinate(latitude: 42.84940602525705, longitude: 74.67571611402049),
           Coordinate(latitude: 42.85256886980763, longitude: 74.67594122459657),
           Coordinate(latitude: 42.85450551308609, longitude: 74.66389293668287),
         ],
-        deliveryPrice: 280,
+        deliveryPrice: 310,
       ),
       DeliveryPolygon(
         id: 11,
@@ -753,20 +689,15 @@ class Polygons {
           Coordinate(latitude: 42.90559813308555, longitude: 74.58083663363198),
           Coordinate(latitude: 42.90562968119235, longitude: 74.585342744777),
           Coordinate(latitude: 42.90555081080824, longitude: 74.59072862047896),
-          Coordinate(
-              latitude: 42.903334512131096, longitude: 74.59331426996931),
-          Coordinate(
-              latitude: 42.903326624729615, longitude: 74.59989104647386),
+          Coordinate(latitude: 42.903334512131096, longitude: 74.59331426996931),
+          Coordinate(latitude: 42.903326624729615, longitude: 74.59989104647386),
           Coordinate(latitude: 42.90347084039342, longitude: 74.60677759751162),
-          Coordinate(
-              latitude: 42.903636473634535, longitude: 74.61223857506594),
-          Coordinate(
-              latitude: 42.905119265761776, longitude: 74.61241023644294),
+          Coordinate(latitude: 42.903636473634535, longitude: 74.61223857506594),
+          Coordinate(latitude: 42.905119265761776, longitude: 74.61241023644294),
           Coordinate(latitude: 42.9049930720856, longitude: 74.61597221001472),
           Coordinate(latitude: 42.90490631378233, longitude: 74.61821453675117),
           Coordinate(latitude: 42.90394465265386, longitude: 74.62048380535144),
-          Coordinate(
-              latitude: 42.904796469509584, longitude: 74.62069838207266),
+          Coordinate(latitude: 42.904796469509584, longitude: 74.62069838207266),
           Coordinate(latitude: 42.90429169058166, longitude: 74.6225437418749),
           Coordinate(latitude: 42.905048857412424, longitude: 74.6243461863329),
           Coordinate(latitude: 42.90713101789998, longitude: 74.62417452495595),
@@ -774,29 +705,25 @@ class Polygons {
           Coordinate(latitude: 42.91211529614828, longitude: 74.6271356837084),
           Coordinate(latitude: 42.91239919851131, longitude: 74.63035433452627),
           Coordinate(latitude: 42.91902321303858, longitude: 74.62953894298576),
-          Coordinate(
-              latitude: 42.918360843857805, longitude: 74.62159960430165),
+          Coordinate(latitude: 42.918360843857805, longitude: 74.62159960430165),
           Coordinate(latitude: 42.918928589308976, longitude: 74.6180805460741),
-          Coordinate(
-              latitude: 42.917256879261636, longitude: 74.61181490581535),
+          Coordinate(latitude: 42.917256879261636, longitude: 74.61181490581535),
           Coordinate(latitude: 42.91858163435686, longitude: 74.60945456188226),
           Coordinate(latitude: 42.91896013054374, longitude: 74.60314600627925),
-          Coordinate(
-              latitude: 42.919401706468705, longitude: 74.60198729198483),
+          Coordinate(latitude: 42.919401706468705, longitude: 74.60198729198483),
           Coordinate(latitude: 42.91927554224395, longitude: 74.59902613323237),
           Coordinate(latitude: 42.91965403411288, longitude: 74.59718077343013),
           Coordinate(latitude: 42.91952787040851, longitude: 74.5871814982226),
           Coordinate(latitude: 42.92009560502914, longitude: 74.58027212780023),
           Coordinate(latitude: 42.92097873729949, longitude: 74.57877009075187),
-          Coordinate(
-              latitude: 42.921104898011635, longitude: 74.57739679973625),
+          Coordinate(latitude: 42.921104898011635, longitude: 74.57739679973625),
           Coordinate(latitude: 42.92060025360194, longitude: 74.57417814891838),
           Coordinate(latitude: 42.92135721865532, longitude: 74.57228987377192),
           Coordinate(latitude: 42.91826621905423, longitude: 74.57271902721428),
           Coordinate(latitude: 42.91407104121468, longitude: 74.57323401134518),
           Coordinate(latitude: 42.90602685065632, longitude: 74.5737060801318),
         ],
-        deliveryPrice: 320,
+        deliveryPrice: 350,
       ),
       DeliveryPolygon(
         id: 12,
@@ -804,8 +731,7 @@ class Polygons {
           Coordinate(latitude: 42.88492413406275, longitude: 74.5746609465407),
           Coordinate(latitude: 42.88404048145197, longitude: 74.55594985645277),
           Coordinate(latitude: 42.88492413406275, longitude: 74.51990096729264),
-          Coordinate(
-              latitude: 42.874698231257305, longitude: 74.52161758106216),
+          Coordinate(latitude: 42.874698231257305, longitude: 74.52161758106216),
           Coordinate(latitude: 42.874161639867545, longitude: 74.5232483641432),
           Coordinate(latitude: 42.86352353425941, longitude: 74.52539413135513),
           Coordinate(latitude: 42.86245015109575, longitude: 74.50994460742933),
@@ -824,24 +750,20 @@ class Polygons {
           Coordinate(latitude: 42.85687772745219, longitude: 74.56803052585565),
           Coordinate(latitude: 42.86219758785107, longitude: 74.56845967929796),
           Coordinate(latitude: 42.86560710723495, longitude: 74.56891029041243),
-          Coordinate(
-              latitude: 42.866901412139555, longitude: 74.57455365817977),
-          Coordinate(
-              latitude: 42.878832984337286, longitude: 74.57556216876934),
+          Coordinate(latitude: 42.866901412139555, longitude: 74.57455365817977),
+          Coordinate(latitude: 42.878832984337286, longitude: 74.57556216876934),
           Coordinate(latitude: 42.88480596333407, longitude: 74.57613311187018),
           Coordinate(latitude: 42.88492413406275, longitude: 74.5746609465407),
         ],
-        deliveryPrice: 450,
+        deliveryPrice: 500,
       ),
       DeliveryPolygon(
         id: 13,
         coordinates: [
           Coordinate(latitude: 42.89555852481646, longitude: 74.5742168572387),
-          Coordinate(
-              latitude: 42.895085223274535, longitude: 74.56958200006093),
+          Coordinate(latitude: 42.895085223274535, longitude: 74.56958200006093),
           Coordinate(latitude: 42.89584250398538, longitude: 74.56129933862293),
-          Coordinate(
-              latitude: 42.895463864800774, longitude: 74.55614949731434),
+          Coordinate(latitude: 42.895463864800774, longitude: 74.55614949731434),
           Coordinate(latitude: 42.89625269379288, longitude: 74.55031301049796),
           Coordinate(latitude: 42.89543231142968, longitude: 74.54739476708976),
           Coordinate(latitude: 42.89559007812248, longitude: 74.54074288873281),
@@ -853,15 +775,13 @@ class Polygons {
           Coordinate(latitude: 42.88479789932741, longitude: 74.54597856072988),
           Coordinate(latitude: 42.8847347816013, longitude: 74.55460454492172),
           Coordinate(latitude: 42.88394580422662, longitude: 74.55572034387193),
-          Coordinate(
-              latitude: 42.884166718915964, longitude: 74.56181432275378),
+          Coordinate(latitude: 42.884166718915964, longitude: 74.56181432275378),
           Coordinate(latitude: 42.88498725221477, longitude: 74.57155610589587),
-          Coordinate(
-              latitude: 42.884892575856675, longitude: 74.57614804772936),
+          Coordinate(latitude: 42.884892575856675, longitude: 74.57614804772936),
           Coordinate(latitude: 42.89025733865708, longitude: 74.57528974084458),
           Coordinate(latitude: 42.89555852481646, longitude: 74.5742168572387),
         ],
-        deliveryPrice: 400,
+        deliveryPrice: 450,
       ),
       DeliveryPolygon(
         id: 14,
@@ -879,49 +799,37 @@ class Polygons {
           Coordinate(latitude: 42.88894923565508, longitude: 74.7075374513146),
           Coordinate(latitude: 42.88958036680521, longitude: 74.70221594862905),
           Coordinate(latitude: 42.89327235370878, longitude: 74.70324591689078),
-          Coordinate(
-              latitude: 42.894534520393464, longitude: 74.70307425551378),
-          Coordinate(
-              latitude: 42.894439858794605, longitude: 74.70200137190784),
+          Coordinate(latitude: 42.894534520393464, longitude: 74.70307425551378),
+          Coordinate(latitude: 42.894439858794605, longitude: 74.70200137190784),
           Coordinate(latitude: 42.89150527664008, longitude: 74.70011309676138),
-          Coordinate(
-              latitude: 42.890590163116215, longitude: 74.69955519728627),
+          Coordinate(latitude: 42.890590163116215, longitude: 74.69955519728627),
           Coordinate(latitude: 42.89567044816429, longitude: 74.68208865218128),
           Coordinate(latitude: 42.89721653825995, longitude: 74.67638091139759),
-          Coordinate(
-              latitude: 42.900403253746624, longitude: 74.67582301192249),
+          Coordinate(latitude: 42.900403253746624, longitude: 74.67582301192249),
           Coordinate(latitude: 42.90213852410153, longitude: 74.67543677382433),
-          Coordinate(
-              latitude: 42.903621352516886, longitude: 74.67814044051136),
+          Coordinate(latitude: 42.903621352516886, longitude: 74.67814044051136),
           Coordinate(latitude: 42.90677618706949, longitude: 74.67917040877309),
           Coordinate(latitude: 42.90873210282605, longitude: 74.67861250929799),
           Coordinate(latitude: 42.910782592572, longitude: 74.67848376326526),
           Coordinate(latitude: 42.91217057738746, longitude: 74.67951373152698),
-          Coordinate(
-              latitude: 42.913400810335936, longitude: 74.67977122359241),
-          Coordinate(
-              latitude: 42.914315582904386, longitude: 74.67376307539908),
+          Coordinate(latitude: 42.913400810335936, longitude: 74.67977122359241),
+          Coordinate(latitude: 42.914315582904386, longitude: 74.67376307539908),
           Coordinate(latitude: 42.91217057738746, longitude: 74.67341975264513),
           Coordinate(latitude: 42.90396839230248, longitude: 74.66891364150011),
           Coordinate(latitude: 42.89983533645073, longitude: 74.66796950392686),
-          Coordinate(
-              latitude: 42.902012324354146, longitude: 74.65084628157575),
+          Coordinate(latitude: 42.902012324354146, longitude: 74.65084628157575),
           Coordinate(latitude: 42.90150752249031, longitude: 74.64363650374375),
-          Coordinate(
-              latitude: 42.901444421986305, longitude: 74.63247851424177),
+          Coordinate(latitude: 42.901444421986305, longitude: 74.63247851424177),
           Coordinate(latitude: 42.89811577690533, longitude: 74.63357285551982),
           Coordinate(latitude: 42.89668014424419, longitude: 74.63402346663433),
           Coordinate(latitude: 42.89467651271547, longitude: 74.63415221266702),
-          Coordinate(
-              latitude: 42.894755397086435, longitude: 74.63795022063215),
+          Coordinate(latitude: 42.894755397086435, longitude: 74.63795022063215),
           Coordinate(latitude: 42.89440830509395, longitude: 74.63915185027082),
           Coordinate(latitude: 42.89262548339703, longitude: 74.64346484236675),
           Coordinate(latitude: 42.89346168056826, longitude: 74.64704827361066),
           Coordinate(latitude: 42.89387188635102, longitude: 74.6489794641014),
-          Coordinate(
-              latitude: 42.892515041432276, longitude: 74.65204791121442),
-          Coordinate(
-              latitude: 42.892309934376584, longitude: 74.65985850386575),
+          Coordinate(latitude: 42.892515041432276, longitude: 74.65204791121442),
+          Coordinate(latitude: 42.892309934376584, longitude: 74.65985850386575),
           Coordinate(latitude: 42.89092149917502, longitude: 74.66917113356543),
           Coordinate(latitude: 42.88965925803899, longitude: 74.67788294844578),
           Coordinate(latitude: 42.88830231977317, longitude: 74.6821744828696),
@@ -931,15 +839,14 @@ class Polygons {
           Coordinate(latitude: 42.88532010566251, longitude: 74.69665841154999),
           Coordinate(latitude: 42.88405723103115, longitude: 74.69880010156206),
         ],
-        deliveryPrice: 220,
+        deliveryPrice: 250,
       ),
       DeliveryPolygon(
         id: 15,
         coordinates: [
           Coordinate(latitude: 42.89639616909683, longitude: 74.61160019926965),
           Coordinate(latitude: 42.89486901829936, longitude: 74.6187422178024),
-          Coordinate(
-              latitude: 42.893701521396714, longitude: 74.62547992684783),
+          Coordinate(latitude: 42.893701521396714, longitude: 74.62547992684783),
           Coordinate(latitude: 42.89385929252453, longitude: 74.62663864114225),
           Coordinate(latitude: 42.8954369816914, longitude: 74.62968563058317),
           Coordinate(latitude: 42.8951687774011, longitude: 74.63112329461516),
@@ -952,80 +859,66 @@ class Polygons {
           Coordinate(latitude: 42.90170000659548, longitude: 74.63275407769626),
           Coordinate(latitude: 42.91233148334839, longitude: 74.63058685281227),
           Coordinate(latitude: 42.91198130889434, longitude: 74.62739304594933),
-          Coordinate(
-              latitude: 42.906082137754844, longitude: 74.62747887663781),
+          Coordinate(latitude: 42.906082137754844, longitude: 74.62747887663781),
           Coordinate(latitude: 42.90587707612501, longitude: 74.62677077345786),
           Coordinate(latitude: 42.90534075782011, longitude: 74.62529019408166),
           Coordinate(latitude: 42.90387374557507, longitude: 74.62297276549278),
           Coordinate(latitude: 42.90431543038061, longitude: 74.62136344008384),
-          Coordinate(
-              latitude: 42.903384733679694, longitude: 74.62069825224816),
+          Coordinate(latitude: 42.903384733679694, longitude: 74.62069825224816),
           Coordinate(latitude: 42.90483598338105, longitude: 74.61829499297082),
-          Coordinate(
-              latitude: 42.905088371120954, longitude: 74.61254433684284),
+          Coordinate(latitude: 42.905088371120954, longitude: 74.61254433684284),
           Coordinate(latitude: 42.90262754623795, longitude: 74.61228684477743),
           Coordinate(latitude: 42.89639616909683, longitude: 74.61160019926965),
-        ],
-        deliveryPrice: 250,
-      ),
-      DeliveryPolygon(
-        id: 16,
-        coordinates: [
-          Coordinate(
-              latitude: 42.912418231336346, longitude: 74.63110183694296),
-          Coordinate(latitude: 42.91226839441172, longitude: 74.6306673190824),
-          Coordinate(latitude: 42.91137725008751, longitude: 74.63086043813152),
-          Coordinate(
-              latitude: 42.901597468859975, longitude: 74.63288818814682),
-          Coordinate(
-              latitude: 42.901526480815285, longitude: 74.64089189984723),
-          Coordinate(latitude: 42.90156591860053, longitude: 74.64348827817365),
-          Coordinate(latitude: 42.90174338827015, longitude: 74.64647625901628),
-          Coordinate(latitude: 42.90200367626087, longitude: 74.65025280930925),
-          Coordinate(latitude: 42.90209438239706, longitude: 74.65082680203844),
-          Coordinate(
-              latitude: 42.902954112353605, longitude: 74.65105747201378),
-          Coordinate(latitude: 42.90601433759578, longitude: 74.65011333444052),
-          Coordinate(latitude: 42.90920059509307, longitude: 74.65127204873494),
-          Coordinate(latitude: 42.91043088775195, longitude: 74.64440559365681),
-          Coordinate(
-              latitude: 42.915194095283354, longitude: 74.64762424447468),
-          Coordinate(latitude: 42.91427933584925, longitude: 74.63977073647911),
-          Coordinate(latitude: 42.91465785865311, longitude: 74.63569377877646),
-          Coordinate(
-              latitude: 42.912418231336346, longitude: 74.63110183694296),
         ],
         deliveryPrice: 280,
       ),
       DeliveryPolygon(
+        id: 16,
+        coordinates: [
+          Coordinate(latitude: 42.912418231336346, longitude: 74.63110183694296),
+          Coordinate(latitude: 42.91226839441172, longitude: 74.6306673190824),
+          Coordinate(latitude: 42.91137725008751, longitude: 74.63086043813152),
+          Coordinate(latitude: 42.901597468859975, longitude: 74.63288818814682),
+          Coordinate(latitude: 42.901526480815285, longitude: 74.64089189984723),
+          Coordinate(latitude: 42.90156591860053, longitude: 74.64348827817365),
+          Coordinate(latitude: 42.90174338827015, longitude: 74.64647625901628),
+          Coordinate(latitude: 42.90200367626087, longitude: 74.65025280930925),
+          Coordinate(latitude: 42.90209438239706, longitude: 74.65082680203844),
+          Coordinate(latitude: 42.902954112353605, longitude: 74.65105747201378),
+          Coordinate(latitude: 42.90601433759578, longitude: 74.65011333444052),
+          Coordinate(latitude: 42.90920059509307, longitude: 74.65127204873494),
+          Coordinate(latitude: 42.91043088775195, longitude: 74.64440559365681),
+          Coordinate(latitude: 42.915194095283354, longitude: 74.64762424447468),
+          Coordinate(latitude: 42.91427933584925, longitude: 74.63977073647911),
+          Coordinate(latitude: 42.91465785865311, longitude: 74.63569377877646),
+          Coordinate(latitude: 42.912418231336346, longitude: 74.63110183694296),
+        ],
+        deliveryPrice: 310,
+      ),
+      DeliveryPolygon(
         id: 17,
         coordinates: [
-          Coordinate(
-              latitude: 42.843139335786944, longitude: 74.59947854697307),
+          Coordinate(latitude: 42.843139335786944, longitude: 74.59947854697307),
           Coordinate(latitude: 42.84028125062078, longitude: 74.60035831152997),
           Coordinate(latitude: 42.83331707130618, longitude: 74.60003644644813),
           Coordinate(latitude: 42.82919408865183, longitude: 74.59983131724537),
           Coordinate(latitude: 42.82834122036698, longitude: 74.60787794429007),
           Coordinate(latitude: 42.82767787017313, longitude: 74.6104099496001),
-          Coordinate(
-              latitude: 42.822813083021586, longitude: 74.61639664012138),
+          Coordinate(latitude: 42.822813083021586, longitude: 74.61639664012138),
           Coordinate(latitude: 42.81333511771834, longitude: 74.63111660319507),
           Coordinate(latitude: 42.8109338008858, longitude: 74.63534376460247),
           Coordinate(latitude: 42.81151834061038, longitude: 74.63993570643596),
           Coordinate(latitude: 42.81211867291385, longitude: 74.64246771174605),
-          Coordinate(
-              latitude: 42.816431414019235, longitude: 74.63935634928876),
+          Coordinate(latitude: 42.816431414019235, longitude: 74.63935634928876),
           Coordinate(latitude: 42.82273410614794, longitude: 74.63375589686568),
-          Coordinate(
-              latitude: 42.830233691531966, longitude: 74.63237699435815),
+          Coordinate(latitude: 42.830233691531966, longitude: 74.63237699435815),
           Coordinate(latitude: 42.83977221191948, longitude: 74.63211950229274),
           Coordinate(latitude: 42.84184080129953, longitude: 74.63078912662137),
           Coordinate(latitude: 42.84202633932703, longitude: 74.626588787304),
           Coordinate(latitude: 42.84287546467996, longitude: 74.60871765202162),
-          Coordinate(
-              latitude: 42.843139335786944, longitude: 74.59947854697307),
+          Coordinate(latitude: 42.843139335786944, longitude: 74.59947854697307),
         ],
-        deliveryPrice: 320,
+        deliveryPrice: 350,
       ),
       DeliveryPolygon(
         id: 18,
@@ -1044,29 +937,26 @@ class Polygons {
           Coordinate(latitude: 42.83228085036855, longitude: 74.63954901469793),
           Coordinate(latitude: 42.83021193865639, longitude: 74.63268255961982),
         ],
-        deliveryPrice: 370,
+        deliveryPrice: 400,
       ),
       DeliveryPolygon(
         id: 19,
         coordinates: [
           Coordinate(latitude: 42.84184731349177, longitude: 74.63139509929242),
-          Coordinate(
-              latitude: 42.839657884810435, longitude: 74.63247229143784),
-          Coordinate(
-              latitude: 42.830529976539246, longitude: 74.63260103747056),
+          Coordinate(latitude: 42.839657884810435, longitude: 74.63247229143784),
+          Coordinate(latitude: 42.830529976539246, longitude: 74.63260103747056),
           Coordinate(latitude: 42.8323935697863, longitude: 74.63895250841789),
           Coordinate(latitude: 42.83402021938876, longitude: 74.65043236300166),
           Coordinate(latitude: 42.84147382905499, longitude: 74.65028215929682),
           Coordinate(latitude: 42.84184731349177, longitude: 74.63139509929242),
         ],
-        deliveryPrice: 320,
+        deliveryPrice: 350,
       ),
       DeliveryPolygon(
         id: 20,
         coordinates: [
           Coordinate(latitude: 42.82818186012256, longitude: 74.607474103419),
-          Coordinate(
-              latitude: 42.822637912965206, longitude: 74.60646559282942),
+          Coordinate(latitude: 42.822637912965206, longitude: 74.60646559282942),
           Coordinate(latitude: 42.81657216642342, longitude: 74.60766722246805),
           Coordinate(latitude: 42.81170649908793, longitude: 74.61476971193942),
           Coordinate(latitude: 42.80575027109777, longitude: 74.62785889193212),
@@ -1077,103 +967,86 @@ class Polygons {
           Coordinate(latitude: 42.82755009695475, longitude: 74.60998465105672),
           Coordinate(latitude: 42.82818186012256, longitude: 74.607474103419),
         ],
-        deliveryPrice: 370,
+        deliveryPrice: 400,
       ),
       DeliveryPolygon(
         id: 21,
         coordinates: [
           Coordinate(latitude: 42.82963489214517, longitude: 74.56334506918812),
-          Coordinate(
-              latitude: 42.817156652946174, longitude: 74.56368839194201),
+          Coordinate(latitude: 42.817156652946174, longitude: 74.56368839194201),
           Coordinate(latitude: 42.80480227740058, longitude: 74.56958925177472),
-          Coordinate(
-              latitude: 42.803791067569804, longitude: 74.58218490530864),
+          Coordinate(latitude: 42.803791067569804, longitude: 74.58218490530864),
           Coordinate(latitude: 42.80312745207073, longitude: 74.5842662995042),
           Coordinate(latitude: 42.80399647098898, longitude: 74.59398662497414),
           Coordinate(latitude: 42.80554487409266, longitude: 74.60565959860696),
           Coordinate(latitude: 42.80586086992993, longitude: 74.61025154044046),
-          Coordinate(
-              latitude: 42.805734471790124, longitude: 74.61334144522559),
+          Coordinate(latitude: 42.805734471790124, longitude: 74.61334144522559),
           Coordinate(latitude: 42.81682491845382, longitude: 74.60737621237647),
-          Coordinate(
-              latitude: 42.822866947088094, longitude: 74.60632478644264),
+          Coordinate(latitude: 42.822866947088094, longitude: 74.60632478644264),
           Coordinate(latitude: 42.82822134595274, longitude: 74.60711872031101),
           Coordinate(latitude: 42.82892417487682, longitude: 74.59724819113612),
           Coordinate(latitude: 42.82880572116109, longitude: 74.59674393584133),
           Coordinate(latitude: 42.82921994347816, longitude: 74.58264092241511),
           Coordinate(latitude: 42.82963489214517, longitude: 74.56334506918812),
         ],
-        deliveryPrice: 500,
+        deliveryPrice: 550,
       ),
       DeliveryPolygon(
         id: 22,
         coordinates: [
           Coordinate(latitude: 42.84390714991628, longitude: 74.56847275458375),
-          Coordinate(
-              latitude: 42.829568190355424, longitude: 74.56937397681276),
+          Coordinate(latitude: 42.829568190355424, longitude: 74.56937397681276),
           Coordinate(latitude: 42.8292207290476, longitude: 74.58508099280397),
           Coordinate(latitude: 42.84349660957585, longitude: 74.58619679175416),
           Coordinate(latitude: 42.84390714991628, longitude: 74.56847275458375),
         ],
-        deliveryPrice: 450,
+        deliveryPrice: 500,
       ),
       DeliveryPolygon(
         id: 23,
         coordinates: [
-          Coordinate(
-              latitude: 42.849622849585465, longitude: 74.58647574149154),
-          Coordinate(
-              latitude: 42.839852461094516, longitude: 74.58604829554803),
+          Coordinate(latitude: 42.849622849585465, longitude: 74.58647574149154),
+          Coordinate(latitude: 42.839852461094516, longitude: 74.58604829554803),
           Coordinate(latitude: 42.82935298741458, longitude: 74.58527162412095),
           Coordinate(latitude: 42.82898973106539, longitude: 74.5992834840147),
-          Coordinate(
-              latitude: 42.840243770193034, longitude: 74.59988678656593),
-          Coordinate(
-              latitude: 42.843038696377846, longitude: 74.59887827597636),
+          Coordinate(latitude: 42.840243770193034, longitude: 74.59988678656593),
+          Coordinate(latitude: 42.843038696377846, longitude: 74.59887827597636),
           Coordinate(latitude: 42.8489755181299, longitude: 74.59658230505963),
-          Coordinate(
-              latitude: 42.849370233245054, longitude: 74.59231222830792),
-          Coordinate(
-              latitude: 42.849622849585465, longitude: 74.58647574149154),
+          Coordinate(latitude: 42.849370233245054, longitude: 74.59231222830792),
+          Coordinate(latitude: 42.849622849585465, longitude: 74.58647574149154),
         ],
-        deliveryPrice: 370,
+        deliveryPrice: 400,
       ),
       DeliveryPolygon(
         id: 24,
         coordinates: [
           Coordinate(latitude: 42.865569508378314, longitude: 74.5695443943231),
-          Coordinate(
-              latitude: 42.860890207706966, longitude: 74.56845676277186),
+          Coordinate(latitude: 42.860890207706966, longitude: 74.56845676277186),
           Coordinate(latitude: 42.85857757540972, longitude: 74.5683709320835),
           Coordinate(latitude: 42.85213647430551, longitude: 74.56757699821513),
           Coordinate(latitude: 42.8518207166609, longitude: 74.56793104980513),
           Coordinate(latitude: 42.84705257853268, longitude: 74.56744825218244),
           Coordinate(latitude: 42.84646837718228, longitude: 74.56813489769029),
-          Coordinate(
-              latitude: 42.844052566569054, longitude: 74.56843530509997),
+          Coordinate(latitude: 42.844052566569054, longitude: 74.56843530509997),
           Coordinate(latitude: 42.84349991675592, longitude: 74.58600913856559),
           Coordinate(latitude: 42.85590870506783, longitude: 74.58664615900204),
           Coordinate(latitude: 42.86504862154224, longitude: 74.58713968546083),
           Coordinate(latitude: 42.86676910970875, longitude: 74.57692583353212),
           Coordinate(latitude: 42.865569508378314, longitude: 74.5695443943231),
         ],
-        deliveryPrice: 370,
+        deliveryPrice: 400,
       ),
       DeliveryPolygon(
         id: 25,
         coordinates: [
-          Coordinate(
-              latitude: 42.895492485421215, longitude: 74.57442266407098),
+          Coordinate(latitude: 42.895492485421215, longitude: 74.57442266407098),
           Coordinate(latitude: 42.88827423261669, longitude: 74.57567793788901),
           Coordinate(latitude: 42.88492909201086, longitude: 74.57632166805269),
           Coordinate(latitude: 42.88033711568395, longitude: 74.57612854900364),
-          Coordinate(
-              latitude: 42.868611023517644, longitude: 74.57486254634858),
+          Coordinate(latitude: 42.868611023517644, longitude: 74.57486254634858),
           Coordinate(latitude: 42.86654333714466, longitude: 74.57460505428317),
-          Coordinate(
-              latitude: 42.866937939166945, longitude: 74.57687956752778),
-          Coordinate(
-              latitude: 42.865738341116206, longitude: 74.58398205699922),
+          Coordinate(latitude: 42.866937939166945, longitude: 74.57687956752778),
+          Coordinate(latitude: 42.865738341116206, longitude: 74.58398205699922),
           Coordinate(latitude: 42.86513853329832, longitude: 74.58720070781709),
           Coordinate(latitude: 42.84976250834211, longitude: 74.58649260463724),
           Coordinate(latitude: 42.84905202382549, longitude: 74.59666354122172),
@@ -1181,42 +1054,32 @@ class Polygons {
           Coordinate(latitude: 42.84308362911821, longitude: 74.601749009514),
           Coordinate(latitude: 42.84941516134702, longitude: 74.60198504390725),
           Coordinate(latitude: 42.85244648652994, longitude: 74.60224253597272),
-          Coordinate(
-              latitude: 42.852462274289664, longitude: 74.59988219203959),
+          Coordinate(latitude: 42.852462274289664, longitude: 74.59988219203959),
           Coordinate(latitude: 42.8530779937484, longitude: 74.59692103328717),
-          Coordinate(
-              latitude: 42.855982843083076, longitude: 74.59725362720508),
+          Coordinate(latitude: 42.855982843083076, longitude: 74.59725362720508),
           Coordinate(latitude: 42.857999580129615, longitude: 74.5973716444018),
           Coordinate(latitude: 42.86032407340804, longitude: 74.59744674625422),
-          Coordinate(
-              latitude: 42.860249091128836, longitude: 74.59802073898341),
+          Coordinate(latitude: 42.860249091128836, longitude: 74.59802073898341),
           Coordinate(latitude: 42.86123963907913, longitude: 74.59810120525385),
           Coordinate(latitude: 42.86300364302466, longitude: 74.59822458686861),
           Coordinate(latitude: 42.86315754697872, longitude: 74.59482354583774),
           Coordinate(latitude: 42.86409674747599, longitude: 74.59218425216713),
-          Coordinate(
-              latitude: 42.864566342290644, longitude: 74.59002239170117),
+          Coordinate(latitude: 42.864566342290644, longitude: 74.59002239170117),
           Coordinate(latitude: 42.865012256772715, longitude: 74.5875547594075),
           Coordinate(latitude: 42.86523323971371, longitude: 74.58741528453875),
           Coordinate(latitude: 42.87805677888857, longitude: 74.58845598163674),
           Coordinate(latitude: 42.88393498121277, longitude: 74.58901388111184),
-          Coordinate(
-              latitude: 42.884834414767816, longitude: 74.58888513507915),
+          Coordinate(latitude: 42.884834414767816, longitude: 74.58888513507915),
           Coordinate(latitude: 42.8848738633056, longitude: 74.58926064434121),
-          Coordinate(
-              latitude: 42.886238767064796, longitude: 74.58929283084942),
+          Coordinate(latitude: 42.886238767064796, longitude: 74.58929283084942),
           Coordinate(latitude: 42.88963905967749, longitude: 74.58835942211226),
-          Coordinate(
-              latitude: 42.892534287616286, longitude: 74.58872420253837),
-          Coordinate(
-              latitude: 42.896155102147816, longitude: 74.58860618534173),
+          Coordinate(latitude: 42.892534287616286, longitude: 74.58872420253837),
+          Coordinate(latitude: 42.896155102147816, longitude: 74.58860618534173),
           Coordinate(latitude: 42.89591845414012, longitude: 74.58517295780265),
-          Coordinate(
-              latitude: 42.896391749240834, longitude: 74.57903606357658),
-          Coordinate(
-              latitude: 42.895492485421215, longitude: 74.57442266407098),
+          Coordinate(latitude: 42.896391749240834, longitude: 74.57903606357658),
+          Coordinate(latitude: 42.895492485421215, longitude: 74.57442266407098),
         ],
-        deliveryPrice: 320,
+        deliveryPrice: 350,
       ),
       DeliveryPolygon(
         id: 26,
@@ -1228,27 +1091,22 @@ class Polygons {
           Coordinate(latitude: 42.89680172309001, longitude: 74.59738144583035),
           Coordinate(latitude: 42.89658085392779, longitude: 74.59307918257053),
           Coordinate(latitude: 42.89618644281617, longitude: 74.5886803597861),
-          Coordinate(
-              latitude: 42.892691849359835, longitude: 74.58885202116304),
+          Coordinate(latitude: 42.892691849359835, longitude: 74.58885202116304),
           Coordinate(latitude: 42.8896861816799, longitude: 74.58843359655673),
-          Coordinate(
-              latitude: 42.886325339187295, longitude: 74.58938846296608),
+          Coordinate(latitude: 42.886325339187295, longitude: 74.58938846296608),
           Coordinate(latitude: 42.88489731974916, longitude: 74.5894635648185),
           Coordinate(latitude: 42.88480264325206, longitude: 74.58897003835978),
           Coordinate(latitude: 42.884029446381135, longitude: 74.5890880555564),
-          Coordinate(
-              latitude: 42.881772918048114, longitude: 74.58895930952372),
+          Coordinate(latitude: 42.881772918048114, longitude: 74.58895930952372),
           Coordinate(latitude: 42.87678293538958, longitude: 74.5884312490545),
-          Coordinate(
-              latitude: 42.872876891009525, longitude: 74.58812011280877),
+          Coordinate(latitude: 42.872876891009525, longitude: 74.58812011280877),
           Coordinate(latitude: 42.86852122823157, longitude: 74.58776112691388),
-          Coordinate(
-              latitude: 42.865238146855994, longitude: 74.58748217717634),
+          Coordinate(latitude: 42.865238146855994, longitude: 74.58748217717634),
           Coordinate(latitude: 42.86443313368459, longitude: 74.59130164281353),
           Coordinate(latitude: 42.86322559414, longitude: 74.59480997220503),
           Coordinate(latitude: 42.86306774407537, longitude: 74.59821101323591),
         ],
-        deliveryPrice: 280,
+        deliveryPrice: 310,
       ),
       DeliveryPolygon(
         id: 27,
@@ -1260,12 +1118,11 @@ class Polygons {
           Coordinate(latitude: 42.89626170998725, longitude: 74.58482639018646),
           Coordinate(latitude: 42.89712941001217, longitude: 74.59727184001555),
           Coordinate(latitude: 42.90320658251138, longitude: 74.59754798462755),
-          Coordinate(
-              latitude: 42.903175033130864, longitude: 74.59321353485947),
+          Coordinate(latitude: 42.903175033130864, longitude: 74.59321353485947),
           Coordinate(latitude: 42.90543077282823, longitude: 74.59074590256581),
           Coordinate(latitude: 42.90550964334229, longitude: 74.57390162995229),
         ],
-        deliveryPrice: 320,
+        deliveryPrice: 350,
       ),
       DeliveryPolygon(
         id: 28,
@@ -1273,17 +1130,14 @@ class Polygons {
           Coordinate(latitude: 42.89601820955025, longitude: 74.55590937188005),
           Coordinate(latitude: 42.89553938586295, longitude: 74.5695147192448),
           Coordinate(latitude: 42.895563789587, longitude: 74.57224241109387),
-          Coordinate(
-              latitude: 42.895895098460876, longitude: 74.57451692433854),
+          Coordinate(latitude: 42.895895098460876, longitude: 74.57451692433854),
           Coordinate(latitude: 42.91712667939762, longitude: 74.57265010686423),
           Coordinate(latitude: 42.92164493218389, longitude: 74.5721565804055),
-          Coordinate(
-              latitude: 42.920698728853964, longitude: 74.57404485555196),
+          Coordinate(latitude: 42.920698728853964, longitude: 74.57404485555196),
           Coordinate(latitude: 42.92126645260822, longitude: 74.5773064217141),
           Coordinate(latitude: 42.92107721194225, longitude: 74.57885137410666),
           Coordinate(latitude: 42.92035178396588, longitude: 74.58056798787618),
-          Coordinate(
-              latitude: 42.919850113993185, longitude: 74.58644397727281),
+          Coordinate(latitude: 42.919850113993185, longitude: 74.58644397727281),
           Coordinate(latitude: 42.9198516638969, longitude: 74.59588344783789),
           Coordinate(latitude: 42.91944163223102, longitude: 74.59925230236061),
           Coordinate(latitude: 42.91958356658023, longitude: 74.60144098491675),
@@ -1300,8 +1154,7 @@ class Polygons {
           Coordinate(latitude: 42.94346352790536, longitude: 74.63270638039418),
           Coordinate(latitude: 42.94825568951321, longitude: 74.61931679299185),
           Coordinate(latitude: 42.94907536368519, longitude: 74.60176441719844),
-          Coordinate(
-              latitude: 42.949989602731485, longitude: 74.59399673989128),
+          Coordinate(latitude: 42.949989602731485, longitude: 74.59399673989128),
           Coordinate(latitude: 42.95030485440373, longitude: 74.58863232186152),
           Coordinate(latitude: 42.94964282401364, longitude: 74.5850703482897),
           Coordinate(latitude: 42.94803500603965, longitude: 74.57635853340939),
@@ -1309,12 +1162,11 @@ class Polygons {
           Coordinate(latitude: 42.92962089866762, longitude: 74.5660588507923),
           Coordinate(latitude: 42.92630955481973, longitude: 74.55841991951787),
           Coordinate(latitude: 42.91927629644976, longitude: 74.55786202004282),
-          Coordinate(
-              latitude: 42.909687054140754, longitude: 74.55764744332167),
+          Coordinate(latitude: 42.909687054140754, longitude: 74.55764744332167),
           Coordinate(latitude: 42.89887369645038, longitude: 74.55613467743731),
           Coordinate(latitude: 42.89601820955025, longitude: 74.55590937188005),
         ],
-        deliveryPrice: 450,
+        deliveryPrice: 500,
       ),
       DeliveryPolygon(
         id: 29,
@@ -1324,7 +1176,7 @@ class Polygons {
             longitude: 74.639674,
           ),
         ],
-        deliveryPrice: 180,
+        deliveryPrice: 220,
       ),
       DeliveryPolygon(
         id: 30,
@@ -1334,7 +1186,7 @@ class Polygons {
             longitude: 74.650871,
           ),
         ],
-        deliveryPrice: 180,
+        deliveryPrice: 220,
       ),
       DeliveryPolygon(
         id: 31,
@@ -1344,7 +1196,7 @@ class Polygons {
             longitude: 74.65035,
           ),
         ],
-        deliveryPrice: 180,
+        deliveryPrice: 220,
       ),
     ];
   }
