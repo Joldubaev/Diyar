@@ -593,7 +593,7 @@ class Polygons {
           Coordinate(latitude: 42.87948501425819, longitude: 74.75076327329379),
           Coordinate(latitude: 42.878001601259385, longitude: 74.73724493985871),
         ],
-        deliveryPrice: 300,
+        deliveryPrice: 320,
       ),
       DeliveryPolygon(
         id: 8,
