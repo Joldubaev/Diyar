@@ -33,7 +33,7 @@ void showOrderDialogs({
   required String? serverTimeString,
 }) {
   final TimeOfDay startWorkTime = _parseTimeOfDay(startWorkTimeString ?? '10:00');
-  final TimeOfDay endWorkTime = _parseTimeOfDay('24:00');
+  final TimeOfDay endWorkTime = _parseTimeOfDay(endWorkTimeString ?? '24:00');
 
   final TimeOfDay currentTimeOfDay;
   if (serverTimeString != null) {
