@@ -4,7 +4,7 @@ class ApiConst {
   // static const baseUrl = "http://176.126.164.230:8088";
   // static const baseUrl = "http://20.127.235.82/api/v1";
   // static const baseUrl2 = "http://20.127.235.82/api/v2";
-  // static const baseUrl = "https://20.127.235.82/";a
+  // static const baseUrl = "https://20.127.235.82/";
 
   // AUTH
   static const signUp = "$baseUrl/auth/sign-up";
@@ -94,4 +94,6 @@ class ApiConst {
 
   // timer
   static const getTimer = "$baseUrl/work-time/get-work-time";
+
+  static String getPrice({String? id}) => "$baseUrl/districts/get-district-price-by-yandex-id/$id";
 }

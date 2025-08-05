@@ -13,10 +13,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class PickupFormPage extends StatefulWidget {
   final List<CartItemEntity> cart;
   final int totalPrice;
+  final int? dishCount;
   const PickupFormPage({
     super.key,
     required this.cart,
     required this.totalPrice,
+    this.dishCount,
   });
 
   @override
@@ -248,7 +250,7 @@ class _PickupFormPageState extends State<PickupFormPage> {
                   comment: _commentController.text,
                   paymentMethod: _paymentType.name,
                   price: widget.totalPrice,
-                  dishesCount: widget.cart.fold(0, (sum, item) => sum + (item.quantity ?? 1)),
+                  dishesCount: widget.dishCount ?? 0,
                   foods: widget.cart
                       .map((cartItem) => FoodItemOrderEntity(
                             dishId: cartItem.food?.id ?? '',

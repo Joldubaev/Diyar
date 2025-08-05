@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/injection_container.dart';
+import 'package:diyar/features/map/data/models/price_model.dart';
 
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,7 +10,7 @@ abstract class AppLocation {
   Future<AppLatLong> getCurrentLocation();
   Future<bool> requestPermission();
   Future<bool> checkPermission();
-  Future<int> getDeliveryPrice(double latitude, double longitude);
+  Future<PriceModel> getDeliveryPrice(double latitude, double longitude);
 }
 
 class LocationService implements AppLocation {
@@ -32,23 +33,19 @@ class LocationService implements AppLocation {
   @override
   Future<bool> requestPermission() async {
     return Geolocator.requestPermission()
-        .then((value) =>
-            value == LocationPermission.always ||
-            value == LocationPermission.whileInUse)
+        .then((value) => value == LocationPermission.always || value == LocationPermission.whileInUse)
         .catchError((e) => false);
   }
 
   @override
   Future<bool> checkPermission() async {
     return Geolocator.checkPermission()
-        .then((value) =>
-            value == LocationPermission.always ||
-            value == LocationPermission.whileInUse)
+        .then((value) => value == LocationPermission.always || value == LocationPermission.whileInUse)
         .catchError((e) => false);
   }
 
   @override
-  Future<int> getDeliveryPrice(double latitude, double longitude) async {
+  Future<PriceModel> getDeliveryPrice(double latitude, double longitude) async {
     var token = prefs.getString(AppConst.accessToken) ?? '';
     return await dio
         .post(
@@ -57,10 +54,23 @@ class LocationService implements AppLocation {
       options: Options(headers: ApiConst.authMap(token)),
     )
         .then((value) {
-      if (value.data['districtPrice'] == null) return 500;
-      if (value.statusCode != 200) return 500;
-      return value.data['districtPrice'];
-    }).catchError((e) => 500);
+      if (value.statusCode != 200) {
+        return PriceModel(
+          districtId: null,
+          districtName: null,
+          price: 500,
+          yandexId: null,
+        );
+      }
+
+      final data = value.data['message'] ?? value.data;
+      return PriceModel.fromJson(data);
+    }).catchError((e) => PriceModel(
+              districtId: null,
+              districtName: null,
+              price: 500,
+              yandexId: null,
+            ));
   }
 }
 

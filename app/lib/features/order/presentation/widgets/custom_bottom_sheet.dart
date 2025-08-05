@@ -12,6 +12,7 @@ class CustomBottomSheet extends StatelessWidget {
   final DeliveryFormPage widget;
   final int deliveryPrice;
   final int totalOrderCost;
+  final int dishCount; 
   final int sdacha;
   final String? region;
   final TextEditingController phoneController;
@@ -29,6 +30,7 @@ class CustomBottomSheet extends StatelessWidget {
     super.key,
     required this.theme,
     required this.widget,
+    required this.dishCount,
     required this.deliveryPrice,
     required this.totalOrderCost,
     required this.sdacha,
@@ -192,7 +194,7 @@ class CustomBottomSheet extends StatelessWidget {
         floor: floorController.text,
         entrance: entranceController.text,
         paymentMethod: paymentType.name,
-        dishesCount: widget.dishCount,
+        dishesCount: dishCount,
         sdacha: sdacha,
         region: region,
         foods: widget.cart

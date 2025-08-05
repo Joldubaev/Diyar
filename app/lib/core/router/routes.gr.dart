@@ -873,6 +873,7 @@ class OrderMapRoute extends _i51.PageRouteInfo<OrderMapRouteArgs> {
     _i52.Key? key,
     required List<_i54.CartItemEntity> cart,
     required int totalPrice,
+    int? dishCount,
     List<_i51.PageRouteInfo>? children,
   }) : super(
           OrderMapRoute.name,
@@ -880,6 +881,7 @@ class OrderMapRoute extends _i51.PageRouteInfo<OrderMapRouteArgs> {
             key: key,
             cart: cart,
             totalPrice: totalPrice,
+            dishCount: dishCount,
           ),
           initialChildren: children,
         );
@@ -894,6 +896,7 @@ class OrderMapRoute extends _i51.PageRouteInfo<OrderMapRouteArgs> {
         key: args.key,
         cart: args.cart,
         totalPrice: args.totalPrice,
+        dishCount: args.dishCount,
       );
     },
   );
@@ -904,6 +907,7 @@ class OrderMapRouteArgs {
     this.key,
     required this.cart,
     required this.totalPrice,
+    this.dishCount,
   });
 
   final _i52.Key? key;
@@ -912,9 +916,11 @@ class OrderMapRouteArgs {
 
   final int totalPrice;
 
+  final int? dishCount;
+
   @override
   String toString() {
-    return 'OrderMapRouteArgs{key: $key, cart: $cart, totalPrice: $totalPrice}';
+    return 'OrderMapRouteArgs{key: $key, cart: $cart, totalPrice: $totalPrice, dishCount: $dishCount}';
   }
 }
 
@@ -1030,6 +1036,7 @@ class PickupFormRoute extends _i51.PageRouteInfo<PickupFormRouteArgs> {
     _i55.Key? key,
     required List<_i53.CartItemEntity> cart,
     required int totalPrice,
+    int? dishCount,
     List<_i51.PageRouteInfo>? children,
   }) : super(
           PickupFormRoute.name,
@@ -1037,6 +1044,7 @@ class PickupFormRoute extends _i51.PageRouteInfo<PickupFormRouteArgs> {
             key: key,
             cart: cart,
             totalPrice: totalPrice,
+            dishCount: dishCount,
           ),
           initialChildren: children,
         );
@@ -1051,6 +1059,7 @@ class PickupFormRoute extends _i51.PageRouteInfo<PickupFormRouteArgs> {
         key: args.key,
         cart: args.cart,
         totalPrice: args.totalPrice,
+        dishCount: args.dishCount,
       );
     },
   );
@@ -1061,6 +1070,7 @@ class PickupFormRouteArgs {
     this.key,
     required this.cart,
     required this.totalPrice,
+    this.dishCount,
   });
 
   final _i55.Key? key;
@@ -1069,9 +1079,11 @@ class PickupFormRouteArgs {
 
   final int totalPrice;
 
+  final int? dishCount;
+
   @override
   String toString() {
-    return 'PickupFormRouteArgs{key: $key, cart: $cart, totalPrice: $totalPrice}';
+    return 'PickupFormRouteArgs{key: $key, cart: $cart, totalPrice: $totalPrice, dishCount: $dishCount}';
   }
 }
 

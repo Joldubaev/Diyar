@@ -120,6 +120,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
       isScrollControlled: true,
       builder: (bottomSheetContext) {
         return CustomBottomSheet(
+          dishCount: widget.dishCount,
           region: '',
           theme: Theme.of(context),
           widget: widget,
