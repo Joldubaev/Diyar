@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
@@ -16,7 +15,13 @@ import 'package:geolocator/geolocator.dart';
 class OrderMapPage extends StatefulWidget {
   final int totalPrice;
   final List<CartItemEntity> cart;
-  const OrderMapPage({super.key, required this.cart, required this.totalPrice});
+  final int? dishCount;
+  const OrderMapPage({
+    super.key,
+    required this.cart,
+    required this.totalPrice,
+    this.dishCount,
+  });
 
   @override
   State<OrderMapPage> createState() => _OrderMapPageState();
@@ -31,8 +36,8 @@ class _OrderMapPageState extends State<OrderMapPage> {
   final List<PolygonMapObject> _polygons = [];
   double _lat = 0;
   double _long = 0;
-  bool _firstLaunch = true;
   double _currentZoom = 14.0;
+  double _deliveryPrice = 0;
 
   static const _kyrgyzstanBounds = BoundingBox(
     northEast: Point(latitude: 43.0019, longitude: 80.2754),
@@ -59,96 +64,111 @@ class _OrderMapPageState extends State<OrderMapPage> {
       appBar: AppBar(
         title: Text(context.l10n.chooseAddress, style: theme.textTheme.titleSmall),
       ),
-      body: Stack(
-        children: [
-          MapWidget(
-            mapObjects: _mapObjects,
-            onCameraPositionChanged: _onCameraPositionChanged,
-            onMapCreated: (controller) {
-              _mapControllerCompleter.complete(controller);
-              _fetchCurrentLocation();
-            },
-          ),
-          const Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Icon(Icons.location_on, size: 30, color: Colors.red),
-          ),
-          Align(
-            alignment: const Alignment(0.95, -0.3), // x: 0.95 (справа), y: -0.3 (немного выше центра)
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Zoom Controls
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(28.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withValues(alpha: 0.3),
-                        spreadRadius: 1,
-                        blurRadius: 3,
-                        offset: const Offset(0, 1),
+      body: BlocConsumer<UserMapCubit, UserMapState>(
+        listener: (context, state) {
+          if (state is GetDistrictPriceLoaded) {
+            setState(() {
+              _deliveryPrice = state.priceModel.price?.toDouble() ?? 0;
+            });
+          } else if (state is GetDelPriceError) {
+            setState(() {
+              _deliveryPrice = MapHelper.isCoordinateInsidePolygons(_lat, _long, polygons: Polygons.getPolygons());
+            });
+          }
+        },
+        builder: (context, state) {
+          return Stack(
+            children: [
+              MapWidget(
+                mapObjects: _mapObjects,
+                onCameraPositionChanged: _onCameraPositionChanged,
+                onMapCreated: (controller) {
+                  _mapControllerCompleter.complete(controller);
+                  _fetchCurrentLocation();
+                },
+              ),
+              const Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: Icon(Icons.location_on, size: 30, color: Colors.red),
+              ),
+              Align(
+                alignment: const Alignment(0.95, -0.3),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Zoom Controls
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(28.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withValues(alpha: 0.3),
+                            spreadRadius: 1,
+                            blurRadius: 3,
+                            offset: const Offset(0, 1),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.add, color: Colors.black87),
-                        onPressed: _zoomIn,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.add, color: Colors.black87),
+                            onPressed: _zoomIn,
+                            iconSize: 28,
+                            padding: const EdgeInsets.all(12),
+                          ),
+                          Container(
+                            height: 1,
+                            width: 40,
+                            color: Colors.grey[300],
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.remove, color: Colors.black87),
+                            onPressed: _zoomOut,
+                            iconSize: 28,
+                            padding: const EdgeInsets.all(12),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    // Location Button
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withValues(alpha: 0.3),
+                            spreadRadius: 1,
+                            blurRadius: 3,
+                            offset: const Offset(0, 1),
+                          ),
+                        ],
+                      ),
+                      child: IconButton(
+                        icon: const Icon(Icons.navigation_outlined, color: Colors.black87),
+                        onPressed: _fetchCurrentLocation,
                         iconSize: 28,
-                        padding: const EdgeInsets.all(12),
+                        padding: const EdgeInsets.all(16),
                       ),
-                      Container(
-                        height: 1,
-                        width: 40,
-                        color: Colors.grey[300],
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.remove, color: Colors.black87),
-                        onPressed: _zoomOut,
-                        iconSize: 28,
-                        padding: const EdgeInsets.all(12),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 16), // Space between zoom controls and location button
-                // Location Button
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withValues(alpha: 0.3),
-                        spreadRadius: 1,
-                        blurRadius: 3,
-                        offset: const Offset(0, 1),
-                      ),
-                    ],
-                  ),
-                  child: IconButton(
-                    icon: const Icon(Icons.navigation_outlined, color: Colors.black87),
-                    onPressed: _fetchCurrentLocation,
-                    iconSize: 28,
-                    padding: const EdgeInsets.all(16),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+              ),
+            ],
+          );
+        },
       ),
       bottomSheet: BottomSheetWidget(
         theme: theme,
         address: _address,
-        deliveryPrice: _calculateDeliveryPrice(),
+        deliveryPrice: _deliveryPrice,
         onAddressCardTap: _onAddressCardTap,
         onSearchPressed: () => showMapSearchBottom(context, onSearch: _searchMap),
       ),
@@ -163,6 +183,8 @@ class _OrderMapPageState extends State<OrderMapPage> {
       ));
       _lat = cameraPosition.target.latitude;
       _long = cameraPosition.target.longitude;
+
+      context.read<UserMapCubit>().getDeliveryPrice(_lat, _long);
     }
   }
 
@@ -184,6 +206,13 @@ class _OrderMapPageState extends State<OrderMapPage> {
     if (point != null) {
       if (_isPointInKyrgyzstan(point.latitude, point.longitude)) {
         _moveToCurrentLocation(point.latitude, point.longitude);
+
+        setState(() {
+          _lat = point.latitude;
+          _long = point.longitude;
+        });
+
+        context.read<UserMapCubit>().getDeliveryPrice(_lat, _long);
       } else {
         setState(() => _address = context.l10n.addressIsNotFounded);
         showToast('Адрес находится за пределами Кыргызстана', isError: true);
@@ -217,10 +246,23 @@ class _OrderMapPageState extends State<OrderMapPage> {
   }
 
   Future<void> _initPermission() async {
-    if (!await LocationService().checkPermission()) {
-      await LocationService().requestPermission();
+    try {
+      if (!await LocationService().checkPermission()) {
+        final granted = await LocationService().requestPermission();
+        if (!granted) {
+          // Если разрешение не дано, используем координаты Бишкека
+          setState(() {
+            _lat = 42.882004;
+            _long = 74.582748;
+          });
+        }
+      }
+    } catch (e) {
+      setState(() {
+        _lat = 42.882004;
+        _long = 74.582748;
+      });
     }
-    await _fetchCurrentLocation();
   }
 
   final LocationSettings locationSettings = const LocationSettings(
@@ -236,9 +278,23 @@ class _OrderMapPageState extends State<OrderMapPage> {
         _lat = position.latitude;
         _long = position.longitude;
       });
+
       await _moveToCurrentLocation(_lat, _long);
+
+      if (mounted) {
+        context.read<UserMapCubit>().getDeliveryPrice(_lat, _long);
+      }
     } catch (e) {
-      log("Error getting location: $e");
+      setState(() {
+        _lat = 42.882004;
+        _long = 74.582748;
+      });
+
+      await _moveToCurrentLocation(_lat, _long);
+
+      if (mounted) {
+        context.read<UserMapCubit>().getDeliveryPrice(_lat, _long);
+      }
     }
   }
 
@@ -273,22 +329,11 @@ class _OrderMapPageState extends State<OrderMapPage> {
 
       if (searchSessionResult.items != null && searchSessionResult.items!.isNotEmpty) {
         final formattedAddress = searchSessionResult.items!.first.name;
-        final point = searchSessionResult.items!.first.geometry.first.point;
-
-        if (point != null && _isPointInKyrgyzstan(point.latitude, point.longitude)) {
-          setState(() => _address = formattedAddress);
-        } else {
-          setState(() => _address = context.l10n.addressIsNotFounded);
-          if (!_firstLaunch) {
-            showToast('Адрес находится за пределами Кыргызстана', isError: true);
-          }
-        }
+        setState(() => _address = formattedAddress);
       } else {
         setState(() => _address = context.l10n.addressIsNotFounded);
       }
-      _firstLaunch = false;
     } catch (error) {
-      log(error.toString());
       setState(() => _address = context.l10n.addressIsNotFounded);
     }
   }
@@ -306,28 +351,19 @@ class _OrderMapPageState extends State<OrderMapPage> {
     }
 
     final cartState = context.read<CartBloc>().state;
-    int currentTotalItems = 0;
-    if (cartState is CartLoaded) {
-      currentTotalItems = cartState.totalItems;
-    } else {
-      log("Cart state is not CartLoaded when trying to get totalItems.");
-    }
+    if (cartState is CartLoaded) {}
 
     context.read<OrderCubit>()
       ..changeAddress(_address!)
       ..changeAddressSearch(false)
-      ..selectDeliveryPrice(_calculateDeliveryPrice());
+      ..selectDeliveryPrice(_deliveryPrice);
 
     context.router.push(DeliveryFormRoute(
         totalPrice: widget.totalPrice,
         cart: widget.cart,
-        dishCount: currentTotalItems,
+        dishCount: widget.dishCount ?? 0,
         address: _address!,
-        deliveryPrice: _calculateDeliveryPrice()));
-  }
-
-  double _calculateDeliveryPrice() {
-    return MapHelper.isCoordinateInsidePolygons(_lat, _long, polygons: Polygons.getPolygons());
+        deliveryPrice: _deliveryPrice));
   }
 
   Future<void> _zoomIn() async {

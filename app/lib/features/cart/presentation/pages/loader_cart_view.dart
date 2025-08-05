@@ -184,6 +184,7 @@ class _LoadedCartViewState extends State<LoadedCartView> {
                         }
 
                         showOrderDialogs(
+                          dishCount: _selectedCutleryCount,
                           context: context,
                           cartItems: carts,
                           totalPrice: _dynamicFinalTotalPrice.toInt(),

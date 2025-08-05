@@ -27,12 +27,13 @@ void showOrderDialogs({
   required BuildContext context,
   required List<CartItemEntity> cartItems,
   required int totalPrice,
+  required int? dishCount,
   required String? startWorkTimeString,
   required String? endWorkTimeString,
   required String? serverTimeString,
 }) {
   final TimeOfDay startWorkTime = _parseTimeOfDay(startWorkTimeString ?? '10:00');
-  final TimeOfDay endWorkTime = _parseTimeOfDay(endWorkTimeString ?? '22:00');
+  final TimeOfDay endWorkTime = _parseTimeOfDay('24:00');
 
   final TimeOfDay currentTimeOfDay;
   if (serverTimeString != null) {
@@ -59,7 +60,7 @@ void showOrderDialogs({
   if (isShopClosed) {
     _showClosedAlertDialog(context, startWorkTime, endWorkTime);
   } else {
-    _showDeliveryOptionsBottomSheet(context, cartItems, totalPrice);
+    _showDeliveryOptionsBottomSheet(context, cartItems, totalPrice, dishCount);
   }
 }
 
@@ -110,6 +111,7 @@ Future<dynamic> _showDeliveryOptionsBottomSheet(
   BuildContext context,
   List<CartItemEntity> carts,
   int totalPrice,
+  int? dishCount,
 ) {
   final router = context.router;
   final l10n = context.l10n;
@@ -184,7 +186,11 @@ Future<dynamic> _showDeliveryOptionsBottomSheet(
                         ),
                         onPressed: () {
                           Navigator.of(context).pop();
-                          router.push(OrderMapRoute(cart: carts, totalPrice: totalPrice));
+                          router.push(OrderMapRoute(
+                            cart: carts,
+                            totalPrice: totalPrice,
+                            dishCount: dishCount ?? 0,
+                          ));
                         },
                         child: Column(
                           children: [
@@ -215,7 +221,11 @@ Future<dynamic> _showDeliveryOptionsBottomSheet(
                         ),
                         onPressed: () {
                           Navigator.of(context).pop();
-                          router.push(PickupFormRoute(cart: carts, totalPrice: totalPrice));
+                          router.push(PickupFormRoute(
+                            cart: carts,
+                            totalPrice: totalPrice,
+                            dishCount: dishCount ?? 0,
+                          ));
                         },
                         child: Column(
                           children: [
