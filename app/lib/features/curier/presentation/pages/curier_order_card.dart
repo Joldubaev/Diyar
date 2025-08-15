@@ -21,6 +21,7 @@ class CurierOrderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final totalPrice = (order.price ?? 0) + (order.deliveryPrice ?? 0);
+    final address = '${order.address ?? ''} ${order.houseNumber ?? ''}';
     return Card(
       margin: const EdgeInsets.all(0),
       shape: const RoundedRectangleBorder(
@@ -46,7 +47,7 @@ class CurierOrderCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  order.address.toString(),
+                  address,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(

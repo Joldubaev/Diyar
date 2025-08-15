@@ -120,14 +120,15 @@ class _CurierPageState extends State<CurierPage> {
                     itemCount: orders.length,
                     itemBuilder: (context, index) {
                       final order = orders[index];
+                      final address = '${order.address ?? ''} ${order.houseNumber ?? ''}';
                       return CurierOrderCard(
                         order: order,
                         onFinish: () => _finishOrder(order.orderNumber ?? 0, context: context),
-                        onOpenMap: () => _openAddressIn2GIS(order.address!, context: context),
+                        onOpenMap: () => _openAddressIn2GIS(address, context: context),
                         onDetails: () => context.router.push(
                           OrderDetailRoute(orderNumber: "${order.orderNumber}"),
                         ),
-                        onCall: () => makePhoneCall(order.userPhone.toString()),
+                        onCall: () => makePhoneCall('+${order.userPhone ?? ''}'),
                       );
                     },
                   ),
