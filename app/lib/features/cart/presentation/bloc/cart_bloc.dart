@@ -4,11 +4,13 @@ import 'package:bloc/bloc.dart';
 import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:diyar/features/cart/domain/repository/cart_repository.dart'; // Assuming interface is moved
 import 'package:equatable/equatable.dart';
+import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
 
 part 'cart_event.dart';
 part 'cart_state.dart';
 
+@injectable
 class CartBloc extends Bloc<CartEvent, CartState> {
   final CartRepository? _cartRepository;
   StreamSubscription<List<CartItemEntity>>? _cartSubscription;

@@ -4,6 +4,7 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/curier/data/data.dart';
+import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class CurierDataSource {
@@ -13,6 +14,7 @@ abstract class CurierDataSource {
   Future<Either<Failure, GetUserModel>> getUser();
 }
 
+@LazySingleton(as: CurierDataSource)
 class CurierDataSourceImpl extends CurierDataSource {
   final Dio dio;
   final SharedPreferences prefs;

@@ -4,12 +4,14 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/pick_up/pick_up.dart';
+import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class RemotePickUpDataSource {
   Future<Either<Failure, String>> getPickupOrder(PickupOrderModel order);
 }
 
+@LazySingleton(as: RemotePickUpDataSource)
 class RemotePickUpDataSourceImpl implements RemotePickUpDataSource {
   final Dio _dio;
   final SharedPreferences _prefs;

@@ -5,17 +5,19 @@ import 'package:diyar/features/map/data/repositories/yandex_service.dart';
 import 'package:diyar/features/map/data/models/price_model.dart';
 import 'package:diyar/features/map/data/repositories/price_repository.dart';
 import 'package:diyar/core/utils/helper/map_helper.dart';
+import 'package:injectable/injectable.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
 part 'user_map_state.dart';
 
+@injectable
 class UserMapCubit extends Cubit<UserMapState> {
   final PriceRepository priceRepository;
-  UserMapCubit(this.priceRepository) : super(UserMapInitial());
-
-  LocationService locationService = LocationService();
+  final AppLocation locationService;
+  
+  UserMapCubit(this.priceRepository, this.locationService) : super(UserMapInitial());
 
   void getDeliveryPrice(double latitude, double longitude) async {
     try {

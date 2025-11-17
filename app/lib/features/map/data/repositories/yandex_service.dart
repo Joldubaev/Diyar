@@ -1,9 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:diyar/core/core.dart';
-import 'package:diyar/injection_container.dart';
 import 'package:diyar/features/map/data/models/price_model.dart';
-
 import 'package:geolocator/geolocator.dart';
+import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class AppLocation {
@@ -13,10 +12,13 @@ abstract class AppLocation {
   Future<PriceModel> getDeliveryPrice(double latitude, double longitude);
 }
 
+@LazySingleton(as: AppLocation)
 class LocationService implements AppLocation {
-  final Dio dio = sl<Dio>();
-  final prefs = sl<SharedPreferences>();
+  final Dio dio;
+  final SharedPreferences prefs;
   final defaultLocation = BiskekLocation();
+
+  LocationService(this.dio, this.prefs);
 
   @override
   Future<AppLatLong> getCurrentLocation() async {

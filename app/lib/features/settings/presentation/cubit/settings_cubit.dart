@@ -1,10 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:injectable/injectable.dart';
 import '../../domain/entities/timer_entites.dart';
 import '../../domain/repositories/settings_repositories.dart';
 
 part 'settings_state.dart';
 
+@injectable
 class SettingsCubit extends Cubit<SettingsState> {
   final SettingsRepository repository;
   SettingsCubit(this.repository) : super(SettingsInitial());

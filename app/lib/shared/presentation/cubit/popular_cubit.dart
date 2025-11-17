@@ -2,9 +2,11 @@ import 'package:diyar/features/menu/domain/domain.dart';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
 part 'popular_state.dart';
 
+@injectable
 class PopularCubit extends Cubit<PopularState> {
   PopularCubit(this._menuRepository) : super(PopularInitial());
 

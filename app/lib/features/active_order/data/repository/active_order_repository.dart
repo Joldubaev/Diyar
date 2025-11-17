@@ -1,7 +1,8 @@
 import 'package:diyar/features/active_order/data/data.dart';
-
 import 'package:diyar/features/active_order/domain/domain.dart';
+import 'package:injectable/injectable.dart';
 
+@LazySingleton(as: ActiveOrderRepository)
 class ActiveOrderRepositoryImpl implements ActiveOrderRepository {
   final ActiveOrderRemoteDataSource dataSource;
 

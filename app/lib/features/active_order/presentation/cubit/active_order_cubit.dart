@@ -1,9 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:diyar/features/active_order/domain/domain.dart';
+import 'package:injectable/injectable.dart';
 
 part 'active_order_state.dart';
 
+@injectable
 class ActiveOrderCubit extends Cubit<ActiveOrderState> {
   final ActiveOrderRepository repository;
   ActiveOrderCubit(this.repository) : super(ActiveOrderInitial());

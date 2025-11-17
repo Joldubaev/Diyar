@@ -5,6 +5,7 @@ import 'package:diyar/core/core.dart';
 import 'package:diyar/features/auth/data/models/user_model.dart';
 import 'package:diyar/features/auth/data/models/reset_password_model.dart';
 import 'package:diyar/features/auth/data/datasources/local/auth_local_data_source.dart';
+import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class AuthRemoteDataSource {
@@ -18,6 +19,7 @@ abstract class AuthRemoteDataSource {
   Future<Either<Failure, void>> refreshToken();
 }
 
+@LazySingleton(as: AuthRemoteDataSource)
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final AuthLocalDataSource _localDataSource;
   final SharedPreferences _prefs;

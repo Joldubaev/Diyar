@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/auth/auth.dart';
+import 'package:injectable/injectable.dart';
 
 abstract class ProfileRemoteDataSource {
   Future<Either<Failure, UserModel>> getUser();
@@ -10,6 +11,7 @@ abstract class ProfileRemoteDataSource {
   Future<Either<Failure, String>> deleteUser();
 }
 
+@LazySingleton(as: ProfileRemoteDataSource)
 class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   final Dio _dio;
   final LocalStorage _prefs;

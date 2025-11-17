@@ -1,9 +1,11 @@
 import 'package:bloc/bloc.dart';
 import 'package:diyar/features/auth/domain/domain.dart';
+import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
 
 part 'sign_up_state.dart';
 
+@injectable
 class SignUpCubit extends Cubit<SignUpState> {
   final AuthRepository authRepository;
 

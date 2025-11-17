@@ -3,6 +3,7 @@ import 'package:diyar/core/core.dart';
 import 'package:diyar/features/active_order/active_order.dart';
 import 'package:diyar/features/history/data/model/user_pickup_history_model.dart';
 import 'package:flutter/foundation.dart';
+import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class HistoryReDatasource {
@@ -10,6 +11,7 @@ abstract class HistoryReDatasource {
   Future<List<UserPickupHistoryModel>> getPickupHistory();
 }
 
+@LazySingleton(as: HistoryReDatasource)
 class HistoryReDatasourceImpl implements HistoryReDatasource {
   SharedPreferences prefs;
   final Dio dio;

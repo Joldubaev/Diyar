@@ -3,9 +3,11 @@ import 'package:diyar/features/home_content/domain/usecases/get_news.dart';
 import 'package:diyar/features/home_content/domain/usecases/get_sales.dart';
 import 'package:diyar/features/home_content/domain/entities/news_entity.dart';
 import 'package:diyar/features/home_content/domain/entities/sale_entity.dart';
+import 'package:injectable/injectable.dart';
 
 part 'home_content_state.dart';
 
+@injectable
 class HomeContentCubit extends Cubit<HomeContentState> {
   final GetNewsUseCase _getNewsUseCase;
   final GetSalesUseCase _getSalesUseCase;

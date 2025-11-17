@@ -2,11 +2,13 @@ import '../../../core/remote_config/diyar_remote_config.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 part 'remote_config_state.dart';
 
+@injectable
 class RemoteConfigCubit extends Cubit<RemoteConfigState> {
   RemoteConfigCubit({
     required this.packageInfo,

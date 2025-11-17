@@ -2,9 +2,11 @@ import 'package:bloc/bloc.dart';
 import 'package:diyar/features/order/domain/entities/entities.dart';
 import 'package:diyar/features/order/domain/repositories/order_repositories.dart';
 import 'package:equatable/equatable.dart';
+import 'package:injectable/injectable.dart';
 
 part 'order_state.dart';
 
+@injectable
 class OrderCubit extends Cubit<OrderState> {
   final OrderRepository _orderRepository;
   OrderCubit(this._orderRepository) : super(OrderInitial());

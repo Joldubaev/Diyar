@@ -1,7 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:diyar/core/network/error/failures.dart';
 import 'package:diyar/features/payments/domain/domain.dart';
+import 'package:injectable/injectable.dart';
 
+@injectable
 class MbankInitiateUsecase {
   final PaymentsRepository repository;
   MbankInitiateUsecase(this.repository);

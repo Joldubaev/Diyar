@@ -5,7 +5,9 @@ import 'package:diyar/features/order/domain/repositories/order_repositories.dart
 import 'package:diyar/features/order/data/datasources/order_remote_datasource.dart';
 import 'package:diyar/features/order/data/models/model.dart';
 import 'package:diyar/features/map/map.dart';
+import 'package:injectable/injectable.dart';
 
+@LazySingleton(as: OrderRepository)
 class OrderRepositoryImpl implements OrderRepository {
   final OrderRemoteDataSource _orderDataSource;
 

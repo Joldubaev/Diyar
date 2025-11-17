@@ -5,6 +5,7 @@ import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:diyar/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:diyar/features/map/map.dart';
 import 'package:diyar/features/order/order.dart';
+import 'package:diyar/injection_container.dart';
 import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -247,8 +248,9 @@ class _OrderMapPageState extends State<OrderMapPage> {
 
   Future<void> _initPermission() async {
     try {
-      if (!await LocationService().checkPermission()) {
-        final granted = await LocationService().requestPermission();
+      final locationService = sl<AppLocation>();
+      if (!await locationService.checkPermission()) {
+        final granted = await locationService.requestPermission();
         if (!granted) {
           // Если разрешение не дано, используем координаты Бишкека
           setState(() {

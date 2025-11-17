@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/map/map.dart';
 import 'package:diyar/features/order/data/models/model.dart';
+import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class OrderRemoteDataSource {
@@ -15,6 +16,7 @@ abstract class OrderRemoteDataSource {
   Future<Either<Failure, LocationModel>> getGeoSuggestions({required String query});
 }
 
+@LazySingleton(as: OrderRemoteDataSource)
 class OrderRemoteDataSourceImpl extends OrderRemoteDataSource {
   final Dio _dio;
   final SharedPreferences _prefs;

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:diyar/features/cart/data/models/cart_item_model.dart';
 import 'package:hive_flutter/hive_flutter.dart'; // Import hive_flutter
+import 'package:injectable/injectable.dart';
 
 abstract class CartLocalDataSource {
   Future<void> init(); // Method to initialize Hive box
@@ -13,6 +14,7 @@ abstract class CartLocalDataSource {
   Future<void> close(); // Method to close Hive box
 }
 
+@LazySingleton(as: CartLocalDataSource)
 class CartHiveDataSource implements CartLocalDataSource {
   static const String _boxName = 'cartBox';
   Box<CartItemModel>? _box;

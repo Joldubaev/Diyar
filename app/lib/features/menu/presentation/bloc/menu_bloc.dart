@@ -1,11 +1,13 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:diyar/features/menu/domain/domain.dart';
+import 'package:injectable/injectable.dart';
 import 'dart:developer';
 
 part 'menu_event.dart';
 part 'menu_state.dart';
 
+@injectable
 class MenuBloc extends Bloc<MenuEvent, MenuState> {
   final MenuRepository _menuRepository;
 

@@ -2,7 +2,9 @@ import 'package:diyar/features/active_order/active_order.dart';
 import 'package:diyar/features/active_order/domain/domain.dart';
 import 'package:diyar/features/history/history.dart';
 import 'package:diyar/features/history/domain/domain.dart';
+import 'package:injectable/injectable.dart';
 
+@LazySingleton(as: HistoryRepository)
 class HistoryRepositoryImpl implements HistoryRepository {
   final HistoryReDatasource historyReDatasource;
   HistoryRepositoryImpl(this.historyReDatasource);
