@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/active_order/data/data.dart';
+import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class ActiveOrderRemoteDataSource {
@@ -9,6 +10,7 @@ abstract class ActiveOrderRemoteDataSource {
   Future<List<OrderActiveItemModel>> getActiveOrders();
 }
 
+@LazySingleton(as: ActiveOrderRemoteDataSource)
 class ActiveOrderRemoteDataSourceImpl implements ActiveOrderRemoteDataSource {
   final Dio dio;
   final SharedPreferences prefs;

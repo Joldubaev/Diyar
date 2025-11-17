@@ -1,9 +1,11 @@
 import 'package:dartz/dartz.dart';
 import 'package:diyar/core/network/error/failures.dart';
+import 'package:injectable/injectable.dart';
 import '../../domain/domain.dart';
 import '../../domain/entities/timer_entites.dart';
 import '../datasource/remote_settings_datasource.dart';
 
+@LazySingleton(as: SettingsRepository)
 class SettingsRepositoryImpl implements SettingsRepository {
   final RemoteSettingsDataSource _remoteDataSource;
 

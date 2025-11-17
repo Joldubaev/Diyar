@@ -3,10 +3,12 @@ import 'package:diyar/core/network/error/failures.dart';
 import 'package:diyar/features/payments/presentation/presentation.dart';
 import 'package:equatable/equatable.dart';
 import 'package:diyar/features/payments/domain/domain.dart';
+import 'package:injectable/injectable.dart';
 
 part 'payment_event.dart';
 part 'payment_state.dart';
 
+@injectable
 class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
   final MegaCheckUseCase checkUseCase;
   final MegaInitiateUsecase initiateUseCase;

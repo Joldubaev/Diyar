@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/auth/domain/domain.dart';
-import 'package:diyar/injection_container.dart';
+import 'package:injectable/injectable.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:meta/meta.dart';
 import 'package:flutter/services.dart';
@@ -10,12 +10,17 @@ import 'package:local_auth/local_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 part 'sign_in_state.dart';
 
+@injectable
 class SignInCubit extends Cubit<SignInState> {
-  SignInCubit(this._authRepository) : super(SignInInitial());
+  SignInCubit(
+    this._authRepository,
+    this._localStorage,
+    this._localAuth,
+  ) : super(SignInInitial());
 
   final AuthRepository _authRepository;
-  final LocalStorage _localStorage = sl<LocalStorage>();
-  final LocalAuthentication _localAuth = LocalAuthentication();
+  final LocalStorage _localStorage;
+  final LocalAuthentication _localAuth;
 
   // 🔐 Вход
   Future<void> signIn(UserEntities model) async {

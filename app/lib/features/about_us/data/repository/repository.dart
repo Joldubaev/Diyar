@@ -1,6 +1,8 @@
 import 'package:diyar/features/about_us/data/data.dart';
 import 'package:diyar/features/about_us/domain/domain.dart';
+import 'package:injectable/injectable.dart';
 
+@LazySingleton(as: AboutUsRepository)
 class AboutUsRepositoryImpl implements AboutUsRepository {
   final AboutUsRemoteDataSource _dataSource;
 

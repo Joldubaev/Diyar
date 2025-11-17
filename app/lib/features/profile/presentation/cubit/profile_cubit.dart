@@ -3,9 +3,11 @@ import 'package:diyar/core/core.dart';
 import 'package:diyar/features/auth/auth.dart';
 import 'package:diyar/features/profile/profile.dart';
 import 'package:equatable/equatable.dart';
+import 'package:injectable/injectable.dart';
 
 part 'profile_state.dart';
 
+@injectable
 class ProfileCubit extends Cubit<ProfileState> {
   final ProfileRepository _userRepository;
   ProfileCubit(this._userRepository) : super(ProfileInitial());

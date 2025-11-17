@@ -2,9 +2,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:diyar/features/pick_up/domain/entities/pickup_order_entity.dart';
 import 'package:diyar/features/pick_up/domain/repositories/pick_up_repositories.dart';
+import 'package:injectable/injectable.dart';
 
 part 'pick_up_state.dart';
 
+@injectable
 class PickUpCubit extends Cubit<PickUpState> {
   final PickUpRepositories _pickUpRepository;
 

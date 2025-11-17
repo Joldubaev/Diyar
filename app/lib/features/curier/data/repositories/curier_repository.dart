@@ -1,7 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:diyar/core/network/error/failures.dart';
 import 'package:diyar/features/curier/curier.dart';
+import 'package:injectable/injectable.dart';
 
+@LazySingleton(as: CurierRepository)
 class CurierRepositoryImpl extends CurierRepository {
   final CurierDataSource dataSource;
 

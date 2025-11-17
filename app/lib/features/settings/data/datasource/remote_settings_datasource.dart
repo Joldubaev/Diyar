@@ -1,12 +1,14 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:diyar/core/core.dart';
+import 'package:injectable/injectable.dart';
 import '../models/timer_model.dart';
 
 abstract class RemoteSettingsDataSource {
  Future<Either<Failure, TimerModel>> getTimer();
 }
 
+@LazySingleton(as: RemoteSettingsDataSource)
 class RemoteSettingsDataSourceImpl implements RemoteSettingsDataSource {
   final Dio _dio;
 

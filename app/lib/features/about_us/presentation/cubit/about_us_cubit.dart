@@ -1,9 +1,11 @@
 import 'package:bloc/bloc.dart';
 import 'package:diyar/features/about_us/domain/domain.dart';
 import 'package:equatable/equatable.dart';
+import 'package:injectable/injectable.dart';
 
 part 'about_us_state.dart';
 
+@injectable
 class AboutUsCubit extends Cubit<AboutUsState> {
   AboutUsCubit(this._repository) : super(AboutUsInitial());
 

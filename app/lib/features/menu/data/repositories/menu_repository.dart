@@ -1,7 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:diyar/core/network/error/failures.dart';
 import 'package:diyar/features/menu/menu.dart';
+import 'package:injectable/injectable.dart';
 
+@LazySingleton(as: MenuRepository)
 class MenuRepositoryImpl implements MenuRepository {
   final MenuRemoteDataSource _remoteDataSource;
 

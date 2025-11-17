@@ -2,10 +2,12 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:diyar/features/curier/curier.dart';
 import 'package:diyar/features/curier/domain/domain.dart';
+import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
 
 part 'curier_state.dart';
 
+@injectable
 class CurierCubit extends Cubit<CurierState> {
   CurierCubit(this.curierRepository) : super(CurierInitial());
 

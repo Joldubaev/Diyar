@@ -1,7 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:diyar/core/network/error/failures.dart';
 import 'package:diyar/features/pick_up/pick_up.dart';
+import 'package:injectable/injectable.dart';
 
+@LazySingleton(as: PickUpRepositories)
 class PickUpRepository extends PickUpRepositories {
   final RemotePickUpDataSource remoteDataSource;
 

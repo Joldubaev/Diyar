@@ -3,7 +3,9 @@ import 'package:diyar/core/network/error/failures.dart';
 import 'package:diyar/features/payments/data/datasource/remote_payments_datasource.dart';
 import 'package:diyar/features/payments/data/models/model.dart';
 import 'package:diyar/features/payments/domain/domain.dart';
+import 'package:injectable/injectable.dart';
 
+@LazySingleton(as: PaymentsRepository)
 class PaymentsRepositoryImpl implements PaymentsRepository {
   final RemotePaymentsDatasource remotePaymentsDatasource;
 

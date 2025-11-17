@@ -3,11 +3,13 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/features.dart';
+import 'package:injectable/injectable.dart';
 
 abstract class AboutUsRemoteDataSource {
   Future<AboutUsModel> getAboutUs({required String type});
 }
 
+@LazySingleton(as: AboutUsRemoteDataSource)
 class AboutUsRemoteDataSourceImpl implements AboutUsRemoteDataSource {
   final Dio _dio;
   final LocalStorage _localStorage;

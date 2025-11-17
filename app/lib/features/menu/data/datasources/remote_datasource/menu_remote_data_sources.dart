@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/features.dart';
+import 'package:injectable/injectable.dart';
 
 abstract class MenuRemoteDataSource {
   Future<Either<Failure, CatergoryFoodModel>> getProducts({String? foodName});
@@ -10,6 +11,7 @@ abstract class MenuRemoteDataSource {
   Future<Either<Failure, List<CategoryModel>>> getFoodsCategory();
 }
 
+@LazySingleton(as: MenuRemoteDataSource)
 class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
   final Dio _dio;
   MenuRemoteDataSourceImpl(this._dio);

@@ -8,9 +8,11 @@ import 'package:diyar/features/home_content/domain/entities/sale_entity.dart';
 import 'package:diyar/features/home_content/domain/repositories/home_content_repository.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart'; // Нужен Dio для реализации datasource здесь (или в отдельном файле)
+import 'package:injectable/injectable.dart';
 
 // --- РЕАЛИЗАЦИЯ DATASOURCE (временно здесь, лучше в отдельном файле) ---
 // Используем код из старого home_remote_data_source.dart
+@LazySingleton(as: HomeContentRemoteDatasource)
 class HomeContentRemoteDatasourceImpl implements HomeContentRemoteDatasource {
   final Dio client;
 
@@ -57,6 +59,7 @@ class HomeContentRemoteDatasourceImpl implements HomeContentRemoteDatasource {
 // --- КОНЕЦ РЕАЛИЗАЦИИ DATASOURCE ---
 
 // --- РЕАЛИЗАЦИЯ РЕПОЗИТОРИЯ ---
+@LazySingleton(as: HomeContentRepository)
 class HomeContentRepositoryImpl implements HomeContentRepository {
   final HomeContentRemoteDatasource remoteDataSource;
   // final NetworkInfo networkInfo; // Если используете проверку сети

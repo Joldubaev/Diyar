@@ -10,6 +10,7 @@ import 'package:diyar/features/cart/data/datasources/cart_local_data_source.dart
 
 // const _boxName = 'cartBox'; // Defined locally, consider moving to DataSource
 
+// Не используем @LazySingleton здесь, так как регистрация идет через CartModule
 class CartRepositoryImpl implements CartRepository {
   final CartLocalDataSource _localDataSource;
   // Potentially add mappers here if needed

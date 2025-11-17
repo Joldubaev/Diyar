@@ -5,7 +5,9 @@ import 'package:diyar/features/auth/data/datasources/remote/auth_remote_data_sou
 import 'package:diyar/features/auth/data/datasources/local/auth_local_data_source.dart';
 import 'package:diyar/features/auth/data/models/user_model.dart';
 import 'package:diyar/features/auth/data/models/reset_password_model.dart';
+import 'package:injectable/injectable.dart';
 
+@LazySingleton(as: AuthRepository)
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
   final AuthLocalDataSource localDataSource;

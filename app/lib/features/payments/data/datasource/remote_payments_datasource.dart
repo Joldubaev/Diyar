@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/payments/data/models/model.dart';
 import 'package:diyar/features/payments/presentation/presentation.dart';
+import 'package:injectable/injectable.dart';
 
 abstract class RemotePaymentsDatasource {
   Future<Either<Failure, String>> checkPaymentMega(PaymentsModel model);
@@ -16,6 +17,7 @@ abstract class RemotePaymentsDatasource {
   Future<Either<Failure, QrCodeModel>> qrGenerate(int amount);
 }
 
+@LazySingleton(as: RemotePaymentsDatasource)
 class RemotePaymentsDatasourceImpl implements RemotePaymentsDatasource {
   final Dio dio;
 

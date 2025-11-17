@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:diyar/core/constants/api_const/api_const.dart';
 import 'package:diyar/features/map/data/models/price_model.dart';
+import 'package:injectable/injectable.dart';
 
 abstract class RemoteDataSource {
   Future<PriceModel> getDistrictPrice({
@@ -8,6 +9,7 @@ abstract class RemoteDataSource {
   });
 }
 
+@LazySingleton(as: RemoteDataSource)
 class RemoteDataSourceImpl implements RemoteDataSource {
   final Dio _dio;
 

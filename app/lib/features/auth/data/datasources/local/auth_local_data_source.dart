@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/shared/shared.dart';
+import 'package:injectable/injectable.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 abstract class AuthLocalDataSource {
@@ -15,6 +16,7 @@ abstract class AuthLocalDataSource {
   Future<void> setTokenToCache({String? refresh, required String access, String phone});
 }
 
+@LazySingleton(as: AuthLocalDataSource)
 class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   final LocalStorage prefs;
 

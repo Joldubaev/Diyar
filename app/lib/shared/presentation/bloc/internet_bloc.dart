@@ -3,19 +3,17 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:injectable/injectable.dart';
 
 part 'internet_event.dart';
 part 'internet_state.dart';
 
+@singleton
 class InternetBloc extends Bloc<InternetEvent, InternetState> {
-  InternetBloc._() : super(InternetInitial()) {
+  InternetBloc() : super(InternetInitial()) {
     on<NetworkObserve>(_observe);
     on<NetworkNotify>(_notifyStatus);
   }
-
-  static final InternetBloc _instance = InternetBloc._();
-
-  factory InternetBloc() => _instance;
 
   StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
 
