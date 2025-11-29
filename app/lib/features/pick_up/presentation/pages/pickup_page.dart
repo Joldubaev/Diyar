@@ -4,7 +4,6 @@ import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/order/presentation/widgets/widgets.dart';
 import 'package:diyar/features/pick_up/pick_up.dart';
 import 'package:diyar/features/profile/profile.dart';
-import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

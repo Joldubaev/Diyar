@@ -111,9 +111,9 @@ import 'package:diyar/features/profile/presentation/pages/security/security_page
     as _i38;
 import 'package:diyar/features/templates/presentation/pages/templates_page.dart'
     as _i45;
-import 'package:diyar/shared/presentation/pages/main_home/home_page.dart'
+import 'package:diyar/core/shared/presentation/pages/main_home/home_page.dart'
     as _i11;
-import 'package:diyar/shared/presentation/pages/main_home/main_page.dart'
+import 'package:diyar/core/shared/presentation/pages/main_home/main_page.dart'
     as _i12;
 import 'package:flutter/cupertino.dart' as _i55;
 import 'package:flutter/material.dart' as _i52;

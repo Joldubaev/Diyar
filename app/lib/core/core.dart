@@ -9,5 +9,7 @@ export 'router/routes.dart';
 export 'router/routes.gr.dart';
 export 'theme/theme.dart';
 export 'constants/constant.dart';
+export 'l10n/l10n.dart';
+export 'shared/shared.dart';
 
 
