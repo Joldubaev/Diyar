@@ -11,7 +11,13 @@ class OrderStatusModel with _$OrderStatusModel {
     String? status,
   }) = _OrderStatusModel;
 
-  factory OrderStatusModel.fromJson(Map<String, dynamic> json) => _$OrderStatusModelFromJson(json);
+  factory OrderStatusModel.fromJson(Map<String, dynamic> json) {
+    return OrderStatusModel(
+      orderNumber: (json['orderNumber'] as num?)?.toInt(),
+      // Fallback: проверяем оба ключа 'status' и 'orderStatus'
+      status: json['status'] as String? ?? json['orderStatus'] as String?,
+    );
+  }
 
   factory OrderStatusModel.fromEntity(OrderStatusEntity entity) => OrderStatusModel(
         orderNumber: entity.orderNumber,
