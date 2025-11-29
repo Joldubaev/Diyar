@@ -1,5 +1,5 @@
 import 'package:diyar/features/cart/cart.dart';
-import 'package:diyar/l10n/l10n.dart';
+import 'package:diyar/core/core.dart';
 import 'package:flutter/material.dart';
 
 class TotalPriceWidget extends StatelessWidget {

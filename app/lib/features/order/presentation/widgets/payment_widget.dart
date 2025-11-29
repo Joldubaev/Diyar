@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:diyar/l10n/l10n.dart';
+import 'package:diyar/core/core.dart';
 
 enum PaymentTypeDelivery { cash, online }
 

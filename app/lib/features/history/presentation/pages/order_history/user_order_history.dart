@@ -4,7 +4,6 @@ import 'package:diyar/features/active_order/active_order.dart';
 import 'package:diyar/features/curier/curier.dart';
 import 'package:diyar/features/history/history.dart';
 import 'package:diyar/features/history/presentation/widgets/error_widget.dart';
-import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

@@ -3,7 +3,6 @@ import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/cart/presentation/utils/cart_dialog_utils.dart';
 import 'package:diyar/features/features.dart';
 import 'package:diyar/features/settings/domain/entities/timer_entites.dart';
-import 'package:diyar/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

@@ -4,8 +4,6 @@ import 'core/core.dart';
 import 'features/app/cubit/remote_config_cubit.dart';
 import 'features/pick_up/pick_up.dart';
 import 'firebase_options.dart';
-import 'shared/presentation/bloc/internet_bloc.dart';
-import 'shared/presentation/cubit/popular_cubit.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'injection_container.dart' as di;
@@ -13,14 +11,12 @@ import 'features/cart/cart.dart';
 import 'features/cart/data/models/cart_item_model_hive_adapter.dart';
 import 'features/menu/data/models/food_model_hive_adapter.dart';
 import 'features/features.dart';
-import 'l10n/l10n.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'features/app/view/app_listener.dart';
-import 'shared/presentation/theme_cubit/theme_cubit.dart';
-import 'shared/presentation/pages/app_wrapper_connection_page.dart';
+import 'core/shared/presentation/pages/app_wrapper_connection_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
