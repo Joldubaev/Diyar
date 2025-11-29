@@ -1,41 +1,32 @@
 import 'package:diyar/features/home_content/domain/entities/sale_entity.dart';
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class SaleModel extends Equatable {
-  final String? id;
-  final String? name;
-  final String? description;
-  final String? photoLink;
-  final int? discount;
+part 'sale_model.freezed.dart';
+part 'sale_model.g.dart';
 
-  const SaleModel({
-    this.id,
-    this.name,
-    this.description,
-    this.photoLink,
-    this.discount,
-  });
+@freezed
+class SaleModel with _$SaleModel {
+  const factory SaleModel({
+    String? id,
+    String? name,
+    String? description,
+    String? photoLink,
+    int? discount,
+  }) = _SaleModel;
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'description': description,
-      'photoLink': photoLink,
-      'discount': discount,
-    };
-  }
+  factory SaleModel.fromJson(Map<String, dynamic> json) =>
+      _$SaleModelFromJson(json);
 
-  factory SaleModel.fromJson(Map<String, dynamic> json) {
-    return SaleModel(
-      id: json['id'] as String?,
-      name: json['name'] as String?,
-      description: json['description'] as String?,
-      photoLink: json['photoLink'] as String?,
-      discount: json['discount'] as int?,
-    );
-  }
+  factory SaleModel.fromEntity(SaleEntity entity) => SaleModel(
+        id: entity.id,
+        name: entity.name,
+        description: entity.description,
+        photoLink: entity.photoLink,
+        discount: entity.discount,
+      );
+}
 
+extension SaleModelX on SaleModel {
   SaleEntity toEntity() => SaleEntity(
         id: id,
         name: name,
@@ -45,7 +36,4 @@ class SaleModel extends Equatable {
         dateEnd: null,
         discount: discount,
       );
-
-  @override
-  List<Object?> get props => [id, name, description, photoLink, discount];
 }

@@ -1,49 +1,28 @@
 import 'package:diyar/features/order/domain/entities/entities.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class DistrictDataModel {
-  final String? id;
-  final String? name;
-  final dynamic price;
+part 'district_data_model.freezed.dart';
+part 'district_data_model.g.dart';
 
-  DistrictDataModel({
-    this.id,
-    this.name,
-    this.price,
-  });
-
-  DistrictDataModel copyWith({
+@freezed
+class DistrictDataModel with _$DistrictDataModel {
+  const factory DistrictDataModel({
     String? id,
     String? name,
     dynamic price,
-  }) =>
-      DistrictDataModel(
-        id: id ?? this.id,
-        name: name ?? this.name,
-        price: price ?? this.price,
-      );
+  }) = _DistrictDataModel;
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'price': price,
-    };
-  }
+  factory DistrictDataModel.fromJson(Map<String, dynamic> json) =>
+      _$DistrictDataModelFromJson(json);
+}
 
-  factory DistrictDataModel.fromJson(Map<String, dynamic> json) {
-    return DistrictDataModel(
-      id: json['id'],
-      name: json['name'],
-      price: json['price'],
-    );
-  }
-
+extension DistrictDataModelX on DistrictDataModel {
   DistrictEntity toEntity() {
     int parsedPrice;
     if (price is int) {
-      parsedPrice = price;
+      parsedPrice = price as int;
     } else if (price is String) {
-      parsedPrice = int.tryParse(price) ?? 0;
+      parsedPrice = int.tryParse(price as String) ?? 0;
     } else {
       parsedPrice = 0;
     }

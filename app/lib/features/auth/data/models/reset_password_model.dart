@@ -1,42 +1,32 @@
 import 'package:diyar/features/auth/domain/entities/reset_password_entity.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class ResetPasswordModel extends ResetPasswordEntity {
-  ResetPasswordModel({
-     super.phone,
-    super.newPassword,
-    super.code,
-  });
+part 'reset_password_model.freezed.dart';
+part 'reset_password_model.g.dart';
 
-  factory ResetPasswordModel.fromJson(Map<String, dynamic> json) {
-    return ResetPasswordModel(
-      phone: json['phone'] as String,
-      newPassword: json['newPassword'] as String?,
-      code: json['code'] as int?,
-    );
-  }
+@freezed
+class ResetPasswordModel with _$ResetPasswordModel {
+  const factory ResetPasswordModel({
+    String? phone,
+    String? newPassword,
+    int? code,
+  }) = _ResetPasswordModel;
 
-  Map<String, dynamic> toJson() {
-    return {
-      'phone': phone,
-      'newPassword': newPassword,
-      'code': code,
-    };
-  }
+  factory ResetPasswordModel.fromJson(Map<String, dynamic> json) =>
+      _$ResetPasswordModelFromJson(json);
 
-    factory ResetPasswordModel.fromEntity(ResetPasswordEntity entity) {
-    return ResetPasswordModel(
-      phone: entity.phone,
-      newPassword: entity.newPassword,
-      code: entity.code,
-    );
-  }
+  factory ResetPasswordModel.fromEntity(ResetPasswordEntity entity) =>
+      ResetPasswordModel(
+        phone: entity.phone,
+        newPassword: entity.newPassword,
+        code: entity.code,
+      );
+}
 
-
-  ResetPasswordEntity toEntity() {
-    return ResetPasswordEntity(
-      phone: phone,
-      newPassword: newPassword,
-      code: code,
-    );
-  }
+extension ResetPasswordModelX on ResetPasswordModel {
+  ResetPasswordEntity toEntity() => ResetPasswordEntity(
+        phone: phone,
+        newPassword: newPassword,
+        code: code,
+      );
 }

@@ -1,56 +1,37 @@
 import 'package:diyar/features/curier/domain/domain.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class GetUserModel {
-  final String? id;
-  final String? userName;
-  final String? email;
-  final String? phone;
-  final String? role;
+part 'get_user_moderl.freezed.dart';
+part 'get_user_moderl.g.dart';
 
-  GetUserModel({
-    this.id,
-    this.userName,
-    this.email,
-    this.phone,
-    this.role,
-  });
+@freezed
+class GetUserModel with _$GetUserModel {
+  const factory GetUserModel({
+    String? id,
+    String? userName,
+    String? email,
+    String? phone,
+    String? role,
+  }) = _GetUserModel;
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'userName': userName,
-      'email': email,
-      'phone': phone,
-      'role': role,
-    };
-  }
+  factory GetUserModel.fromJson(Map<String, dynamic> json) =>
+      _$GetUserModelFromJson(json);
 
-  factory GetUserModel.fromJson(Map<String, dynamic> map) {
-    return GetUserModel(
-      id: map['id'],
-      userName: map['userName'],
-      email: map['email'],
-      phone: map['phone'],
-      role: map['role'],
-    );
-  }
+  factory GetUserModel.fromEntity(GetUserEntity entity) => GetUserModel(
+        id: entity.id,
+        userName: entity.userName,
+        email: entity.email,
+        phone: entity.phone,
+        role: entity.role,
+      );
+}
 
-  factory GetUserModel.fromEntity(GetUserEntity entity) {
-    return GetUserModel(
-      id: entity.id,
-      userName: entity.userName,
-      email: entity.email,
-      phone: entity.phone,
-      role: entity.role,
-    );
-  }
-  GetUserEntity toEntity() {
-    return GetUserEntity(
-      id: id,
-      userName: userName,
-      email: email,
-      phone: phone,
-      role: role,
-    );
-  }
+extension GetUserModelX on GetUserModel {
+  GetUserEntity toEntity() => GetUserEntity(
+        id: id,
+        userName: userName,
+        email: email,
+        phone: phone,
+        role: role,
+      );
 }

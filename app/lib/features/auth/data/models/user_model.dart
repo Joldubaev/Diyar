@@ -1,67 +1,42 @@
 import 'package:diyar/features/auth/domain/entities/user_entities.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class UserModel {
-  final String phone;
-  final String? password;
-  final String? userName;
-  const UserModel({
-    required this.phone,
-    this.password,
-    this.userName,
-  });
+part 'user_model.freezed.dart';
+part 'user_model.g.dart';
 
-  UserModel copyWith({
+@freezed
+class UserModel with _$UserModel {
+  const factory UserModel({
     String? phone,
     String? password,
     String? userName,
-  }) {
-    return UserModel(
-      phone: phone ?? this.phone,
-      password: password ?? this.password,
-      userName: userName ?? this.userName,
-    );
-  }
+  }) = _UserModel;
 
-  factory UserModel.fromJson(Map<String, dynamic> json) {
-    return UserModel(
-      phone: json['phone'] as String,
-      password: json['password'] as String?,
-      userName: json['userName'] as String?,
-    );
-  }
+  factory UserModel.fromJson(Map<String, dynamic> json) =>
+      _$UserModelFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    return {
-      'phone': phone,
-      if (password != null) 'password': password,
-      if (userName != null) 'userName': userName,
-    };
-  }
+  factory UserModel.fromEntity(UserEntities entity) => UserModel(
+        phone: entity.phone,
+        password: entity.password,
+        userName: entity.userName,
+      );
+}
 
+extension UserModelX on UserModel {
   Map<String, dynamic> toRegister() => {
-        "userName": userName,
-        "phone": phone,
-        "password": password,
+        'userName': userName,
+        'phone': phone,
+        'password': password,
       };
 
   Map<String, dynamic> toLogin() => {
-        "phone": phone.toString(),
-        "password": password.toString(),
+        'phone': phone?.toString() ?? '',
+        'password': password?.toString() ?? '',
       };
 
-  factory UserModel.fromEntity(UserEntities entity) {
-    return UserModel(
-      phone: entity.phone,
-      password: entity.password,
-      userName: entity.userName,
-    );
-  }
-
-  UserEntities toEntity() {
-    return UserEntities(
-      phone: phone,
-      password: password,
-      userName: userName,
-    );
-  }
+  UserEntities toEntity() => UserEntities(
+        phone: phone ?? '',
+        password: password,
+        userName: userName,
+      );
 }

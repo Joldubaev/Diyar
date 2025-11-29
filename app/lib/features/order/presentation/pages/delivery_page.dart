@@ -154,7 +154,7 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
             _userName.text = profileState.userModel.userName ?? '';
           }
           if (_phoneController.text.isEmpty || _phoneController.text == '+996') {
-            _phoneController.text = profileState.userModel.phone;
+            _phoneController.text = profileState.userModel.phone ?? '';
           }
         }
       },

@@ -1,45 +1,28 @@
-// import 'dart:convert';
-// import 'package:diyar/features/menu/domain/domain.dart';
-// import 'message_model.dart';
+import 'package:diyar/features/menu/domain/domain.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-// CategoryModel menuModelFromJson(String str) => CategoryModel.fromJson(json.decode(str));
+part 'category_model.freezed.dart';
+part 'category_model.g.dart';
 
-// String menuModelToJson(CategoryModel data) => json.encode(data.toJson());
+@freezed
+class CategoryModel with _$CategoryModel {
+  const factory CategoryModel({
+    String? id,
+    String? name,
+  }) = _CategoryModel;
 
-// class CategoryModel {
-//   final int? code;
-//   final List<MessageModel>? message;
+  factory CategoryModel.fromJson(Map<String, dynamic> json) =>
+      _$CategoryModelFromJson(json);
 
-//   CategoryModel({
-//     this.code,
-//     this.message,
-//   });
+  factory CategoryModel.fromEntity(CategoryEntity entity) => CategoryModel(
+        id: entity.id,
+        name: entity.name,
+      );
+}
 
-//   Map<String, dynamic> toJson() {
-//     return {
-//       'code': code,
-//       'message': message?.map((x) => x.toJson()).toList(),
-//     };
-//   }
-
-//   factory CategoryModel.fromJson(Map<String, dynamic> map) {
-//     return CategoryModel(
-//       code: map['code']?.toInt(),
-//       message:
-//           map['message'] != null ? List<MessageModel>.from(map['message']?.map((x) => MessageModel.fromJson(x))) : null,
-//     );
-//   }
-
-//   factory CategoryModel.fromEntity(CategoryEntity entity) {
-//     return CategoryModel(
-//       code: entity.code,
-//       message: entity.message?.map((e) => MessageModel.fromEntity(e)).toList(),
-//     );
-//   }
-//   CategoryEntity toEntity() {
-//     return CategoryEntity(
-//       code: code,
-//       message: message?.map((e) => e.toEntity()).toList(),
-//     );
-//   }
-// }
+extension CategoryModelX on CategoryModel {
+  CategoryEntity toEntity() => CategoryEntity(
+        id: id ?? '',
+        name: name ?? '',
+      );
+}

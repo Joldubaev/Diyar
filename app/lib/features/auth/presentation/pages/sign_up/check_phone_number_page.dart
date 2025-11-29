@@ -48,85 +48,88 @@ class _CheckPhoneNumberPageState extends State<CheckPhoneNumberPage> {
         ),
         body: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 10,
+            padding: EdgeInsets.only(
+              left: 20,
+              right: 20,
+              top: 10,
             ),
             child: Form(
               key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const SizedBox(height: 40),
-                  Center(
-                    child: Image.asset(
-                      'assets/images/app_logo.png',
-                      width: 120,
-                      height: 120,
-                      color: theme.colorScheme.primary,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const SizedBox(height: 40),
+                    Center(
+                      child: Image.asset(
+                        'assets/images/app_logo.png',
+                        width: 120,
+                        height: 120,
+                        color: theme.colorScheme.primary,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 40),
-                  const Text(
-                    'Введите номер телефона',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                    const SizedBox(height: 40),
+                    const Text(
+                      'Введите номер телефона',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'Мы отправим код подтверждения',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey,
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Мы отправим код подтверждения',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 32),
-                  CustomInputWidget(
-                    hintText: '+996',
-                    filledColor: theme.colorScheme.surface,
-                    controller: _phoneController,
-                    inputType: TextInputType.phone,
-                    phoneFormatType: PhoneFormatType.withPlus,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Введите номер телефона';
-                      } else if (value.length < 10) {
-                        return 'Номер должен содержать 10 цифр';
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 10),
-                  TextCheckButton(
-                    text: 'Уже есть аккаунт?',
-                    route: 'Войти',
-                    onPressed: () => context.pushRoute(const SignInRoute()),
-                  ),
-                  Spacer(),
-                  BlocBuilder<SignUpCubit, SignUpState>(
-                    builder: (context, state) {
-                      return SubmitButtonWidget(
-                        isLoading: state is CheckPhoneLoading,
-                        bgColor: theme.colorScheme.primary,
-                        onTap: state is CheckPhoneLoading
-                            ? LoadingAdaptive.new
-                            : () {
-                                if (_formKey.currentState?.validate() ?? false) {
-                                  context.read<SignUpCubit>().checkPhoneNumber(
-                                        _phoneController.text,
-                                      );
-                                }
-                              },
-                        title: 'Продолжить',
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 40),
-                ],
+                    const SizedBox(height: 32),
+                    CustomInputWidget(
+                      hintText: '+996',
+                      filledColor: theme.colorScheme.surface,
+                      controller: _phoneController,
+                      inputType: TextInputType.phone,
+                      phoneFormatType: PhoneFormatType.withPlus,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Введите номер телефона';
+                        } else if (value.length < 10) {
+                          return 'Номер должен содержать 10 цифр';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    TextCheckButton(
+                      text: 'Уже есть аккаунт?',
+                      route: 'Войти',
+                      onPressed: () => context.pushRoute(const SignInRoute()),
+                    ),
+                    const SizedBox(height: 40),
+                    BlocBuilder<SignUpCubit, SignUpState>(
+                      builder: (context, state) {
+                        return SubmitButtonWidget(
+                          isLoading: state is CheckPhoneLoading,
+                          bgColor: theme.colorScheme.primary,
+                          onTap: state is CheckPhoneLoading
+                              ? LoadingAdaptive.new
+                              : () {
+                                  if (_formKey.currentState?.validate() ?? false) {
+                                    context.read<SignUpCubit>().checkPhoneNumber(
+                                          _phoneController.text,
+                                        );
+                                  }
+                                },
+                          title: 'Продолжить',
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 40),
+                  ],
+                ),
               ),
             ),
           ),

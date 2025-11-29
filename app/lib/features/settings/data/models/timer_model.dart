@@ -1,63 +1,34 @@
-import '../../domain/entities/timer_entites.dart';
+import 'package:diyar/features/settings/domain/entities/timer_entites.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class TimerModel {
-  final String? startTime;
-  final String? endTime;
-  final bool? isTechnicalWork;
-  final String? serverTime;
+part 'timer_model.freezed.dart';
+part 'timer_model.g.dart';
 
-  TimerModel({
-    this.startTime,
-    this.endTime,
-    this.isTechnicalWork,
-    this.serverTime,
-  });
-
-  TimerModel copyWith({
+@freezed
+class TimerModel with _$TimerModel {
+  const factory TimerModel({
     String? startTime,
     String? endTime,
     bool? isTechnicalWork,
     String? serverTime,
-  }) =>
-      TimerModel(
-        startTime: startTime ?? this.startTime,
-        endTime: endTime ?? this.endTime,
-        isTechnicalWork: isTechnicalWork ?? this.isTechnicalWork,
-        serverTime: serverTime ?? this.serverTime,
+  }) = _TimerModel;
+
+  factory TimerModel.fromJson(Map<String, dynamic> json) =>
+      _$TimerModelFromJson(json);
+
+  factory TimerModel.fromEntity(TimerEntites entity) => TimerModel(
+        startTime: entity.startTime,
+        endTime: entity.endTime,
+        isTechnicalWork: entity.isTechnicalWork,
+        serverTime: entity.serverTime,
       );
+}
 
-  factory TimerModel.fromJson(Map<String, dynamic> json) {
-    return TimerModel(
-      startTime: json['startTime'] as String?,
-      endTime: json['endTime'] as String?,
-      isTechnicalWork: json['isTechnicalWork'] as bool?,
-      serverTime: json['serverTime'] as String?,
-    );
-  }
-  Map<String, dynamic> toJson() {
-    return {
-      'startTime': startTime,
-      'endTime': endTime,
-      'isTechnicalWork': isTechnicalWork,
-      'serverTime': serverTime,
-    };
-  }
-
-  TimerModel fromEntity(TimerEntites entity) {
-    return TimerModel(
-      startTime: entity.startTime,
-      endTime: entity.endTime,
-      isTechnicalWork: entity.isTechnicalWork,
-      serverTime: entity.serverTime,
-    );
-  }
-
-  TimerEntites toEntity() {
-    return TimerEntites(
-      startTime: startTime,
-      endTime: endTime,
-      isTechnicalWork: isTechnicalWork,
-      serverTime: serverTime,
-    );
-  }
+extension TimerModelX on TimerModel {
+  TimerEntites toEntity() => TimerEntites(
+        startTime: startTime,
+        endTime: endTime,
+        isTechnicalWork: isTechnicalWork,
+        serverTime: serverTime,
+      );
 }

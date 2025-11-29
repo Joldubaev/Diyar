@@ -4,6 +4,7 @@ import 'package:injectable/injectable.dart';
 import '../../domain/domain.dart';
 import '../../domain/entities/timer_entites.dart';
 import '../datasource/remote_settings_datasource.dart';
+import '../models/timer_model.dart';
 
 @LazySingleton(as: SettingsRepository)
 class SettingsRepositoryImpl implements SettingsRepository {

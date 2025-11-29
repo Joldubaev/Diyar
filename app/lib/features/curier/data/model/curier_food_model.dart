@@ -1,44 +1,30 @@
 import 'package:diyar/features/curier/domain/domain.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class CurierFoodModel {
-  final int? quantity;
-  final String? name;
-  final int? price;
+part 'curier_food_model.freezed.dart';
+part 'curier_food_model.g.dart';
 
-  CurierFoodModel({
-    this.quantity,
-    this.name,
-    this.price,
-  });
+@freezed
+class CurierFoodModel with _$CurierFoodModel {
+  const factory CurierFoodModel({
+    int? quantity,
+    String? name,
+    int? price,
+  }) = _CurierFoodModel;
 
-  Map<String, dynamic> toJson() {
-    return {
-      'quantity': quantity,
-      'name': name,
-      'price': price,
-    };
-  }
+  factory CurierFoodModel.fromJson(Map<String, dynamic> json) => _$CurierFoodModelFromJson(json);
 
-  factory CurierFoodModel.fromJson(Map<String, dynamic> map) {
-    return CurierFoodModel(
-      quantity: map['quantity']?.toInt(),
-      name: map['name'],
-      price: map['price']?.toInt(),
-    );
-  }
+  factory CurierFoodModel.fromEntity(CurierFoodEntity entity) => CurierFoodModel(
+        quantity: entity.quantity,
+        name: entity.name,
+        price: entity.price,
+      );
+}
 
-  factory CurierFoodModel.fromEntity(CurierFoodEntity entity) {
-    return CurierFoodModel(
-      quantity: entity.quantity,
-      name: entity.name,
-      price: entity.price,
-    );
-  }
-  CurierFoodEntity toEntity() {
-    return CurierFoodEntity(
-      quantity: quantity,
-      name: name,
-      price: price,
-    );
-  }
+extension CurierFoodModelX on CurierFoodModel {
+  CurierFoodEntity toEntity() => CurierFoodEntity(
+        quantity: quantity,
+        name: name,
+        price: price,
+      );
 }

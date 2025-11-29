@@ -47,7 +47,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           await _localDataSource.setTokenToCache(
             refresh: refreshToken,
             access: accessToken,
-            phone: user.phone,
+            phone: user.phone ?? '',
           );
 
           log('[LOGIN] Токены успешно сохранены в кэш');
