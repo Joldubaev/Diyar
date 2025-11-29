@@ -1,27 +1,15 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class TokenModel extends Equatable {
-  const TokenModel({
-    required this.role,
-    required this.refreshToken,
-    required this.accessToken,
-  });
-  final String role;
-  final String refreshToken;
-  final String accessToken;
+part 'token_model.freezed.dart';
+part 'token_model.g.dart';
 
-  factory TokenModel.fromJson(Map<String, dynamic> json) => TokenModel(
-        refreshToken: json["refreshToken"] ?? '',
-        accessToken: json["accessToken"] ?? '',
-        role: json["role"] ?? '',
-      );
+@freezed
+class TokenModel with _$TokenModel {
+  const factory TokenModel({
+    required String role,
+    required String refreshToken,
+    required String accessToken,
+  }) = _TokenModel;
 
-  Map<String, dynamic> toJson() => {
-        "refreshToken": refreshToken,
-        "accessToken": accessToken,
-        "role": role,
-      };
-
-  @override
-  List<Object?> get props => [role, refreshToken, accessToken];
+  factory TokenModel.fromJson(Map<String, dynamic> json) => _$TokenModelFromJson(json);
 }

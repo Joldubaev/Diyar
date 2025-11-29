@@ -66,7 +66,6 @@ class _SignUpFormState extends State<SignUpForm> {
       child: Form(
         key: _formKey,
         child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           children: [
             Image.asset(
               'assets/images/app_logo.png',

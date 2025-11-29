@@ -10,6 +10,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'injection_container.dart' as di;
 import 'features/cart/cart.dart';
+import 'features/cart/data/models/cart_item_model_hive_adapter.dart';
+import 'features/menu/data/models/food_model_hive_adapter.dart';
 import 'features/features.dart';
 import 'l10n/l10n.dart';
 import 'package:flutter/services.dart';

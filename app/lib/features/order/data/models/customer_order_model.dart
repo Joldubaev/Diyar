@@ -1,47 +1,35 @@
 import 'package:diyar/features/features.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class CustomerOrderModel {
-  final String? id;
-  final List<FoodModel>? foods;
-  final String? address;
-  final String? status;
+part 'customer_order_model.freezed.dart';
+part 'customer_order_model.g.dart';
 
-  CustomerOrderModel({this.id, this.foods, this.address, this.status});
+@freezed
+class CustomerOrderModel with _$CustomerOrderModel {
+  const factory CustomerOrderModel({
+    String? id,
+    List<FoodModel>? foods,
+    String? address,
+    String? status,
+  }) = _CustomerOrderModel;
 
-  factory CustomerOrderModel.fromJson(Map<String, dynamic> json) {
-    return CustomerOrderModel(
-      id: json['id'],
-      foods: json['foods'] != null
-          ? (json['foods'] as List).map((i) => FoodModel.fromJson(i)).toList()
-          : null,
-      address: json['address'],
-      status: json['status'],
-    );
-  }
+  factory CustomerOrderModel.fromJson(Map<String, dynamic> json) =>
+      _$CustomerOrderModelFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'foods': foods?.map((e) => e.toJson()).toList(),
-      'address': address,
-      'status': status,
-    };
-  }
+  factory CustomerOrderModel.fromEntity(CustomerOrderEntity entity) =>
+      CustomerOrderModel(
+        id: entity.id,
+        foods: entity.foods?.map((foodEntity) => FoodModel.fromEntity(foodEntity)).toList(),
+        address: entity.address,
+        status: entity.status,
+      );
+}
 
-  factory CustomerOrderModel.fromEntity(CustomerOrderEntity entity) {
-    return CustomerOrderModel(
-      id: entity.id,
-      foods: entity.foods?.map((foodEntity) => FoodModel.fromEntity(foodEntity)).toList(),
-      address: entity.address,
-      status: entity.status,
-    );
-  }
-  CustomerOrderEntity toEntity() {
-    return CustomerOrderEntity(
-      id: id,
-      foods: foods?.map((foodModel) => foodModel.toEntity()).toList(),
-      address: address,
-      status: status,
-    );
-  }
+extension CustomerOrderModelX on CustomerOrderModel {
+  CustomerOrderEntity toEntity() => CustomerOrderEntity(
+        id: id,
+        foods: foods?.map((foodModel) => foodModel.toEntity()).toList(),
+        address: address,
+        status: status,
+      );
 }

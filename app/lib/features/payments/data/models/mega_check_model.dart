@@ -1,47 +1,28 @@
 import 'package:diyar/features/payments/domain/domain.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class MegaCheckModel {
-  final int? commission;
-  final int? amount;
+part 'mega_check_model.freezed.dart';
+part 'mega_check_model.g.dart';
 
-  MegaCheckModel({
-    this.commission,
-    this.amount,
-  });
-
-  MegaCheckModel copyWith({
+@freezed
+class MegaCheckModel with _$MegaCheckModel {
+  const factory MegaCheckModel({
     int? commission,
     int? amount,
-  }) =>
-      MegaCheckModel(
-        commission: commission ?? this.commission,
-        amount: amount ?? this.amount,
+  }) = _MegaCheckModel;
+
+  factory MegaCheckModel.fromJson(Map<String, dynamic> json) =>
+      _$MegaCheckModelFromJson(json);
+
+  factory MegaCheckModel.fromEntity(MegaCheckEntity entity) => MegaCheckModel(
+        commission: entity.commission,
+        amount: entity.amount,
       );
+}
 
-  Map<String, dynamic> toJson() {
-    return {
-      'commission': commission,
-      'amount': amount,
-    };
-  }
-
-  factory MegaCheckModel.fromJson(Map<String, dynamic> map) {
-    return MegaCheckModel(
-      commission: map['commission']?.toInt(),
-      amount: map['amount']?.toInt(),
-    );
-  }
-
-  factory MegaCheckModel.fromEntity(MegaCheckEntity entity) {
-    return MegaCheckModel(
-      commission: entity.commission,
-      amount: entity.amount,
-    );
-  }
-  MegaCheckEntity toEntity() {
-    return MegaCheckEntity(
-      commission: commission,
-      amount: amount,
-    );
-  }
+extension MegaCheckModelX on MegaCheckModel {
+  MegaCheckEntity toEntity() => MegaCheckEntity(
+        commission: commission,
+        amount: amount,
+      );
 }
