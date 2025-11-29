@@ -15,7 +15,8 @@ class CartItemModelAdapter extends TypeAdapter<CartItemModel> {
 
   @override
   void write(BinaryWriter writer, CartItemModel obj) {
-    final jsonString = jsonEncode(obj.toJson());
+    // Используем кастомный toJson для обратной совместимости с ключом 'price'
+    final jsonString = jsonEncode(obj.toJsonCustom());
     writer.writeString(jsonString);
   }
 }
