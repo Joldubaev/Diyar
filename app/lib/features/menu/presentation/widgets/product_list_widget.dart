@@ -1,7 +1,5 @@
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/cart.dart';
-import 'package:diyar/features/menu/domain/entities/category_food_entity.dart';
-import 'package:diyar/features/menu/domain/entities/food_entity.dart';
 import 'package:diyar/features/menu/presentation/bloc/menu_bloc.dart'; // Import MenuBloc and States
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,9 +24,6 @@ class ProductsList extends StatefulWidget {
 }
 
 class _ProductsListState extends State<ProductsList> {
-  CategoryFoodEntity? categoryFood;
-  List<FoodEntity> foods = [];
-
   @override
   Widget build(BuildContext context) {
     // Combine BlocBuilders: First for Menu, then for Cart inside
@@ -40,51 +35,54 @@ class _ProductsListState extends State<ProductsList> {
         if (menuState is GetProductsFailure) {
           return Center(child: Text('Ошибка загрузки продуктов: ${menuState.message}'));
         }
-        if (menuState is GetProductsLoaded && menuState.foods.isNotEmpty) {
-          categoryFood = menuState.foods.first;
-          foods = categoryFood?.foodModels ?? [];
+        if (menuState is GetProductsLoaded) {
+          if (menuState.foods.isEmpty) {
+            return const Center(child: Text('Нет продуктов в этой категории'));
+          }
 
-          if ((foods).isEmpty) {
+          final categoryFood = menuState.foods.first;
+          final foods = categoryFood.foodModels;
+
+          if (foods.isEmpty) {
             return const Center(child: Text('Нет продуктов в этой категории'));
           }
 
           // Now use BlocBuilder for Cart state
-        }
-        return foods.isEmpty
-            ? Center(
-                child: Text("Продукты не найдено"),
-              )
-            : BlocBuilder<CartBloc, CartState>(
-                builder: (context, cartState) {
-                  List<CartItemEntity> cartItems = [];
-                  if (cartState is CartLoaded) {
-                    cartItems = cartState.items;
-                  }
-                  // Build grid regardless of cart state, using quantity 0 if not loaded/found
-                  return GridView.builder(
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 10,
-                      crossAxisSpacing: 10,
-                      childAspectRatio: 0.80,
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                    itemCount: foods.length,
-                    itemBuilder: (context, index) {
-                      final food = foods[index];
-                      // Find quantity from current cart state
-                      final cartItem = cartItems.firstWhere(
-                        (element) => element.food?.id == food.id,
-                        orElse: () => CartItemEntity(food: food, quantity: 0),
-                      );
-                      return ProductItemWidget(
-                        food: food,
-                        quantity: cartItem.quantity ?? 0,
-                      );
-                    },
+          return BlocBuilder<CartBloc, CartState>(
+            builder: (context, cartState) {
+              List<CartItemEntity> cartItems = [];
+              if (cartState is CartLoaded) {
+                cartItems = cartState.items;
+              }
+              // Build grid regardless of cart state, using quantity 0 if not loaded/found
+              return GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 10,
+                  crossAxisSpacing: 10,
+                  childAspectRatio: 0.80,
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                itemCount: foods.length,
+                itemBuilder: (context, index) {
+                  final food = foods[index];
+                  // Find quantity from current cart state
+                  final cartItem = cartItems.firstWhere(
+                    (element) => element.food?.id == food.id,
+                    orElse: () => CartItemEntity(food: food, quantity: 0),
+                  );
+                  return ProductItemWidget(
+                    food: food,
+                    quantity: cartItem.quantity ?? 0,
                   );
                 },
               );
+            },
+          );
+        }
+
+        // Если состояние не GetProductsLoaded, показываем пустой экран
+        return const Center(child: Text('Нет продуктов в этой категории'));
       },
     );
   }
