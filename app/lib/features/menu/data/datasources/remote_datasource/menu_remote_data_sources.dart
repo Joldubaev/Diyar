@@ -53,7 +53,9 @@ class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
       );
 
       if (res.data['code'] == 200) {
-        return Right(CatergoryFoodModel.fromJson(res.data as Map<String, dynamic>));
+        final messageList = res.data['message'] as List;
+        final foods = messageList.map((e) => FoodModel.fromJson(e as Map<String, dynamic>)).toList();
+        return Right(CatergoryFoodModel(foodModels: foods));
       }
       return const Left(Failure('Ошибка при получении блюд'));
     } catch (e) {

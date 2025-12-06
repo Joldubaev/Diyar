@@ -119,6 +119,15 @@ class _MenuPageState extends State<MenuPage> with SingleTickerProviderStateMixin
                 backgroundColor: Colors.red,
               ),
             );
+          } else if (state is MenuInitial) {
+            // Когда состояние очищается (например, после поиска), загружаем продукты для текущей категории
+            if (categories.isNotEmpty &&
+                _activeIndex.value < categories.length &&
+                categories[_activeIndex.value].name != null) {
+              context.read<MenuBloc>().add(
+                    GetProductsEvent(foodName: categories[_activeIndex.value].name!),
+                  );
+            }
           }
         },
         builder: (context, state) {
