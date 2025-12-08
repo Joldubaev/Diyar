@@ -17,116 +17,142 @@ import 'package:local_auth/local_auth.dart' as _i152;
 import 'package:package_info_plus/package_info_plus.dart' as _i655;
 import 'package:shared_preferences/shared_preferences.dart' as _i460;
 
-import '../core.dart' as _i156;
-import '../remote_config/diyar_remote_config.dart' as _i413;
-import '../../features/about_us/data/data.dart' as _i197;
+import '../../features/about_us/data/data.dart' as _i798;
 import '../../features/about_us/data/remote_datasource/about_us_remote_datasource.dart'
-    as _i669;
-import '../../features/about_us/data/repository/repository.dart' as _i1060;
-import '../../features/about_us/domain/domain.dart' as _i494;
-import '../../features/about_us/presentation/cubit/about_us_cubit.dart' as _i776;
-import '../../features/active_order/data/data.dart' as _i373;
+    as _i243;
+import '../../features/about_us/data/repository/repository.dart' as _i471;
+import '../../features/about_us/domain/domain.dart' as _i168;
+import '../../features/about_us/presentation/cubit/about_us_cubit.dart'
+    as _i573;
+import '../../features/active_order/data/data.dart' as _i311;
 import '../../features/active_order/data/datasource/remote_active_order_datasource.dart'
-    as _i937;
+    as _i283;
 import '../../features/active_order/data/repository/active_order_repository.dart'
-    as _i44;
-import '../../features/active_order/domain/domain.dart' as _i679;
+    as _i243;
+import '../../features/active_order/domain/domain.dart' as _i74;
 import '../../features/active_order/presentation/cubit/active_order_cubit.dart'
-    as _i297;
-import '../../features/app/cubit/remote_config_cubit.dart' as _i239;
+    as _i60;
+import '../../features/app/cubit/remote_config_cubit.dart' as _i122;
 import '../../features/auth/data/datasources/local/auth_local_data_source.dart'
-    as _i148;
+    as _i835;
 import '../../features/auth/data/datasources/remote/auth_remote_data_source.dart'
-    as _i236;
-import '../../features/auth/data/repositories/auth_repository.dart' as _i243;
-import '../../features/auth/domain/domain.dart' as _i968;
-import '../../features/auth/presentation/cubit/sign_in/sign_in_cubit.dart' as _i89;
+    as _i520;
+import '../../features/auth/data/datasources/remote/auth_remote_datasource_impl.dart'
+    as _i415;
+import '../../features/auth/data/repositories/auth_repository.dart' as _i573;
+import '../../features/auth/domain/domain.dart' as _i140;
+import '../../features/auth/domain/usecases/authenticate_with_biometrics_usecase.dart'
+    as _i349;
+import '../../features/auth/domain/usecases/check_biometrics_availability_usecase.dart'
+    as _i35;
+import '../../features/auth/domain/usecases/refresh_token_if_needed_usecase.dart'
+    as _i550;
+import '../../features/auth/domain/usecases/verify_sms_code_and_handle_first_launch_usecase.dart'
+    as _i952;
+import '../../features/auth/presentation/cubit/sign_in/sign_in_cubit.dart'
+    as _i302;
 import '../../features/auth/presentation/cubit/sign_up/sign_up_cubit.dart'
-    as _i760;
-import '../../features/bonuses/bonuses.dart' as _i499;
-import '../../features/bonuses/data/repository/bonuses_repository.dart' as _i773;
-import '../../features/bonuses/presentation/cubit/bonuses_cubit.dart' as _i591;
-import '../../features/cart/data/cart_module.dart' as _i214;
-import '../../features/cart/data/datasources/cart_local_data_source.dart' as _i502;
-import '../../features/cart/domain/repository/cart_repository.dart' as _i491;
-import '../../features/cart/presentation/bloc/cart_bloc.dart' as _i421;
-import '../../features/curier/curier.dart' as _i450;
-import '../../features/curier/data/datasource/curier_data_source.dart' as _i322;
-import '../../features/curier/data/repositories/curier_repository.dart' as _i53;
-import '../../features/curier/presentation/cubit/curier_cubit.dart' as _i800;
+    as _i781;
+import '../../features/bonuses/bonuses.dart' as _i806;
+import '../../features/bonuses/data/repository/bonuses_repository.dart'
+    as _i275;
+import '../../features/bonuses/presentation/cubit/bonuses_cubit.dart' as _i0;
+import '../../features/cart/data/cart_module.dart' as _i979;
+import '../../features/cart/data/datasources/cart_local_data_source.dart'
+    as _i706;
+import '../../features/cart/domain/repository/cart_repository.dart' as _i26;
+import '../../features/cart/presentation/bloc/cart_bloc.dart' as _i517;
+import '../../features/curier/curier.dart' as _i566;
+import '../../features/curier/data/datasource/curier_data_source.dart' as _i614;
+import '../../features/curier/data/repositories/curier_repository.dart'
+    as _i537;
+import '../../features/curier/presentation/cubit/curier_cubit.dart' as _i110;
 import '../../features/history/data/data_source/history_re_datasource.dart'
-    as _i339;
+    as _i49;
 import '../../features/history/data/repositories/history_repositories.dart'
-    as _i165;
-import '../../features/history/domain/domain.dart' as _i283;
-import '../../features/history/history.dart' as _i539;
-import '../../features/history/presentation/cubit/history_cubit.dart' as _i791;
+    as _i178;
+import '../../features/history/domain/domain.dart' as _i408;
+import '../../features/history/history.dart' as _i926;
+import '../../features/history/presentation/cubit/history_cubit.dart' as _i232;
 import '../../features/home_content/data/datasource/home_content_remote_datasource.dart'
-    as _i553;
+    as _i521;
 import '../../features/home_content/data/datasource/home_content_repository_impl.dart'
-    as _i753;
+    as _i347;
 import '../../features/home_content/domain/repositories/home_content_repository.dart'
-    as _i622;
-import '../../features/home_content/domain/usecases/get_news.dart' as _i371;
-import '../../features/home_content/domain/usecases/get_sales.dart' as _i626;
+    as _i477;
+import '../../features/home_content/domain/usecases/get_news.dart' as _i31;
+import '../../features/home_content/domain/usecases/get_sales.dart' as _i608;
 import '../../features/home_content/presentation/cubit/home_content_cubit.dart'
-    as _i1025;
-import '../../features/map/data/datasource/remote_datasource.dart' as _i294;
-import '../../features/map/data/repositories/price_repository.dart' as _i188;
-import '../../features/map/data/repositories/yandex_service.dart' as _i750;
-import '../../features/map/presentation/cubit/user_map_cubit.dart' as _i368;
+    as _i812;
+import '../../features/map/data/datasource/remote_datasource.dart' as _i337;
+import '../../features/map/data/repositories/price_repository.dart' as _i659;
+import '../../features/map/data/repositories/yandex_service.dart' as _i835;
+import '../../features/map/presentation/cubit/user_map_cubit.dart' as _i661;
 import '../../features/menu/data/datasources/remote_datasource/menu_remote_data_sources.dart'
-    as _i223;
-import '../../features/menu/data/repositories/menu_repository.dart' as _i527;
-import '../../features/menu/domain/domain.dart' as _i728;
-import '../../features/menu/menu.dart' as _i708;
-import '../../features/menu/presentation/bloc/menu_bloc.dart' as _i49;
+    as _i433;
+import '../../features/menu/data/repositories/menu_repository.dart' as _i1024;
+import '../../features/menu/domain/domain.dart' as _i872;
+import '../../features/menu/menu.dart' as _i660;
+import '../../features/menu/presentation/bloc/menu_bloc.dart' as _i395;
 import '../../features/order/data/datasources/order_remote_datasource.dart'
-    as _i1010;
-import '../../features/order/data/repository/order_repository.dart' as _i276;
-import '../../features/order/domain/repositories/order_repositories.dart' as _i405;
-import '../../features/order/presentation/cubit/order_cubit.dart' as _i767;
+    as _i773;
+import '../../features/order/data/repository/order_repository.dart' as _i576;
+import '../../features/order/domain/repositories/order_repositories.dart'
+    as _i758;
+import '../../features/order/presentation/cubit/order_cubit.dart' as _i304;
 import '../../features/payments/data/datasource/remote_payments_datasource.dart'
-    as _i922;
-import '../../features/payments/data/repository/payments_repository.dart' as _i579;
-import '../../features/payments/domain/domain.dart' as _i1055;
+    as _i1005;
+import '../../features/payments/data/repository/payments_repository.dart'
+    as _i944;
+import '../../features/payments/domain/domain.dart' as _i838;
 import '../../features/payments/domain/usecase/mbank_confirm_usecase.dart'
-    as _i383;
+    as _i427;
 import '../../features/payments/domain/usecase/mbank_initiate_usecase.dart'
-    as _i725;
-import '../../features/payments/domain/usecase/mbank_status_usecase.dart' as _i382;
-import '../../features/payments/domain/usecase/mega_check_usecase.dart' as _i308;
+    as _i985;
+import '../../features/payments/domain/usecase/mbank_status_usecase.dart'
+    as _i134;
+import '../../features/payments/domain/usecase/mega_check_usecase.dart'
+    as _i283;
 import '../../features/payments/domain/usecase/mega_initiate_usecase.dart'
-    as _i394;
-import '../../features/payments/domain/usecase/mega_status_usecase.dart' as _i861;
+    as _i982;
+import '../../features/payments/domain/usecase/mega_status_usecase.dart'
+    as _i561;
 import '../../features/payments/domain/usecase/qr_check_status_usecase.dart'
-    as _i417;
-import '../../features/payments/domain/usecase/qr_code_usecase.dart' as _i381;
-import '../../features/payments/payments.dart' as _i721;
-import '../../features/payments/presentation/bloc/payment_bloc.dart' as _i488;
+    as _i286;
+import '../../features/payments/domain/usecase/qr_code_usecase.dart' as _i299;
+import '../../features/payments/payments.dart' as _i971;
+import '../../features/payments/presentation/bloc/payment_bloc.dart' as _i849;
 import '../../features/pick_up/data/datasource/remote_pick_up_datasource.dart'
-    as _i987;
-import '../../features/pick_up/data/repository/pick_up_repository.dart' as _i414;
+    as _i39;
+import '../../features/pick_up/data/repository/pick_up_repository.dart'
+    as _i123;
 import '../../features/pick_up/domain/repositories/pick_up_repositories.dart'
-    as _i698;
-import '../../features/pick_up/pick_up.dart' as _i31;
-import '../../features/pick_up/presentation/cubit/pick_up_cubit.dart' as _i13;
+    as _i292;
+import '../../features/pick_up/pick_up.dart' as _i54;
+import '../../features/pick_up/presentation/cubit/pick_up_cubit.dart' as _i370;
 import '../../features/profile/data/datasources/profile_remote_data_source.dart'
-    as _i1053;
-import '../../features/profile/data/repositories/profile_repository.dart' as _i537;
-import '../../features/profile/presentation/cubit/profile_cubit.dart' as _i300;
-import '../../features/profile/profile.dart' as _i443;
+    as _i847;
+import '../../features/profile/data/repositories/profile_repository.dart'
+    as _i361;
+import '../../features/profile/presentation/cubit/profile_cubit.dart' as _i36;
+import '../../features/profile/profile.dart' as _i315;
 import '../../features/settings/data/datasource/remote_settings_datasource.dart'
-    as _i187;
-import '../../features/settings/data/repository/settings_repository.dart' as _i34;
-import '../../features/settings/domain/domain.dart' as _i498;
+    as _i300;
+import '../../features/settings/data/repository/settings_repository.dart'
+    as _i87;
+import '../../features/settings/domain/domain.dart' as _i879;
 import '../../features/settings/domain/repositories/settings_repositories.dart'
-    as _i259;
-import '../../features/settings/presentation/cubit/settings_cubit.dart' as _i692;
-import '../../features/templates/presentation/cubit/templates_cubit.dart' as _i738;
+    as _i635;
+import '../../features/settings/presentation/cubit/settings_cubit.dart'
+    as _i792;
+import '../../features/templates/presentation/cubit/templates_cubit.dart'
+    as _i2;
+import '../core.dart' as _i351;
+import '../remote_config/diyar_remote_config.dart' as _i1020;
 import '../shared/presentation/bloc/internet_bloc.dart' as _i231;
 import '../shared/presentation/cubit/popular_cubit.dart' as _i1012;
 import '../shared/presentation/theme_cubit/theme_cubit.dart' as _i489;
+import '../utils/storage/local_storage.dart' as _i31;
 import 'register_module.dart' as _i291;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -146,7 +172,7 @@ extension GetItInjectableX on _i174.GetIt {
       () => registerModule.prefs,
       preResolve: true,
     );
-    await gh.factoryAsync<_i156.LocalStorage>(
+    await gh.factoryAsync<_i351.LocalStorage>(
       () => registerModule.localStorage,
       preResolve: true,
     );
@@ -154,187 +180,210 @@ extension GetItInjectableX on _i174.GetIt {
       () => registerModule.packageInfo,
       preResolve: true,
     );
-    gh.factory<_i738.TemplatesCubit>(() => _i738.TemplatesCubit());
+    gh.factory<_i2.TemplatesCubit>(() => _i2.TemplatesCubit());
     gh.singleton<_i231.InternetBloc>(() => _i231.InternetBloc());
     gh.lazySingleton<_i361.Dio>(() => registerModule.dio);
     gh.lazySingleton<_i152.LocalAuthentication>(() => registerModule.localAuth);
     gh.lazySingleton<_i161.InternetConnection>(
         () => registerModule.internetConnection);
-    gh.lazySingleton<_i502.CartLocalDataSource>(
-        () => _i502.CartHiveDataSource());
+    gh.lazySingleton<_i706.CartLocalDataSource>(
+        () => _i706.CartHiveDataSource());
     gh.factory<_i489.ThemeCubit>(
         () => _i489.ThemeCubit(gh<_i460.SharedPreferences>()));
-    gh.lazySingleton<_i669.AboutUsRemoteDataSource>(
-        () => _i669.AboutUsRemoteDataSourceImpl(
+    gh.lazySingleton<_i243.AboutUsRemoteDataSource>(
+        () => _i243.AboutUsRemoteDataSourceImpl(
               gh<_i361.Dio>(),
-              gh<_i156.LocalStorage>(),
+              gh<_i351.LocalStorage>(),
             ));
-    gh.lazySingleton<_i148.AuthLocalDataSource>(
-        () => _i148.AuthLocalDataSourceImpl(gh<_i156.LocalStorage>()));
-    gh.lazySingleton<_i294.RemoteDataSource>(
-        () => _i294.RemoteDataSourceImpl(gh<_i361.Dio>()));
-    gh.lazySingleton<_i922.RemotePaymentsDatasource>(
-        () => _i922.RemotePaymentsDatasourceImpl(gh<_i361.Dio>()));
-    gh.lazySingleton<_i499.BonusesRepository>(
-        () => _i773.BonusesRepositoryImpl(gh<_i361.Dio>()));
-    gh.lazySingleton<_i553.HomeContentRemoteDatasource>(
-        () => _i753.HomeContentRemoteDatasourceImpl(gh<_i361.Dio>()));
-    gh.lazySingleton<_i1053.ProfileRemoteDataSource>(
-        () => _i1053.ProfileRemoteDataSourceImpl(
+    gh.factory<_i349.AuthenticateWithBiometricsUseCase>(
+        () => _i349.AuthenticateWithBiometricsUseCase(
+              gh<_i152.LocalAuthentication>(),
+              gh<_i31.LocalStorage>(),
+            ));
+    gh.factory<_i35.CheckBiometricsAvailabilityUseCase>(
+        () => _i35.CheckBiometricsAvailabilityUseCase(
+              gh<_i152.LocalAuthentication>(),
+              gh<_i31.LocalStorage>(),
+            ));
+    gh.lazySingleton<_i835.AuthLocalDataSource>(
+        () => _i835.AuthLocalDataSourceImpl(gh<_i351.LocalStorage>()));
+    gh.lazySingleton<_i337.RemoteDataSource>(
+        () => _i337.RemoteDataSourceImpl(gh<_i361.Dio>()));
+    gh.lazySingleton<_i1005.RemotePaymentsDatasource>(
+        () => _i1005.RemotePaymentsDatasourceImpl(gh<_i361.Dio>()));
+    gh.lazySingleton<_i806.BonusesRepository>(
+        () => _i275.BonusesRepositoryImpl(gh<_i361.Dio>()));
+    gh.lazySingleton<_i521.HomeContentRemoteDatasource>(
+        () => _i347.HomeContentRemoteDatasourceImpl(gh<_i361.Dio>()));
+    gh.lazySingleton<_i847.ProfileRemoteDataSource>(
+        () => _i847.ProfileRemoteDataSourceImpl(
               gh<_i361.Dio>(),
-              gh<_i156.LocalStorage>(),
+              gh<_i351.LocalStorage>(),
             ));
-    gh.lazySingleton<_i537.ProfileRepository>(
-        () => _i537.ProfileRepositoryImpl(gh<_i443.ProfileRemoteDataSource>()));
-    gh.lazySingleton<_i187.RemoteSettingsDataSource>(
-        () => _i187.RemoteSettingsDataSourceImpl(gh<_i361.Dio>()));
-    gh.lazySingleton<_i498.SettingsRepository>(() =>
-        _i34.SettingsRepositoryImpl(gh<_i187.RemoteSettingsDataSource>()));
-    gh.lazySingleton<_i223.MenuRemoteDataSource>(
-        () => _i223.MenuRemoteDataSourceImpl(gh<_i361.Dio>()));
-    await gh.factoryAsync<_i491.CartRepository>(
-      () => cartModule.cartRepository(gh<_i502.CartLocalDataSource>()),
+    gh.lazySingleton<_i361.ProfileRepository>(
+        () => _i361.ProfileRepositoryImpl(gh<_i315.ProfileRemoteDataSource>()));
+    gh.lazySingleton<_i300.RemoteSettingsDataSource>(
+        () => _i300.RemoteSettingsDataSourceImpl(gh<_i361.Dio>()));
+    gh.lazySingleton<_i879.SettingsRepository>(() =>
+        _i87.SettingsRepositoryImpl(gh<_i300.RemoteSettingsDataSource>()));
+    gh.lazySingleton<_i433.MenuRemoteDataSource>(
+        () => _i433.MenuRemoteDataSourceImpl(gh<_i361.Dio>()));
+    await gh.factoryAsync<_i26.CartRepository>(
+      () => cartModule.cartRepository(gh<_i706.CartLocalDataSource>()),
       preResolve: true,
     );
-    await gh.factoryAsync<_i156.DiyarRemoteConfig>(
+    gh.lazySingleton<_i520.AuthRemoteDataSource>(
+        () => _i415.AuthRemoteDataSourceImpl(
+              gh<_i361.Dio>(),
+              gh<_i835.AuthLocalDataSource>(),
+              gh<_i351.LocalStorage>(),
+            ));
+    await gh.factoryAsync<_i351.DiyarRemoteConfig>(
       () => registerModule.diyarRemoteConfig(gh<_i655.PackageInfo>()),
       preResolve: true,
     );
-    gh.lazySingleton<_i1010.OrderRemoteDataSource>(
-        () => _i1010.OrderRemoteDataSourceImpl(
+    gh.lazySingleton<_i773.OrderRemoteDataSource>(
+        () => _i773.OrderRemoteDataSourceImpl(
               gh<_i361.Dio>(),
               gh<_i460.SharedPreferences>(),
             ));
-    gh.lazySingleton<_i188.PriceRepository>(
-        () => _i188.PriceRepositoryImpl(gh<_i294.RemoteDataSource>()));
-    gh.lazySingleton<_i322.CurierDataSource>(() => _i322.CurierDataSourceImpl(
+    gh.lazySingleton<_i659.PriceRepository>(
+        () => _i659.PriceRepositoryImpl(gh<_i337.RemoteDataSource>()));
+    gh.lazySingleton<_i614.CurierDataSource>(() => _i614.CurierDataSourceImpl(
           gh<_i361.Dio>(),
           gh<_i460.SharedPreferences>(),
         ));
-    gh.lazySingleton<_i987.RemotePickUpDataSource>(
-        () => _i987.RemotePickUpDataSourceImpl(
+    gh.lazySingleton<_i39.RemotePickUpDataSource>(
+        () => _i39.RemotePickUpDataSourceImpl(
               gh<_i361.Dio>(),
               gh<_i460.SharedPreferences>(),
             ));
-    gh.lazySingleton<_i622.HomeContentRepository>(() =>
-        _i753.HomeContentRepositoryImpl(
-            remoteDataSource: gh<_i553.HomeContentRemoteDatasource>()));
-    gh.lazySingleton<_i1055.PaymentsRepository>(() =>
-        _i579.PaymentsRepositoryImpl(gh<_i922.RemotePaymentsDatasource>()));
-    gh.lazySingleton<_i937.ActiveOrderRemoteDataSource>(
-        () => _i937.ActiveOrderRemoteDataSourceImpl(
+    gh.lazySingleton<_i477.HomeContentRepository>(() =>
+        _i347.HomeContentRepositoryImpl(
+            remoteDataSource: gh<_i521.HomeContentRemoteDatasource>()));
+    gh.lazySingleton<_i838.PaymentsRepository>(() =>
+        _i944.PaymentsRepositoryImpl(gh<_i1005.RemotePaymentsDatasource>()));
+    gh.lazySingleton<_i283.ActiveOrderRemoteDataSource>(
+        () => _i283.ActiveOrderRemoteDataSourceImpl(
               gh<_i361.Dio>(),
               gh<_i460.SharedPreferences>(),
             ));
-    gh.lazySingleton<_i339.HistoryReDatasource>(
-        () => _i339.HistoryReDatasourceImpl(
+    gh.lazySingleton<_i49.HistoryReDatasource>(
+        () => _i49.HistoryReDatasourceImpl(
               gh<_i361.Dio>(),
               gh<_i460.SharedPreferences>(),
             ));
-    gh.factory<_i591.BonusesCubit>(
-        () => _i591.BonusesCubit(gh<_i499.BonusesRepository>()));
-    gh.factory<_i421.CartBloc>(
-        () => _i421.CartBloc(gh<_i491.CartRepository>()));
-    gh.lazySingleton<_i236.AuthRemoteDataSource>(
-        () => _i236.AuthRemoteDataSourceImpl(
-              gh<_i361.Dio>(),
-              gh<_i148.AuthLocalDataSource>(),
-              gh<_i460.SharedPreferences>(),
-            ));
-    gh.lazySingleton<_i750.AppLocation>(() => _i750.LocationService(
+    gh.factory<_i0.BonusesCubit>(
+        () => _i0.BonusesCubit(gh<_i806.BonusesRepository>()));
+    gh.factory<_i517.CartBloc>(() => _i517.CartBloc(gh<_i26.CartRepository>()));
+    gh.lazySingleton<_i835.AppLocation>(() => _i835.LocationService(
           gh<_i361.Dio>(),
           gh<_i460.SharedPreferences>(),
         ));
-    gh.lazySingleton<_i708.MenuRepository>(
-        () => _i527.MenuRepositoryImpl(gh<_i708.MenuRemoteDataSource>()));
-    gh.lazySingleton<_i968.AuthRepository>(() => _i243.AuthRepositoryImpl(
-          gh<_i236.AuthRemoteDataSource>(),
-          gh<_i148.AuthLocalDataSource>(),
+    gh.lazySingleton<_i660.MenuRepository>(
+        () => _i1024.MenuRepositoryImpl(gh<_i660.MenuRemoteDataSource>()));
+    gh.lazySingleton<_i140.AuthRepository>(() => _i573.AuthRepositoryImpl(
+          gh<_i520.AuthRemoteDataSource>(),
+          gh<_i835.AuthLocalDataSource>(),
         ));
-    gh.factory<_i239.RemoteConfigCubit>(() => _i239.RemoteConfigCubit(
+    gh.factory<_i122.RemoteConfigCubit>(() => _i122.RemoteConfigCubit(
           packageInfo: gh<_i655.PackageInfo>(),
-          remoteConfig: gh<_i413.DiyarRemoteConfig>(),
+          remoteConfig: gh<_i1020.DiyarRemoteConfig>(),
         ));
-    gh.lazySingleton<_i494.AboutUsRepository>(() =>
-        _i1060.AboutUsRepositoryImpl(gh<_i197.AboutUsRemoteDataSource>()));
-    gh.factory<_i300.ProfileCubit>(
-        () => _i300.ProfileCubit(gh<_i443.ProfileRepository>()));
-    gh.factory<_i776.AboutUsCubit>(
-        () => _i776.AboutUsCubit(gh<_i494.AboutUsRepository>()));
-    gh.factory<_i394.MegaInitiateUsecase>(
-        () => _i394.MegaInitiateUsecase(gh<_i721.PaymentsRepository>()));
-    gh.factory<_i725.MbankInitiateUsecase>(
-        () => _i725.MbankInitiateUsecase(gh<_i1055.PaymentsRepository>()));
-    gh.factory<_i382.MbankStatusUsecase>(
-        () => _i382.MbankStatusUsecase(gh<_i1055.PaymentsRepository>()));
-    gh.factory<_i381.QrCodeUsecase>(
-        () => _i381.QrCodeUsecase(gh<_i1055.PaymentsRepository>()));
-    gh.factory<_i308.MegaCheckUseCase>(
-        () => _i308.MegaCheckUseCase(gh<_i1055.PaymentsRepository>()));
-    gh.factory<_i861.MegaStatusUsecase>(
-        () => _i861.MegaStatusUsecase(gh<_i721.PaymentsRepository>()));
-    gh.factory<_i383.MbankConfimUsecase>(
-        () => _i383.MbankConfimUsecase(gh<_i1055.PaymentsRepository>()));
-    gh.factory<_i417.QrCheckStatusUsecase>(
-        () => _i417.QrCheckStatusUsecase(gh<_i1055.PaymentsRepository>()));
-    gh.factory<_i89.SignInCubit>(() => _i89.SignInCubit(
-          gh<_i968.AuthRepository>(),
-          gh<_i156.LocalStorage>(),
-          gh<_i152.LocalAuthentication>(),
+    gh.lazySingleton<_i168.AboutUsRepository>(
+        () => _i471.AboutUsRepositoryImpl(gh<_i798.AboutUsRemoteDataSource>()));
+    gh.factory<_i550.RefreshTokenIfNeededUseCase>(
+        () => _i550.RefreshTokenIfNeededUseCase(
+              gh<_i140.AuthRepository>(),
+              gh<_i351.LocalStorage>(),
+            ));
+    gh.factory<_i36.ProfileCubit>(
+        () => _i36.ProfileCubit(gh<_i315.ProfileRepository>()));
+    gh.factory<_i573.AboutUsCubit>(
+        () => _i573.AboutUsCubit(gh<_i168.AboutUsRepository>()));
+    gh.factory<_i982.MegaInitiateUsecase>(
+        () => _i982.MegaInitiateUsecase(gh<_i971.PaymentsRepository>()));
+    gh.factory<_i985.MbankInitiateUsecase>(
+        () => _i985.MbankInitiateUsecase(gh<_i838.PaymentsRepository>()));
+    gh.factory<_i134.MbankStatusUsecase>(
+        () => _i134.MbankStatusUsecase(gh<_i838.PaymentsRepository>()));
+    gh.factory<_i299.QrCodeUsecase>(
+        () => _i299.QrCodeUsecase(gh<_i838.PaymentsRepository>()));
+    gh.factory<_i283.MegaCheckUseCase>(
+        () => _i283.MegaCheckUseCase(gh<_i838.PaymentsRepository>()));
+    gh.factory<_i561.MegaStatusUsecase>(
+        () => _i561.MegaStatusUsecase(gh<_i971.PaymentsRepository>()));
+    gh.factory<_i427.MbankConfimUsecase>(
+        () => _i427.MbankConfimUsecase(gh<_i838.PaymentsRepository>()));
+    gh.factory<_i286.QrCheckStatusUsecase>(
+        () => _i286.QrCheckStatusUsecase(gh<_i838.PaymentsRepository>()));
+    gh.factory<_i31.GetNewsUseCase>(
+        () => _i31.GetNewsUseCase(gh<_i477.HomeContentRepository>()));
+    gh.factory<_i608.GetSalesUseCase>(
+        () => _i608.GetSalesUseCase(gh<_i477.HomeContentRepository>()));
+    gh.factory<_i792.SettingsCubit>(
+        () => _i792.SettingsCubit(gh<_i635.SettingsRepository>()));
+    gh.lazySingleton<_i54.PickUpRepositories>(
+        () => _i123.PickUpRepository(gh<_i54.RemotePickUpDataSource>()));
+    gh.factory<_i661.UserMapCubit>(() => _i661.UserMapCubit(
+          gh<_i659.PriceRepository>(),
+          gh<_i835.AppLocation>(),
         ));
-    gh.factory<_i371.GetNewsUseCase>(
-        () => _i371.GetNewsUseCase(gh<_i622.HomeContentRepository>()));
-    gh.factory<_i626.GetSalesUseCase>(
-        () => _i626.GetSalesUseCase(gh<_i622.HomeContentRepository>()));
-    gh.factory<_i692.SettingsCubit>(
-        () => _i692.SettingsCubit(gh<_i259.SettingsRepository>()));
-    gh.lazySingleton<_i31.PickUpRepositories>(
-        () => _i414.PickUpRepository(gh<_i31.RemotePickUpDataSource>()));
-    gh.factory<_i368.UserMapCubit>(() => _i368.UserMapCubit(
-          gh<_i188.PriceRepository>(),
-          gh<_i750.AppLocation>(),
+    gh.lazySingleton<_i408.HistoryRepository>(
+        () => _i178.HistoryRepositoryImpl(gh<_i926.HistoryReDatasource>()));
+    gh.lazySingleton<_i758.OrderRepository>(
+        () => _i576.OrderRepositoryImpl(gh<_i773.OrderRemoteDataSource>()));
+    gh.factory<_i849.PaymentBloc>(() => _i849.PaymentBloc(
+          gh<_i838.MegaCheckUseCase>(),
+          gh<_i838.MegaInitiateUsecase>(),
+          gh<_i838.MegaStatusUsecase>(),
+          gh<_i838.QrCodeUsecase>(),
+          gh<_i838.MbankInitiateUsecase>(),
+          gh<_i838.MbankConfimUsecase>(),
+          gh<_i838.MbankStatusUsecase>(),
         ));
-    gh.lazySingleton<_i283.HistoryRepository>(
-        () => _i165.HistoryRepositoryImpl(gh<_i539.HistoryReDatasource>()));
-    gh.lazySingleton<_i405.OrderRepository>(
-        () => _i276.OrderRepositoryImpl(gh<_i1010.OrderRemoteDataSource>()));
-    gh.factory<_i488.PaymentBloc>(() => _i488.PaymentBloc(
-          gh<_i1055.MegaCheckUseCase>(),
-          gh<_i1055.MegaInitiateUsecase>(),
-          gh<_i1055.MegaStatusUsecase>(),
-          gh<_i1055.QrCodeUsecase>(),
-          gh<_i1055.MbankInitiateUsecase>(),
-          gh<_i1055.MbankConfimUsecase>(),
-          gh<_i1055.MbankStatusUsecase>(),
-        ));
-    gh.lazySingleton<_i679.ActiveOrderRepository>(() =>
-        _i44.ActiveOrderRepositoryImpl(
-            gh<_i373.ActiveOrderRemoteDataSource>()));
-    gh.factory<_i49.MenuBloc>(() => _i49.MenuBloc(gh<_i728.MenuRepository>()));
+    gh.lazySingleton<_i74.ActiveOrderRepository>(() =>
+        _i243.ActiveOrderRepositoryImpl(
+            gh<_i311.ActiveOrderRemoteDataSource>()));
     gh.factory<_i1012.PopularCubit>(
-        () => _i1012.PopularCubit(gh<_i728.MenuRepository>()));
-    gh.lazySingleton<_i450.CurierRepository>(
-        () => _i53.CurierRepositoryImpl(gh<_i450.CurierDataSource>()));
-    gh.factory<_i791.HistoryCubit>(
-        () => _i791.HistoryCubit(gh<_i283.HistoryRepository>()));
-    gh.factory<_i760.SignUpCubit>(
-        () => _i760.SignUpCubit(gh<_i968.AuthRepository>()));
-    gh.factory<_i13.PickUpCubit>(
-        () => _i13.PickUpCubit(gh<_i698.PickUpRepositories>()));
-    gh.factory<_i800.CurierCubit>(
-        () => _i800.CurierCubit(gh<_i450.CurierRepository>()));
-    gh.factory<_i1025.HomeContentCubit>(() => _i1025.HomeContentCubit(
-          getNewsUseCase: gh<_i371.GetNewsUseCase>(),
-          getSalesUseCase: gh<_i626.GetSalesUseCase>(),
+        () => _i1012.PopularCubit(gh<_i872.MenuRepository>()));
+    gh.factory<_i395.MenuBloc>(
+        () => _i395.MenuBloc(gh<_i872.MenuRepository>()));
+    gh.lazySingleton<_i566.CurierRepository>(
+        () => _i537.CurierRepositoryImpl(gh<_i566.CurierDataSource>()));
+    gh.factory<_i952.VerifySmsCodeAndHandleFirstLaunchUseCase>(
+        () => _i952.VerifySmsCodeAndHandleFirstLaunchUseCase(
+              gh<_i140.AuthRepository>(),
+              gh<_i835.AuthLocalDataSource>(),
+            ));
+    gh.factory<_i232.HistoryCubit>(
+        () => _i232.HistoryCubit(gh<_i408.HistoryRepository>()));
+    gh.factory<_i781.SignUpCubit>(
+        () => _i781.SignUpCubit(gh<_i140.AuthRepository>()));
+    gh.factory<_i370.PickUpCubit>(
+        () => _i370.PickUpCubit(gh<_i292.PickUpRepositories>()));
+    gh.factory<_i110.CurierCubit>(
+        () => _i110.CurierCubit(gh<_i566.CurierRepository>()));
+    gh.factory<_i302.SignInCubit>(() => _i302.SignInCubit(
+          gh<_i140.AuthRepository>(),
+          gh<_i351.LocalStorage>(),
+          gh<_i952.VerifySmsCodeAndHandleFirstLaunchUseCase>(),
+          gh<_i550.RefreshTokenIfNeededUseCase>(),
+          gh<_i35.CheckBiometricsAvailabilityUseCase>(),
+          gh<_i349.AuthenticateWithBiometricsUseCase>(),
         ));
-    gh.factory<_i297.ActiveOrderCubit>(
-        () => _i297.ActiveOrderCubit(gh<_i679.ActiveOrderRepository>()));
-    gh.factory<_i767.OrderCubit>(
-        () => _i767.OrderCubit(gh<_i405.OrderRepository>()));
+    gh.factory<_i812.HomeContentCubit>(() => _i812.HomeContentCubit(
+          getNewsUseCase: gh<_i31.GetNewsUseCase>(),
+          getSalesUseCase: gh<_i608.GetSalesUseCase>(),
+        ));
+    gh.factory<_i60.ActiveOrderCubit>(
+        () => _i60.ActiveOrderCubit(gh<_i74.ActiveOrderRepository>()));
+    gh.factory<_i304.OrderCubit>(
+        () => _i304.OrderCubit(gh<_i758.OrderRepository>()));
     return this;
   }
 }
 
 class _$RegisterModule extends _i291.RegisterModule {}
 
-class _$CartModule extends _i214.CartModule {}
+class _$CartModule extends _i979.CartModule {}

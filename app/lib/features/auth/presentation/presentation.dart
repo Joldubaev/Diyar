@@ -1,5 +1,5 @@
 export 'pages/pages.dart';
-export 'cubit/cubit.dart';
+export 'cubit/sign_in/sign_in_cubit.dart';
 export 'widgets/sign_up_form.dart';
 export 'widgets/sign_in_form.dart';
 export 'widgets/auth_bottom_sheet.dart';

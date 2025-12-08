@@ -15,11 +15,6 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl(this.remoteDataSource, this.localDataSource);
 
   @override
-  Future<Either<Failure, void>> login(UserEntities user) {
-    return remoteDataSource.login(UserModel.fromEntity(user));
-  }
-
-  @override
   Future<Either<Failure, void>> register(UserEntities user) {
     return remoteDataSource.register(UserModel.fromEntity(user));
   }
@@ -35,8 +30,13 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, void>> verifyCode(String phone, String code) {
-    return remoteDataSource.verifyCode(phone, code);
+  Future<Either<Failure, void>> verifyCodeForRegistration(String phone, String code) {
+    return remoteDataSource.verifyCodeForRegistration(phone, code);
+  }
+
+  @override
+  Future<Either<Failure, void>> verifyCodeForLogin(String phone, String code) {
+    return remoteDataSource.verifyCodeForLogin(phone, code);
   }
 
   @override

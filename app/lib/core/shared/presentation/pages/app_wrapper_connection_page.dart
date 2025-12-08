@@ -9,8 +9,7 @@ class AppWrapperConnectionPage extends StatefulWidget {
   const AppWrapperConnectionPage({super.key, required this.child});
 
   @override
-  State<AppWrapperConnectionPage> createState() =>
-      _AppWrapperConnectionPageState();
+  State<AppWrapperConnectionPage> createState() => _AppWrapperConnectionPageState();
 }
 
 class _AppWrapperConnectionPageState extends State<AppWrapperConnectionPage> {
@@ -20,7 +19,7 @@ class _AppWrapperConnectionPageState extends State<AppWrapperConnectionPage> {
   Widget build(BuildContext context) {
     return BlocListener<InternetBloc, InternetState>(
       listener: (context, state) {
-        if (state is NetworkFailure) {
+        if (state is InternetFailure) {
           setState(() => isInternet = false);
 
           showModalBottomSheet(
@@ -59,8 +58,7 @@ class _AppWrapperConnectionPageState extends State<AppWrapperConnectionPage> {
           );
         } else {
           setState(() => isInternet = true);
-          if (isInternet &&
-              Navigator.canPop(appRoute.navigatorKey.currentContext!)) {
+          if (isInternet && Navigator.canPop(appRoute.navigatorKey.currentContext!)) {
             Navigator.pop(appRoute.navigatorKey.currentContext!);
           }
         }

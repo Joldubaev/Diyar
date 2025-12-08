@@ -7,10 +7,10 @@ abstract class AuthRepository {
   Future<Either<Failure, void>> register(UserEntities user);
   Future<Either<Failure, bool>> checkPhoneNumber(String phone);
   Future<Either<Failure, void>> sendVerificationCode(String phone);
-  Future<Either<Failure, void>> verifyCode(String phone, String code);
+  Future<Either<Failure, void>> verifyCodeForRegistration(String phone, String code);
 
   // 🔓 Login & Auth
-  Future<Either<Failure, void>> login(UserEntities user);
+  Future<Either<Failure, void>> verifyCodeForLogin(String phone, String code);
   Future<Either<Failure, void>> sendForgotPasswordCodeToPhone(String phone);
   Future<Either<Failure, void>> resetPassword(ResetPasswordEntity model);
   Future<Either<Failure, void>> refreshToken();

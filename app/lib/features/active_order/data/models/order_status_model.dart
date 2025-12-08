@@ -2,7 +2,6 @@ import 'package:diyar/features/active_order/domain/domain.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'order_status_model.freezed.dart';
-part 'order_status_model.g.dart';
 
 @freezed
 class OrderStatusModel with _$OrderStatusModel {
