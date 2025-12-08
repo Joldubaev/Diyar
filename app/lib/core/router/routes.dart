@@ -26,6 +26,7 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: ProfileInfoRoute.page),
         AutoRoute(page: ContactRoute.page),
         AutoRoute(page: SignInRoute.page),
+        AutoRoute(page: SignInOtpRoute.page),
         AutoRoute(page: SignUpRoute.page),
         AutoRoute(page: PickupFormRoute.page),
         AutoRoute(page: SignUpSucces.page),
@@ -94,7 +95,7 @@ class AuthGuard extends AutoRouteGuard {
     if (role == 'Courier') {
       log('AuthGuard: Роль Courier. Перенаправление на CurierRoute.');
       resolver.next(false);
-       router.replace(const CurierRoute()); // Заменяем стек, чтобы нельзя было вернуться назад
+      router.replace(const CurierRoute()); // Заменяем стек, чтобы нельзя было вернуться назад
     } else if (role == 'admin') {
       log('AuthGuard: Роль Admin. Перенаправление на MainRoute.');
       resolver.next(false);

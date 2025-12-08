@@ -1,25 +1,25 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
-import 'package:diyar/features/auth/domain/domain.dart';
-import 'package:diyar/features/auth/presentation/cubit/sign_up/sign_up_cubit.dart';
+import 'package:diyar/features/auth/presentation/cubit/sign_in/sign_in_cubit.dart';
+import 'package:diyar/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pinput/pinput.dart';
 
 @RoutePage()
-class SignUpOtpPage extends StatefulWidget {
-  final UserEntities user;
+class SignInOtpPage extends StatefulWidget {
+  final String phone;
 
-  const SignUpOtpPage({
+  const SignInOtpPage({
     super.key,
-    required this.user,
+    required this.phone,
   });
 
   @override
-  State<SignUpOtpPage> createState() => _SignUpOtpPageState();
+  State<SignInOtpPage> createState() => _SignInOtpPageState();
 }
 
-class _SignUpOtpPageState extends State<SignUpOtpPage> with TimerMixin<SignUpOtpPage> {
+class _SignInOtpPageState extends State<SignInOtpPage> with TimerMixin<SignInOtpPage> {
   final _codeController = TextEditingController();
 
   @override
@@ -40,7 +40,7 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> with TimerMixin<SignUpOtp
       return TextButton(
         onPressed: () {
           startTimer();
-          context.read<SignUpCubit>().sendVerificationCode(widget.user.phone);
+          context.read<SignInCubit>().sendSmsCodeForLogin(widget.phone);
         },
         child: const Text(
           'Отправить код повторно',
@@ -76,15 +76,18 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> with TimerMixin<SignUpOtp
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SignUpCubit, SignUpState>(
+    return BlocListener<SignInCubit, SignInState>(
       listener: (context, state) {
-        if (state is VerifyCodeSuccess) {
-          context.router.push(
-            SignUpRoute(user: widget.user),
-          );
-        } else if (state is VerifyCodeFailure) {
+        if (state is SignInSuccessWithUser) {
+          final role = sl<LocalStorage>().getString(AppConst.userRole);
+          final targetRoute = role == "Courier" ? const CurierRoute() : const MainRoute();
+          context.router.pushAndPopUntil(targetRoute, predicate: (_) => false);
+        } else if (state is SignInFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
+            SnackBar(
+              content: Text(state.message),
+              backgroundColor: Colors.red,
+            ),
           );
           _codeController.clear();
         }
@@ -112,7 +115,7 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> with TimerMixin<SignUpOtp
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  widget.user.phone,
+                  widget.phone,
                   style: const TextStyle(
                     color: Colors.black,
                     fontSize: 22,
@@ -124,8 +127,8 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> with TimerMixin<SignUpOtp
                   length: 6,
                   controller: _codeController,
                   onCompleted: (value) {
-                    context.read<SignUpCubit>().verifyCode(
-                          widget.user.phone,
+                    context.read<SignInCubit>().verifySmsCodeForLogin(
+                          widget.phone,
                           value,
                         );
                   },

@@ -11,7 +11,6 @@ class SignUpCubit extends Cubit<SignUpState> {
 
   SignUpCubit(this.authRepository) : super(SignUpInitial());
 
-  // 🔐 Регистрация
   Future<void> signUpUser(UserEntities model) async {
     emit(SignUpLoading());
 
@@ -22,7 +21,6 @@ class SignUpCubit extends Cubit<SignUpState> {
     );
   }
 
-  // 📞 Проверка номера
   Future<void> checkPhoneNumber(String phone) async {
     emit(CheckPhoneLoading());
 
@@ -33,7 +31,6 @@ class SignUpCubit extends Cubit<SignUpState> {
     );
   }
 
-  // 📤 Отправка кода
   Future<void> sendVerificationCode(String phone) async {
     emit(SendCodeLoading());
 
@@ -44,11 +41,10 @@ class SignUpCubit extends Cubit<SignUpState> {
     );
   }
 
-  // ✅ Подтверждение кода
   Future<void> verifyCode(String phone, String code) async {
     emit(VerifyCodeLoading());
 
-    final res = await authRepository.verifyCode(phone, code);
+    final res = await authRepository.verifyCodeForRegistration(phone, code);
     res.fold(
       (failure) => emit(VerifyCodeFailure(failure.message)),
       (_) => emit(VerifyCodeSuccess()),

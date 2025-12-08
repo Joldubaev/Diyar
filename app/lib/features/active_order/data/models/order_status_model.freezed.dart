@@ -14,17 +14,10 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-OrderStatusModel _$OrderStatusModelFromJson(Map<String, dynamic> json) {
-  return _OrderStatusModel.fromJson(json);
-}
-
 /// @nodoc
 mixin _$OrderStatusModel {
   int? get orderNumber => throw _privateConstructorUsedError;
   String? get status => throw _privateConstructorUsedError;
-
-  /// Serializes this OrderStatusModel to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of OrderStatusModel
   /// with the given fields replaced by the non-null parameter values.
@@ -114,12 +107,9 @@ class __$$OrderStatusModelImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _$OrderStatusModelImpl implements _OrderStatusModel {
   const _$OrderStatusModelImpl({this.orderNumber, this.status});
-
-  factory _$OrderStatusModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$OrderStatusModelImplFromJson(json);
 
   @override
   final int? orderNumber;
@@ -141,7 +131,6 @@ class _$OrderStatusModelImpl implements _OrderStatusModel {
             (identical(other.status, status) || other.status == status));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, orderNumber, status);
 
@@ -153,21 +142,11 @@ class _$OrderStatusModelImpl implements _OrderStatusModel {
   _$$OrderStatusModelImplCopyWith<_$OrderStatusModelImpl> get copyWith =>
       __$$OrderStatusModelImplCopyWithImpl<_$OrderStatusModelImpl>(
           this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$OrderStatusModelImplToJson(
-      this,
-    );
-  }
 }
 
 abstract class _OrderStatusModel implements OrderStatusModel {
   const factory _OrderStatusModel(
       {final int? orderNumber, final String? status}) = _$OrderStatusModelImpl;
-
-  factory _OrderStatusModel.fromJson(Map<String, dynamic> json) =
-      _$OrderStatusModelImpl.fromJson;
 
   @override
   int? get orderNumber;

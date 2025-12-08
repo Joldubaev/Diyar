@@ -8,16 +8,13 @@ part 'user_model.g.dart';
 class UserModel with _$UserModel {
   const factory UserModel({
     String? phone,
-    String? password,
     String? userName,
   }) = _UserModel;
 
-  factory UserModel.fromJson(Map<String, dynamic> json) =>
-      _$UserModelFromJson(json);
+  factory UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
 
   factory UserModel.fromEntity(UserEntities entity) => UserModel(
         phone: entity.phone,
-        password: entity.password,
         userName: entity.userName,
       );
 }
@@ -26,17 +23,14 @@ extension UserModelX on UserModel {
   Map<String, dynamic> toRegister() => {
         'userName': userName,
         'phone': phone,
-        'password': password,
       };
 
   Map<String, dynamic> toLogin() => {
         'phone': phone?.toString() ?? '',
-        'password': password?.toString() ?? '',
       };
 
   UserEntities toEntity() => UserEntities(
         phone: phone ?? '',
-        password: password,
         userName: userName,
       );
 }

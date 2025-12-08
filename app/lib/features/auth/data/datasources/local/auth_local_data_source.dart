@@ -13,6 +13,8 @@ abstract class AuthLocalDataSource {
   Future<void> setUserToCache(TokenModel user);
   String? getUserFromCache();
   Future<void> setTokenToCache({String? refresh, required String access, String phone});
+  Future<bool> isFirstLaunch();
+  Future<void> setFirstLaunchCompleted();
 }
 
 @LazySingleton(as: AuthLocalDataSource)
@@ -117,6 +119,24 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   Future<void> setPinCode(String pinCode) async {
     try {
       await prefs.setString(AppConst.pinCode, pinCode);
+    } catch (e) {
+      throw CacheException();
+    }
+  }
+
+  @override
+  Future<bool> isFirstLaunch() async {
+    try {
+      return prefs.getBool(AppConst.firstLaunch) ?? true;
+    } catch (e) {
+      throw CacheException();
+    }
+  }
+
+  @override
+  Future<void> setFirstLaunchCompleted() async {
+    try {
+      await prefs.setBool(AppConst.firstLaunch, false);
     } catch (e) {
       throw CacheException();
     }

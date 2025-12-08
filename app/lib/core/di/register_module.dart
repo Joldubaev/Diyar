@@ -11,8 +11,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 abstract class RegisterModule {
   @lazySingleton
   Dio get dio {
-    DioNetwork.initDio();
-    return DioNetwork.appAPI;
+    final dio = Dio(BaseOptions(
+      baseUrl: ApiConst.baseUrl,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+    ));
+    return dio;
   }
 
   @preResolve

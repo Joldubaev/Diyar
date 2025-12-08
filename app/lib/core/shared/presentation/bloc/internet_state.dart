@@ -11,4 +11,4 @@ final class InternetInitial extends InternetState {}
 
 final class NetworkSuccess extends InternetState {}
 
-final class NetworkFailure extends InternetState {}
+final class InternetFailure extends InternetState {}

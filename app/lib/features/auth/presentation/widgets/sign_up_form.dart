@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
-import 'package:diyar/features/auth/auth.dart';
 import 'package:diyar/features/auth/domain/domain.dart';
+import 'package:diyar/features/auth/presentation/cubit/sign_up/sign_up_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,13 +18,11 @@ class _SignUpFormState extends State<SignUpForm> {
 
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
   @override
   void dispose() {
     _usernameController.dispose();
-    _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
   }
@@ -44,7 +42,6 @@ class _SignUpFormState extends State<SignUpForm> {
 
       final user = UserEntities(
         userName: _usernameController.text,
-        password: _passwordController.text,
         phone: phone,
       );
       context.read<SignUpCubit>().signUpUser(user);
@@ -66,6 +63,7 @@ class _SignUpFormState extends State<SignUpForm> {
       child: Form(
         key: _formKey,
         child: ListView(
+          padding: EdgeInsets.all(16),
           children: [
             Image.asset(
               'assets/images/app_logo.png',
@@ -80,8 +78,6 @@ class _SignUpFormState extends State<SignUpForm> {
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
-
-            /// Имя пользователя
             CustomInputWidget(
               filledColor: theme.colorScheme.surface,
               hintText: 'Ваше имя',
@@ -96,42 +92,6 @@ class _SignUpFormState extends State<SignUpForm> {
               },
             ),
             const SizedBox(height: 10),
-
-            /// Пароль
-            CustomInputWidget(
-              filledColor: theme.colorScheme.surface,
-              hintText: 'Пароль',
-              controller: _passwordController,
-              isPasswordField: true,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Пожалуйста, введите пароль';
-                } else if (value.length < 6) {
-                  return 'Пароль должен содержать минимум 6 символов';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 10),
-
-            /// Подтверждение пароля
-            CustomInputWidget(
-              filledColor: theme.colorScheme.surface,
-              hintText: 'Подтвердите пароль',
-              controller: _confirmPasswordController,
-              isPasswordField: true,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Пожалуйста, подтвердите пароль';
-                } else if (value != _passwordController.text) {
-                  return 'Пароли не совпадают';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 10),
-
-            /// Условия
             Row(
               children: [
                 Checkbox(
@@ -153,8 +113,6 @@ class _SignUpFormState extends State<SignUpForm> {
               ],
             ),
             const SizedBox(height: 20),
-
-            /// Кнопка регистрации
             BlocBuilder<SignUpCubit, SignUpState>(
               builder: (context, state) {
                 return SubmitButtonWidget(

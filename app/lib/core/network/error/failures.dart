@@ -13,7 +13,24 @@ class Failure extends Equatable {
 class ServerFailure extends Failure {
   final int? statusCode;
 
-  const ServerFailure(super.message, this.statusCode);
+  const ServerFailure(super.message, [this.statusCode]);
+
+  const ServerFailure.withStatusCode(super.message, this.statusCode);
+}
+
+/// Network-related failures (timeout, connection errors, etc.)
+class NetworkFailure extends Failure {
+  const NetworkFailure(super.message);
+}
+
+/// Format/parsing failures
+class FormatFailure extends Failure {
+  const FormatFailure(super.message);
+}
+
+/// Cache/storage failures
+class CacheFailure extends Failure {
+  const CacheFailure(super.message);
 }
 
 /// Cancel token failure

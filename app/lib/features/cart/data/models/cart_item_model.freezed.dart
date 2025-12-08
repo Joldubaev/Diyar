@@ -14,18 +14,11 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-CartItemModel _$CartItemModelFromJson(Map<String, dynamic> json) {
-  return _CartItemModel.fromJson(json);
-}
-
 /// @nodoc
 mixin _$CartItemModel {
   FoodModel? get food => throw _privateConstructorUsedError;
   int? get quantity => throw _privateConstructorUsedError;
   double? get totalPrice => throw _privateConstructorUsedError;
-
-  /// Serializes this CartItemModel to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of CartItemModel
   /// with the given fields replaced by the non-null parameter values.
@@ -144,12 +137,9 @@ class __$$CartItemModelImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _$CartItemModelImpl implements _CartItemModel {
   const _$CartItemModelImpl({this.food, this.quantity, this.totalPrice});
-
-  factory _$CartItemModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$CartItemModelImplFromJson(json);
 
   @override
   final FoodModel? food;
@@ -175,7 +165,6 @@ class _$CartItemModelImpl implements _CartItemModel {
                 other.totalPrice == totalPrice));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, food, quantity, totalPrice);
 
@@ -186,13 +175,6 @@ class _$CartItemModelImpl implements _CartItemModel {
   @pragma('vm:prefer-inline')
   _$$CartItemModelImplCopyWith<_$CartItemModelImpl> get copyWith =>
       __$$CartItemModelImplCopyWithImpl<_$CartItemModelImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$CartItemModelImplToJson(
-      this,
-    );
-  }
 }
 
 abstract class _CartItemModel implements CartItemModel {
@@ -200,9 +182,6 @@ abstract class _CartItemModel implements CartItemModel {
       {final FoodModel? food,
       final int? quantity,
       final double? totalPrice}) = _$CartItemModelImpl;
-
-  factory _CartItemModel.fromJson(Map<String, dynamic> json) =
-      _$CartItemModelImpl.fromJson;
 
   @override
   FoodModel? get food;

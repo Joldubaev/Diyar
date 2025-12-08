@@ -1,26 +1,24 @@
 class ApiConst {
   ApiConst._();
   static const baseUrl = "https://api.diyar.kg/api/v1";
-  // static const baseUrl = "http://176.126.164.230:8088";
-  // static const baseUrl = "http://20.127.235.82/api/v1";
-  // static const baseUrl2 = "http://20.127.235.82/api/v2";
-  // static const baseUrl = "https://20.127.235.82/";
+  static const baseUrl2 = "https://api.diyar.kg/api/v2";
 
   // AUTH
-  static const signUp = "$baseUrl/auth/sign-up";
-  static const signIn = "$baseUrl/auth/sign-in";
+  static const signUp = "$baseUrl2/auth/sign-up";
+  // static const signIn = "$baseUrl/auth/sign-in";
   static const refreshToken = "$baseUrl/auth/refresh-token";
   static const resetPsw = "$baseUrl/user/reset-password";
   static const sendCodeToPhone = "$baseUrl/user/send-code-to-phone";
 
   // CHECK NUMBER
-  static const checkPhone = "$baseUrl/auth/check-phone-number";
+  static const checkPhone = "$baseUrl2/auth/check-phone-number";
 
   // SEND SMS CODE
   static const sendCode = "$baseUrl/user/send-code-to-phone";
 
   // VERIFY CODE
-  static const verifyCode = "$baseUrl/user/verify-code";
+  static const verifyRegister = "$baseUrl2/user/verify-register";
+  static const verifyLogin = "$baseUrl2/user/verify-login";
 
   // USER
   static const getUser = "$baseUrl/user/get-user-info";

@@ -1,21 +1,19 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/auth/auth.dart';
-import 'package:diyar/features/auth/domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class LoginForm extends StatefulWidget {
-  const LoginForm({super.key});
+class SignInForm extends StatefulWidget {
+  const SignInForm({super.key});
 
   @override
-  State<LoginForm> createState() => _LoginFormState();
+  State<SignInForm> createState() => _SignInFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _SignInFormState extends State<SignInForm> {
   final _formKey = GlobalKey<FormState>();
   final _phoneController = TextEditingController();
-  final _passwordController = TextEditingController();
   final resedPasswordCode = TextEditingController();
 
   @override
@@ -51,7 +49,7 @@ class _LoginFormState extends State<LoginForm> {
                 ),
                 const SizedBox(height: 20),
                 CustomInputWidget(
-                  hintText: '+996',
+                  hintText: '996',
                   filledColor: theme.colorScheme.surface,
                   controller: _phoneController,
                   inputType: TextInputType.phone,
@@ -61,22 +59,6 @@ class _LoginFormState extends State<LoginForm> {
                       return context.l10n.pleaseEnterPhone;
                     } else if (value.length < 10) {
                       return context.l10n.pleaseEnterCorrectPhone;
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20),
-                CustomInputWidget(
-                  filledColor: theme.colorScheme.surface,
-                  hintText: context.l10n.password,
-                  controller: _passwordController,
-                  isPasswordField: true,
-                  inputType: TextInputType.text,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return context.l10n.pleaseEnterPassword;
-                    } else if (value.length < 5) {
-                      return context.l10n.pleaseEnterCorrectPassword;
                     }
                     return null;
                   },
@@ -113,10 +95,9 @@ class _LoginFormState extends State<LoginForm> {
                         message: state.message,
                         context: context,
                       );
-                    } else if (state is SignInSuccessWithUser) {
-                      context.router.pushAndPopUntil(
-                        const SetNewPinCodeRoute(),
-                        predicate: (route) => false,
+                    } else if (state is SmsCodeSentForLogin) {
+                      context.router.push(
+                        SignInOtpRoute(phone: state.phone),
                       );
                     }
                   },
@@ -128,12 +109,9 @@ class _LoginFormState extends State<LoginForm> {
                       title: context.l10n.authorize,
                       onTap: () {
                         if (_formKey.currentState!.validate()) {
-                          context.read<SignInCubit>().signIn(
-                                UserEntities(
-                                  phone: _phoneController.text,
-                                  password: _passwordController.text,
-                                ),
-                              );
+                          final phone = _phoneController.text.replaceAll(RegExp(r'[^0-9]'), '');
+                          final formattedPhone = phone.startsWith('996') ? phone : '996$phone';
+                          context.read<SignInCubit>().sendSmsCodeForLogin(formattedPhone);
                         }
                       },
                     );

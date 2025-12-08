@@ -21,7 +21,6 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$UserModel {
   String? get phone => throw _privateConstructorUsedError;
-  String? get password => throw _privateConstructorUsedError;
   String? get userName => throw _privateConstructorUsedError;
 
   /// Serializes this UserModel to a JSON map.
@@ -39,7 +38,7 @@ abstract class $UserModelCopyWith<$Res> {
   factory $UserModelCopyWith(UserModel value, $Res Function(UserModel) then) =
       _$UserModelCopyWithImpl<$Res, UserModel>;
   @useResult
-  $Res call({String? phone, String? password, String? userName});
+  $Res call({String? phone, String? userName});
 }
 
 /// @nodoc
@@ -58,17 +57,12 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
   @override
   $Res call({
     Object? phone = freezed,
-    Object? password = freezed,
     Object? userName = freezed,
   }) {
     return _then(_value.copyWith(
       phone: freezed == phone
           ? _value.phone
           : phone // ignore: cast_nullable_to_non_nullable
-              as String?,
-      password: freezed == password
-          ? _value.password
-          : password // ignore: cast_nullable_to_non_nullable
               as String?,
       userName: freezed == userName
           ? _value.userName
@@ -86,7 +80,7 @@ abstract class _$$UserModelImplCopyWith<$Res>
       __$$UserModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String? phone, String? password, String? userName});
+  $Res call({String? phone, String? userName});
 }
 
 /// @nodoc
@@ -103,17 +97,12 @@ class __$$UserModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? phone = freezed,
-    Object? password = freezed,
     Object? userName = freezed,
   }) {
     return _then(_$UserModelImpl(
       phone: freezed == phone
           ? _value.phone
           : phone // ignore: cast_nullable_to_non_nullable
-              as String?,
-      password: freezed == password
-          ? _value.password
-          : password // ignore: cast_nullable_to_non_nullable
               as String?,
       userName: freezed == userName
           ? _value.userName
@@ -126,7 +115,7 @@ class __$$UserModelImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$UserModelImpl implements _UserModel {
-  const _$UserModelImpl({this.phone, this.password, this.userName});
+  const _$UserModelImpl({this.phone, this.userName});
 
   factory _$UserModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserModelImplFromJson(json);
@@ -134,13 +123,11 @@ class _$UserModelImpl implements _UserModel {
   @override
   final String? phone;
   @override
-  final String? password;
-  @override
   final String? userName;
 
   @override
   String toString() {
-    return 'UserModel(phone: $phone, password: $password, userName: $userName)';
+    return 'UserModel(phone: $phone, userName: $userName)';
   }
 
   @override
@@ -149,15 +136,13 @@ class _$UserModelImpl implements _UserModel {
         (other.runtimeType == runtimeType &&
             other is _$UserModelImpl &&
             (identical(other.phone, phone) || other.phone == phone) &&
-            (identical(other.password, password) ||
-                other.password == password) &&
             (identical(other.userName, userName) ||
                 other.userName == userName));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, phone, password, userName);
+  int get hashCode => Object.hash(runtimeType, phone, userName);
 
   /// Create a copy of UserModel
   /// with the given fields replaced by the non-null parameter values.
@@ -176,18 +161,14 @@ class _$UserModelImpl implements _UserModel {
 }
 
 abstract class _UserModel implements UserModel {
-  const factory _UserModel(
-      {final String? phone,
-      final String? password,
-      final String? userName}) = _$UserModelImpl;
+  const factory _UserModel({final String? phone, final String? userName}) =
+      _$UserModelImpl;
 
   factory _UserModel.fromJson(Map<String, dynamic> json) =
       _$UserModelImpl.fromJson;
 
   @override
   String? get phone;
-  @override
-  String? get password;
   @override
   String? get userName;
 

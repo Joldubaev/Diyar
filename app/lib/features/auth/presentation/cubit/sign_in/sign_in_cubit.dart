@@ -1,13 +1,13 @@
-import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/auth/domain/domain.dart';
+import 'package:diyar/features/auth/domain/usecases/verify_sms_code_and_handle_first_launch_usecase.dart';
+import 'package:diyar/features/auth/domain/usecases/refresh_token_if_needed_usecase.dart';
+import 'package:diyar/features/auth/domain/usecases/check_biometrics_availability_usecase.dart';
+import 'package:diyar/features/auth/domain/usecases/authenticate_with_biometrics_usecase.dart';
 import 'package:injectable/injectable.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:meta/meta.dart';
-import 'package:flutter/services.dart';
-import 'package:local_auth/local_auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 part 'sign_in_state.dart';
 
 @injectable
@@ -15,193 +15,162 @@ class SignInCubit extends Cubit<SignInState> {
   SignInCubit(
     this._authRepository,
     this._localStorage,
-    this._localAuth,
+    this._verifySmsCodeUseCase,
+    this._refreshTokenUseCase,
+    this._checkBiometricsUseCase,
+    this._authenticateBiometricsUseCase,
   ) : super(SignInInitial());
 
   final AuthRepository _authRepository;
   final LocalStorage _localStorage;
-  final LocalAuthentication _localAuth;
+  final VerifySmsCodeAndHandleFirstLaunchUseCase _verifySmsCodeUseCase;
+  final RefreshTokenIfNeededUseCase _refreshTokenUseCase;
+  final CheckBiometricsAvailabilityUseCase _checkBiometricsUseCase;
+  final AuthenticateWithBiometricsUseCase _authenticateBiometricsUseCase;
 
-  // 🔐 Вход
-  Future<void> signIn(UserEntities model) async {
+  /// Отправка SMS кода для логина
+  Future<void> sendSmsCode(String phone) async {
     emit(SignInLoading());
 
-    final res = await _authRepository.login(model);
-    res.fold(
+    final result = await _authRepository.sendVerificationCode(phone);
+    result.fold(
       (failure) => emit(SignInFailure(failure.message)),
-      (_) async {
-        final prefs = await SharedPreferences.getInstance();
-        final bool isCurrentlyFirstLaunch = prefs.getBool(AppConst.firstLaunch) ?? true;
-        if (isCurrentlyFirstLaunch) {
-          await prefs.setBool(AppConst.firstLaunch, false);
-          log("[SignInCubit] First launch flag has been set to false after successful login.");
-        }
-        emit(SignInSuccessWithUser());
-      },
+      (_) => emit(SmsCodeSentForLogin(phone)),
     );
   }
 
-  // 📤 Отправка кода для сброса пароля
-  Future<void> sendCode(String phone) async {
+  /// Отправка SMS кода для логина (алиас для обратной совместимости)
+  Future<void> sendSmsCodeForLogin(String phone) => sendSmsCode(phone);
+
+  /// Верификация SMS кода
+  Future<void> verifySmsCode(String phone, String code) async {
     emit(SignInLoading());
 
-    final res = await _authRepository.sendForgotPasswordCodeToPhone(phone);
-    res.fold(
+    final result = await _verifySmsCodeUseCase(phone, code);
+    result.fold(
+      (failure) => emit(SignInFailure(failure.message)),
+      (_) => emit(SignInSuccessWithUser()),
+    );
+  }
+
+  /// Верификация SMS кода для логина (алиас для обратной совместимости)
+  Future<void> verifySmsCodeForLogin(String phone, String code) => verifySmsCode(phone, code);
+
+  /// Отправка кода для сброса пароля
+  Future<void> sendForgotPasswordCode(String phone) async {
+    emit(SignInLoading());
+
+    final result = await _authRepository.sendForgotPasswordCodeToPhone(phone);
+    result.fold(
       (failure) => emit(SignInFailure(failure.message)),
       (_) => emit(ForgotPasswordSuccess()),
     );
   }
 
-  // 🔄 Сброс пароля
+  /// Отправка кода (алиас для обратной совместимости)
+  Future<void> sendCode(String phone) => sendForgotPasswordCode(phone);
+
+  /// Сброс пароля
   Future<void> resetPassword(ResetPasswordEntity model) async {
     emit(SignInLoading());
 
-    final res = await _authRepository.resetPassword(model);
-    res.fold(
+    final result = await _authRepository.resetPassword(model);
+    result.fold(
       (failure) => emit(SignInFailure(failure.message)),
       (_) => emit(ResetPasswordSuccess()),
     );
   }
 
-  // 🔁 Обновление токена
-  Future<void> refreshToken() async {
-    final token = _localStorage.getString(AppConst.accessToken);
-
-    if (token != null && JwtDecoder.isExpired(token)) {
-      emit(RefreshTokenLoading());
-
-      final res = await _authRepository.refreshToken();
-      res.fold(
-        (failure) async {
-          log('[SignInCubit] Token refresh failed: ${failure.message}');
-          // await _localStorage.clear(); // Очищаем все токены при ошибке
-          emit(RefreshTokenFailure());
-        },
-        (_) => emit(RefreshTokenLoaded()),
-      );
-
-      log('Token isExpired: ${JwtDecoder.isExpired(token)}');
-    } else {
-      emit(RefreshTokenLoaded());
-    }
+  /// Обновление токена, если необходимо
+  Future<void> refreshTokenIfNeeded() async {
+    final result = await _refreshTokenUseCase();
+    result.fold(
+      (failure) => emit(RefreshTokenFailure()),
+      (_) => emit(RefreshTokenLoaded()),
+    );
   }
 
-  // pin code
+  /// Обновление токена (алиас для обратной совместимости)
+  Future<void> refreshToken() => refreshTokenIfNeeded();
+
+  /// Установка PIN кода
   Future<void> setPinCode(String code) async {
     emit(SignInLoading());
+
     try {
       await _authRepository.setPinCode(code);
       emit(PinCodeSetSuccess());
-    } on Exception catch (e) {
-      emit(PinCodeSetFailure(e.toString()));
+    } catch (e) {
+      emit(PinCodeSetFailure('Не удалось сохранить PIN-код: ${e.toString()}'));
     }
   }
 
+  /// Получение PIN кода
   Future<void> getPinCode() async {
     emit(SignInLoading());
+
     try {
-      final String? pinCode = await _authRepository.getPinCode();
+      final pinCode = await _authRepository.getPinCode();
       if (pinCode == null) {
-        emit(PinCodeGetFailure("PIN code is not set or could not be retrieved."));
+        emit(PinCodeGetFailure('PIN-код не установлен'));
       } else {
         emit(PinCodeGetSuccess(pinCode));
       }
-    } on Exception catch (e) {
-      emit(PinCodeGetFailure(e.toString()));
+    } catch (e) {
+      emit(PinCodeGetFailure('Не удалось получить PIN-код: ${e.toString()}'));
     }
   }
 
-  // --- Методы для биометрии ---
-
-  /// Проверяет доступность биометрии и сохраненную настройку пользователя
+  /// Проверка доступности биометрии
   Future<void> checkBiometricsAvailability() async {
-    emit(BiometricInitial());
-    try {
-      final bool canCheckBiometrics = await _localAuth.canCheckBiometrics;
-      final bool isDeviceSupported = await _localAuth.isDeviceSupported();
-
-      if (canCheckBiometrics && isDeviceSupported) {
-        final bool isEnabled = _localStorage.getBool(AppConst.biometricPrefKey) ?? false;
-        emit(BiometricAvailable(isEnabled));
-      } else {
-        emit(BiometricNotAvailable());
-      }
-    } catch (e) {
-      log('Error checking biometrics: $e');
-      emit(BiometricNotAvailable()); // Считаем недоступной при ошибке
+    final result = await _checkBiometricsUseCase();
+    if (result.isAvailable) {
+      emit(BiometricAvailable(result.isEnabled));
+    } else {
+      emit(BiometricNotAvailable());
     }
   }
 
-  /// Запускает аутентификацию по биометрии
+  /// Аутентификация по биометрии
   Future<void> authenticateWithBiometrics() async {
-    // Проверяем еще раз на всякий случай
-    final bool canCheckBiometrics = await _localAuth.canCheckBiometrics;
-    final bool isDeviceSupported = await _localAuth.isDeviceSupported();
-
-    if (!canCheckBiometrics || !isDeviceSupported) {
-      emit(BiometricAuthenticationFailure("Биометрия недоступна на этом устройстве."));
-      return;
-    }
-
-    final bool isEnabled = _localStorage.getBool(AppConst.biometricPrefKey) ?? false;
-    if (!isEnabled) {
-      emit(BiometricAuthenticationFailure("Вход по биометрии не включен в настройках."));
-      return;
-    }
-
     emit(BiometricAuthenticating());
-    try {
-      final bool didAuthenticate = await _localAuth.authenticate(
-        localizedReason: 'Пожалуйста, подтвердите вход', // Локализованная строка
-        options: const AuthenticationOptions(
-          stickyAuth: true, // Оставаться на экране аутентификации
-          biometricOnly: true, // Использовать только биометрию (не PIN/пароль устройства)
-        ),
-      );
 
-      if (didAuthenticate) {
-        emit(BiometricAuthenticationSuccess());
-      } else {
-        emit(BiometricAuthenticationFailure("Аутентификация отменена или не удалась."));
-      }
-    } on PlatformException catch (e) {
-      log('Biometric PlatformException: ${e.code} - ${e.message}');
-      // Обработка специфичных ошибок, если нужно (e.g., e.code == error_code.notAvailable)
-      emit(BiometricAuthenticationFailure("Ошибка биометрии: ${e.message ?? 'Неизвестная ошибка'}"));
-    } catch (e) {
-      log('Biometric generic error: $e');
-      emit(BiometricAuthenticationFailure("Произошла ошибка при аутентификации."));
+    final result = await _authenticateBiometricsUseCase();
+    if (result.isSuccess) {
+      emit(BiometricAuthenticationSuccess());
+    } else {
+      emit(BiometricAuthenticationFailure(result.errorMessage ?? 'Ошибка аутентификации'));
     }
   }
 
-  /// Сохраняет настройку использования биометрии
+  /// Сохранение настройки биометрии
   Future<void> saveBiometricPreference(bool isEnabled) async {
     try {
       await _localStorage.setBool(AppConst.biometricPrefKey, isEnabled);
       emit(BiometricPreferenceSaved(isEnabled));
-      // После сохранения снова проверяем доступность, чтобы обновить состояние BiometricAvailable
       await checkBiometricsAvailability();
     } catch (e) {
-      log('Error saving biometric preference: $e');
-      emit(BiometricPreferenceFailure("Не удалось сохранить настройку биометрии."));
+      emit(BiometricPreferenceFailure('Не удалось сохранить настройку биометрии'));
     }
   }
 
-  /// Получает текущую настройку биометрии (для инициализации UI)
+  /// Получение настройки биометрии
   bool getBiometricPreference() {
     return _localStorage.getBool(AppConst.biometricPrefKey) ?? false;
   }
 
-  // 🚪 Выход
+  /// Выход
   Future<void> logout() async {
-    // Добавляем async, так как удаляем настройку
-    // При выходе сбрасываем настройку биометрии
-    await _localStorage.delete(AppConst.biometricPrefKey);
-    await _authRepository.logout();
-    emit(LogoutSuccess()); // Эмитим успех после очистки
+    try {
+      await _localStorage.delete(AppConst.biometricPrefKey);
+      await _authRepository.logout();
+      emit(LogoutSuccess());
+    } catch (e) {
+      emit(LogoutFailure('Ошибка при выходе: ${e.toString()}'));
+    }
   }
 
-  // 🔧 Хелпер
+  /// Форматирование номера телефона
   String unformatPhoneNumber(String formattedPhoneNumber) {
     return formattedPhoneNumber.replaceAll(RegExp(r'\D'), '');
   }

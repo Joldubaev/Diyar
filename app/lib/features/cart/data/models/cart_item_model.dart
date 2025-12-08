@@ -3,7 +3,6 @@ import 'package:diyar/features/menu/menu.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'cart_item_model.freezed.dart';
-part 'cart_item_model.g.dart';
 
 @freezed
 class CartItemModel with _$CartItemModel {
@@ -16,9 +15,7 @@ class CartItemModel with _$CartItemModel {
   factory CartItemModel.fromJson(Map<String, dynamic> json) {
     // Используем кастомный fromJson для поддержки fallback на 'totalPrice'
     return CartItemModel(
-      food: json['food'] == null
-          ? null
-          : FoodModel.fromJson(json['food'] as Map<String, dynamic>),
+      food: json['food'] == null ? null : FoodModel.fromJson(json['food'] as Map<String, dynamic>),
       quantity: (json['quantity'] as num?)?.toInt(),
       // Используем ключ 'price' для обратной совместимости с Hive и API
       // Fallback на 'totalPrice' для обратной совместимости

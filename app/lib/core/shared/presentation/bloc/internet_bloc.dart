@@ -22,9 +22,7 @@ class InternetBloc extends Bloc<InternetEvent, InternetState> {
     _connectivitySubscription?.cancel();
 
     // Подписываемся на изменения состояния сети
-    _connectivitySubscription = Connectivity()
-        .onConnectivityChanged
-        .listen((List<ConnectivityResult> results) {
+    _connectivitySubscription = Connectivity().onConnectivityChanged.listen((List<ConnectivityResult> results) {
       // Проверяем, если хоть одно подключение активно
       final isConnected = results.any((result) => result != ConnectivityResult.none);
 
@@ -41,6 +39,6 @@ class InternetBloc extends Bloc<InternetEvent, InternetState> {
 
   void _notifyStatus(NetworkNotify event, Emitter<InternetState> emit) {
     // Выдаём соответствующее состояние
-    event.isConnected ? emit(NetworkSuccess()) : emit(NetworkFailure());
+    event.isConnected ? emit(NetworkSuccess()) : emit(InternetFailure());
   }
 }
