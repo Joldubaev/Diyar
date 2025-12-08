@@ -66,6 +66,8 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: MbankCheckStatusRoute.page),
         AutoRoute(page: MbankInitiateRoute.page),
         AutoRoute(page: PaymentStatusRoute.page),
+        AutoRoute(page: TemplatesRoute.page),
+        AutoRoute(page: CreateTemplateRoute.page),
       ];
 }
 

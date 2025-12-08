@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:diyar/features/auth/presentation/cubit/sign_up/sign_up_cubit.dart';
 import 'package:diyar/features/map/presentation/presentation.dart';
+import 'package:diyar/features/templates/presentation/cubit/templates_cubit.dart';
 import 'core/core.dart';
 import 'features/app/cubit/remote_config_cubit.dart';
 import 'features/pick_up/pick_up.dart';
@@ -72,6 +73,7 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => di.sl<PaymentBloc>()),
         BlocProvider(create: (context) => di.sl<SettingsCubit>()),
         BlocProvider(create: (context) => di.sl<UserMapCubit>()),
+        BlocProvider(create: (context) => di.sl<TemplatesCubit>()),
       ],
       child: AppListener(
         navigationKey: appRoute.navigatorKey,
