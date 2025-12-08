@@ -1,0 +1,13 @@
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    prefer_const_constructors: true
+    always_use_package_imports: true
+    sort_pub_dependencies: true
+    unnecessary_this: true
+    avoid_print: true
+    public_member_api_docs: false
+
+formatter: 
+  trailing_commas: preserve

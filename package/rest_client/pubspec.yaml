@@ -1,0 +1,18 @@
+publish_to: none
+name: rest_client
+description: REST client package for kg_border monorepo
+version: 0.0.1
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  connectivity_plus: ^7.0.0
+  cupertino_icons: ^1.0.8
+  dio: ^5.9.0
+  equatable: ^2.0.7
+  storage:
+    path: ../storage
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
