@@ -188,7 +188,7 @@ class _LoadedCartViewState extends State<LoadedCartView> {
                           cartItems: carts,
                           totalPrice: _dynamicFinalTotalPrice.toInt(),
                           startWorkTimeString: timerFromState.startTime.toString(),
-                          endWorkTimeString: timerFromState.endTime.toString(),
+                          endWorkTimeString: '00:00',
                           serverTimeString: timerFromState.serverTime,
                         );
                       },

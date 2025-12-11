@@ -27,55 +27,85 @@ class TemplatesCubit extends Cubit<TemplatesState> {
   ) : super(TemplatesInitial());
 
   Future<void> fetchTemplates() async {
+    if (isClosed) return;
     emit(TemplatesLoading());
     final result = await _getTemplatesUseCase();
+    if (isClosed) return;
     result.fold(
-      (failure) => emit(TemplatesError(failure.message)),
-      (templates) => emit(TemplatesLoaded(templates)),
+      (failure) {
+        if (!isClosed) emit(TemplatesError(failure.message));
+      },
+      (templates) {
+        if (!isClosed) emit(TemplatesLoaded(templates));
+      },
     );
   }
 
   Future<void> fetchTemplateById(String templateId) async {
+    if (isClosed) return;
     emit(TemplatesLoading());
     final result = await _getTemplateByIdUseCase(templateId);
+    if (isClosed) return;
     result.fold(
-      (failure) => emit(TemplatesError(failure.message)),
-      (template) => emit(TemplateLoaded(template)),
+      (failure) {
+        if (!isClosed) emit(TemplatesError(failure.message));
+      },
+      (template) {
+        if (!isClosed) emit(TemplateLoaded(template));
+      },
     );
   }
 
   Future<void> saveTemplate(TemplateEntity template) async {
+    if (isClosed) return;
     emit(TemplatesLoading());
     final result = await _createTemplateUseCase(template);
+    if (isClosed) return;
     result.fold(
-      (failure) => emit(TemplatesError(failure.message)),
+      (failure) {
+        if (!isClosed) emit(TemplatesError(failure.message));
+      },
       (_) {
-        emit(TemplatesCreationSuccess());
-        fetchTemplates(); // Обновляем список после создания
+        if (!isClosed) {
+          emit(TemplatesCreationSuccess());
+          fetchTemplates(); // Обновляем список после создания
+        }
       },
     );
   }
 
   Future<void> updateTemplate(TemplateEntity template) async {
+    if (isClosed) return;
     emit(TemplatesLoading());
     final result = await _updateTemplateUseCase(template);
+    if (isClosed) return;
     result.fold(
-      (failure) => emit(TemplatesError(failure.message)),
+      (failure) {
+        if (!isClosed) emit(TemplatesError(failure.message));
+      },
       (_) {
-        emit(TemplatesUpdateSuccess());
-        fetchTemplates(); // Обновляем список после обновления
+        if (!isClosed) {
+          emit(TemplatesUpdateSuccess());
+          fetchTemplates(); // Обновляем список после обновления
+        }
       },
     );
   }
 
   Future<void> deleteTemplate(String templateId) async {
+    if (isClosed) return;
     emit(TemplatesLoading());
     final result = await _deleteTemplateUseCase(templateId);
+    if (isClosed) return;
     result.fold(
-      (failure) => emit(TemplatesError(failure.message)),
+      (failure) {
+        if (!isClosed) emit(TemplatesError(failure.message));
+      },
       (_) {
-        emit(TemplatesDeleteSuccess());
-        fetchTemplates(); // Обновляем список после удаления
+        if (!isClosed) {
+          emit(TemplatesDeleteSuccess());
+          fetchTemplates(); // Обновляем список после удаления
+        }
       },
     );
   }

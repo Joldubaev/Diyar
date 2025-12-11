@@ -1,8 +1,10 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:diyar/core/router/routes.gr.dart';
+import 'package:diyar/core/core.dart';
 import 'package:diyar/features/templates/presentation/cubit/templates_cubit.dart';
+import 'package:diyar/features/templates/presentation/widgets/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 @RoutePage()
 class TemplatesPage extends StatelessWidget {
@@ -10,11 +12,12 @@ class TemplatesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => context.read<TemplatesCubit>()..fetchTemplates(),
+    final cubit = context.read<TemplatesCubit>();
+    return BlocProvider.value(
+      value: cubit..fetchTemplates(),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Templates'),
+          title: const Text('Мои шаблоны'),
           actions: [
             IconButton(
               icon: const Icon(Icons.add),
@@ -26,17 +29,21 @@ class TemplatesPage extends StatelessWidget {
         ),
         body: BlocConsumer<TemplatesCubit, TemplatesState>(
           listener: (context, state) {
+            final snackBar = SnackBarMessage();
             if (state is TemplatesError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message)),
+              snackBar.showErrorSnackBar(
+                message: state.message,
+                context: context,
               );
             } else if (state is TemplatesDeleteSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Template deleted successfully')),
+              snackBar.showSuccessSnackBar(
+                message: 'Шаблон успешно удален',
+                context: context,
               );
             } else if (state is TemplatesUpdateSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Template updated successfully')),
+              snackBar.showSuccessSnackBar(
+                message: 'Шаблон успешно обновлен',
+                context: context,
               );
             }
           },
@@ -47,93 +54,89 @@ class TemplatesPage extends StatelessWidget {
 
             if (state is TemplatesLoaded) {
               if (state.templates.isEmpty) {
-                return const Center(
-                  child: Text('No templates found'),
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset('assets/icons/cart.svg', width: 200, height: 200),
+                      const SizedBox(height: 16),
+                      Text(
+                        'Нет шаблонов',
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Создайте свой первый шаблон',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                            ),
+                      ),
+                    ],
+                  ),
                 );
               }
 
               return ListView.builder(
+                padding: const EdgeInsets.all(16),
                 itemCount: state.templates.length,
                 itemBuilder: (context, index) {
                   final template = state.templates[index];
-                  return ListTile(
-                    title: Text(template.templateName),
-                    subtitle: Text(template.addressData.address),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.edit),
-                          onPressed: () {
-                            context.router.push(
-                              CreateTemplateRoute(template: template),
-                            );
-                          },
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Dismissible(
+                      key: Key(template.id ?? 'template_$index'),
+                      direction: DismissDirection.endToStart,
+                      background: Container(
+                        alignment: Alignment.centerRight,
+                        padding: const EdgeInsets.only(right: 20),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () {
-                            if (template.id != null) {
-                              _showDeleteDialog(context, template.id!);
-                            }
-                          },
+                        child: const Icon(
+                          Icons.delete,
+                          color: Colors.white,
+                          size: 28,
                         ),
-                      ],
+                      ),
+                      confirmDismiss: (direction) async {
+                        if (template.id != null) {
+                          return await DeleteConfirmationDialog.show(
+                            context: context,
+                            title: 'Удалить шаблон',
+                            message: 'Вы уверены, что хотите удалить этот шаблон?',
+                          );
+                        }
+                        return false;
+                      },
+                      onDismissed: (direction) {
+                        if (template.id != null) {
+                          context.read<TemplatesCubit>().deleteTemplate(template.id!);
+                        }
+                      },
+                      child: TemplateCard(
+                        template: template,
+                        onTap: () {
+                          context.router.push(
+                            CreateTemplateRoute(template: template),
+                          );
+                        },
+                      ),
                     ),
-                    onTap: () {
-                      if (template.id != null) {
-                        context.read<TemplatesCubit>().fetchTemplateById(template.id!);
-                      }
-                    },
                   );
                 },
               );
             }
 
             if (state is TemplatesError) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(state.message),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () {
-                        context.read<TemplatesCubit>().fetchTemplates();
-                      },
-                      child: const Text('Retry'),
-                    ),
-                  ],
-                ),
-              );
+              return EmptyTemplateWidget();
             }
 
             return const Center(child: Text('Initial state'));
           },
         ),
-      ),
-    );
-  }
-
-  void _showDeleteDialog(BuildContext context, String templateId) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete Template'),
-        content: const Text('Are you sure you want to delete this template?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              context.read<TemplatesCubit>().deleteTemplate(templateId);
-              Navigator.of(context).pop();
-            },
-            child: const Text('Delete'),
-          ),
-        ],
       ),
     );
   }

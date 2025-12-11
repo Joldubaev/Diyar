@@ -185,14 +185,13 @@ Future<dynamic> _showDeliveryOptionsBottomSheet(
                         ),
                         onPressed: () {
                           Navigator.of(context).pop();
-                          router.push(
-                            // TemplatesRoute()
-                            OrderMapRoute(
-                              cart: carts,
-                              totalPrice: totalPrice,
-                              dishCount: dishCount ?? 0,
-                            ),
-                          );
+                          router.push(TemplatesRoute()
+                              // OrderMapRoute(
+                              //   cart: carts,
+                              //   totalPrice: totalPrice,
+                              //   dishCount: dishCount ?? 0,
+                              // ),
+                              );
                         },
                         child: Column(
                           children: [
