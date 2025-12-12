@@ -7,6 +7,10 @@ abstract class CartLocalDataSource {
   Future<void> saveCartItem(CartItemModel item);
   Future<void> removeCartItem(String foodId);
   Future<void> updateCartItemQuantity(String foodId, int newQuantity);
+  Future<void> incrementCartItem(String foodId);
+  Future<void> decrementCartItem(String foodId);
+  Future<void> addOrUpdateCartItem(CartItemModel item);
+  CartItemModel? getCartItemByFoodId(String foodId);
   List<CartItemModel> getAllCartItems(); // Get current items synchronously
   Stream<List<CartItemModel>> getCartItemsStream(); // Stream for reactive updates
   Future<void> clearCart();
@@ -52,6 +56,50 @@ class CartHiveDataSource implements CartLocalDataSource {
       );
       await _hiveStorage.save(foodId, updatedItem);
     }
+  }
+
+  @override
+  Future<void> incrementCartItem(String foodId) async {
+    final existingItem = _hiveStorage.read(foodId);
+    if (existingItem != null) {
+      final newQuantity = (existingItem.quantity ?? 0) + 1;
+      await updateCartItemQuantity(foodId, newQuantity);
+    }
+  }
+
+  @override
+  Future<void> decrementCartItem(String foodId) async {
+    final existingItem = _hiveStorage.read(foodId);
+    if (existingItem != null) {
+      final newQuantity = (existingItem.quantity ?? 1) - 1;
+      if (newQuantity <= 0) {
+        await removeCartItem(foodId);
+      } else {
+        await updateCartItemQuantity(foodId, newQuantity);
+      }
+    }
+  }
+
+  @override
+  Future<void> addOrUpdateCartItem(CartItemModel item) async {
+    if (item.food?.id == null) return;
+
+    final foodId = item.food!.id!;
+    final existingItem = _hiveStorage.read(foodId);
+
+    if (existingItem != null) {
+      // Item exists, update quantity by adding new quantity
+      final newQuantity = (existingItem.quantity ?? 0) + (item.quantity ?? 1);
+      await updateCartItemQuantity(foodId, newQuantity);
+    } else {
+      // Item doesn't exist, save new
+      await saveCartItem(item);
+    }
+  }
+
+  @override
+  CartItemModel? getCartItemByFoodId(String foodId) {
+    return _hiveStorage.read(foodId);
   }
 
   @override

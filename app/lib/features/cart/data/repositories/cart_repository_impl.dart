@@ -24,32 +24,14 @@ class CartRepositoryImpl implements CartRepository {
 
   @override
   Future<void> addToCart(CartItemEntity product) async {
-    // Check if item already exists to update quantity or save new
-    final existingItems = _localDataSource.getAllCartItems(); // Sync fetch is fine here
-    final existingItemIndex = existingItems.indexWhere((item) => item.food?.id == product.food?.id);
-
-    if (existingItemIndex != -1) {
-      // Item exists, update quantity
-      final existingItem = existingItems[existingItemIndex];
-      final newQuantity = (existingItem.quantity ?? 0) + (product.quantity ?? 1);
-      // Ensure product.food and product.food.id are not null
-      if (product.food?.id != null) {
-        await _localDataSource.updateCartItemQuantity(product.food!.id!, newQuantity);
-      } else {
-        // Handle error: product must have a food item with an ID
-        log("Error: Cannot add product to cart without a valid food ID.");
-      }
-    } else {
-      // Item doesn't exist, add new
-      // We need a proper CartItemModel.fromEntity implementation
-      final cartModel = CartItemModel.fromEntity(product); // Needs implementation in CartItemModel
-      if (cartModel.food?.id != null) {
-        await _localDataSource.saveCartItem(cartModel);
-      } else {
-        // Handle error: product must have a food item with an ID
-        log("Error: Cannot save product to cart without a valid food ID.");
-      }
+    if (product.food?.id == null) {
+      log("Error: Cannot add product to cart without a valid food ID.");
+      return;
     }
+
+    // Преобразуем entity в model и используем метод datasource
+    final cartModel = CartItemModel.fromEntity(product);
+    await _localDataSource.addOrUpdateCartItem(cartModel);
   }
 
   @override
@@ -59,22 +41,8 @@ class CartRepositoryImpl implements CartRepository {
 
   @override
   Future<void> decrementCart(String foodId) async {
-    final existingItems = _localDataSource.getAllCartItems();
-    try {
-      final existingItem = existingItems.firstWhere((item) => item.food?.id == foodId);
-
-      final newQuantity = (existingItem.quantity ?? 1) - 1;
-
-      if (newQuantity <= 0) {
-        await _localDataSource.removeCartItem(foodId);
-      } else {
-        await _localDataSource.updateCartItemQuantity(foodId, newQuantity);
-      }
-    } catch (e) {
-      // Handle case where item is not found
-      log("Error decrementing cart: Item with foodId $foodId not found. $e");
-      // Optionally rethrow or handle differently
-    }
+    // Логика уменьшения количества теперь в datasource
+    await _localDataSource.decrementCartItem(foodId);
   }
 
   @override
@@ -87,17 +55,8 @@ class CartRepositoryImpl implements CartRepository {
 
   @override
   Future<void> incrementCart(String foodId) async {
-    final existingItems = _localDataSource.getAllCartItems();
-    try {
-      final existingItem = existingItems.firstWhere((item) => item.food?.id == foodId);
-
-      final newQuantity = (existingItem.quantity ?? 0) + 1;
-      await _localDataSource.updateCartItemQuantity(foodId, newQuantity);
-    } catch (e) {
-      // Handle case where item is not found
-      log("Error incrementing cart: Item with foodId $foodId not found. $e");
-      // Optionally rethrow or handle differently
-    }
+    // Логика увеличения количества теперь в datasource
+    await _localDataSource.incrementCartItem(foodId);
   }
 
   @override
@@ -119,12 +78,11 @@ class CartRepositoryImpl implements CartRepository {
     }
   }
 
-  // setCartItemCount uses localDataSource now
   @override
   Future<void> setCartItemCount(CartItemEntity cart) async {
     if (cart.food?.id == null || cart.quantity == null) {
       log("Error setting cart item count: Food ID or quantity is null.");
-      return; // Guard clause
+      return;
     }
 
     final foodId = cart.food!.id!;
@@ -133,15 +91,14 @@ class CartRepositoryImpl implements CartRepository {
     if (quantity <= 0) {
       await _localDataSource.removeCartItem(foodId);
     } else {
-      // Check if item exists to decide between save and update
-      final existingItems = _localDataSource.getAllCartItems();
-      final existingItemIndex = existingItems.indexWhere((item) => item.food?.id == foodId);
+      // Используем метод datasource для проверки существования
+      final existingItem = _localDataSource.getCartItemByFoodId(foodId);
 
-      if (existingItemIndex != -1) {
+      if (existingItem != null) {
         await _localDataSource.updateCartItemQuantity(foodId, quantity);
       } else {
-        // If setting count for a non-existent item, treat as add
-        final cartModel = CartItemModel.fromEntity(cart); // Needs implementation in CartItemModel
+        // Если элемент не существует, добавляем новый
+        final cartModel = CartItemModel.fromEntity(cart);
         await _localDataSource.saveCartItem(cartModel);
       }
     }

@@ -1,5 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
+import 'package:diyar/features/cart/cart.dart';
+import 'package:diyar/features/templates/domain/entities/template_entity.dart';
 import 'package:diyar/features/templates/presentation/cubit/templates_cubit.dart';
 import 'package:diyar/features/templates/presentation/widgets/widget.dart';
 import 'package:flutter/material.dart';
@@ -116,11 +118,29 @@ class TemplatesPage extends StatelessWidget {
                           context.read<TemplatesCubit>().deleteTemplate(template.id!);
                         }
                       },
-                      child: TemplateCard(
-                        template: template,
-                        onTap: () {
-                          context.router.push(
-                            CreateTemplateRoute(template: template),
+                      child: BlocBuilder<CartBloc, CartState>(
+                        builder: (context, cartState) {
+                          return TemplateCard(
+                            template: template,
+                            onTap: () {
+                              context.router.push(
+                                CreateTemplateRoute(template: template),
+                              );
+                            },
+                            onEditTap: cartState is CartLoaded && cartState.items.isNotEmpty
+                                ? () {
+                                    final address = _buildAddressFromTemplate(template);
+                                    context.router.push(
+                                      DeliveryFormRoute(
+                                        cart: cartState.items,
+                                        totalPrice: cartState.totalPrice.toInt(),
+                                        dishCount: cartState.totalItems,
+                                        deliveryPrice: 0.0,
+                                        address: address,
+                                      ),
+                                    );
+                                  }
+                                : null,
                           );
                         },
                       ),
@@ -139,5 +159,15 @@ class TemplatesPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _buildAddressFromTemplate(TemplateEntity template) {
+    final address = template.addressData.address;
+    final houseNumber = template.addressData.houseNumber;
+
+    if (houseNumber.isNotEmpty) {
+      return '$address, д. $houseNumber';
+    }
+    return address;
   }
 }

@@ -1,27 +1,14 @@
 import 'dart:developer';
 
-import 'package:auto_route/auto_route.dart';
+import 'package:diyar/common/timer/time_utils.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/domain/domain.dart';
 import 'package:flutter/material.dart';
 
-TimeOfDay _parseTimeOfDay(String timeString) {
-  try {
-    final parts = timeString.split(':');
-    if (parts.length >= 2) {
-      final hour = int.tryParse(parts[0]);
-      final minute = int.tryParse(parts[1]);
-      if (hour != null && minute != null && hour >= 0 && hour <= 23 && minute >= 0 && minute <= 59) {
-        return TimeOfDay(hour: hour, minute: minute);
-      }
-    }
-  } catch (e) {
-    log("Ошибка парсинга времени: $timeString, $e");
-  }
-  log("Не удалось распарсить время '$timeString', используется полночь по умолчанию.");
-  return const TimeOfDay(hour: 0, minute: 0);
-}
-
+/// Показывает диалоги для оформления заказа
+///
+/// [onDeliveryTap] - callback для перехода на страницу доставки
+/// [onPickupTap] - callback для перехода на страницу самовывоза
 void showOrderDialogs({
   required BuildContext context,
   required List<CartItemEntity> cartItems,
@@ -30,36 +17,34 @@ void showOrderDialogs({
   required String? startWorkTimeString,
   required String? endWorkTimeString,
   required String? serverTimeString,
+  required VoidCallback onDeliveryTap,
+  required VoidCallback onPickupTap,
 }) {
-  final TimeOfDay startWorkTime = _parseTimeOfDay(startWorkTimeString ?? '10:00');
-  final TimeOfDay endWorkTime = _parseTimeOfDay(endWorkTimeString ?? '24:00');
+  final TimeOfDay startWorkTime = parseTimeOfDay(startWorkTimeString ?? '10:00');
+  final TimeOfDay endWorkTime = parseTimeOfDay(endWorkTimeString ?? '24:00');
 
   final TimeOfDay currentTimeOfDay;
   if (serverTimeString != null) {
-    currentTimeOfDay = _parseTimeOfDay(serverTimeString);
+    currentTimeOfDay = parseTimeOfDay(serverTimeString);
   } else {
     log("Ошибка: serverTimeString is null. Магазин будет считаться закрытым.");
     _showClosedAlertDialog(context, startWorkTime, endWorkTime);
     return;
   }
 
-  int timeOfDayToMinutes(TimeOfDay time) => time.hour * 60 + time.minute;
-
-  final currentTimeInMinutes = timeOfDayToMinutes(currentTimeOfDay);
-  final startWorkTimeInMinutes = timeOfDayToMinutes(startWorkTime);
-  final endWorkTimeInMinutes = timeOfDayToMinutes(endWorkTime);
-
-  bool isShopClosed;
-  if (startWorkTimeInMinutes < endWorkTimeInMinutes) {
-    isShopClosed = currentTimeInMinutes < startWorkTimeInMinutes || currentTimeInMinutes >= endWorkTimeInMinutes;
-  } else {
-    isShopClosed = currentTimeInMinutes < startWorkTimeInMinutes && currentTimeInMinutes >= endWorkTimeInMinutes;
-  }
-
-  if (isShopClosed) {
+  // Используем универсальную функцию проверки времени работы
+  if (isShopClosed(
+    currentTime: currentTimeOfDay,
+    startWorkTime: startWorkTime,
+    endWorkTime: endWorkTime,
+  )) {
     _showClosedAlertDialog(context, startWorkTime, endWorkTime);
   } else {
-    _showDeliveryOptionsBottomSheet(context, cartItems, totalPrice, dishCount);
+    _showDeliveryOptionsBottomSheet(
+      context,
+      onDeliveryTap: onDeliveryTap,
+      onPickupTap: onPickupTap,
+    );
   }
 }
 
@@ -86,7 +71,7 @@ Future<dynamic> _showClosedAlertDialog(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'Мы работаем с${startWorkTime.hour.toString().padLeft(2, '0')}:${startWorkTime.minute.toString().padLeft(2, '0')} до ${endWorkTime.hour.toString().padLeft(2, '0')}:${endWorkTime.minute.toString().padLeft(2, '0')}. Пожалуйста, сделайте заказ позже.',
+              'Мы работаем с ${formatTimeOfDay(startWorkTime)} до ${formatTimeOfDay(endWorkTime)}. Пожалуйста, сделайте заказ позже.',
               style: Theme.of(dialogContext).textTheme.bodyMedium,
               textAlign: TextAlign.center,
             ),
@@ -107,12 +92,10 @@ Future<dynamic> _showClosedAlertDialog(
 }
 
 Future<dynamic> _showDeliveryOptionsBottomSheet(
-  BuildContext context,
-  List<CartItemEntity> carts,
-  int totalPrice,
-  int? dishCount,
-) {
-  final router = context.router;
+  BuildContext context, {
+  required VoidCallback onDeliveryTap,
+  required VoidCallback onPickupTap,
+}) {
   final l10n = context.l10n;
 
   return showModalBottomSheet(
@@ -185,13 +168,7 @@ Future<dynamic> _showDeliveryOptionsBottomSheet(
                         ),
                         onPressed: () {
                           Navigator.of(context).pop();
-                          router.push(TemplatesRoute()
-                              // OrderMapRoute(
-                              //   cart: carts,
-                              //   totalPrice: totalPrice,
-                              //   dishCount: dishCount ?? 0,
-                              // ),
-                              );
+                          onDeliveryTap();
                         },
                         child: Column(
                           children: [
@@ -222,11 +199,7 @@ Future<dynamic> _showDeliveryOptionsBottomSheet(
                         ),
                         onPressed: () {
                           Navigator.of(context).pop();
-                          router.push(PickupFormRoute(
-                            cart: carts,
-                            totalPrice: totalPrice,
-                            dishCount: dishCount ?? 0,
-                          ));
+                          onPickupTap();
                         },
                         child: Column(
                           children: [

@@ -14,13 +14,18 @@ class CartItemsListWidget extends StatelessWidget {
       delegate: SliverChildBuilderDelegate(
         (context, index) {
           final cartItem = items[index];
+          final cartItemFood = cartItem.food;
+          final quantity = cartItem.quantity ?? 0;
+          if (cartItemFood == null) {
+            return const SizedBox.shrink();
+          }
           return Padding(
             padding: EdgeInsets.only(bottom: index == items.length - 1 ? 0 : 10),
-            child: CartItemWidgets(
-              counter: cartItem.quantity ?? 0,
-              food: cartItem.food ?? FoodEntity(),
+            child: CartItemWidget(
+              counter: quantity,
+              food: cartItemFood,
               onRemove: () {
-                _showDeleteConfirmationDialog(context, cartItem.food);
+                _showDeleteConfirmationDialog(context, cartItemFood);
               },
             ),
           );
@@ -30,49 +35,26 @@ class CartItemsListWidget extends StatelessWidget {
     );
   }
 
-  Future<void> _showDeleteConfirmationDialog(BuildContext context, FoodEntity? food) async {
-    if (food?.id == null) return;
+  Future<void> _showDeleteConfirmationDialog(
+    BuildContext context,
+    FoodEntity? food,
+  ) async {
+    final foodId = food?.id;
+    if (foodId == null) return;
 
     final cartBloc = context.read<CartBloc>();
     final l10n = context.l10n;
 
-    final confirmed = await showDialog<bool>(
+    final confirmed = await DeleteConfirmationDialog.show(
       context: context,
-      builder: (dialogContext) {
-        final theme = Theme.of(dialogContext);
-        return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          titlePadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
-          contentPadding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
-          title: Text(l10n.deleteOrder, textAlign: TextAlign.center, style: theme.textTheme.titleLarge),
-          content: Text(l10n.deleteOrderText, textAlign: TextAlign.center, style: theme.textTheme.bodyMedium),
-          actionsAlignment: MainAxisAlignment.center,
-          actionsPadding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-          actions: [
-            OutlinedButton(
-              style: OutlinedButton.styleFrom(
-                side: BorderSide(color: theme.colorScheme.outline.withValues(alpha: 0.5)),
-                foregroundColor: theme.colorScheme.onSurfaceVariant,
-              ),
-              onPressed: () => Navigator.of(dialogContext).pop(false),
-              child: Text(l10n.no),
-            ),
-            const SizedBox(width: 12),
-            FilledButton.tonal(
-              style: FilledButton.styleFrom(
-                backgroundColor: theme.colorScheme.errorContainer,
-                foregroundColor: theme.colorScheme.onErrorContainer,
-              ),
-              onPressed: () => Navigator.of(dialogContext).pop(true),
-              child: Text(l10n.yes),
-            ),
-          ],
-        );
-      },
+      title: l10n.deleteOrder,
+      message: l10n.deleteOrderText,
+      cancelText: l10n.no,
+      deleteText: l10n.yes,
     );
 
-    if (confirmed == true) {
-      cartBloc.add(RemoveItemFromCart(food!.id!));
+    if (confirmed == true && context.mounted) {
+      cartBloc.add(RemoveItemFromCart(foodId));
     }
   }
 }

@@ -4,7 +4,7 @@ import 'package:diyar/features/order/domain/domain.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'create_order_model.freezed.dart';
-// part 'create_order_model.g.dart'; // Будет сгенерирован после build_runner
+// part 'create_order_model.g.dar
 
 @freezed
 class CreateOrderModel with _$CreateOrderModel {
@@ -19,9 +19,7 @@ class CreateOrderModel with _$CreateOrderModel {
     int? sdacha,
   }) = _CreateOrderModel;
 
-  // Кастомный fromJson для преобразования плоской структуры API в композиционную
   factory CreateOrderModel.fromJson(Map<String, dynamic> json) {
-    // Если уже есть вложенные объекты, парсим их напрямую
     if (json.containsKey('addressData') || json.containsKey('contactInfo')) {
       return CreateOrderModel(
         addressData:
@@ -39,7 +37,6 @@ class CreateOrderModel with _$CreateOrderModel {
       );
     }
 
-    // Иначе собираем из плоской структуры
     return CreateOrderModel(
       addressData: AddressModel(
         address: json['address'] as String? ?? '',
@@ -98,11 +95,8 @@ extension CreateOrderModelX on CreateOrderModel {
         sdacha: sdacha,
       );
 
-  // Кастомный toJson для преобразования композиционной структуры в плоскую для API
   Map<String, dynamic> toJsonFlat() {
     final json = <String, dynamic>{};
-
-    // Разворачиваем addressData
     if (addressData != null) {
       json['address'] = addressData!.address;
       json['houseNumber'] = addressData!.houseNumber;

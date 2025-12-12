@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 class TemplateCard extends StatelessWidget {
   final TemplateEntity template;
   final VoidCallback onTap;
+  final VoidCallback? onEditTap;
 
   const TemplateCard({
     super.key,
     required this.template,
     required this.onTap,
+    this.onEditTap,
   });
 
   String _buildFullAddress() {
@@ -88,11 +90,29 @@ class TemplateCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              Icon(
-                Icons.chevron_right,
-                color: colorScheme.onSurface.withValues(alpha: 0.3),
-                size: 24,
-              ),
+              if (onEditTap != null)
+                InkWell(
+                  onTap: onEditTap,
+                  borderRadius: BorderRadius.circular(8),
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: colorScheme.primaryContainer.withValues(alpha: 0.5),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Icon(
+                      Icons.edit_outlined,
+                      color: colorScheme.primary,
+                      size: 20,
+                    ),
+                  ),
+                ),
+              if (onEditTap == null)
+                Icon(
+                  Icons.chevron_right,
+                  color: colorScheme.onSurface.withValues(alpha: 0.3),
+                  size: 24,
+                ),
             ],
           ),
         ),
