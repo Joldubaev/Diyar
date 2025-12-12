@@ -94,4 +94,12 @@ class ApiConst {
   static const getTimer = "$baseUrl/work-time/get-work-time";
 
   static String getPrice({String? id}) => "$baseUrl/districts/get-district-price-by-yandex-id/$id";
+
+  static const createTemplate = "$baseUrl/templates/create-template";
+  static const deleteTemplate = "$baseUrl/templates/delete-template";
+  // with query templateId
+  static const getAllTemplates = "$baseUrl/templates/get-all-templates";
+  static const getTemplateById = "$baseUrl/templates/get-template-by-id";
+  // with query templateId
+  static const updateTemplate = "$baseUrl/templates/update-template";
 }

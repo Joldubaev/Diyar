@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:diyar/common/calculiator/order_calculation_service.dart';
 import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:diyar/features/cart/domain/repository/cart_repository.dart'; // Assuming interface is moved
 import 'package:equatable/equatable.dart';
@@ -127,12 +128,11 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
   // --- Helper Methods ---
 
+  // Используем OrderCalculationService для расчета цены товаров
+  static final _calculationService = OrderCalculationService();
+
   double _calculateTotalPrice(List<CartItemEntity> items) {
-    return items.fold(0.0, (sum, item) {
-      final price = item.food?.price?.toDouble() ?? 0.0;
-      final quantity = item.quantity ?? 0;
-      return sum + (price * quantity);
-    });
+    return _calculationService.calculateItemsPrice(items);
   }
 
   int _calculateTotalItems(List<CartItemEntity> items) {

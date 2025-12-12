@@ -14,31 +14,16 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-CreateOrderModel _$CreateOrderModelFromJson(Map<String, dynamic> json) {
-  return _CreateOrderModel.fromJson(json);
-}
-
 /// @nodoc
 mixin _$CreateOrderModel {
-  String? get address => throw _privateConstructorUsedError;
-  String? get comment => throw _privateConstructorUsedError;
+  AddressModel? get addressData => throw _privateConstructorUsedError;
+  ContactInfoModel? get contactInfo => throw _privateConstructorUsedError;
   int? get dishesCount => throw _privateConstructorUsedError;
-  String? get entrance => throw _privateConstructorUsedError;
-  String? get floor => throw _privateConstructorUsedError;
   List<FoodItemOrderModel>? get foods => throw _privateConstructorUsedError;
-  String? get houseNumber => throw _privateConstructorUsedError;
-  String? get intercom => throw _privateConstructorUsedError;
-  String? get kvOffice => throw _privateConstructorUsedError;
   String? get paymentMethod => throw _privateConstructorUsedError;
   int? get price => throw _privateConstructorUsedError;
-  String? get userName => throw _privateConstructorUsedError;
-  String? get userPhone => throw _privateConstructorUsedError;
   int? get deliveryPrice => throw _privateConstructorUsedError;
   int? get sdacha => throw _privateConstructorUsedError;
-  String? get region => throw _privateConstructorUsedError;
-
-  /// Serializes this CreateOrderModel to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of CreateOrderModel
   /// with the given fields replaced by the non-null parameter values.
@@ -54,22 +39,17 @@ abstract class $CreateOrderModelCopyWith<$Res> {
       _$CreateOrderModelCopyWithImpl<$Res, CreateOrderModel>;
   @useResult
   $Res call(
-      {String? address,
-      String? comment,
+      {AddressModel? addressData,
+      ContactInfoModel? contactInfo,
       int? dishesCount,
-      String? entrance,
-      String? floor,
       List<FoodItemOrderModel>? foods,
-      String? houseNumber,
-      String? intercom,
-      String? kvOffice,
       String? paymentMethod,
       int? price,
-      String? userName,
-      String? userPhone,
       int? deliveryPrice,
-      int? sdacha,
-      String? region});
+      int? sdacha});
+
+  $AddressModelCopyWith<$Res>? get addressData;
+  $ContactInfoModelCopyWith<$Res>? get contactInfo;
 }
 
 /// @nodoc
@@ -87,60 +67,32 @@ class _$CreateOrderModelCopyWithImpl<$Res, $Val extends CreateOrderModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? address = freezed,
-    Object? comment = freezed,
+    Object? addressData = freezed,
+    Object? contactInfo = freezed,
     Object? dishesCount = freezed,
-    Object? entrance = freezed,
-    Object? floor = freezed,
     Object? foods = freezed,
-    Object? houseNumber = freezed,
-    Object? intercom = freezed,
-    Object? kvOffice = freezed,
     Object? paymentMethod = freezed,
     Object? price = freezed,
-    Object? userName = freezed,
-    Object? userPhone = freezed,
     Object? deliveryPrice = freezed,
     Object? sdacha = freezed,
-    Object? region = freezed,
   }) {
     return _then(_value.copyWith(
-      address: freezed == address
-          ? _value.address
-          : address // ignore: cast_nullable_to_non_nullable
-              as String?,
-      comment: freezed == comment
-          ? _value.comment
-          : comment // ignore: cast_nullable_to_non_nullable
-              as String?,
+      addressData: freezed == addressData
+          ? _value.addressData
+          : addressData // ignore: cast_nullable_to_non_nullable
+              as AddressModel?,
+      contactInfo: freezed == contactInfo
+          ? _value.contactInfo
+          : contactInfo // ignore: cast_nullable_to_non_nullable
+              as ContactInfoModel?,
       dishesCount: freezed == dishesCount
           ? _value.dishesCount
           : dishesCount // ignore: cast_nullable_to_non_nullable
               as int?,
-      entrance: freezed == entrance
-          ? _value.entrance
-          : entrance // ignore: cast_nullable_to_non_nullable
-              as String?,
-      floor: freezed == floor
-          ? _value.floor
-          : floor // ignore: cast_nullable_to_non_nullable
-              as String?,
       foods: freezed == foods
           ? _value.foods
           : foods // ignore: cast_nullable_to_non_nullable
               as List<FoodItemOrderModel>?,
-      houseNumber: freezed == houseNumber
-          ? _value.houseNumber
-          : houseNumber // ignore: cast_nullable_to_non_nullable
-              as String?,
-      intercom: freezed == intercom
-          ? _value.intercom
-          : intercom // ignore: cast_nullable_to_non_nullable
-              as String?,
-      kvOffice: freezed == kvOffice
-          ? _value.kvOffice
-          : kvOffice // ignore: cast_nullable_to_non_nullable
-              as String?,
       paymentMethod: freezed == paymentMethod
           ? _value.paymentMethod
           : paymentMethod // ignore: cast_nullable_to_non_nullable
@@ -149,14 +101,6 @@ class _$CreateOrderModelCopyWithImpl<$Res, $Val extends CreateOrderModel>
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
               as int?,
-      userName: freezed == userName
-          ? _value.userName
-          : userName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      userPhone: freezed == userPhone
-          ? _value.userPhone
-          : userPhone // ignore: cast_nullable_to_non_nullable
-              as String?,
       deliveryPrice: freezed == deliveryPrice
           ? _value.deliveryPrice
           : deliveryPrice // ignore: cast_nullable_to_non_nullable
@@ -165,11 +109,35 @@ class _$CreateOrderModelCopyWithImpl<$Res, $Val extends CreateOrderModel>
           ? _value.sdacha
           : sdacha // ignore: cast_nullable_to_non_nullable
               as int?,
-      region: freezed == region
-          ? _value.region
-          : region // ignore: cast_nullable_to_non_nullable
-              as String?,
     ) as $Val);
+  }
+
+  /// Create a copy of CreateOrderModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $AddressModelCopyWith<$Res>? get addressData {
+    if (_value.addressData == null) {
+      return null;
+    }
+
+    return $AddressModelCopyWith<$Res>(_value.addressData!, (value) {
+      return _then(_value.copyWith(addressData: value) as $Val);
+    });
+  }
+
+  /// Create a copy of CreateOrderModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $ContactInfoModelCopyWith<$Res>? get contactInfo {
+    if (_value.contactInfo == null) {
+      return null;
+    }
+
+    return $ContactInfoModelCopyWith<$Res>(_value.contactInfo!, (value) {
+      return _then(_value.copyWith(contactInfo: value) as $Val);
+    });
   }
 }
 
@@ -182,22 +150,19 @@ abstract class _$$CreateOrderModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String? address,
-      String? comment,
+      {AddressModel? addressData,
+      ContactInfoModel? contactInfo,
       int? dishesCount,
-      String? entrance,
-      String? floor,
       List<FoodItemOrderModel>? foods,
-      String? houseNumber,
-      String? intercom,
-      String? kvOffice,
       String? paymentMethod,
       int? price,
-      String? userName,
-      String? userPhone,
       int? deliveryPrice,
-      int? sdacha,
-      String? region});
+      int? sdacha});
+
+  @override
+  $AddressModelCopyWith<$Res>? get addressData;
+  @override
+  $ContactInfoModelCopyWith<$Res>? get contactInfo;
 }
 
 /// @nodoc
@@ -213,60 +178,32 @@ class __$$CreateOrderModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? address = freezed,
-    Object? comment = freezed,
+    Object? addressData = freezed,
+    Object? contactInfo = freezed,
     Object? dishesCount = freezed,
-    Object? entrance = freezed,
-    Object? floor = freezed,
     Object? foods = freezed,
-    Object? houseNumber = freezed,
-    Object? intercom = freezed,
-    Object? kvOffice = freezed,
     Object? paymentMethod = freezed,
     Object? price = freezed,
-    Object? userName = freezed,
-    Object? userPhone = freezed,
     Object? deliveryPrice = freezed,
     Object? sdacha = freezed,
-    Object? region = freezed,
   }) {
     return _then(_$CreateOrderModelImpl(
-      address: freezed == address
-          ? _value.address
-          : address // ignore: cast_nullable_to_non_nullable
-              as String?,
-      comment: freezed == comment
-          ? _value.comment
-          : comment // ignore: cast_nullable_to_non_nullable
-              as String?,
+      addressData: freezed == addressData
+          ? _value.addressData
+          : addressData // ignore: cast_nullable_to_non_nullable
+              as AddressModel?,
+      contactInfo: freezed == contactInfo
+          ? _value.contactInfo
+          : contactInfo // ignore: cast_nullable_to_non_nullable
+              as ContactInfoModel?,
       dishesCount: freezed == dishesCount
           ? _value.dishesCount
           : dishesCount // ignore: cast_nullable_to_non_nullable
               as int?,
-      entrance: freezed == entrance
-          ? _value.entrance
-          : entrance // ignore: cast_nullable_to_non_nullable
-              as String?,
-      floor: freezed == floor
-          ? _value.floor
-          : floor // ignore: cast_nullable_to_non_nullable
-              as String?,
       foods: freezed == foods
           ? _value._foods
           : foods // ignore: cast_nullable_to_non_nullable
               as List<FoodItemOrderModel>?,
-      houseNumber: freezed == houseNumber
-          ? _value.houseNumber
-          : houseNumber // ignore: cast_nullable_to_non_nullable
-              as String?,
-      intercom: freezed == intercom
-          ? _value.intercom
-          : intercom // ignore: cast_nullable_to_non_nullable
-              as String?,
-      kvOffice: freezed == kvOffice
-          ? _value.kvOffice
-          : kvOffice // ignore: cast_nullable_to_non_nullable
-              as String?,
       paymentMethod: freezed == paymentMethod
           ? _value.paymentMethod
           : paymentMethod // ignore: cast_nullable_to_non_nullable
@@ -275,14 +212,6 @@ class __$$CreateOrderModelImplCopyWithImpl<$Res>
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
               as int?,
-      userName: freezed == userName
-          ? _value.userName
-          : userName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      userPhone: freezed == userPhone
-          ? _value.userPhone
-          : userPhone // ignore: cast_nullable_to_non_nullable
-              as String?,
       deliveryPrice: freezed == deliveryPrice
           ? _value.deliveryPrice
           : deliveryPrice // ignore: cast_nullable_to_non_nullable
@@ -291,49 +220,30 @@ class __$$CreateOrderModelImplCopyWithImpl<$Res>
           ? _value.sdacha
           : sdacha // ignore: cast_nullable_to_non_nullable
               as int?,
-      region: freezed == region
-          ? _value.region
-          : region // ignore: cast_nullable_to_non_nullable
-              as String?,
     ));
   }
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _$CreateOrderModelImpl implements _CreateOrderModel {
   const _$CreateOrderModelImpl(
-      {this.address,
-      this.comment,
+      {this.addressData,
+      this.contactInfo,
       this.dishesCount,
-      this.entrance,
-      this.floor,
       final List<FoodItemOrderModel>? foods,
-      this.houseNumber,
-      this.intercom,
-      this.kvOffice,
       this.paymentMethod,
       this.price,
-      this.userName,
-      this.userPhone,
       this.deliveryPrice,
-      this.sdacha,
-      this.region})
+      this.sdacha})
       : _foods = foods;
 
-  factory _$CreateOrderModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$CreateOrderModelImplFromJson(json);
-
   @override
-  final String? address;
+  final AddressModel? addressData;
   @override
-  final String? comment;
+  final ContactInfoModel? contactInfo;
   @override
   final int? dishesCount;
-  @override
-  final String? entrance;
-  @override
-  final String? floor;
   final List<FoodItemOrderModel>? _foods;
   @override
   List<FoodItemOrderModel>? get foods {
@@ -345,29 +255,17 @@ class _$CreateOrderModelImpl implements _CreateOrderModel {
   }
 
   @override
-  final String? houseNumber;
-  @override
-  final String? intercom;
-  @override
-  final String? kvOffice;
-  @override
   final String? paymentMethod;
   @override
   final int? price;
   @override
-  final String? userName;
-  @override
-  final String? userPhone;
-  @override
   final int? deliveryPrice;
   @override
   final int? sdacha;
-  @override
-  final String? region;
 
   @override
   String toString() {
-    return 'CreateOrderModel(address: $address, comment: $comment, dishesCount: $dishesCount, entrance: $entrance, floor: $floor, foods: $foods, houseNumber: $houseNumber, intercom: $intercom, kvOffice: $kvOffice, paymentMethod: $paymentMethod, price: $price, userName: $userName, userPhone: $userPhone, deliveryPrice: $deliveryPrice, sdacha: $sdacha, region: $region)';
+    return 'CreateOrderModel(addressData: $addressData, contactInfo: $contactInfo, dishesCount: $dishesCount, foods: $foods, paymentMethod: $paymentMethod, price: $price, deliveryPrice: $deliveryPrice, sdacha: $sdacha)';
   }
 
   @override
@@ -375,53 +273,32 @@ class _$CreateOrderModelImpl implements _CreateOrderModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$CreateOrderModelImpl &&
-            (identical(other.address, address) || other.address == address) &&
-            (identical(other.comment, comment) || other.comment == comment) &&
+            (identical(other.addressData, addressData) ||
+                other.addressData == addressData) &&
+            (identical(other.contactInfo, contactInfo) ||
+                other.contactInfo == contactInfo) &&
             (identical(other.dishesCount, dishesCount) ||
                 other.dishesCount == dishesCount) &&
-            (identical(other.entrance, entrance) ||
-                other.entrance == entrance) &&
-            (identical(other.floor, floor) || other.floor == floor) &&
             const DeepCollectionEquality().equals(other._foods, _foods) &&
-            (identical(other.houseNumber, houseNumber) ||
-                other.houseNumber == houseNumber) &&
-            (identical(other.intercom, intercom) ||
-                other.intercom == intercom) &&
-            (identical(other.kvOffice, kvOffice) ||
-                other.kvOffice == kvOffice) &&
             (identical(other.paymentMethod, paymentMethod) ||
                 other.paymentMethod == paymentMethod) &&
             (identical(other.price, price) || other.price == price) &&
-            (identical(other.userName, userName) ||
-                other.userName == userName) &&
-            (identical(other.userPhone, userPhone) ||
-                other.userPhone == userPhone) &&
             (identical(other.deliveryPrice, deliveryPrice) ||
                 other.deliveryPrice == deliveryPrice) &&
-            (identical(other.sdacha, sdacha) || other.sdacha == sdacha) &&
-            (identical(other.region, region) || other.region == region));
+            (identical(other.sdacha, sdacha) || other.sdacha == sdacha));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      address,
-      comment,
+      addressData,
+      contactInfo,
       dishesCount,
-      entrance,
-      floor,
       const DeepCollectionEquality().hash(_foods),
-      houseNumber,
-      intercom,
-      kvOffice,
       paymentMethod,
       price,
-      userName,
-      userPhone,
       deliveryPrice,
-      sdacha,
-      region);
+      sdacha);
 
   /// Create a copy of CreateOrderModel
   /// with the given fields replaced by the non-null parameter values.
@@ -431,69 +308,35 @@ class _$CreateOrderModelImpl implements _CreateOrderModel {
   _$$CreateOrderModelImplCopyWith<_$CreateOrderModelImpl> get copyWith =>
       __$$CreateOrderModelImplCopyWithImpl<_$CreateOrderModelImpl>(
           this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$CreateOrderModelImplToJson(
-      this,
-    );
-  }
 }
 
 abstract class _CreateOrderModel implements CreateOrderModel {
   const factory _CreateOrderModel(
-      {final String? address,
-      final String? comment,
+      {final AddressModel? addressData,
+      final ContactInfoModel? contactInfo,
       final int? dishesCount,
-      final String? entrance,
-      final String? floor,
       final List<FoodItemOrderModel>? foods,
-      final String? houseNumber,
-      final String? intercom,
-      final String? kvOffice,
       final String? paymentMethod,
       final int? price,
-      final String? userName,
-      final String? userPhone,
       final int? deliveryPrice,
-      final int? sdacha,
-      final String? region}) = _$CreateOrderModelImpl;
-
-  factory _CreateOrderModel.fromJson(Map<String, dynamic> json) =
-      _$CreateOrderModelImpl.fromJson;
+      final int? sdacha}) = _$CreateOrderModelImpl;
 
   @override
-  String? get address;
+  AddressModel? get addressData;
   @override
-  String? get comment;
+  ContactInfoModel? get contactInfo;
   @override
   int? get dishesCount;
   @override
-  String? get entrance;
-  @override
-  String? get floor;
-  @override
   List<FoodItemOrderModel>? get foods;
-  @override
-  String? get houseNumber;
-  @override
-  String? get intercom;
-  @override
-  String? get kvOffice;
   @override
   String? get paymentMethod;
   @override
   int? get price;
   @override
-  String? get userName;
-  @override
-  String? get userPhone;
-  @override
   int? get deliveryPrice;
   @override
   int? get sdacha;
-  @override
-  String? get region;
 
   /// Create a copy of CreateOrderModel
   /// with the given fields replaced by the non-null parameter values.

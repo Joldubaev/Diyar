@@ -11,35 +11,20 @@ class CartPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CartAppBarWidget(),
-      body: const CartContentsWidget(),
-    );
-  }
-}
-
-class CartContentsWidget extends StatelessWidget {
-  const CartContentsWidget({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<CartBloc, CartState>(
-      builder: (context, state) {
-        if (state is CartLoading) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (state is CartError) {
-          return Center(child: Text('Ошибка: ${state.message}'));
-        } else if (state is CartLoaded) {
-          if (state.items.isEmpty) {
-            return const CartEmptyWidget();
+      body: BlocBuilder<CartBloc, CartState>(
+        builder: (context, state) {
+          if (state is CartLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is CartError) {
+            return Center(child: Text('Ошибка: ${state.message}'));
+          } else if (state is CartLoaded) {
+            return CartView(initialItems: state.items);
           }
-
-          return LoadedCartView(cartState: state);
-        } else {
           return const Center(
-            child: Text(
-              'Неизвестное состояние корзины',
-            ),
+            child: Text('Неизвестное состояние корзины'),
           );
-        }
-      },
+        },
+      ),
     );
   }
 }

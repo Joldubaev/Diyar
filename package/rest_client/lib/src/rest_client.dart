@@ -6,15 +6,12 @@ import 'package:dio/dio.dart';
 import 'package:rest_client/src/network.dart';
 
 abstract class RestClient {
-  RestClient(this._client,
-      {required NetworkErrorHandler errorHandler,
-      List<Interceptor> interceptors = const []})
+  RestClient(this._client, {required NetworkErrorHandler errorHandler, List<Interceptor> interceptors = const []})
       : _errorHandler = errorHandler;
 
   final Dio _client;
 
-  final NetworkInfo _networkInfo =
-      NetworkInfoImpl(connectivity: Connectivity());
+  final NetworkInfo _networkInfo = NetworkInfoImpl(connectivity: Connectivity());
 
   final NetworkErrorHandler _errorHandler;
 
@@ -27,10 +24,7 @@ abstract class RestClient {
     DataParser<T>? parser,
   }) =>
       request(
-        (dio) => dio.get(url,
-            queryParameters: params,
-            options: options,
-            cancelToken: cancelToken),
+        (dio) => dio.get(url, queryParameters: params, options: options, cancelToken: cancelToken),
         parser: parser,
       );
 
@@ -43,11 +37,7 @@ abstract class RestClient {
     DataParser<T>? parser,
   }) =>
       request(
-        (dio) => dio.post(url,
-            data: body,
-            queryParameters: params,
-            options: options,
-            cancelToken: cancelToken),
+        (dio) => dio.post(url, data: body, queryParameters: params, options: options, cancelToken: cancelToken),
         parser: parser,
       );
 
@@ -60,11 +50,7 @@ abstract class RestClient {
     DataParser<T>? parser,
   }) =>
       request(
-        (dio) => dio.put(url,
-            data: body,
-            options: options,
-            cancelToken: cancelToken,
-            queryParameters: params),
+        (dio) => dio.put(url, data: body, options: options, cancelToken: cancelToken, queryParameters: params),
         parser: parser,
       );
 
@@ -76,10 +62,7 @@ abstract class RestClient {
     DataParser<T>? parser,
   }) =>
       request(
-        (dio) => dio.delete(url,
-            options: options,
-            cancelToken: cancelToken,
-            queryParameters: params),
+        (dio) => dio.delete(url, options: options, cancelToken: cancelToken, queryParameters: params),
         parser: parser,
       );
 
@@ -92,16 +75,11 @@ abstract class RestClient {
     DataParser<T>? parser,
   }) =>
       request(
-        (_) => _client.patch(url,
-            data: body,
-            options: options,
-            cancelToken: cancelToken,
-            queryParameters: params),
+        (_) => _client.patch(url, data: body, options: options, cancelToken: cancelToken, queryParameters: params),
         parser: parser,
       );
 
-  Future<T> request<T>(Future<Response> Function(Dio dio) call,
-      {required DataParser<T>? parser}) async {
+  Future<T> request<T>(Future<Response> Function(Dio dio) call, {required DataParser<T>? parser}) async {
     return _errorHandler.tryCall<T>(() async {
       if (await _networkInfo.isConnected) {
         final response = await call(_client);

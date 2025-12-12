@@ -1,72 +1,139 @@
 import 'package:diyar/core/components/components.dart';
+import 'package:diyar/core/shared/shared.dart';
 import 'package:diyar/features/order/domain/domain.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'create_order_model.freezed.dart';
-part 'create_order_model.g.dart';
+// part 'create_order_model.g.dar
 
 @freezed
 class CreateOrderModel with _$CreateOrderModel {
   const factory CreateOrderModel({
-    String? address,
-    String? comment,
+    AddressModel? addressData,
+    ContactInfoModel? contactInfo,
     int? dishesCount,
-    String? entrance,
-    String? floor,
     List<FoodItemOrderModel>? foods,
-    String? houseNumber,
-    String? intercom,
-    String? kvOffice,
     String? paymentMethod,
     int? price,
-    String? userName,
-    String? userPhone,
     int? deliveryPrice,
     int? sdacha,
-    String? region,
   }) = _CreateOrderModel;
 
-  factory CreateOrderModel.fromJson(Map<String, dynamic> json) =>
-      _$CreateOrderModelFromJson(json);
+  factory CreateOrderModel.fromJson(Map<String, dynamic> json) {
+    if (json.containsKey('addressData') || json.containsKey('contactInfo')) {
+      return CreateOrderModel(
+        addressData:
+            json['addressData'] != null ? AddressModel.fromJson(json['addressData'] as Map<String, dynamic>) : null,
+        contactInfo:
+            json['contactInfo'] != null ? ContactInfoModel.fromJson(json['contactInfo'] as Map<String, dynamic>) : null,
+        dishesCount: (json['dishesCount'] as num?)?.toInt(),
+        foods: (json['foods'] as List<dynamic>?)
+            ?.map((e) => FoodItemOrderModel.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        paymentMethod: json['paymentMethod'] as String?,
+        price: (json['price'] as num?)?.toInt(),
+        deliveryPrice: (json['deliveryPrice'] as num?)?.toInt(),
+        sdacha: (json['sdacha'] as num?)?.toInt(),
+      );
+    }
 
-  factory CreateOrderModel.fromEntity(CreateOrderEntity entity) =>
-      CreateOrderModel(
-        address: entity.address,
-        comment: entity.comment,
+    return CreateOrderModel(
+      addressData: AddressModel(
+        address: json['address'] as String? ?? '',
+        houseNumber: json['houseNumber'] as String? ?? '',
+        comment: json['comment'] as String?,
+        entrance: json['entrance'] as String?,
+        floor: json['floor'] as String?,
+        intercom: json['intercom'] as String?,
+        kvOffice: json['kvOffice'] as String?,
+        region: json['region'] as String?,
+      ),
+      contactInfo: ContactInfoModel(
+        userName: json['userName'] as String? ?? '',
+        userPhone: json['userPhone'] as String? ?? '',
+      ),
+      dishesCount: (json['dishesCount'] as num?)?.toInt(),
+      foods: (json['foods'] as List<dynamic>?)
+          ?.map((e) => FoodItemOrderModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      paymentMethod: json['paymentMethod'] as String?,
+      price: (json['price'] as num?)?.toInt(),
+      deliveryPrice: (json['deliveryPrice'] as num?)?.toInt(),
+      sdacha: (json['sdacha'] as num?)?.toInt(),
+    );
+  }
+
+  factory CreateOrderModel.fromEntity(CreateOrderEntity entity) => CreateOrderModel(
+        addressData: AddressModel.fromEntity(entity.addressData),
+        contactInfo: ContactInfoModel.fromEntity(entity.contactInfo),
         dishesCount: entity.dishesCount,
-        entrance: entity.entrance,
-        floor: entity.floor,
         foods: entity.foods.map((food) => FoodItemOrderModel.fromEntity(food)).toList(),
-        houseNumber: entity.houseNumber,
-        intercom: entity.intercom,
-        kvOffice: entity.kvOffice,
         paymentMethod: entity.paymentMethod,
         price: entity.price,
-        userName: entity.userName,
-        userPhone: entity.userPhone,
         deliveryPrice: entity.deliveryPrice,
         sdacha: entity.sdacha,
-        region: entity.region,
       );
 }
 
 extension CreateOrderModelX on CreateOrderModel {
   CreateOrderEntity toEntity() => CreateOrderEntity(
-        address: address ?? '',
-        comment: comment,
+        addressData: addressData?.toEntity() ??
+            const AddressEntity(
+              address: '',
+              houseNumber: '',
+            ),
+        contactInfo: contactInfo?.toEntity() ??
+            const ContactInfoEntity(
+              userName: '',
+              userPhone: '',
+            ),
         dishesCount: dishesCount ?? 0,
-        entrance: entrance,
-        floor: floor,
         foods: foods?.map((food) => food.toEntity()).toList() ?? [],
-        houseNumber: houseNumber ?? '',
-        intercom: intercom,
-        kvOffice: kvOffice,
         paymentMethod: paymentMethod ?? '',
         price: price ?? 0,
-        userName: userName ?? '',
-        userPhone: userPhone ?? '',
         deliveryPrice: deliveryPrice ?? 0,
         sdacha: sdacha,
-        region: region,
       );
+
+  Map<String, dynamic> toJsonFlat() {
+    final json = <String, dynamic>{};
+    if (addressData != null) {
+      json['address'] = addressData!.address;
+      json['houseNumber'] = addressData!.houseNumber;
+      if (addressData!.comment != null && addressData!.comment!.isNotEmpty) {
+        json['comment'] = addressData!.comment;
+      }
+      if (addressData!.entrance != null && addressData!.entrance!.isNotEmpty) {
+        json['entrance'] = addressData!.entrance;
+      }
+      if (addressData!.floor != null && addressData!.floor!.isNotEmpty) {
+        json['floor'] = addressData!.floor;
+      }
+      if (addressData!.intercom != null && addressData!.intercom!.isNotEmpty) {
+        json['intercom'] = addressData!.intercom;
+      }
+      if (addressData!.kvOffice != null && addressData!.kvOffice!.isNotEmpty) {
+        json['kvOffice'] = addressData!.kvOffice;
+      }
+      if (addressData!.region != null && addressData!.region!.isNotEmpty) {
+        json['region'] = addressData!.region;
+      }
+    }
+
+    // Разворачиваем contactInfo
+    if (contactInfo != null) {
+      json['userName'] = contactInfo!.userName;
+      json['userPhone'] = contactInfo!.userPhone;
+    }
+
+    // Остальные поля
+    if (dishesCount != null) json['dishesCount'] = dishesCount;
+    if (foods != null) json['foods'] = foods!.map((e) => e.toJson()).toList();
+    if (paymentMethod != null) json['paymentMethod'] = paymentMethod;
+    if (price != null) json['price'] = price;
+    if (deliveryPrice != null) json['deliveryPrice'] = deliveryPrice;
+    if (sdacha != null) json['sdacha'] = sdacha;
+
+    return json;
+  }
 }

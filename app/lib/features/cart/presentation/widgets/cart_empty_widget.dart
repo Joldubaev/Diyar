@@ -16,16 +16,11 @@ class CartEmptyWidget extends StatelessWidget {
           SvgPicture.asset('assets/icons/cart.svg', width: 200, height: 200),
           const SizedBox(height: 16),
           Text(context.l10n.noOrders,
-              style: Theme.of(context)
-                  .textTheme
-                  .titleSmall!
-                  .copyWith(color: Theme.of(context).colorScheme.onSurface)),
+              style: Theme.of(context).textTheme.titleSmall!.copyWith(color: Theme.of(context).colorScheme.onSurface)),
           Text(context.l10n.addToCart,
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withValues(alpha: 0.6),)),
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                  )),
         ],
       ),
     );

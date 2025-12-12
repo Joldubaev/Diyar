@@ -8,6 +8,6 @@ abstract class CartRepository {
   Future<void> decrementCart(String foodId);
   Future<void> setCartItemCount(CartItemEntity cart);
   Future<void> clearCart();
-  Stream<List<CartItemEntity>> getAllCartItems(); // Returns stream of Entities
-  List<CartItemEntity> getCurrentCartItems(); // Returns current items synchronously
+  Stream<List<CartItemEntity>> getAllCartItems();
+  List<CartItemEntity> getCurrentCartItems();
 }

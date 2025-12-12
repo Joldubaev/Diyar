@@ -64,19 +64,18 @@ class OrderRemoteDataSourceImpl extends OrderRemoteDataSource {
     }
   }
 
-
   @override
   Future<Either<Failure, String>> createOrder(CreateOrderModel order) async {
     try {
       var res = await _dio.post(
         ApiConst.createOrder,
-        data: order.toJson(),
+        data: order.toJsonFlat(), // Используем плоскую структуру для API
         options: Options(
           headers: ApiConst.authMap(_prefs.getString(AppConst.accessToken) ?? ''),
         ),
       );
       if ([200, 201].contains(res.data['code'])) {
-        return  Right(res.data['message'] ?? 'Order created successfully');
+        return Right(res.data['message'] ?? 'Order created successfully');
       } else {
         log('Failed to create order: ${res.statusCode} ${res.data}');
         return Left(ServerFailure(res.data?['message']?.toString() ?? 'Failed to create order', res.statusCode));

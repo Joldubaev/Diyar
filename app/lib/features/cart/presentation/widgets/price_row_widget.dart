@@ -7,6 +7,8 @@ class PriceRowWidget extends StatelessWidget {
   final Color? valueColor;
   final bool isTotal;
 
+  static const double _verticalPadding = 4.0;
+
   const PriceRowWidget({
     super.key,
     required this.label,
@@ -18,23 +20,20 @@ class PriceRowWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textStyle =
+        isTotal ? theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold) : theme.textTheme.bodyMedium;
+
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      padding: const EdgeInsets.symmetric(vertical: _verticalPadding),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            label,
-            style: isTotal
-                ? theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)
-                : theme.textTheme.bodyMedium,
-          ),
+          Text(label, style: textStyle),
           Text(
             '${value.toStringAsFixed(0)} ${context.l10n.som}',
-            style: (isTotal
-                    ? theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)
-                    : theme.textTheme.bodyMedium)
-                ?.copyWith(color: valueColor),
+            style: textStyle?.copyWith(
+              color: valueColor ?? theme.colorScheme.onSurface,
+            ),
           ),
         ],
       ),

@@ -18,30 +18,36 @@ class TotalPriceWidget extends StatelessWidget {
     required this.finalTotalPrice,
   });
 
+  static const double _padding = 16.0;
+  static const double _borderRadius = 12.0;
+  static const double _shadowBlur = 8.0;
+  static const Offset _shadowOffset = Offset(0, 2);
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = context.l10n;
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(_padding),
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(_borderRadius),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.05),
+            blurRadius: _shadowBlur,
+            offset: _shadowOffset,
           )
         ],
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           PriceRowWidget(label: l10n.costOfMeal, value: itemsPrice),
           if (containerPrice > 0) PriceRowWidget(label: 'Стоимость контейнера', value: containerPrice),
           PriceRowWidget(
-            label: "Скидка (${(discountRatePercentage).toInt()}%)",
+            label: "Скидка (${discountRatePercentage.toInt()}%)",
             value: -monetaryDiscountAmount,
             valueColor: theme.colorScheme.error,
           ),
@@ -52,9 +58,9 @@ class TotalPriceWidget extends StatelessWidget {
             isTotal: true,
           ),
           Text(
-            'Ценна без учета доставки',
+            'Цена без учета доставки',
             style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.error,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
             ),
           ),
         ],

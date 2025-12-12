@@ -8,3 +8,4 @@ export 'responce/general_response.dart';
 export 'storage/local_storage.dart';
 export 'storage/storage_exception.dart';
 export 'timer_mixin.dart';
+export 'api_error_utils.dart';

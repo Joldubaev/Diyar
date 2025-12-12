@@ -11,7 +11,7 @@ class CustomBottomSheet extends StatelessWidget {
   final DeliveryFormPage widget;
   final int deliveryPrice;
   final int totalOrderCost;
-  final int dishCount; 
+  final int dishCount;
   final int sdacha;
   final String? region;
   final TextEditingController phoneController;
@@ -179,23 +179,32 @@ class CustomBottomSheet extends StatelessWidget {
 
   void _onConfirmOrder(BuildContext context) {
     final orderCubit = context.read<OrderCubit>();
+
+    final addressData = AddressEntity(
+      address: addressController.text,
+      houseNumber: houseController.text,
+      comment: commentController.text.isEmpty ? null : commentController.text,
+      entrance: entranceController.text.isEmpty ? null : entranceController.text,
+      floor: floorController.text.isEmpty ? null : floorController.text,
+      intercom: intercomController.text.isEmpty ? null : intercomController.text,
+      kvOffice: apartmentController.text.isEmpty ? null : apartmentController.text,
+      region: region,
+    );
+
+    final contactInfo = ContactInfoEntity(
+      userName: userName.text,
+      userPhone: phoneController.text,
+    );
+
     orderCubit.createOrder(
       CreateOrderEntity(
-        userPhone: phoneController.text,
-        userName: userName.text,
-        address: addressController.text,
-        comment: commentController.text,
+        addressData: addressData,
+        contactInfo: contactInfo,
         price: widget.totalPrice,
         deliveryPrice: deliveryPrice,
-        houseNumber: houseController.text,
-        kvOffice: apartmentController.text,
-        intercom: intercomController.text,
-        floor: floorController.text,
-        entrance: entranceController.text,
         paymentMethod: paymentType.name,
         dishesCount: dishCount,
         sdacha: sdacha,
-        region: region,
         foods: widget.cart
             .map(
               (e) => FoodItemOrderEntity(

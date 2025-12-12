@@ -17,26 +17,26 @@ class DishesWidget extends StatefulWidget {
 }
 
 class _DishesWidgetState extends State<DishesWidget> {
-  late int _cutleryCount;
+  late int _count;
 
   @override
   void initState() {
     super.initState();
-    _cutleryCount = widget.initialCount;
+    _count = widget.initialCount;
   }
 
-  void _incrementCutlery() {
+  void _increment() {
     setState(() {
-      _cutleryCount++;
-      widget.onChanged?.call(_cutleryCount);
+      _count++;
+      widget.onChanged?.call(_count);
     });
   }
 
-  void _decrementCutlery() {
-    if (_cutleryCount > 0) {
+  void _decrement() {
+    if (_count > 0) {
       setState(() {
-        _cutleryCount--;
-        widget.onChanged?.call(_cutleryCount);
+        _count--;
+        widget.onChanged?.call(_count);
       });
     }
   }
@@ -44,6 +44,7 @@ class _DishesWidgetState extends State<DishesWidget> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return DecoratedBox(
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
@@ -53,21 +54,19 @@ class _DishesWidgetState extends State<DishesWidget> {
             color: theme.colorScheme.onSurface.withValues(alpha: 0.2),
             spreadRadius: 1,
             blurRadius: 5,
-            offset: const Offset(0, 0),
           ),
         ],
       ),
       child: Padding(
         padding: const EdgeInsets.all(6),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SvgPicture.asset('assets/icons/menu_icon.svg', height: 30),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
                 context.l10n.cutlery,
-                style: theme.textTheme.bodyMedium!.copyWith(
+                style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                 ),
                 overflow: TextOverflow.ellipsis,
@@ -76,8 +75,9 @@ class _DishesWidgetState extends State<DishesWidget> {
             const SizedBox(width: 8),
             Container(
               height: 40,
+              padding: const EdgeInsets.symmetric(horizontal: 4),
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(Radius.circular(30)),
+                borderRadius: BorderRadius.circular(30),
                 border: Border.all(
                   color: theme.colorScheme.outline.withValues(alpha: 0.5),
                 ),
@@ -86,21 +86,19 @@ class _DishesWidgetState extends State<DishesWidget> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.remove),
                     visualDensity: VisualDensity.compact,
                     splashRadius: 20,
                     iconSize: 20,
-                    color: _cutleryCount > 0
-                        ? theme.colorScheme.primary
-                        : theme.colorScheme.onSurface.withValues(alpha: 0.38),
-                    onPressed: _cutleryCount > 0 ? _decrementCutlery : null,
+                    icon: const Icon(Icons.remove),
+                    color: _count > 0 ? theme.colorScheme.primary : theme.colorScheme.onSurface.withValues(alpha: 0.38),
+                    onPressed: _count > 0 ? _decrement : null,
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(
-                      _cutleryCount.toString(),
-                      style: theme.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500),
-                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Text('$_count',
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.w500,
+                        )),
                   ),
                   IconButton(
                     visualDensity: VisualDensity.compact,
@@ -108,11 +106,11 @@ class _DishesWidgetState extends State<DishesWidget> {
                     iconSize: 20,
                     icon: const Icon(Icons.add),
                     color: theme.colorScheme.primary,
-                    onPressed: _incrementCutlery,
+                    onPressed: _increment,
                   ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),

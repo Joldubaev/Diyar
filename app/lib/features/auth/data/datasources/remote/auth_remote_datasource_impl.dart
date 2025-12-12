@@ -1,11 +1,11 @@
 import 'dart:developer';
 import 'package:dartz/dartz.dart';
-import 'package:dio/dio.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/auth/data/models/user_model.dart';
 import 'package:diyar/features/auth/data/models/reset_password_model.dart';
 import 'package:diyar/features/auth/data/datasources/local/auth_local_data_source.dart';
 import 'package:injectable/injectable.dart';
+import 'package:rest_client/rest_client.dart' as rest_client;
 
 import 'auth_remote_data_source.dart';
 
@@ -18,12 +18,12 @@ class _Tokens {
 
 @LazySingleton(as: AuthRemoteDataSource)
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
-  final Dio _dio;
+  final rest_client.RestClient _restClient; // UnAuthRestClient для неавторизованных запросов
   final AuthLocalDataSource _localDataSource;
   final LocalStorage _localStorage;
 
   AuthRemoteDataSourceImpl(
-    this._dio,
+    @Named('unauthRestClient') this._restClient,
     this._localDataSource,
     this._localStorage,
   );
@@ -34,17 +34,28 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     Map<String, dynamic>? queryParameters,
   }) async {
     try {
-      final response = await _dio.post(
+      final response = await _restClient.post<dynamic>(
         endpoint,
-        data: data,
-        queryParameters: queryParameters,
+        body: data,
+        params: queryParameters,
       );
 
-      if (response.statusCode != 200) {
-        return Left(_extractError(response.data));
+      if (response is Map) {
+        final normalizedData = _normalizeResponseData(response);
+        // Проверяем код ответа, если есть
+        if (normalizedData.containsKey('code') && normalizedData['code'] != 200 && normalizedData['code'] != 0) {
+          return Left(_extractError(normalizedData));
+        }
+        return Right(normalizedData);
       }
 
-      return Right(_normalizeResponseData(response.data));
+      return Left(const FormatFailure('Неверный формат ответа сервера'));
+    } on rest_client.ServerFailure catch (e) {
+      return Left(ServerFailure(e.message, e.statusCode));
+    } on rest_client.NetworkFailure catch (e) {
+      return Left(NetworkFailure(e.message));
+    } on rest_client.AppFailure catch (e) {
+      return Left(ServerFailure(e.message));
     } catch (e) {
       return Left(_handleError(e));
     }
@@ -102,28 +113,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   Failure _handleError(dynamic error) {
-    if (error is DioException) {
-      if (error.response != null) {
-        return _extractError(error.response!.data);
-      }
-
-      switch (error.type) {
-        case DioExceptionType.connectionTimeout:
-        case DioExceptionType.sendTimeout:
-        case DioExceptionType.receiveTimeout:
-          return const NetworkFailure('Превышено время ожидания запроса');
-        case DioExceptionType.connectionError:
-          return const NetworkFailure('Ошибка соединения');
-        case DioExceptionType.cancel:
-          return const NetworkFailure('Запрос был отменен');
-        case DioExceptionType.badResponse:
-          return const ServerFailure('Ошибка сервера');
-        case DioExceptionType.badCertificate:
-        case DioExceptionType.unknown:
-          return NetworkFailure('Ошибка сети: ${error.message ?? 'Неизвестная сетевая ошибка'}');
-      }
-    }
-
     log('[AUTH ERROR] Unexpected error: $error');
     return ServerFailure('Неизвестная ошибка: ${error.toString()}');
   }

@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:diyar/common/calculiator/order_calculation_service.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/order/order.dart';
@@ -28,6 +29,7 @@ class DeliveryFormPage extends StatefulWidget {
 }
 
 class _DeliveryFormPageState extends State<DeliveryFormPage> {
+  final OrderCalculationService _calculationService = OrderCalculationService();
   final _formKey = GlobalKey<FormState>();
   final _phoneController = TextEditingController();
   final _addressController = TextEditingController();
@@ -89,7 +91,14 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
     if (!_formKey.currentState!.validate()) return;
 
     final sdachaValue = int.tryParse(_sdachaController.text) ?? 0;
-    if (_paymentType == PaymentTypeDelivery.cash && sdachaValue != 0 && sdachaValue < calculatedTotalOrderCost) {
+
+    // Используем сервис для расчета сдачи
+    final calculatedChange = _calculationService.calculateChange(
+      calculatedTotalOrderCost,
+      sdachaValue > 0 ? sdachaValue : null,
+    );
+
+    if (_paymentType == PaymentTypeDelivery.cash && sdachaValue != 0 && calculatedChange < 0) {
       showToast("Сдача не может быть меньше суммы", isError: true);
       return;
     }
@@ -144,7 +153,16 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final totalOrderCost = widget.totalPrice + widget.deliveryPrice.toInt();
+
+    // Используем сервис для расчета итоговой стоимости
+    // widget.totalPrice уже содержит цену товаров (возможно со скидкой)
+    // Добавляем к ней цену доставки
+    final totalOrderCost = _calculationService
+        .calculateFinalTotalPrice(
+          subtotalPrice: widget.totalPrice.toDouble(),
+          deliveryPrice: widget.deliveryPrice,
+        )
+        .toInt();
 
     return BlocListener<ProfileCubit, ProfileState>(
       listener: (context, profileState) {

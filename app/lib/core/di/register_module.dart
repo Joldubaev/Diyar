@@ -1,11 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:diyar/core/core.dart';
+import 'package:diyar/core/network/custom_auth_rest_client.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:injectable/injectable.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:rest_client/rest_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:storage/storage.dart';
 
 @module
 abstract class RegisterModule {
@@ -48,5 +51,22 @@ abstract class RegisterModule {
     );
     await diyarRemoteConfig.initialise();
     return diyarRemoteConfig;
+  }
+
+  @lazySingleton
+  PreferencesStorage get preferencesStorage => PreferencesStorageImpl();
+
+  @lazySingleton
+  @Named('authRestClient')
+  RestClient authRestClient(Dio dio, PreferencesStorage preferencesStorage) {
+    // Создаем кастомный AuthRestClient с правильными ключами из AppConst
+    return CustomAuthRestClient(dio, preferencesStorage);
+  }
+
+  @lazySingleton
+  @Named('unauthRestClient')
+  RestClient unauthRestClient(Dio dio) {
+    // UnAuthRestClient для неавторизованных запросов (регистрация, логин и т.д.)
+    return UnAuthRestClient(dio);
   }
 }
