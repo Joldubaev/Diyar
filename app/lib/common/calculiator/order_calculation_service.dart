@@ -1,7 +1,9 @@
 // lib/features/order/domain/services/order_calculation_service.dart
 
 import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
+import 'package:injectable/injectable.dart';
 
+@lazySingleton
 class OrderCalculationService {
   // --- Константы (примеры, должны быть получены из настроек/API) ---
 

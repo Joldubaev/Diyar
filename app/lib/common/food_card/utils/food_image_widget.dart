@@ -39,8 +39,8 @@ class FoodImageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isValidUrl = isValidImageUrl(imageUrl);
-    final imageWidth = this.width ?? _FoodImageConstants.defaultImageWidth;
-    final imageHeight = this.height ?? _FoodImageConstants.defaultImageHeight;
+    final imageWidth = width ?? _FoodImageConstants.defaultImageWidth;
+    final imageHeight = height ?? _FoodImageConstants.defaultImageHeight;
 
     final imageWidget = isValidUrl
         ? CachedNetworkImage(

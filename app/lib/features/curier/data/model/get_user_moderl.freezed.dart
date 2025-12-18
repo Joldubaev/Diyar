@@ -25,6 +25,7 @@ mixin _$GetUserModel {
   String? get email => throw _privateConstructorUsedError;
   String? get phone => throw _privateConstructorUsedError;
   String? get role => throw _privateConstructorUsedError;
+  int? get discount => throw _privateConstructorUsedError;
 
   /// Serializes this GetUserModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -47,7 +48,8 @@ abstract class $GetUserModelCopyWith<$Res> {
       String? userName,
       String? email,
       String? phone,
-      String? role});
+      String? role,
+      int? discount});
 }
 
 /// @nodoc
@@ -70,6 +72,7 @@ class _$GetUserModelCopyWithImpl<$Res, $Val extends GetUserModel>
     Object? email = freezed,
     Object? phone = freezed,
     Object? role = freezed,
+    Object? discount = freezed,
   }) {
     return _then(_value.copyWith(
       id: freezed == id
@@ -92,6 +95,10 @@ class _$GetUserModelCopyWithImpl<$Res, $Val extends GetUserModel>
           ? _value.role
           : role // ignore: cast_nullable_to_non_nullable
               as String?,
+      discount: freezed == discount
+          ? _value.discount
+          : discount // ignore: cast_nullable_to_non_nullable
+              as int?,
     ) as $Val);
   }
 }
@@ -109,7 +116,8 @@ abstract class _$$GetUserModelImplCopyWith<$Res>
       String? userName,
       String? email,
       String? phone,
-      String? role});
+      String? role,
+      int? discount});
 }
 
 /// @nodoc
@@ -130,6 +138,7 @@ class __$$GetUserModelImplCopyWithImpl<$Res>
     Object? email = freezed,
     Object? phone = freezed,
     Object? role = freezed,
+    Object? discount = freezed,
   }) {
     return _then(_$GetUserModelImpl(
       id: freezed == id
@@ -152,6 +161,10 @@ class __$$GetUserModelImplCopyWithImpl<$Res>
           ? _value.role
           : role // ignore: cast_nullable_to_non_nullable
               as String?,
+      discount: freezed == discount
+          ? _value.discount
+          : discount // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -160,7 +173,12 @@ class __$$GetUserModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$GetUserModelImpl implements _GetUserModel {
   const _$GetUserModelImpl(
-      {this.id, this.userName, this.email, this.phone, this.role});
+      {this.id,
+      this.userName,
+      this.email,
+      this.phone,
+      this.role,
+      this.discount});
 
   factory _$GetUserModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$GetUserModelImplFromJson(json);
@@ -175,10 +193,12 @@ class _$GetUserModelImpl implements _GetUserModel {
   final String? phone;
   @override
   final String? role;
+  @override
+  final int? discount;
 
   @override
   String toString() {
-    return 'GetUserModel(id: $id, userName: $userName, email: $email, phone: $phone, role: $role)';
+    return 'GetUserModel(id: $id, userName: $userName, email: $email, phone: $phone, role: $role, discount: $discount)';
   }
 
   @override
@@ -191,13 +211,15 @@ class _$GetUserModelImpl implements _GetUserModel {
                 other.userName == userName) &&
             (identical(other.email, email) || other.email == email) &&
             (identical(other.phone, phone) || other.phone == phone) &&
-            (identical(other.role, role) || other.role == role));
+            (identical(other.role, role) || other.role == role) &&
+            (identical(other.discount, discount) ||
+                other.discount == discount));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, id, userName, email, phone, role);
+      Object.hash(runtimeType, id, userName, email, phone, role, discount);
 
   /// Create a copy of GetUserModel
   /// with the given fields replaced by the non-null parameter values.
@@ -221,7 +243,8 @@ abstract class _GetUserModel implements GetUserModel {
       final String? userName,
       final String? email,
       final String? phone,
-      final String? role}) = _$GetUserModelImpl;
+      final String? role,
+      final int? discount}) = _$GetUserModelImpl;
 
   factory _GetUserModel.fromJson(Map<String, dynamic> json) =
       _$GetUserModelImpl.fromJson;
@@ -236,6 +259,8 @@ abstract class _GetUserModel implements GetUserModel {
   String? get phone;
   @override
   String? get role;
+  @override
+  int? get discount;
 
   /// Create a copy of GetUserModel
   /// with the given fields replaced by the non-null parameter values.

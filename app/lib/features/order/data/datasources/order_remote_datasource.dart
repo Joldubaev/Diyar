@@ -67,23 +67,53 @@ class OrderRemoteDataSourceImpl extends OrderRemoteDataSource {
   @override
   Future<Either<Failure, String>> createOrder(CreateOrderModel order) async {
     try {
+      final jsonData = order.toJsonFlat();
+      // Логирование для отладки
+      log('Sending order to API: userName="${jsonData['userName']}", userPhone="${jsonData['userPhone']}"');
+      log('Full order JSON: $jsonData');
+      log('API endpoint: ${ApiConst.createOrder}');
+      log('Auth token: ${_prefs.getString(AppConst.accessToken)?.substring(0, 20)}...');
+
       var res = await _dio.post(
         ApiConst.createOrder,
-        data: order.toJsonFlat(), // Используем плоскую структуру для API
+        data: jsonData, // Используем плоскую структуру для API
         options: Options(
           headers: ApiConst.authMap(_prefs.getString(AppConst.accessToken) ?? ''),
+          validateStatus: (status) => status != null && status < 500, // Разрешаем 404 для логирования
         ),
       );
-      if ([200, 201].contains(res.data['code'])) {
-        return Right(res.data['message'] ?? 'Order created successfully');
+
+      log('Response status: ${res.statusCode}');
+      log('Response data: ${res.data}');
+
+      if ([200, 201].contains(res.statusCode) || [200, 201].contains(res.data?['code'])) {
+        return Right(res.data?['message']?.toString() ?? res.data?.toString() ?? 'Order created successfully');
       } else {
-        log('Failed to create order: ${res.statusCode} ${res.data}');
-        return Left(ServerFailure(res.data?['message']?.toString() ?? 'Failed to create order', res.statusCode));
+        log('Failed to create order: status=${res.statusCode}, data=${res.data}');
+        final errorMessage = res.data?['message']?.toString() ??
+            res.data?.toString() ??
+            'Failed to create order (status: ${res.statusCode})';
+        return Left(ServerFailure(errorMessage, res.statusCode));
       }
     } catch (e, stacktrace) {
       log('Error in createOrder: $e');
       log('Stacktrace: $stacktrace');
       if (e is DioException) {
+        log('DioException details:');
+        log('  - Request path: ${e.requestOptions.path}');
+        log('  - Request data: ${e.requestOptions.data}');
+        log('  - Response status: ${e.response?.statusCode}');
+        log('  - Response data: ${e.response?.data}');
+        log('  - Response headers: ${e.response?.headers}');
+
+        // Если есть ответ от сервера, используем его сообщение
+        if (e.response != null && e.response!.data != null) {
+          final errorData = e.response!.data;
+          final errorMessage =
+              errorData is Map ? (errorData['message']?.toString() ?? errorData.toString()) : errorData.toString();
+          return Left(ServerFailure(errorMessage, e.response?.statusCode));
+        }
+
         return Left(ServerFailure(e.message ?? 'Network error during order creation', e.response?.statusCode));
       }
       return Left(ServerFailure('Exception during order creation: ${e.toString()}', null));

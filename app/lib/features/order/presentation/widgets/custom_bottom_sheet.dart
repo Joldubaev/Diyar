@@ -1,7 +1,10 @@
+import 'dart:developer';
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/order/order.dart';
+import 'package:diyar/features/order/presentation/widgets/save_template_dialog.dart';
+import 'package:diyar/features/templates/presentation/cubit/templates_list_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'info_dialog_widget.dart';
@@ -102,9 +105,9 @@ class CustomBottomSheet extends StatelessWidget {
         }
       },
       child: DraggableScrollableSheet(
-        initialChildSize: 0.35,
+        initialChildSize: 0.4,
         minChildSize: 0.35,
-        maxChildSize: 0.35,
+        maxChildSize: 0.7,
         expand: false,
         builder: (context, scrollController) {
           return Container(
@@ -115,25 +118,31 @@ class CustomBottomSheet extends StatelessWidget {
                 top: Radius.circular(16),
               ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildHeader(context),
-                const SizedBox(height: 15),
-                _buildDetails(context),
-                const Divider(),
-                BlocBuilder<OrderCubit, OrderState>(
-                  builder: (context, state) {
-                    return SubmitButtonWidget(
-                      textStyle: theme.textTheme.bodyMedium!.copyWith(color: theme.colorScheme.onPrimary),
-                      title: context.l10n.confirm,
-                      bgColor: AppColors.green,
-                      isLoading: state is CreateOrderLoading,
-                      onTap: () => _onConfirmOrder(context),
-                    );
-                  },
-                ),
-              ],
+            child: SingleChildScrollView(
+              controller: scrollController,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _buildHeader(context),
+                  const SizedBox(height: 15),
+                  _buildDetails(context),
+                  const Divider(),
+                  _buildSaveTemplateButton(context),
+                  const SizedBox(height: 12),
+                  BlocBuilder<OrderCubit, OrderState>(
+                    builder: (context, state) {
+                      return SubmitButtonWidget(
+                        textStyle: theme.textTheme.bodyMedium!.copyWith(color: theme.colorScheme.onPrimary),
+                        title: context.l10n.confirm,
+                        bgColor: AppColors.green,
+                        isLoading: state is CreateOrderLoading,
+                        onTap: () => _onConfirmOrder(context),
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
           );
         },
@@ -177,6 +186,99 @@ class CustomBottomSheet extends StatelessWidget {
     );
   }
 
+  Widget _buildSaveTemplateButton(BuildContext context) {
+    return BlocListener<TemplatesListCubit, TemplatesListState>(
+      listener: (context, state) {
+        if (state is TemplateCreateSuccess) {
+          showToast('Адрес успешно сохранен в шаблоны', isError: false);
+        } else if (state is TemplateCreateFailure) {
+          showToast(state.message, isError: true);
+        }
+      },
+      child: BlocBuilder<TemplatesListCubit, TemplatesListState>(
+        builder: (context, state) {
+          final isLoading = state is TemplateCreateLoading;
+          return OutlinedButton.icon(
+            onPressed: isLoading ? null : () => _onSaveTemplate(context),
+            icon: isLoading
+                ? SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        theme.colorScheme.primary,
+                      ),
+                    ),
+                  )
+                : Icon(
+                    Icons.bookmark_outline,
+                    color: theme.colorScheme.primary,
+                  ),
+            label: Text(
+              'Сохранить адрес',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.primary,
+              ),
+            ),
+            style: OutlinedButton.styleFrom(
+              side: BorderSide(color: theme.colorScheme.primary),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Future<void> _onSaveTemplate(BuildContext context) async {
+    // Получаем cubit до async gap, чтобы избежать использования context после await
+    final templatesCubit = context.read<TemplatesListCubit>();
+
+    // Формируем название по умолчанию из адреса
+    final defaultName = addressController.text.isNotEmpty ? addressController.text : 'Новый адрес';
+
+    // Показываем диалог для ввода имени шаблона
+    final templateName = await SaveTemplateDialog.show(
+      context: context,
+      defaultName: defaultName,
+      theme: theme,
+    );
+
+    if (templateName == null || templateName.isEmpty) {
+      return; // Пользователь отменил
+    }
+
+    // Создаем AddressEntity из данных формы
+    final addressData = AddressEntity(
+      address: addressController.text,
+      houseNumber: houseController.text,
+      comment: commentController.text.isEmpty ? null : commentController.text,
+      entrance: entranceController.text.isEmpty ? null : entranceController.text,
+      floor: floorController.text.isEmpty ? null : floorController.text,
+      intercom: intercomController.text.isEmpty ? null : intercomController.text,
+      kvOffice: apartmentController.text.isEmpty ? null : apartmentController.text,
+      region: region,
+    );
+
+    // Создаем ContactInfoEntity из данных формы
+    final contactInfo = ContactInfoEntity(
+      userName: userName.text,
+      userPhone: phoneController.text,
+    );
+
+    // Вызываем метод создания шаблона через Cubit (используем сохраненную ссылку)
+    templatesCubit.createTemplateFromOrder(
+      templateName: templateName,
+      addressData: addressData,
+      contactInfo: contactInfo,
+      price: deliveryPrice, // Сохраняем цену доставки на этот адрес
+    );
+  }
+
   void _onConfirmOrder(BuildContext context) {
     final orderCubit = context.read<OrderCubit>();
 
@@ -192,9 +294,12 @@ class CustomBottomSheet extends StatelessWidget {
     );
 
     final contactInfo = ContactInfoEntity(
-      userName: userName.text,
-      userPhone: phoneController.text,
+      userName: userName.text.trim(),
+      userPhone: phoneController.text.trim(),
     );
+
+    // Логирование для отладки
+    log('Creating order with contactInfo: userName="${contactInfo.userName}", userPhone="${contactInfo.userPhone}"');
 
     orderCubit.createOrder(
       CreateOrderEntity(

@@ -73,6 +73,7 @@ dependencies:
     path: ../package/rest_client
   storage:
     path: ../package/storage
+  intl: ^0.20.2
 
   # dgis_mobile_sdk_full: ^12.5.0
 

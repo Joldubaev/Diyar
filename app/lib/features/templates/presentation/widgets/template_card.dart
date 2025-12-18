@@ -3,120 +3,90 @@ import 'package:flutter/material.dart';
 
 class TemplateCard extends StatelessWidget {
   final TemplateEntity template;
-  final VoidCallback onTap;
-  final VoidCallback? onEditTap;
+  final bool isSelected;
+  final ValueChanged<bool> onSelectedChanged;
 
   const TemplateCard({
     super.key,
     required this.template,
-    required this.onTap,
-    this.onEditTap,
+    required this.isSelected,
+    required this.onSelectedChanged,
   });
-
-  String _buildFullAddress() {
-    final address = template.addressData.address;
-    final houseNumber = template.addressData.houseNumber;
-
-    if (houseNumber.isNotEmpty) {
-      return '$address, д. $houseNumber';
-    }
-    return address;
-  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final colors = theme.colorScheme;
 
     return Material(
       color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-          decoration: BoxDecoration(
-            color: colorScheme.surface,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: colorScheme.outline.withValues(alpha: 0.12),
-              width: 1,
-            ),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: colors.surface,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isSelected ? colors.primary : colors.outline.withValues(alpha: 0.12),
+            width: isSelected ? 2 : 1,
           ),
-          child: Row(
-            children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Colors.red.withValues(alpha: 0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.location_on,
-                  color: Colors.red,
-                  size: 22,
-                ),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: colors.primary.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      template.templateName,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16,
-                        color: colorScheme.onSurface,
-                        height: 1.3,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      _buildFullAddress(),
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        fontSize: 14,
-                        color: colorScheme.onSurface.withValues(alpha: 0.6),
-                        height: 1.4,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
+              child: Icon(
+                Icons.bookmark_outline,
+                color: colors.primary,
               ),
-              const SizedBox(width: 8),
-              if (onEditTap != null)
-                InkWell(
-                  onTap: onEditTap,
-                  borderRadius: BorderRadius.circular(8),
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: colorScheme.primaryContainer.withValues(alpha: 0.5),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Icon(
-                      Icons.edit_outlined,
-                      color: colorScheme.primary,
-                      size: 20,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    template.templateName,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                ),
-              if (onEditTap == null)
-                Icon(
-                  Icons.chevron_right,
-                  color: colorScheme.onSurface.withValues(alpha: 0.3),
-                  size: 24,
-                ),
-            ],
-          ),
+                  const SizedBox(height: 4),
+                  Text(
+                    _buildAddress(template),
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: colors.onSurface.withValues(alpha: 0.6),
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+
+            /// ACTIONS
+            GestureDetector(
+              onTap: () => onSelectedChanged(!isSelected),
+              behavior: HitTestBehavior.opaque,
+              child: Checkbox(
+                value: isSelected,
+                onChanged: (value) => onSelectedChanged(value ?? false),
+              ),
+            ),
+          ],
         ),
       ),
     );
+  }
+
+  String _buildAddress(TemplateEntity template) {
+    final address = template.addressData.address;
+    final house = template.addressData.houseNumber;
+    return house.isNotEmpty ? '$address, д. $house' : address;
   }
 }

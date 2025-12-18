@@ -6,6 +6,7 @@ class GetUserEntity extends Equatable {
   final String? email;
   final String? phone;
   final String? role;
+  final int? discount;
 
   const GetUserEntity({
     this.id,
@@ -13,6 +14,7 @@ class GetUserEntity extends Equatable {
     this.email,
     this.phone,
     this.role,
+    this.discount,
   });
 
   @override
@@ -22,5 +24,6 @@ class GetUserEntity extends Equatable {
         email,
         phone,
         role,
+        discount,
       ];
 }
