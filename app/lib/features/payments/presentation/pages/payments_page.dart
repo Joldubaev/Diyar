@@ -1,5 +1,5 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:diyar/core/router/routes.gr.dart';
+import 'package:diyar/core/core.dart';
 import 'package:diyar/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,7 +41,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
         padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
         child: BlocBuilder<ProfileCubit, ProfileState>(
           builder: (context, state) {
-            UserModel? currentUser;
+            UserProfileModel? currentUser;
             if (state is ProfileGetLoaded) {
               currentUser = state.userModel;
             }

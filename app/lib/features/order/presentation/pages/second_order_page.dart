@@ -4,6 +4,7 @@ import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:diyar/features/order/data/models/model.dart';
 import 'package:diyar/features/order/presentation/cubit/order_cubit.dart';
 import 'package:diyar/features/order/presentation/widgets/search_bottom_widget.dart';
+import 'package:diyar/features/profile/profile.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -104,6 +105,10 @@ class _SecondOrderPageState extends State<SecondOrderPage> {
                     );
                   } else {
                     // final DistrictEntity? districtEntity = selectedDistrict?.toEntity();
+                    // Получаем данные пользователя из ProfileCubit
+                    final profileCubit = context.read<ProfileCubit>();
+                    final user = profileCubit.user;
+
                     context.router.push(DeliveryFormRoute(
                       cart: widget.cart,
                       dishCount: widget.dishCount,
@@ -111,6 +116,8 @@ class _SecondOrderPageState extends State<SecondOrderPage> {
                       deliveryPrice: 0,
                       // distric: districtEntity,
                       address: addressController.text,
+                      initialUserName: user?.userName,
+                      initialUserPhone: user?.phone,
                     ));
                   }
                 },

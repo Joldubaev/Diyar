@@ -10,5 +10,6 @@ class TemplateEntity with _$TemplateEntity {
     required String templateName,
     required AddressEntity addressData,
     required ContactInfoEntity contactInfo,
+    int? price, // Цена доставки на этот адрес
   }) = _TemplateEntity;
 }

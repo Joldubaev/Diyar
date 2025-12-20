@@ -20,6 +20,7 @@ mixin _$TemplateEntity {
   String get templateName => throw _privateConstructorUsedError;
   AddressEntity get addressData => throw _privateConstructorUsedError;
   ContactInfoEntity get contactInfo => throw _privateConstructorUsedError;
+  int? get price => throw _privateConstructorUsedError;
 
   /// Create a copy of TemplateEntity
   /// with the given fields replaced by the non-null parameter values.
@@ -38,7 +39,8 @@ abstract class $TemplateEntityCopyWith<$Res> {
       {String? id,
       String templateName,
       AddressEntity addressData,
-      ContactInfoEntity contactInfo});
+      ContactInfoEntity contactInfo,
+      int? price});
 
   $AddressEntityCopyWith<$Res> get addressData;
   $ContactInfoEntityCopyWith<$Res> get contactInfo;
@@ -63,6 +65,7 @@ class _$TemplateEntityCopyWithImpl<$Res, $Val extends TemplateEntity>
     Object? templateName = null,
     Object? addressData = null,
     Object? contactInfo = null,
+    Object? price = freezed,
   }) {
     return _then(_value.copyWith(
       id: freezed == id
@@ -81,6 +84,10 @@ class _$TemplateEntityCopyWithImpl<$Res, $Val extends TemplateEntity>
           ? _value.contactInfo
           : contactInfo // ignore: cast_nullable_to_non_nullable
               as ContactInfoEntity,
+      price: freezed == price
+          ? _value.price
+          : price // ignore: cast_nullable_to_non_nullable
+              as int?,
     ) as $Val);
   }
 
@@ -117,7 +124,8 @@ abstract class _$$TemplateEntityImplCopyWith<$Res>
       {String? id,
       String templateName,
       AddressEntity addressData,
-      ContactInfoEntity contactInfo});
+      ContactInfoEntity contactInfo,
+      int? price});
 
   @override
   $AddressEntityCopyWith<$Res> get addressData;
@@ -142,6 +150,7 @@ class __$$TemplateEntityImplCopyWithImpl<$Res>
     Object? templateName = null,
     Object? addressData = null,
     Object? contactInfo = null,
+    Object? price = freezed,
   }) {
     return _then(_$TemplateEntityImpl(
       id: freezed == id
@@ -160,6 +169,10 @@ class __$$TemplateEntityImplCopyWithImpl<$Res>
           ? _value.contactInfo
           : contactInfo // ignore: cast_nullable_to_non_nullable
               as ContactInfoEntity,
+      price: freezed == price
+          ? _value.price
+          : price // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -171,7 +184,8 @@ class _$TemplateEntityImpl implements _TemplateEntity {
       {this.id,
       required this.templateName,
       required this.addressData,
-      required this.contactInfo});
+      required this.contactInfo,
+      this.price});
 
   @override
   final String? id;
@@ -181,10 +195,12 @@ class _$TemplateEntityImpl implements _TemplateEntity {
   final AddressEntity addressData;
   @override
   final ContactInfoEntity contactInfo;
+  @override
+  final int? price;
 
   @override
   String toString() {
-    return 'TemplateEntity(id: $id, templateName: $templateName, addressData: $addressData, contactInfo: $contactInfo)';
+    return 'TemplateEntity(id: $id, templateName: $templateName, addressData: $addressData, contactInfo: $contactInfo, price: $price)';
   }
 
   @override
@@ -198,12 +214,13 @@ class _$TemplateEntityImpl implements _TemplateEntity {
             (identical(other.addressData, addressData) ||
                 other.addressData == addressData) &&
             (identical(other.contactInfo, contactInfo) ||
-                other.contactInfo == contactInfo));
+                other.contactInfo == contactInfo) &&
+            (identical(other.price, price) || other.price == price));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, templateName, addressData, contactInfo);
+  int get hashCode => Object.hash(
+      runtimeType, id, templateName, addressData, contactInfo, price);
 
   /// Create a copy of TemplateEntity
   /// with the given fields replaced by the non-null parameter values.
@@ -220,7 +237,8 @@ abstract class _TemplateEntity implements TemplateEntity {
       {final String? id,
       required final String templateName,
       required final AddressEntity addressData,
-      required final ContactInfoEntity contactInfo}) = _$TemplateEntityImpl;
+      required final ContactInfoEntity contactInfo,
+      final int? price}) = _$TemplateEntityImpl;
 
   @override
   String? get id;
@@ -230,6 +248,8 @@ abstract class _TemplateEntity implements TemplateEntity {
   AddressEntity get addressData;
   @override
   ContactInfoEntity get contactInfo;
+  @override
+  int? get price;
 
   /// Create a copy of TemplateEntity
   /// with the given fields replaced by the non-null parameter values.

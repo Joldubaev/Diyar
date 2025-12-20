@@ -1,11 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:diyar/core/core.dart';
-import 'package:diyar/features/auth/auth.dart';
 import 'package:diyar/features/profile/profile.dart';
 import 'package:injectable/injectable.dart';
 
 abstract class ProfileRepository {
-  Future<Either<Failure, UserModel>> getUser();
+  Future<Either<Failure, UserProfileModel>> getUser();
   Future<Either<Failure, String>> updateUser(String name, String phone);
   Future<Either<Failure, String>> deleteUser();
 }
@@ -17,7 +16,7 @@ class ProfileRepositoryImpl implements ProfileRepository {
   ProfileRepositoryImpl(this._remoteDataSource);
 
   @override
-  Future<Either<Failure, UserModel>> getUser() async {
+  Future<Either<Failure, UserProfileModel>> getUser() async {
     try {
       return await _remoteDataSource.getUser();
     } catch (e) {

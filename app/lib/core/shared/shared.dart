@@ -3,6 +3,7 @@ export 'models/address_entity.dart';
 export 'models/address_model.dart';
 export 'models/contact_info_entity.dart';
 export 'models/contact_info_model.dart';
+export 'models/user_profile_model.dart';
 export 'presentation/pages/pages.dart';
 export 'presentation/bloc/internet_bloc.dart';
 export 'presentation/cubit/popular_cubit.dart';

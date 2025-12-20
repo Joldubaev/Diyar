@@ -1,23 +1,26 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:diyar/common/calculiator/order_calculation_service.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/order/order.dart';
-import 'package:diyar/features/profile/profile.dart';
+import 'package:diyar/injection_container.dart' as di;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 @RoutePage()
-class DeliveryFormPage extends StatefulWidget {
+class DeliveryFormPage extends StatelessWidget {
   final List<CartItemEntity> cart;
   final int totalPrice;
   final int dishCount;
   final String? address;
   final double deliveryPrice;
+  final String? initialUserName;
+  final String? initialUserPhone;
 
   const DeliveryFormPage({
     super.key,
     this.address,
+    this.initialUserName,
+    this.initialUserPhone,
     required this.cart,
     required this.dishCount,
     required this.totalPrice,
@@ -25,96 +28,97 @@ class DeliveryFormPage extends StatefulWidget {
   });
 
   @override
-  State<DeliveryFormPage> createState() => _DeliveryFormPageState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) {
+        final cubit = di.sl<DeliveryFormCubit>();
+        cubit.initialize(
+          subtotalPrice: totalPrice,
+          deliveryPrice: deliveryPrice,
+        );
+        return cubit;
+      },
+      child: _DeliveryFormPageContent(
+        cart: cart,
+        dishCount: dishCount,
+        totalPrice: totalPrice,
+        deliveryPrice: deliveryPrice,
+        address: address,
+        initialUserName: initialUserName,
+        initialUserPhone: initialUserPhone,
+      ),
+    );
+  }
 }
 
-class _DeliveryFormPageState extends State<DeliveryFormPage> {
-  final OrderCalculationService _calculationService = OrderCalculationService();
-  final _formKey = GlobalKey<FormState>();
-  final _phoneController = TextEditingController();
-  final _addressController = TextEditingController();
-  final _houseController = TextEditingController();
-  final _apartmentController = TextEditingController();
-  final _intercomController = TextEditingController();
-  final _floorController = TextEditingController();
-  final _entranceController = TextEditingController();
-  final _commentController = TextEditingController();
-  final _userName = TextEditingController();
-  final _sdachaController = TextEditingController();
+class _DeliveryFormPageContent extends StatefulWidget {
+  final List<CartItemEntity> cart;
+  final int dishCount;
+  final int totalPrice;
+  final double deliveryPrice;
+  final String? address;
+  final String? initialUserName;
+  final String? initialUserPhone;
 
-  PaymentTypeDelivery _paymentType = PaymentTypeDelivery.cash;
+  const _DeliveryFormPageContent({
+    required this.cart,
+    required this.dishCount,
+    required this.totalPrice,
+    required this.deliveryPrice,
+    this.address,
+    this.initialUserName,
+    this.initialUserPhone,
+  });
+
+  @override
+  State<_DeliveryFormPageContent> createState() => _DeliveryFormPageContentState();
+}
+
+class _DeliveryFormPageContentState extends State<_DeliveryFormPageContent> {
+  final _formKey = GlobalKey<FormState>();
+  late final DeliveryFormControllers _controllers;
 
   @override
   void initState() {
     super.initState();
-    _initializeAddress();
-    _initializeUserData();
-  }
 
-  void _initializeAddress() {
+    // Парсим адрес (если передан) - это ответственность UI, не Cubit
+    String? parsedAddress;
+    String? parsedHouseNumber;
     if (widget.address != null) {
       final parts = widget.address!.split(', ');
       if (parts.isNotEmpty) {
-        _addressController.text = parts[0];
+        parsedAddress = parts[0];
         if (parts.length > 1) {
-          _houseController.text = parts.sublist(1).join(', ');
+          parsedHouseNumber = parts.sublist(1).join(', ');
         }
       } else {
-        _addressController.text = widget.address!;
+        parsedAddress = widget.address;
       }
     }
-  }
 
-  void _initializeUserData() {
-    context.read<ProfileCubit>().getUser();
-    if (_phoneController.text.isEmpty) {
-      _phoneController.text = '+996';
-    }
+    // UI сам инициализирует контроллеры из параметров навигации
+    // Cubit ничего не знает про initial-данные
+    _controllers = DeliveryFormControllers(
+      initialPhone: widget.initialUserPhone ?? '+996',
+      initialUserName: widget.initialUserName,
+      initialAddress: parsedAddress,
+      initialHouseNumber: parsedHouseNumber,
+    );
   }
 
   @override
   void dispose() {
-    _phoneController.dispose();
-    _addressController.dispose();
-    _houseController.dispose();
-    _apartmentController.dispose();
-    _intercomController.dispose();
-    _floorController.dispose();
-    _entranceController.dispose();
-    _commentController.dispose();
-    _userName.dispose();
-    _sdachaController.dispose();
+    _controllers.dispose();
     super.dispose();
   }
 
-  void _onSubmit(int calculatedDeliveryPrice, int calculatedTotalOrderCost) {
-    if (!_formKey.currentState!.validate()) return;
+  /// Побочный эффект: показ bottom sheet для подтверждения заказа
+  /// UI сам вычисляет данные для подтверждения на основе состояния
+  void _showOrderConfirmationSheet(BuildContext context, DeliveryFormLoaded state) {
+    // UI сам вычисляет данные для подтверждения (ослабленная связь с Cubit)
+    final sdachaValue = state.changeAmountResult?.toChangeAmount() ?? 0;
 
-    final sdachaValue = int.tryParse(_sdachaController.text) ?? 0;
-
-    // Используем сервис для расчета сдачи
-    final calculatedChange = _calculationService.calculateChange(
-      calculatedTotalOrderCost,
-      sdachaValue > 0 ? sdachaValue : null,
-    );
-
-    if (_paymentType == PaymentTypeDelivery.cash && sdachaValue != 0 && calculatedChange < 0) {
-      showToast("Сдача не может быть меньше суммы", isError: true);
-      return;
-    }
-
-    _showOrderConfirmationSheet(
-      calculatedDeliveryPrice,
-      calculatedTotalOrderCost,
-      sdachaValue,
-    );
-  }
-
-  void _showOrderConfirmationSheet(
-    int calculatedDeliveryPrice,
-    int calculatedTotalOrderCost,
-    int sdachaValue,
-  ) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -131,88 +135,124 @@ class _DeliveryFormPageState extends State<DeliveryFormPage> {
           dishCount: widget.dishCount,
           region: '',
           theme: Theme.of(context),
-          widget: widget,
-          deliveryPrice: calculatedDeliveryPrice,
-          totalOrderCost: calculatedTotalOrderCost,
-          phoneController: _phoneController,
-          userName: _userName,
-          addressController: _addressController,
-          commentController: _commentController,
-          houseController: _houseController,
-          apartmentController: _apartmentController,
-          intercomController: _intercomController,
-          floorController: _floorController,
-          entranceController: _entranceController,
-          paymentType: _paymentType,
+          widget: DeliveryFormPage(
+            cart: widget.cart,
+            dishCount: widget.dishCount,
+            totalPrice: widget.totalPrice,
+            deliveryPrice: widget.deliveryPrice,
+          ),
+          deliveryPrice: widget.deliveryPrice.toInt(),
+          totalOrderCost: state.totalOrderCost,
+          phoneController: _controllers.phoneController,
+          userName: _controllers.userName,
+          addressController: _controllers.addressController,
+          commentController: _controllers.commentController,
+          houseController: _controllers.houseController,
+          apartmentController: _controllers.apartmentController,
+          intercomController: _controllers.intercomController,
+          floorController: _controllers.floorController,
+          entranceController: _controllers.entranceController,
+          paymentType: state.paymentType,
           sdacha: sdachaValue,
         );
       },
     );
   }
 
+  /// Тупой метод - только валидация формы и вызов Cubit
+  void _onSubmit() {
+    // Валидация формы (UI-валидация, не бизнес-логика)
+    if (!_formKey.currentState!.validate()) return;
+
+    // Вызываем Cubit для бизнес-валидации и обработки
+    context.read<DeliveryFormCubit>().validateAndPrepareOrder(
+          subtotalPrice: widget.totalPrice,
+          deliveryPrice: widget.deliveryPrice,
+        );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    // Используем сервис для расчета итоговой стоимости
-    // widget.totalPrice уже содержит цену товаров (возможно со скидкой)
-    // Добавляем к ней цену доставки
-    final totalOrderCost = _calculationService
-        .calculateFinalTotalPrice(
-          subtotalPrice: widget.totalPrice.toDouble(),
-          deliveryPrice: widget.deliveryPrice,
-        )
-        .toInt();
+    return BlocListener<DeliveryFormCubit, DeliveryFormState>(
+      listenWhen: (previous, current) {
+        if (current is! DeliveryFormLoaded) return false;
+        if (previous is! DeliveryFormLoaded) return true;
 
-    return BlocListener<ProfileCubit, ProfileState>(
-      listener: (context, profileState) {
-        if (profileState is ProfileGetLoaded) {
-          if (_userName.text.isEmpty) {
-            _userName.text = profileState.userModel.userName ?? '';
-          }
-          if (_phoneController.text.isEmpty || _phoneController.text == '+996') {
-            _phoneController.text = profileState.userModel.phone ?? '';
-          }
+        // Упрощенная логика: слушаем только важные изменения
+        return current.validationError != previous.validationError ||
+            current.confirmationRequestId != previous.confirmationRequestId ||
+            current.changeAmountResult != previous.changeAmountResult ||
+            current.paymentType != previous.paymentType;
+      },
+      listener: (context, state) {
+        if (state is! DeliveryFormLoaded) return;
+
+        // Показываем toast при ошибке валидации
+        if (state.validationError != null) {
+          showToast(state.validationError!, isError: true);
+        }
+
+        // Показываем bottom sheet при изменении confirmationRequestId
+        // Monotonic token гарантирует одноразовость - не нужен ручной сброс
+        if (state.confirmationRequestId > 0) {
+          _showOrderConfirmationSheet(context, state);
+        }
+
+        // Обновление текста поля сдачи
+        if (state.changeAmountResult != null) {
+          _controllers.sdachaController.text = state.changeAmountResult!.getDisplayText(state.totalOrderCost);
+        } else if (state.paymentType == PaymentTypeDelivery.online) {
+          _controllers.sdachaController.clear();
         }
       },
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: theme.colorScheme.primary,
-          title: Text(
-            context.l10n.orderDetails,
-            style: theme.textTheme.titleSmall!.copyWith(color: theme.colorScheme.onTertiaryFixed),
-          ),
-          centerTitle: true,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios_sharp, color: theme.colorScheme.onTertiaryFixed),
-            onPressed: () => context.router.maybePop(),
-          ),
-        ),
-        body: DeliveryFormWidget(
-          paymentType: _paymentType,
-          onPaymentTypeChanged: (type) {
-            setState(() {
-              _paymentType = type;
-            });
-          },
-          formKey: _formKey,
-          theme: theme,
-          userName: _userName,
-          phoneController: _phoneController,
-          addressController: _addressController,
-          houseController: _houseController,
-          entranceController: _entranceController,
-          floorController: _floorController,
-          apartmentController: _apartmentController,
-          intercomController: _intercomController,
-          sdachaController: _sdachaController,
-          commentController: _commentController,
-          totalOrderCost: totalOrderCost,
-          onConfirm: () => _onSubmit(
-            widget.deliveryPrice.toInt(),
-            totalOrderCost,
-          ),
-        ),
+      child: BlocBuilder<DeliveryFormCubit, DeliveryFormState>(
+        builder: (context, state) {
+          if (state is! DeliveryFormLoaded) {
+            return const Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            );
+          }
+
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: theme.colorScheme.primary,
+              title: Text(
+                context.l10n.orderDetails,
+                style: theme.textTheme.titleSmall!.copyWith(color: theme.colorScheme.onTertiaryFixed),
+              ),
+              centerTitle: true,
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back_ios_sharp, color: theme.colorScheme.onTertiaryFixed),
+                onPressed: () => context.router.maybePop(),
+              ),
+            ),
+            body: DeliveryFormWidget(
+              paymentType: state.paymentType,
+              onPaymentTypeChanged: (type) {
+                context.read<DeliveryFormCubit>().changePaymentType(type);
+              },
+              formKey: _formKey,
+              theme: theme,
+              userName: _controllers.userName,
+              phoneController: _controllers.phoneController,
+              addressController: _controllers.addressController,
+              houseController: _controllers.houseController,
+              entranceController: _controllers.entranceController,
+              floorController: _controllers.floorController,
+              apartmentController: _controllers.apartmentController,
+              intercomController: _controllers.intercomController,
+              sdachaController: _controllers.sdachaController,
+              commentController: _controllers.commentController,
+              totalOrderCost: state.totalOrderCost,
+              onChangeAmountSelected: (result) {
+                context.read<DeliveryFormCubit>().setChangeAmountResult(result);
+              },
+              onConfirm: _onSubmit,
+            ),
+          );
+        },
       ),
     );
   }

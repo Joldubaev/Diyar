@@ -12,6 +12,7 @@ class TemplateModel with _$TemplateModel {
     required String templateName,
     required AddressModel addressData,
     required ContactInfoModel contactInfo,
+    int? price, // Цена доставки на этот адрес
   }) = _TemplateModel;
 
   // Кастомный fromJson для преобразования плоской структуры API в композиционную
@@ -23,6 +24,7 @@ class TemplateModel with _$TemplateModel {
         templateName: json['templateName'] as String,
         addressData: AddressModel.fromJson(json['addressData'] as Map<String, dynamic>),
         contactInfo: ContactInfoModel.fromJson(json['contactInfo'] as Map<String, dynamic>),
+        price: (json['price'] as num?)?.toInt(),
       );
     }
 
@@ -44,6 +46,7 @@ class TemplateModel with _$TemplateModel {
         userName: json['userName'] as String? ?? '',
         userPhone: json['userPhone'] as String? ?? '',
       ),
+      price: (json['price'] as num?)?.toInt(),
     );
   }
 
@@ -52,6 +55,7 @@ class TemplateModel with _$TemplateModel {
         templateName: entity.templateName,
         addressData: AddressModel.fromEntity(entity.addressData),
         contactInfo: ContactInfoModel.fromEntity(entity.contactInfo),
+        price: entity.price,
       );
 }
 
@@ -61,6 +65,7 @@ extension TemplateModelX on TemplateModel {
         templateName: templateName,
         addressData: addressData.toEntity(),
         contactInfo: contactInfo.toEntity(),
+        price: price,
       );
 
   // Кастомный toJson для преобразования композиционной структуры в плоскую для API
@@ -95,6 +100,9 @@ extension TemplateModelX on TemplateModel {
     if (id != null) {
       json['id'] = id;
     }
+
+    // Цена доставки (по умолчанию 0, если не указана)
+    json['price'] = price ?? 0;
 
     return json;
   }

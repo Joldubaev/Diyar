@@ -1,7 +1,9 @@
 import 'dart:developer' show log;
 import 'package:diyar/core/components/input/phone_number.dart';
 import 'package:diyar/core/core.dart';
+import 'package:diyar/features/order/domain/domain.dart';
 import 'package:diyar/features/order/presentation/presentation.dart';
+import 'package:diyar/features/order/presentation/widgets/change_amount_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
@@ -24,6 +26,7 @@ class DeliveryFormWidget extends StatefulWidget {
     required this.commentController,
     required this.paymentType,
     required this.onPaymentTypeChanged,
+    this.onChangeAmountSelected,
   });
 
   final ThemeData theme;
@@ -42,6 +45,7 @@ class DeliveryFormWidget extends StatefulWidget {
   final TextEditingController commentController;
   final PaymentTypeDelivery paymentType;
   final Function(PaymentTypeDelivery) onPaymentTypeChanged;
+  final ValueChanged<ChangeAmountResult?>? onChangeAmountSelected;
 
   @override
   State<DeliveryFormWidget> createState() => _DeliveryFormWidgetState();
@@ -64,6 +68,19 @@ class _DeliveryFormWidgetState extends State<DeliveryFormWidget> {
   void initState() {
     super.initState();
     log("address2: ${_addressController.text}");
+  }
+
+  @override
+  void didUpdateWidget(DeliveryFormWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Сбрасываем поле сдачи при смене типа оплаты с наличных на онлайн
+    if (oldWidget.paymentType != widget.paymentType) {
+      if (widget.paymentType != PaymentTypeDelivery.cash) {
+        _sdachaController.clear();
+        // Уведомляем родительский виджет об очистке результата
+        widget.onChangeAmountSelected?.call(null);
+      }
+    }
   }
 
   @override
@@ -190,11 +207,26 @@ class _DeliveryFormWidgetState extends State<DeliveryFormWidget> {
               inputType: TextInputType.number,
               controller: _sdachaController,
               hintText: context.l10n.change,
+              isReadOnly: true,
+              onTap: () async {
+                final result = await ChangeAmountDialog.show(
+                  context: context,
+                  totalOrderCost: widget.totalOrderCost,
+                );
+                if (result != null && mounted) {
+                  setState(() {
+                    _sdachaController.text = result.getDisplayText(widget.totalOrderCost);
+                  });
+                  // Передаем результат в родительский виджет
+                  widget.onChangeAmountSelected?.call(result);
+                }
+              },
               validator: (value) {
-                if (value!.isEmpty) {
-                  return context.l10n.confirmOrder;
-                } else if (value.length < 2) {
-                  return context.l10n.confirmOrder;
+                // При наличной оплате поле сдачи должно быть заполнено
+                if (widget.paymentType == PaymentTypeDelivery.cash) {
+                  if (value == null || value.isEmpty) {
+                    return 'Пожалуйста, выберите сумму сдачи';
+                  }
                 }
                 return null;
               },

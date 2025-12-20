@@ -121,10 +121,12 @@ extension CreateOrderModelX on CreateOrderModel {
     }
 
     // Разворачиваем contactInfo
-    if (contactInfo != null) {
-      json['userName'] = contactInfo!.userName;
-      json['userPhone'] = contactInfo!.userPhone;
-    }
+    // Всегда добавляем userName и userPhone в JSON (даже если пустые)
+    // Это гарантирует, что поля всегда присутствуют в запросе
+    final userNameValue = contactInfo?.userName ?? '';
+    final userPhoneValue = contactInfo?.userPhone ?? '';
+    json['userName'] = userNameValue;
+    json['userPhone'] = userPhoneValue;
 
     // Остальные поля
     if (dishesCount != null) json['dishesCount'] = dishesCount;

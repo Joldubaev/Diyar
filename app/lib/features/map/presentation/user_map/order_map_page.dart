@@ -5,6 +5,7 @@ import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:diyar/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:diyar/features/map/map.dart';
 import 'package:diyar/features/order/order.dart';
+import 'package:diyar/features/profile/profile.dart';
 import 'package:diyar/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -359,12 +360,18 @@ class _OrderMapPageState extends State<OrderMapPage> {
       ..changeAddressSearch(false)
       ..selectDeliveryPrice(_deliveryPrice);
 
+    // Получаем данные пользователя из ProfileCubit
+    final profileCubit = context.read<ProfileCubit>();
+    final user = profileCubit.user;
+
     context.router.push(DeliveryFormRoute(
         totalPrice: widget.totalPrice,
         cart: widget.cart,
         dishCount: widget.dishCount ?? 0,
         address: _address!,
-        deliveryPrice: _deliveryPrice));
+        deliveryPrice: _deliveryPrice,
+        initialUserName: user?.userName,
+        initialUserPhone: user?.phone));
   }
 
   Future<void> _zoomIn() async {

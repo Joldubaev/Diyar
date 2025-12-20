@@ -56,6 +56,16 @@ import '../../features/auth/presentation/cubit/sign_in/sign_in_cubit.dart'
     as _i302;
 import '../../features/auth/presentation/cubit/sign_up/sign_up_cubit.dart'
     as _i781;
+import '../../features/bonus/bonus.dart' as _i475;
+import '../../features/bonus/data/datasources/bonus_remote_datasource.dart'
+    as _i805;
+import '../../features/bonus/data/repository/bonus_repository_impl.dart'
+    as _i966;
+import '../../features/bonus/domain/domain.dart' as _i135;
+import '../../features/bonus/domain/repositories/bonus_repository.dart'
+    as _i361;
+import '../../features/bonus/domain/usecases/generate_qr_usecase.dart' as _i360;
+import '../../features/bonus/presentation/cubit/bonus_cubit.dart' as _i968;
 import '../../features/bonuses/bonuses.dart' as _i806;
 import '../../features/bonuses/data/repository/bonuses_repository.dart'
     as _i275;
@@ -63,6 +73,7 @@ import '../../features/bonuses/presentation/cubit/bonuses_cubit.dart' as _i0;
 import '../../features/cart/data/cart_module.dart' as _i979;
 import '../../features/cart/data/datasources/cart_local_data_source.dart'
     as _i706;
+import '../../features/cart/domain/domain.dart' as _i885;
 import '../../features/cart/domain/repository/cart_repository.dart' as _i26;
 import '../../features/cart/presentation/bloc/cart_bloc.dart' as _i517;
 import '../../features/cart/presentation/cubit/cart_cutlery_cubit.dart'
@@ -105,6 +116,11 @@ import '../../features/order/data/datasources/order_remote_datasource.dart'
 import '../../features/order/data/repository/order_repository.dart' as _i576;
 import '../../features/order/domain/repositories/order_repositories.dart'
     as _i758;
+import '../../features/order/domain/usecases/validate_order_data_usecase.dart'
+    as _i679;
+import '../../features/order/order.dart' as _i830;
+import '../../features/order/presentation/cubit/delivery_form_cubit.dart'
+    as _i431;
 import '../../features/order/presentation/cubit/order_cubit.dart' as _i304;
 import '../../features/payments/data/datasource/remote_payments_datasource.dart'
     as _i1005;
@@ -167,10 +183,12 @@ import '../../features/templates/domain/usecases/get_template_by_id_usecase.dart
     as _i844;
 import '../../features/templates/domain/usecases/get_templates_usecase.dart'
     as _i230;
+import '../../features/templates/domain/usecases/prepare_delivery_navigation_usecase.dart'
+    as _i198;
 import '../../features/templates/domain/usecases/update_template_usecase.dart'
     as _i968;
-import '../../features/templates/presentation/cubit/templates_cubit.dart'
-    as _i2;
+import '../../features/templates/presentation/cubit/templates_list_cubit.dart'
+    as _i423;
 import '../core.dart' as _i351;
 import '../remote_config/diyar_remote_config.dart' as _i1020;
 import '../shared/presentation/bloc/internet_bloc.dart' as _i231;
@@ -205,6 +223,8 @@ extension GetItInjectableX on _i174.GetIt {
       preResolve: true,
     );
     gh.factory<_i512.CartCutleryCubit>(() => _i512.CartCutleryCubit());
+    gh.factory<_i198.PrepareDeliveryNavigationUseCase>(
+        () => _i198.PrepareDeliveryNavigationUseCase());
     gh.singleton<_i231.InternetBloc>(() => _i231.InternetBloc());
     gh.lazySingleton<_i361.Dio>(() => registerModule.dio);
     gh.lazySingleton<_i152.LocalAuthentication>(() => registerModule.localAuth);
@@ -212,12 +232,12 @@ extension GetItInjectableX on _i174.GetIt {
         () => registerModule.internetConnection);
     gh.lazySingleton<_i431.PreferencesStorage>(
         () => registerModule.preferencesStorage);
+    gh.lazySingleton<_i804.OrderCalculationService>(
+        () => _i804.OrderCalculationService());
     gh.lazySingleton<_i706.CartLocalDataSource>(
         () => _i706.CartHiveDataSource());
     gh.factory<_i489.ThemeCubit>(
         () => _i489.ThemeCubit(gh<_i460.SharedPreferences>()));
-    gh.factory<_i132.CartPriceCubit>(
-        () => _i132.CartPriceCubit(gh<_i804.OrderCalculationService>()));
     gh.lazySingleton<_i243.AboutUsRemoteDataSource>(
         () => _i243.AboutUsRemoteDataSourceImpl(
               gh<_i361.Dio>(),
@@ -260,6 +280,11 @@ extension GetItInjectableX on _i174.GetIt {
         _i87.SettingsRepositoryImpl(gh<_i300.RemoteSettingsDataSource>()));
     gh.lazySingleton<_i433.MenuRemoteDataSource>(
         () => _i433.MenuRemoteDataSourceImpl(gh<_i361.Dio>()));
+    gh.lazySingleton<_i805.BonusRemoteDataSource>(
+        () => _i805.BonusRemoteDataSourceImpl(
+              gh<_i361.Dio>(),
+              gh<_i460.SharedPreferences>(),
+            ));
     await gh.factoryAsync<_i351.DiyarRemoteConfig>(
       () => registerModule.diyarRemoteConfig(gh<_i655.PackageInfo>()),
       preResolve: true,
@@ -307,10 +332,16 @@ extension GetItInjectableX on _i174.GetIt {
             ));
     gh.factory<_i0.BonusesCubit>(
         () => _i0.BonusesCubit(gh<_i806.BonusesRepository>()));
+    gh.factory<_i132.CartPriceCubit>(() => _i132.CartPriceCubit(
+          gh<_i804.OrderCalculationService>(),
+          initialItems: gh<List<_i885.CartItemEntity>>(),
+        ));
     gh.lazySingleton<_i835.AppLocation>(() => _i835.LocationService(
           gh<_i361.Dio>(),
           gh<_i460.SharedPreferences>(),
         ));
+    gh.factory<_i679.ValidateOrderDataUseCase>(() =>
+        _i679.ValidateOrderDataUseCase(gh<_i804.OrderCalculationService>()));
     gh.lazySingleton<_i1030.RestClient>(
       () => registerModule.authRestClient(
         gh<_i361.Dio>(),
@@ -338,6 +369,8 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i251.TemplateRemoteDataSource>(() =>
         _i692.TemplateRemoteDataSourceImpl(
             gh<_i1030.RestClient>(instanceName: 'authRestClient')));
+    gh.lazySingleton<_i475.BonusRepository>(
+        () => _i966.BonusRepositoryImpl(gh<_i475.BonusRemoteDataSource>()));
     gh.factory<_i36.ProfileCubit>(
         () => _i36.ProfileCubit(gh<_i315.ProfileRepository>()));
     gh.factory<_i573.AboutUsCubit>(
@@ -391,6 +424,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i1012.PopularCubit(gh<_i872.MenuRepository>()));
     gh.factory<_i395.MenuBloc>(
         () => _i395.MenuBloc(gh<_i872.MenuRepository>()));
+    gh.factory<_i360.GenerateQrUseCase>(
+        () => _i360.GenerateQrUseCase(gh<_i361.BonusRepository>()));
     gh.lazySingleton<_i566.CurierRepository>(
         () => _i537.CurierRepositoryImpl(gh<_i566.CurierDataSource>()));
     gh.factory<_i952.VerifySmsCodeAndHandleFirstLaunchUseCase>(
@@ -406,6 +441,10 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i370.PickUpCubit(gh<_i292.PickUpRepositories>()));
     gh.factory<_i110.CurierCubit>(
         () => _i110.CurierCubit(gh<_i566.CurierRepository>()));
+    gh.factory<_i431.DeliveryFormCubit>(() => _i431.DeliveryFormCubit(
+          gh<_i804.OrderCalculationService>(),
+          gh<_i830.ValidateOrderDataUseCase>(),
+        ));
     gh.factory<_i302.SignInCubit>(() => _i302.SignInCubit(
           gh<_i140.AuthRepository>(),
           gh<_i351.LocalStorage>(),
@@ -424,6 +463,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i60.ActiveOrderCubit(gh<_i74.ActiveOrderRepository>()));
     gh.factory<_i304.OrderCubit>(
         () => _i304.OrderCubit(gh<_i758.OrderRepository>()));
+    gh.factory<_i968.BonusCubit>(
+        () => _i968.BonusCubit(gh<_i135.GenerateQrUseCase>()));
     gh.factory<_i968.UpdateTemplateUseCase>(
         () => _i968.UpdateTemplateUseCase(gh<_i411.TemplateRepository>()));
     gh.factory<_i844.GetTemplateByIdUseCase>(
@@ -434,12 +475,11 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i298.DeleteTemplateUseCase(gh<_i411.TemplateRepository>()));
     gh.factory<_i230.GetTemplatesUseCase>(
         () => _i230.GetTemplatesUseCase(gh<_i411.TemplateRepository>()));
-    gh.factory<_i2.TemplatesCubit>(() => _i2.TemplatesCubit(
+    gh.factory<_i423.TemplatesListCubit>(() => _i423.TemplatesListCubit(
           gh<_i230.GetTemplatesUseCase>(),
-          gh<_i844.GetTemplateByIdUseCase>(),
-          gh<_i77.CreateTemplateUseCase>(),
-          gh<_i968.UpdateTemplateUseCase>(),
           gh<_i298.DeleteTemplateUseCase>(),
+          gh<_i198.PrepareDeliveryNavigationUseCase>(),
+          gh<_i77.CreateTemplateUseCase>(),
         ));
     return this;
   }

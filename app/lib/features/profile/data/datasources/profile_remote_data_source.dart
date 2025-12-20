@@ -2,11 +2,10 @@ import 'dart:developer';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:diyar/core/core.dart';
-import 'package:diyar/features/auth/auth.dart';
 import 'package:injectable/injectable.dart';
 
 abstract class ProfileRemoteDataSource {
-  Future<Either<Failure, UserModel>> getUser();
+  Future<Either<Failure, UserProfileModel>> getUser();
   Future<Either<Failure, String>> updateUser(String name, String phone);
   Future<Either<Failure, String>> deleteUser();
 }
@@ -19,7 +18,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   ProfileRemoteDataSourceImpl(this._dio, this._prefs);
 
   @override
-  Future<Either<Failure, UserModel>> getUser() async {
+  Future<Either<Failure, UserProfileModel>> getUser() async {
     try {
       log('get user phone: ${_prefs.getString(AppConst.phone)}');
 
@@ -34,7 +33,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
       if (res.statusCode == 200) {
         final json = res.data['message'];
         log('[GET USER] message: $json');
-        return Right(UserModel.fromJson(json));
+        return Right(UserProfileModel.fromJson(json));
       } else {
         return Left(ServerFailure('Error fetching user data', res.statusCode));
       }

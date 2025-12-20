@@ -20,6 +20,7 @@ mixin _$TemplateModel {
   String get templateName => throw _privateConstructorUsedError;
   AddressModel get addressData => throw _privateConstructorUsedError;
   ContactInfoModel get contactInfo => throw _privateConstructorUsedError;
+  int? get price => throw _privateConstructorUsedError;
 
   /// Create a copy of TemplateModel
   /// with the given fields replaced by the non-null parameter values.
@@ -38,7 +39,8 @@ abstract class $TemplateModelCopyWith<$Res> {
       {String? id,
       String templateName,
       AddressModel addressData,
-      ContactInfoModel contactInfo});
+      ContactInfoModel contactInfo,
+      int? price});
 
   $AddressModelCopyWith<$Res> get addressData;
   $ContactInfoModelCopyWith<$Res> get contactInfo;
@@ -63,6 +65,7 @@ class _$TemplateModelCopyWithImpl<$Res, $Val extends TemplateModel>
     Object? templateName = null,
     Object? addressData = null,
     Object? contactInfo = null,
+    Object? price = freezed,
   }) {
     return _then(_value.copyWith(
       id: freezed == id
@@ -81,6 +84,10 @@ class _$TemplateModelCopyWithImpl<$Res, $Val extends TemplateModel>
           ? _value.contactInfo
           : contactInfo // ignore: cast_nullable_to_non_nullable
               as ContactInfoModel,
+      price: freezed == price
+          ? _value.price
+          : price // ignore: cast_nullable_to_non_nullable
+              as int?,
     ) as $Val);
   }
 
@@ -117,7 +124,8 @@ abstract class _$$TemplateModelImplCopyWith<$Res>
       {String? id,
       String templateName,
       AddressModel addressData,
-      ContactInfoModel contactInfo});
+      ContactInfoModel contactInfo,
+      int? price});
 
   @override
   $AddressModelCopyWith<$Res> get addressData;
@@ -142,6 +150,7 @@ class __$$TemplateModelImplCopyWithImpl<$Res>
     Object? templateName = null,
     Object? addressData = null,
     Object? contactInfo = null,
+    Object? price = freezed,
   }) {
     return _then(_$TemplateModelImpl(
       id: freezed == id
@@ -160,6 +169,10 @@ class __$$TemplateModelImplCopyWithImpl<$Res>
           ? _value.contactInfo
           : contactInfo // ignore: cast_nullable_to_non_nullable
               as ContactInfoModel,
+      price: freezed == price
+          ? _value.price
+          : price // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -171,7 +184,8 @@ class _$TemplateModelImpl implements _TemplateModel {
       {this.id,
       required this.templateName,
       required this.addressData,
-      required this.contactInfo});
+      required this.contactInfo,
+      this.price});
 
   @override
   final String? id;
@@ -181,10 +195,12 @@ class _$TemplateModelImpl implements _TemplateModel {
   final AddressModel addressData;
   @override
   final ContactInfoModel contactInfo;
+  @override
+  final int? price;
 
   @override
   String toString() {
-    return 'TemplateModel(id: $id, templateName: $templateName, addressData: $addressData, contactInfo: $contactInfo)';
+    return 'TemplateModel(id: $id, templateName: $templateName, addressData: $addressData, contactInfo: $contactInfo, price: $price)';
   }
 
   @override
@@ -198,12 +214,13 @@ class _$TemplateModelImpl implements _TemplateModel {
             (identical(other.addressData, addressData) ||
                 other.addressData == addressData) &&
             (identical(other.contactInfo, contactInfo) ||
-                other.contactInfo == contactInfo));
+                other.contactInfo == contactInfo) &&
+            (identical(other.price, price) || other.price == price));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, templateName, addressData, contactInfo);
+  int get hashCode => Object.hash(
+      runtimeType, id, templateName, addressData, contactInfo, price);
 
   /// Create a copy of TemplateModel
   /// with the given fields replaced by the non-null parameter values.
@@ -219,7 +236,8 @@ abstract class _TemplateModel implements TemplateModel {
       {final String? id,
       required final String templateName,
       required final AddressModel addressData,
-      required final ContactInfoModel contactInfo}) = _$TemplateModelImpl;
+      required final ContactInfoModel contactInfo,
+      final int? price}) = _$TemplateModelImpl;
 
   @override
   String? get id;
@@ -229,6 +247,8 @@ abstract class _TemplateModel implements TemplateModel {
   AddressModel get addressData;
   @override
   ContactInfoModel get contactInfo;
+  @override
+  int? get price;
 
   /// Create a copy of TemplateModel
   /// with the given fields replaced by the non-null parameter values.

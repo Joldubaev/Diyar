@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
-import 'package:diyar/features/auth/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -10,7 +9,7 @@ class ProfileInfoPage extends StatefulWidget {
   static const double _defaultSpacing = 20.0;
   static const double _largeSpacing = 40.0;
 
-  final UserModel user;
+  final UserProfileModel user;
 
   const ProfileInfoPage({
     super.key,
