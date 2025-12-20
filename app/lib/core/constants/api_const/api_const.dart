@@ -96,6 +96,9 @@ class ApiConst {
   static String getPrice({String? id}) => "$baseUrl/districts/get-district-price-by-yandex-id/$id";
 
   static const createTemplate = "$baseUrl/templates/create-template";
+
+  // BONUS
+  static const generateBonusQr = "$baseUrl/bonus/generate-qr";
   static const deleteTemplate = "$baseUrl/templates/delete-template";
   // with query templateId
   static const getAllTemplates = "$baseUrl/templates/get-all-templates";

@@ -12,7 +12,7 @@ class ProfileInitial extends ProfileState {}
 class ProfileGetLoading extends ProfileState {}
 
 class ProfileGetLoaded extends ProfileState {
-  final UserModel userModel;
+  final UserProfileModel userModel;
 
   const ProfileGetLoaded(this.userModel);
 
@@ -32,6 +32,7 @@ class ProfileDeleteError extends ProfileState {}
 
 // Update user
 class ProfileUpdateLoading extends ProfileState {}
+
 class ProfileUpdateLoaded extends ProfileState {
   final String message;
 
@@ -40,6 +41,7 @@ class ProfileUpdateLoaded extends ProfileState {
   @override
   List<Object> get props => [message];
 }
+
 class ProfileUpdateError extends ProfileState {
   final String message;
 

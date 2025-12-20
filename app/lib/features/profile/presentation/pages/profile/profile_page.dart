@@ -15,7 +15,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  UserModel? user;
+  UserProfileModel? user;
   String version = '';
 
   @override
@@ -99,7 +99,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   onTap: () => context.pushRoute(ProfileInfoRoute(user: user!)),
                   child: ProfileTile(
                     imgPath: 'assets/icons/profile_icon.svg',
-                    text: user!.userName ?? '',
+                    text: user?.userName ?? '',
                     isSvg: true,
                   ),
                 ),

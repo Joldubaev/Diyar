@@ -73,6 +73,7 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => di.sl<SettingsCubit>()),
         BlocProvider(create: (context) => di.sl<UserMapCubit>()),
         BlocProvider(create: (context) => di.sl<TemplatesListCubit>()),
+        BlocProvider(create: (context) => di.sl<BonusCubit>()),
       ],
       child: AppListener(
         navigationKey: appRoute.navigatorKey,

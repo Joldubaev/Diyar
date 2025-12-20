@@ -1,4 +1,5 @@
 export 'about_us_widget.dart';
+export 'bonus_card_widget.dart';
 export 'carousel_widget.dart';
 export 'custom_nav_bar.dart';
 export 'nave_icon.dart';

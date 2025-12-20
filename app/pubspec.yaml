@@ -74,6 +74,7 @@ dependencies:
   storage:
     path: ../package/storage
   intl: ^0.20.2
+  qr_flutter: ^4.1.0
 
   # dgis_mobile_sdk_full: ^12.5.0
 

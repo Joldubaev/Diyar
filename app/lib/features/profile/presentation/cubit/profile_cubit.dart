@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:diyar/core/core.dart';
-import 'package:diyar/features/auth/auth.dart';
 import 'package:diyar/features/profile/profile.dart';
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
@@ -12,7 +11,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   final ProfileRepository _userRepository;
   ProfileCubit(this._userRepository) : super(ProfileInitial());
 
-  UserModel? user;
+  UserProfileModel? user;
 
   Future<void> getUser() async {
     final isAuth = UserHelper.isAuth();
