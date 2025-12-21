@@ -17,9 +17,6 @@ class QrGenerateModel with _$QrGenerateModel {
 
 extension QrGenerateModelX on QrGenerateModel {
   QrGenerateEntity toEntity() {
-    return QrGenerateEntity(
-      qrData: qrData,
-      expiresAt: expiresAtString 
-    );
+    return QrGenerateEntity(qrData: qrData, expiresAt: expiresAtString);
   }
 }
