@@ -33,33 +33,53 @@ class OrderCubit extends Cubit<OrderState> {
     emit(SelectDeliveryPriceLoaded(deliveryPrice: price));
   }
 
-  Future<void> getDistricts({String? search}) async {
+  Future<void> getDistricts({
+    String? search,
+    void Function(List<DistrictEntity>)? onSuccess,
+    void Function(String)? onError,
+  }) async {
     emit(DistricLoading());
     try {
       final result = await _orderRepository.getDistricts(search: search);
       result.fold(
         (failure) {
           emit(DistricError(message: failure.message));
+          onError?.call(failure.message);
         },
         (districtEntities) {
           emit(DistricLoaded(districtEntities));
+          onSuccess?.call(districtEntities);
         },
       );
     } catch (e) {
-      emit(DistricError(message: e.toString()));
+      final errorMessage = e.toString();
+      emit(DistricError(message: errorMessage));
+      onError?.call(errorMessage);
     }
   }
 
-  Future<void> createOrder(CreateOrderEntity orderEntity) async {
+  Future<void> createOrder(
+    CreateOrderEntity orderEntity, {
+    void Function(String?)? onSuccess,
+    void Function(String)? onError,
+  }) async {
     emit(CreateOrderLoading());
     try {
       final result = await _orderRepository.createOrder(orderEntity);
       result.fold(
-        (failure) => emit(CreateOrderError(failure.message)),
-        (res) => emit(CreateOrderLoaded(res)),
+        (failure) {
+          emit(CreateOrderError(failure.message));
+          onError?.call(failure.message);
+        },
+        (res) {
+          emit(CreateOrderLoaded(res));
+          onSuccess?.call(res);
+        },
       );
     } catch (e) {
-      emit(CreateOrderError(e.toString()));
+      final errorMessage = e.toString();
+      emit(CreateOrderError(errorMessage));
+      onError?.call(errorMessage);
     }
   }
 }

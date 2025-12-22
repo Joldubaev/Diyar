@@ -60,7 +60,7 @@ class CreateOrderError extends OrderState {
 class DistricLoading extends OrderState {}
 
 class DistricLoaded extends OrderState {
-  final List<dynamic> districts; // Замените dynamic на вашу DistrictEntity, когда она будет готова
+  final List<DistrictEntity> districts;
 
   const DistricLoaded(this.districts);
 

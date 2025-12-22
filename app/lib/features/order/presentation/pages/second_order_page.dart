@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
@@ -149,8 +151,26 @@ class _SecondOrderPageState extends State<SecondOrderPage> {
     showDistrictSearchBottom(
       context,
       onSearch: (query) async {
-        context.read<OrderCubit>().getDistricts(search: query);
-        return <DistrictDataModel>[];
+        final completer = Completer<List<DistrictDataModel>>();
+        final cubit = context.read<OrderCubit>();
+        cubit.getDistricts(
+          search: query,
+          onSuccess: (districts) {
+            final districtModels = districts
+                .map(
+                  (e) => DistrictDataModel(
+                    name: e.name,
+                    price: e.price,
+                  ),
+                )
+                .toList();
+            completer.complete(districtModels);
+          },
+          onError: (errorMessage) {
+            completer.complete(<DistrictDataModel>[]);
+          },
+        );
+        return completer.future;
       },
       onDistrictSelected: (DistrictDataModel district) {
         setState(() {

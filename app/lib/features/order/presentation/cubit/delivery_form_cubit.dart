@@ -68,6 +68,8 @@ class DeliveryFormCubit extends Cubit<DeliveryFormState> {
   void validateAndPrepareOrder({
     required int subtotalPrice,
     required double deliveryPrice,
+    void Function()? onSuccess,
+    void Function(String)? onError,
   }) {
     final currentState = state;
     if (currentState is! DeliveryFormLoaded) return;
@@ -86,6 +88,7 @@ class DeliveryFormCubit extends Cubit<DeliveryFormState> {
       emit(currentState.copyWith(
         validationError: validationResult.errorMessage,
       ));
+      onError?.call(validationResult.errorMessage ?? '');
       return;
     }
 
@@ -95,6 +98,7 @@ class DeliveryFormCubit extends Cubit<DeliveryFormState> {
       validationError: null,
       confirmationRequestId: currentState.confirmationRequestId + 1,
     ));
+    onSuccess?.call();
   }
 
   /// Обновление итоговой стоимости (например, при изменении цены доставки)

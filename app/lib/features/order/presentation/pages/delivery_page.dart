@@ -168,6 +168,15 @@ class _DeliveryFormPageContentState extends State<_DeliveryFormPageContent> {
     context.read<DeliveryFormCubit>().validateAndPrepareOrder(
           subtotalPrice: widget.totalPrice,
           deliveryPrice: widget.deliveryPrice,
+          onSuccess: () {
+            final state = context.read<DeliveryFormCubit>().state;
+            if (state is DeliveryFormLoaded) {
+              _showOrderConfirmationSheet(context, state);
+            }
+          },
+          onError: (errorMessage) {
+            showToast(errorMessage, isError: true);
+          },
         );
   }
 
@@ -180,27 +189,12 @@ class _DeliveryFormPageContentState extends State<_DeliveryFormPageContent> {
         if (current is! DeliveryFormLoaded) return false;
         if (previous is! DeliveryFormLoaded) return true;
 
-        // Упрощенная логика: слушаем только важные изменения
-        return current.validationError != previous.validationError ||
-            current.confirmationRequestId != previous.confirmationRequestId ||
-            current.changeAmountResult != previous.changeAmountResult ||
-            current.paymentType != previous.paymentType;
+        return current.changeAmountResult != previous.changeAmountResult || current.paymentType != previous.paymentType;
       },
       listener: (context, state) {
         if (state is! DeliveryFormLoaded) return;
 
-        // Показываем toast при ошибке валидации
-        if (state.validationError != null) {
-          showToast(state.validationError!, isError: true);
-        }
-
-        // Показываем bottom sheet при изменении confirmationRequestId
-        // Monotonic token гарантирует одноразовость - не нужен ручной сброс
-        if (state.confirmationRequestId > 0) {
-          _showOrderConfirmationSheet(context, state);
-        }
-
-        // Обновление текста поля сдачи
+        // Обновление текста поля сдачи (UI-обновление, не side-effect)
         if (state.changeAmountResult != null) {
           _controllers.sdachaController.text = state.changeAmountResult!.getDisplayText(state.totalOrderCost);
         } else if (state.paymentType == PaymentTypeDelivery.online) {
