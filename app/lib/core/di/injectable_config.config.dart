@@ -276,15 +276,12 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i361.ProfileRepositoryImpl(gh<_i315.ProfileRemoteDataSource>()));
     gh.lazySingleton<_i300.RemoteSettingsDataSource>(
         () => _i300.RemoteSettingsDataSourceImpl(gh<_i361.Dio>()));
+    gh.lazySingleton<_i805.BonusRemoteDataSource>(
+        () => _i805.BonusRemoteDataSourceImpl(gh<_i361.Dio>()));
     gh.lazySingleton<_i879.SettingsRepository>(() =>
         _i87.SettingsRepositoryImpl(gh<_i300.RemoteSettingsDataSource>()));
     gh.lazySingleton<_i433.MenuRemoteDataSource>(
         () => _i433.MenuRemoteDataSourceImpl(gh<_i361.Dio>()));
-    gh.lazySingleton<_i805.BonusRemoteDataSource>(
-        () => _i805.BonusRemoteDataSourceImpl(
-              gh<_i361.Dio>(),
-              gh<_i460.SharedPreferences>(),
-            ));
     await gh.factoryAsync<_i351.DiyarRemoteConfig>(
       () => registerModule.diyarRemoteConfig(gh<_i655.PackageInfo>()),
       preResolve: true,

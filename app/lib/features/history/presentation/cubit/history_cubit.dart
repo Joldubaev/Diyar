@@ -12,20 +12,18 @@ class HistoryCubit extends Cubit<HistoryState> {
 
   final HistoryRepository historyRepository;
 
-
-
- Future<void> getHistoryOrders() async {
-  emit(GetHistoryOrdersLoading());
-  try {
-    final orders = await historyRepository.getHistoryOrders();
-    // Не выбрасывай ошибку, если orders.isEmpty!
-    emit(GetHistoryOrdersLoaded(orders));
-  } catch (e) {
-    emit(GetHistoryOrdersError());
+  Future<void> getHistoryOrders() async {
+    emit(GetHistoryOrdersLoading());
+    try {
+      final orders = await historyRepository.getHistoryOrders();
+      // Не выбрасывай ошибку, если orders.isEmpty!
+      emit(GetHistoryOrdersLoaded(orders));
+    } catch (e) {
+      emit(GetHistoryOrdersError());
+    }
   }
-}
 
-  getPickupHistory() async {
+  Future<void> getPickupHistory() async {
     emit(GetPickupHistoryLoading());
     try {
       final orders = await historyRepository.getPickupHistory();

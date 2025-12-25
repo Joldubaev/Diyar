@@ -1,6 +1,5 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
-import 'package:diyar/features/profile/profile.dart';
+import 'package:diyar/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -10,115 +9,114 @@ class BonusCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    if (!UserHelper.isAuth()) {
+      return const SizedBox.shrink();
+    }
 
     return BlocBuilder<ProfileCubit, ProfileState>(
+      buildWhen: (previous, current) => current is ProfileGetLoaded,
       builder: (context, state) {
-        final user = context.read<ProfileCubit>().user;
-        final balance = (user?.balance ?? 0).toInt();
+        if (state is! ProfileGetLoaded) {
+          return const SizedBox.shrink();
+        }
 
-        return Container(
-          margin: const EdgeInsets.only(bottom: 8),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                theme.colorScheme.primary,
-                theme.colorScheme.primary.withValues(alpha: 0.8),
-              ],
-            ),
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: theme.colorScheme.primary.withValues(alpha: 0.3),
-                blurRadius: 8,
-                offset: const Offset(0, 4),
+        final user = state.userModel;
+        final balance = (user.balance ?? 0).toInt();
+        final discount = user.discount ?? 0;
+
+        return BonusCardBackground(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: _CardInfoColumn(
+                  balance: balance,
+                  discount: discount,
+                ),
+              ),
+              const SizedBox(width: 16),
+              _QrActionButton(
+                onPressed: () => BonusSheetHandler.show(context),
               ),
             ],
           ),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: () => context.router.push(const BonusQrRoute()),
-              borderRadius: BorderRadius.circular(20),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Row(
-                  children: [
-                    // Иконка QR кода
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Icon(
-                        Icons.qr_code_2,
-                        color: Colors.white,
-                        size: 32,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    // Информация о бонусах
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Бонусная карта',
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            '$balance баллов',
-                            style: theme.textTheme.headlineSmall?.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    // Кнопка "Мой QR"
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.qr_code_scanner,
-                            color: theme.colorScheme.primary,
-                            size: 20,
-                          ),
-                          const SizedBox(width: 6),
-                          Text(
-                            'Мой QR',
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: theme.colorScheme.primary,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
         );
       },
+    );
+  }
+}
+
+/// Колонка с информацией о балансе и скидке
+class _CardInfoColumn extends StatelessWidget {
+  final int balance;
+  final int discount;
+
+  const _CardInfoColumn({
+    required this.balance,
+    required this.discount,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          'Ваш баланс',
+          style: TextStyle(
+            fontSize: 13,
+            color: Colors.white.withValues(alpha: 0.85),
+            fontWeight: FontWeight.w500,
+            letterSpacing: 0.2,
+          ),
+        ),
+        const SizedBox(height: 8),
+        BonusValueText(balance: balance),
+        const SizedBox(height: 16),
+        DiscountBadge(discount: discount),
+      ],
+    );
+  }
+}
+
+/// Кнопка для открытия QR кода
+class _QrActionButton extends StatelessWidget {
+  final VoidCallback onPressed;
+
+  const _QrActionButton({required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return OutlinedButton.icon(
+      onPressed: onPressed,
+      style: OutlinedButton.styleFrom(
+        backgroundColor: Colors.white,
+        side: BorderSide.none,
+        padding: const EdgeInsets.symmetric(
+          horizontal: 18,
+          vertical: 14,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        elevation: 0,
+      ),
+      icon: const Icon(
+        Icons.qr_code_2_rounded,
+        color: Color(0xFF1E8449),
+        size: 22,
+      ),
+      label: const Text(
+        'Мой QR',
+        style: TextStyle(
+          color: Color(0xFF1E8449),
+          fontWeight: FontWeight.w600,
+          fontSize: 15,
+          letterSpacing: 0.2,
+        ),
+      ),
     );
   }
 }

@@ -4,103 +4,113 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 @RoutePage()
-class BonusQrPage extends StatefulWidget {
+class BonusQrPage extends StatelessWidget {
   const BonusQrPage({super.key});
-
-  @override
-  State<BonusQrPage> createState() => _BonusQrPageState();
-}
-
-class _BonusQrPageState extends State<BonusQrPage> {
-  @override
-  void initState() {
-    super.initState();
-    context.read<BonusCubit>().generateQr();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Мой QR'),
-      ),
+      appBar: AppBar(title: const Text('Мой QR')),
       body: BlocBuilder<BonusCubit, BonusState>(
         builder: (context, state) {
-          if (state is BonusQrLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (state is BonusQrFailure) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.error_outline,
-                    size: 64,
-                    color: Theme.of(context).colorScheme.error,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Ошибка загрузки QR кода',
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    state.message,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 24),
-                  ElevatedButton(
-                    onPressed: () => context.read<BonusCubit>().generateQr(),
-                    child: const Text('Попробовать снова'),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          if (state is BonusQrLoaded) {
-            return SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 40),
-                  QrCodeWidget(qrData: state.qrData),
-                  const SizedBox(height: 32),
-                  Text(
-                    'Покажите этот QR код официанту',
-                    style: Theme.of(context).textTheme.titleMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'QR код обновляется каждые 10 минут',
-                    style: Theme.of(context).textTheme.bodySmall,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 32),
-                  ElevatedButton.icon(
-                    onPressed: () => context.read<BonusCubit>().generateQr(),
-                    icon: const Icon(Icons.refresh),
-                    label: const Text('Обновить QR код'),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 12,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          return const Center(child: CircularProgressIndicator());
+          return animatedSwitcher(
+            child: switch (state) {
+              BonusInitial() || BonusQrLoading() => const _LoadingView(),
+              BonusQrFailure(message: final msg) => _ErrorView(message: msg),
+              BonusQrLoaded(qrData: final data) => _SuccessView(qrData: data),
+            },
+          );
         },
       ),
+    );
+  }
+
+  Widget animatedSwitcher({required Widget child}) {
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 300),
+      child: child,
+    );
+  }
+}
+
+class _LoadingView extends StatelessWidget {
+  const _LoadingView();
+  @override
+  Widget build(BuildContext context) => const Center(child: CircularProgressIndicator.adaptive());
+}
+
+class _ErrorView extends StatelessWidget {
+  final String message;
+  const _ErrorView({required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.error_outline, size: 64, color: Colors.red),
+          const SizedBox(height: 16),
+          Text(message, textAlign: TextAlign.center),
+          const SizedBox(height: 24),
+          FilledButton(
+            onPressed: () => context.read<BonusCubit>().generateQr(),
+            child: const Text('Попробовать снова'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SuccessView extends StatelessWidget {
+  final QrGenerateEntity qrData;
+  const _SuccessView({required this.qrData});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return SingleChildScrollView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+      child: Center(
+        child: Column(
+          children: [
+            QrCodeWidget(qrData: qrData),
+            const SizedBox(height: 32),
+            Text(
+              'Покажите этот QR код официанту',
+              style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 12),
+            _InfoBadge(text: 'QR код обновляется каждые 10 минут'),
+            const SizedBox(height: 48),
+            OutlinedButton.icon(
+              onPressed: () => context.read<BonusCubit>().generateQr(),
+              icon: const Icon(Icons.refresh_rounded),
+              label: const Text('Обновить сейчас'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _InfoBadge extends StatelessWidget {
+  final String text;
+  const _InfoBadge({required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.blue.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(text, style: const TextStyle(fontSize: 12, color: Colors.blueGrey)),
     );
   }
 }

@@ -13,17 +13,21 @@ class BonusCubit extends Cubit<BonusState> {
   BonusCubit(this._generateQrUseCase) : super(BonusInitial());
 
   Future<void> generateQr() async {
-    final isAuth = UserHelper.isAuth();
-    if (!isAuth) {
-      emit(BonusQrFailure('Необходима авторизация для генерации QR кода'));
+    if (state is BonusQrLoading) return;
+    if (!UserHelper.isAuth()) {
+      emit(const BonusQrFailure('Необходима авторизация'));
       return;
     }
 
     emit(BonusQrLoading());
     final result = await _generateQrUseCase();
+    if (isClosed) return;
+
     result.fold(
       (failure) => emit(BonusQrFailure(failure.message)),
       (qrData) => emit(BonusQrLoaded(qrData)),
     );
   }
+
+  void reset() => emit(BonusInitial());
 }

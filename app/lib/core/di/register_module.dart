@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/core/network/custom_auth_rest_client.dart';
+import 'package:diyar/injection_container.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:injectable/injectable.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
@@ -21,6 +22,17 @@ abstract class RegisterModule {
         'Accept': 'application/json',
       },
     ));
+    dio.interceptors.add(
+      QueuedInterceptorsWrapper(
+        onRequest: (options, handler) async {
+          final token = sl<SharedPreferences>().getString(AppConst.accessToken);
+          if (token != null && token.isNotEmpty) {
+            options.headers['Authorization'] = 'Bearer $token';
+          }
+          return handler.next(options);
+        },
+      ),
+    );
     return dio;
   }
 

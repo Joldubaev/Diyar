@@ -3,14 +3,14 @@ import 'package:diyar/features/features.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 
-showDistrictSearchBottom(
+Future<void> showDistrictSearchBottom(
   BuildContext context, {
   required Function(DistrictDataModel) onDistrictSelected,
   required Future<List<DistrictDataModel>> Function(String) onSearch,
-}) {
+}) async {
   List<DistrictDataModel> districts = [];
 
-  showModalBottomSheet(
+  await showModalBottomSheet<void>(
     context: context,
     backgroundColor: Theme.of(context).colorScheme.surface,
     shape: const RoundedRectangleBorder(

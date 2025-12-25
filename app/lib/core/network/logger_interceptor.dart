@@ -103,7 +103,7 @@ class LoggerInterceptor extends Interceptor {
     logger.severe('$key: $v');
   }
 
-  void _printAll(msg) {
+  void _printAll(Object msg) {
     msg.toString().split('\n').forEach(logPrint);
   }
 

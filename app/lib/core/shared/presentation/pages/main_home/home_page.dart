@@ -48,8 +48,9 @@ class _HomePageState extends State<HomePage> {
                 spacing: 20,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  SizedBox(height: 20),
                   const BonusCardWidget(),
-                  const SalesSectionWidget(),
+                  // const SalesSectionWidget(),
                   RowTextWidget(text: context.l10n.popularFood, theme: Theme.of(context)),
                   if (menu.isNotEmpty) PopularFoodSectionWidget(menu: menu),
                   RowTextWidget(text: 'Анонсы', theme: Theme.of(context)),

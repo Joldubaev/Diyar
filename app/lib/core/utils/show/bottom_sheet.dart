@@ -13,8 +13,7 @@ final class AppBottomSheet {
     return showModalBottomSheet<T>(
       context: context,
       isScrollControlled: true,
-      backgroundColor:
-          backgroundColor ?? Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: backgroundColor ?? Theme.of(context).scaffoldBackgroundColor,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(25),
@@ -34,8 +33,7 @@ final class AppBottomSheet {
                   const SizedBox(height: 8),
                   const SizedBox(
                     height: 30,
-                    child: Icon(Icons.maximize_rounded,
-                        size: 50, color: Colors.grey),
+                    child: Icon(Icons.maximize_rounded, size: 50, color: Colors.grey),
                   ),
                   Expanded(
                     child: SingleChildScrollView(
@@ -54,8 +52,8 @@ final class AppBottomSheet {
   }
 }
 
-showToast(String msg, {bool isError = false}) {
-  Fluttertoast.showToast(
+Future<bool?> showToast(String msg, {bool isError = false}) {
+  return Fluttertoast.showToast(
     msg: msg,
     toastLength: Toast.LENGTH_LONG,
     gravity: ToastGravity.BOTTOM,
