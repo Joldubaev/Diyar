@@ -27,12 +27,19 @@ import '../../features/about_us/data/repository/repository.dart' as _i471;
 import '../../features/about_us/domain/domain.dart' as _i168;
 import '../../features/about_us/presentation/cubit/about_us_cubit.dart'
     as _i573;
+import '../../features/active_order/active_order.dart' as _i48;
 import '../../features/active_order/data/data.dart' as _i311;
-import '../../features/active_order/data/datasource/remote_active_order_datasource.dart'
-    as _i283;
+import '../../features/active_order/data/datasource/active_order_remote_data_source.dart'
+    as _i887;
 import '../../features/active_order/data/repository/active_order_repository.dart'
     as _i243;
+import '../../features/active_order/data/services/order_status_service.dart'
+    as _i697;
 import '../../features/active_order/domain/domain.dart' as _i74;
+import '../../features/active_order/domain/usecases/cancel_order_usecase.dart'
+    as _i777;
+import '../../features/active_order/domain/usecases/get_active_orders_usecase.dart'
+    as _i31;
 import '../../features/active_order/presentation/cubit/active_order_cubit.dart'
     as _i60;
 import '../../features/app/cubit/remote_config_cubit.dart' as _i122;
@@ -234,6 +241,10 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i706.CartHiveDataSource());
     gh.factory<_i489.ThemeCubit>(
         () => _i489.ThemeCubit(gh<_i460.SharedPreferences>()));
+    gh.lazySingleton<_i697.OrderStatusService>(
+        () => _i697.OrderStatusService(gh<_i460.SharedPreferences>()));
+    gh.lazySingleton<_i887.ActiveOrderRemoteDataSource>(
+        () => _i887.ActiveOrderRemoteDataSourceImpl(gh<_i361.Dio>()));
     gh.lazySingleton<_i243.AboutUsRemoteDataSource>(
         () => _i243.AboutUsRemoteDataSourceImpl(
               gh<_i361.Dio>(),
@@ -311,11 +322,6 @@ extension GetItInjectableX on _i174.GetIt {
       () => cartModule.cartRepository(gh<_i706.CartLocalDataSource>()),
       preResolve: true,
     );
-    gh.lazySingleton<_i283.ActiveOrderRemoteDataSource>(
-        () => _i283.ActiveOrderRemoteDataSourceImpl(
-              gh<_i361.Dio>(),
-              gh<_i460.SharedPreferences>(),
-            ));
     gh.lazySingleton<_i49.HistoryReDatasource>(
         () => _i49.HistoryReDatasourceImpl(
               gh<_i361.Dio>(),
@@ -344,6 +350,9 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i520.AuthRemoteDataSource>(),
           gh<_i835.AuthLocalDataSource>(),
         ));
+    gh.lazySingleton<_i74.ActiveOrderRepository>(() =>
+        _i243.ActiveOrderRepositoryImpl(
+            gh<_i311.ActiveOrderRemoteDataSource>()));
     gh.factory<_i122.RemoteConfigCubit>(() => _i122.RemoteConfigCubit(
           packageInfo: gh<_i655.PackageInfo>(),
           remoteConfig: gh<_i1020.DiyarRemoteConfig>(),
@@ -358,6 +367,10 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i251.TemplateRemoteDataSource>(() =>
         _i692.TemplateRemoteDataSourceImpl(
             gh<_i1030.RestClient>(instanceName: 'authRestClient')));
+    gh.factory<_i31.GetActiveOrdersUseCase>(
+        () => _i31.GetActiveOrdersUseCase(gh<_i48.ActiveOrderRepository>()));
+    gh.factory<_i777.CancelOrderUseCase>(
+        () => _i777.CancelOrderUseCase(gh<_i74.ActiveOrderRepository>()));
     gh.lazySingleton<_i475.BonusRepository>(
         () => _i966.BonusRepositoryImpl(gh<_i475.BonusRemoteDataSource>()));
     gh.factory<_i36.ProfileCubit>(
@@ -406,9 +419,6 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i838.MbankConfimUsecase>(),
           gh<_i838.MbankStatusUsecase>(),
         ));
-    gh.lazySingleton<_i74.ActiveOrderRepository>(() =>
-        _i243.ActiveOrderRepositoryImpl(
-            gh<_i311.ActiveOrderRemoteDataSource>()));
     gh.factory<_i1012.PopularCubit>(
         () => _i1012.PopularCubit(gh<_i872.MenuRepository>()));
     gh.factory<_i395.MenuBloc>(
@@ -417,6 +427,11 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i360.GenerateQrUseCase(gh<_i361.BonusRepository>()));
     gh.lazySingleton<_i566.CurierRepository>(
         () => _i537.CurierRepositoryImpl(gh<_i566.CurierDataSource>()));
+    gh.factory<_i60.ActiveOrderCubit>(() => _i60.ActiveOrderCubit(
+          gh<_i31.GetActiveOrdersUseCase>(),
+          gh<_i777.CancelOrderUseCase>(),
+          gh<_i697.OrderStatusService>(),
+        ));
     gh.factory<_i952.VerifySmsCodeAndHandleFirstLaunchUseCase>(
         () => _i952.VerifySmsCodeAndHandleFirstLaunchUseCase(
               gh<_i140.AuthRepository>(),
@@ -448,8 +463,6 @@ extension GetItInjectableX on _i174.GetIt {
           getNewsUseCase: gh<_i31.GetNewsUseCase>(),
           getSalesUseCase: gh<_i608.GetSalesUseCase>(),
         ));
-    gh.factory<_i60.ActiveOrderCubit>(
-        () => _i60.ActiveOrderCubit(gh<_i74.ActiveOrderRepository>()));
     gh.factory<_i304.OrderCubit>(
         () => _i304.OrderCubit(gh<_i758.OrderRepository>()));
     gh.factory<_i968.BonusCubit>(

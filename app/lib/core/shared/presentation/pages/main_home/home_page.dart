@@ -24,6 +24,10 @@ class _HomePageState extends State<HomePage> {
     context.read<PopularCubit>().getPopularProducts();
     context.read<ProfileCubit>().getUser();
     context.read<HomeContentCubit>().getSales();
+    // Загружаем активные заказы, если пользователь авторизован
+    if (UserHelper.isAuth()) {
+      context.read<ActiveOrderCubit>().getActiveOrders();
+    }
   }
 
   @override
@@ -48,7 +52,8 @@ class _HomePageState extends State<HomePage> {
                 spacing: 20,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 20),
+                  SizedBox(height: 10),
+                  const ActiveOrdersBannerWidget(),
                   const BonusCardWidget(),
                   // const SalesSectionWidget(),
                   RowTextWidget(text: context.l10n.popularFood, theme: Theme.of(context)),
