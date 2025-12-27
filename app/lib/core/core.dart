@@ -12,3 +12,4 @@ export 'theme/theme.dart';
 export 'constants/constant.dart';
 export 'l10n/l10n.dart';
 export 'shared/shared.dart';
+export 'mixins/repository_error_handler.dart';

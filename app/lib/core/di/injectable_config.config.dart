@@ -66,10 +66,6 @@ import '../../features/bonus/domain/repositories/bonus_repository.dart'
     as _i361;
 import '../../features/bonus/domain/usecases/generate_qr_usecase.dart' as _i360;
 import '../../features/bonus/presentation/cubit/bonus_cubit.dart' as _i968;
-import '../../features/bonuses/bonuses.dart' as _i806;
-import '../../features/bonuses/data/repository/bonuses_repository.dart'
-    as _i275;
-import '../../features/bonuses/presentation/cubit/bonuses_cubit.dart' as _i0;
 import '../../features/cart/data/cart_module.dart' as _i979;
 import '../../features/cart/data/datasources/cart_local_data_source.dart'
     as _i706;
@@ -263,8 +259,6 @@ extension GetItInjectableX on _i174.GetIt {
       () => registerModule.unauthRestClient(gh<_i361.Dio>()),
       instanceName: 'unauthRestClient',
     );
-    gh.lazySingleton<_i806.BonusesRepository>(
-        () => _i275.BonusesRepositoryImpl(gh<_i361.Dio>()));
     gh.lazySingleton<_i521.HomeContentRemoteDatasource>(
         () => _i347.HomeContentRemoteDatasourceImpl(gh<_i361.Dio>()));
     gh.lazySingleton<_i847.ProfileRemoteDataSource>(
@@ -276,15 +270,12 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i361.ProfileRepositoryImpl(gh<_i315.ProfileRemoteDataSource>()));
     gh.lazySingleton<_i300.RemoteSettingsDataSource>(
         () => _i300.RemoteSettingsDataSourceImpl(gh<_i361.Dio>()));
+    gh.lazySingleton<_i805.BonusRemoteDataSource>(
+        () => _i805.BonusRemoteDataSourceImpl(gh<_i361.Dio>()));
     gh.lazySingleton<_i879.SettingsRepository>(() =>
         _i87.SettingsRepositoryImpl(gh<_i300.RemoteSettingsDataSource>()));
     gh.lazySingleton<_i433.MenuRemoteDataSource>(
         () => _i433.MenuRemoteDataSourceImpl(gh<_i361.Dio>()));
-    gh.lazySingleton<_i805.BonusRemoteDataSource>(
-        () => _i805.BonusRemoteDataSourceImpl(
-              gh<_i361.Dio>(),
-              gh<_i460.SharedPreferences>(),
-            ));
     await gh.factoryAsync<_i351.DiyarRemoteConfig>(
       () => registerModule.diyarRemoteConfig(gh<_i655.PackageInfo>()),
       preResolve: true,
@@ -330,8 +321,6 @@ extension GetItInjectableX on _i174.GetIt {
               gh<_i361.Dio>(),
               gh<_i460.SharedPreferences>(),
             ));
-    gh.factory<_i0.BonusesCubit>(
-        () => _i0.BonusesCubit(gh<_i806.BonusesRepository>()));
     gh.factory<_i132.CartPriceCubit>(() => _i132.CartPriceCubit(
           gh<_i804.OrderCalculationService>(),
           initialItems: gh<List<_i885.CartItemEntity>>(),

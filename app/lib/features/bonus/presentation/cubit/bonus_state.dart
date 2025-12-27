@@ -7,9 +7,13 @@ sealed class BonusState extends Equatable {
   List<Object?> get props => [];
 }
 
-final class BonusInitial extends BonusState {}
+final class BonusInitial extends BonusState {
+  const BonusInitial();
+}
 
-final class BonusQrLoading extends BonusState {}
+final class BonusQrLoading extends BonusState {
+  const BonusQrLoading();
+}
 
 final class BonusQrLoaded extends BonusState {
   final QrGenerateEntity qrData;

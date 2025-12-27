@@ -10,14 +10,14 @@ class QrCodeWidget extends StatelessWidget {
   const QrCodeWidget({
     super.key,
     required this.qrData,
-    this.size = 200,
+    this.size = 280,
   });
 
   @override
   Widget build(BuildContext context) {
-    // Генерируем QR код через qr_flutter из данных, полученных с сервера
-    // qrData.qrData содержит URL, который нужно закодировать в QR
-    if (qrData.qrData == null || qrData.qrData!.isEmpty) {
+    final token = qrData.token;
+
+    if (token == null || token.isEmpty) {
       return Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -40,54 +40,69 @@ class QrCodeWidget extends StatelessWidget {
       );
     }
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Генерация QR кода через qr_flutter (только токен)
+        Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.1),
+                blurRadius: 20,
+                offset: const Offset(0, 4),
+                spreadRadius: 2,
+              ),
+            ],
           ),
-        ],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Генерация QR кода через qr_flutter
-          QrImageView(
-            data: qrData.qrData!, // URL для кодирования в QR
+          child: QrImageView(
+            data: token,
             version: QrVersions.auto,
             size: size,
             backgroundColor: Colors.white,
-            foregroundColor: Colors.black,
-            errorCorrectionLevel: QrErrorCorrectLevel.M,
-            padding: const EdgeInsets.all(8),
+            eyeStyle: const QrEyeStyle(
+              eyeShape: QrEyeShape.square,
+              color: Colors.black,
+            ),
+            dataModuleStyle: const QrDataModuleStyle(
+              dataModuleShape: QrDataModuleShape.square,
+              color: Colors.black,
+            ),
+            errorCorrectionLevel: QrErrorCorrectLevel.H,
+            padding: const EdgeInsets.all(16),
           ),
-          if (qrData.expiresAt != null) ...[
-            const SizedBox(height: 16),
-            Text(
-              'QR код действителен до',
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-            const SizedBox(height: 4),
-            Text(
-              '${qrData.expiresAt}',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-          ],
+        ),
+        const SizedBox(height: 24),
+        // Отображение кода токена
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade100,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Text(
+            token,
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 3,
+                  color: Colors.black87,
+                ),
+          ),
+        ),
+        if (qrData.expiresAt != null) ...[
+          const SizedBox(height: 16),
+          Text(
+            'QR код действителен до ${qrData.expiresAt}',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Colors.grey.shade600,
+                ),
+            textAlign: TextAlign.center,
+          ),
         ],
-      ),
+      ],
     );
-  }
-
-  String _formatDateTime(DateTime dateTime) {
-    final hours = dateTime.hour.toString().padLeft(2, '0');
-    final minutes = dateTime.minute.toString().padLeft(2, '0');
-    return '$hours:$minutes';
   }
 }
