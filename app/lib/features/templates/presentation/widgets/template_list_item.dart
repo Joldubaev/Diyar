@@ -34,7 +34,22 @@ class TemplateListItem extends StatelessWidget {
           );
 
           if (confirmed == true && context.mounted) {
-            context.read<TemplatesListCubit>().deleteTemplate(template.id!);
+            final cubit = context.read<TemplatesListCubit>();
+            cubit.deleteTemplate(
+              template.id!,
+              onSuccess: (_) {
+                SnackBarMessage().showSuccessSnackBar(
+                  message: 'Шаблон успешно удален',
+                  context: context,
+                );
+              },
+              onError: (errorMessage) {
+                SnackBarMessage().showErrorSnackBar(
+                  message: errorMessage,
+                  context: context,
+                );
+              },
+            );
           }
 
           return false;

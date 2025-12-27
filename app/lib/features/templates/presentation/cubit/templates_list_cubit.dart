@@ -37,12 +37,18 @@ class TemplatesListCubit extends Cubit<TemplatesListState> {
   }
 
   /// Загрузка списка шаблонов
-  Future<void> fetch() async {
+  Future<void> fetch({
+    void Function(List<TemplateEntity>)? onSuccess,
+    void Function(String)? onError,
+  }) async {
     emit(TemplatesListLoading());
 
     final result = await _getTemplates();
     result.fold(
-      (f) => emit(TemplatesListFailure(f.message)),
+      (f) {
+        emit(TemplatesListFailure(f.message));
+        onError?.call(f.message);
+      },
       (list) {
         final currentState = state;
         // Сохраняем выбранный шаблон при обновлении списка
@@ -57,6 +63,7 @@ class TemplatesListCubit extends Cubit<TemplatesListState> {
         final loadedState = TemplatesListLoaded(list, selectedTemplateId: selectedId);
         _lastLoadedState = loadedState;
         emit(loadedState);
+        onSuccess?.call(list);
       },
     );
   }
@@ -72,7 +79,10 @@ class TemplatesListCubit extends Cubit<TemplatesListState> {
   }
 
   /// Применение выбранного шаблона для доставки
-  void applySelectedTemplate(CartLoaded cartState) {
+  void applySelectedTemplate(
+    CartLoaded cartState, {
+    void Function(DeliveryNavigationData)? onSuccess,
+  }) {
     final currentState = state;
     if (currentState is! TemplatesListLoaded) return;
 
@@ -91,15 +101,20 @@ class TemplatesListCubit extends Cubit<TemplatesListState> {
     );
 
     emit(TemplatesNavigationToDeliveryReady(navigationData));
+    onSuccess?.call(navigationData);
   }
 
   /// Пропуск выбора шаблона и переход на карту
-  void skipToMap(CartLoaded cartState) {
+  void skipToMap(
+    CartLoaded cartState, {
+    void Function(OrderMapNavigationData)? onSuccess,
+  }) {
     final navigationData = _prepareNavigationUseCase.prepareOrderMap(
       cartState: cartState,
     );
 
     emit(TemplatesNavigationToOrderMapReady(navigationData));
+    onSuccess?.call(navigationData);
   }
 
   /// Сброс состояния навигации
@@ -117,7 +132,11 @@ class TemplatesListCubit extends Cubit<TemplatesListState> {
   }
 
   /// Удаление шаблона
-  Future<void> deleteTemplate(String templateId) async {
+  Future<void> deleteTemplate(
+    String templateId, {
+    void Function(String)? onSuccess,
+    void Function(String)? onError,
+  }) async {
     final currentState = state;
     if (currentState is! TemplatesListLoaded) return;
 
@@ -128,6 +147,7 @@ class TemplatesListCubit extends Cubit<TemplatesListState> {
         emit(TemplateDeleteFailure(failure.message));
         // Возвращаемся к исходному состоянию со списком
         emit(currentState);
+        onError?.call(failure.message);
       },
       (_) {
         // Удаляем элемент локально
@@ -144,6 +164,7 @@ class TemplatesListCubit extends Cubit<TemplatesListState> {
         final loadedState = TemplatesListLoaded(updatedList, selectedTemplateId: selectedId);
         _lastLoadedState = loadedState;
         emit(loadedState);
+        onSuccess?.call(templateId);
       },
     );
   }
@@ -166,6 +187,8 @@ class TemplatesListCubit extends Cubit<TemplatesListState> {
     required AddressEntity addressData,
     required ContactInfoEntity contactInfo,
     int? price, // Цена доставки на этот адрес
+    void Function()? onSuccess,
+    void Function(String)? onError,
   }) async {
     emit(TemplateCreateLoading());
 
@@ -187,11 +210,13 @@ class TemplatesListCubit extends Cubit<TemplatesListState> {
         } else {
           fetch();
         }
+        onError?.call(failure.message);
       },
       (_) {
         emit(TemplateCreateSuccess());
         // Обновляем список шаблонов после успешного создания
         fetch();
+        onSuccess?.call();
       },
     );
   }
