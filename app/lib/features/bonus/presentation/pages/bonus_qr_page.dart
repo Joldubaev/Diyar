@@ -11,16 +11,18 @@ class BonusQrPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Мой QR')),
-      body: BlocBuilder<BonusCubit, BonusState>(
-        builder: (context, state) {
-          return animatedSwitcher(
-            child: switch (state) {
-              BonusInitial() || BonusQrLoading() => const _LoadingView(),
-              BonusQrFailure(message: final msg) => _ErrorView(message: msg),
-              BonusQrLoaded(qrData: final data) => _SuccessView(qrData: data),
-            },
-          );
-        },
+      body: SafeArea(
+        child: BlocBuilder<BonusCubit, BonusState>(
+          builder: (context, state) {
+            return animatedSwitcher(
+              child: switch (state) {
+                BonusInitial() || BonusQrLoading() => const _LoadingView(),
+                BonusQrFailure(message: final msg) => _ErrorView(message: msg),
+                BonusQrLoaded(qrData: final data) => _SuccessView(qrData: data),
+              },
+            );
+          },
+        ),
       ),
     );
   }
