@@ -133,50 +133,41 @@ class CustomBottomSheet extends StatelessWidget {
   }
 
   Widget _buildSaveTemplateButton(BuildContext context) {
-    return BlocListener<TemplatesListCubit, TemplatesListState>(
-      listener: (context, state) {
-        if (state is TemplateCreateSuccess) {
-          showToast('Адрес успешно сохранен в шаблоны', isError: false);
-        } else if (state is TemplateCreateFailure) {
-          showToast(state.message, isError: true);
-        }
-      },
-      child: BlocBuilder<TemplatesListCubit, TemplatesListState>(
-        builder: (context, state) {
-          final isLoading = state is TemplateCreateLoading;
-          return OutlinedButton.icon(
-            onPressed: isLoading ? null : () => _onSaveTemplate(context),
-            icon: isLoading
-                ? SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        theme.colorScheme.primary,
-                      ),
+    return BlocBuilder<TemplatesListCubit, TemplatesListState>(
+      builder: (context, state) {
+        final isLoading = state is TemplateCreateLoading;
+        return OutlinedButton.icon(
+          onPressed: isLoading ? null : () => _onSaveTemplate(context),
+          icon: isLoading
+              ? SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      theme.colorScheme.primary,
                     ),
-                  )
-                : Icon(
-                    Icons.bookmark_outline,
-                    color: theme.colorScheme.primary,
                   ),
-            label: Text(
-              'Сохранить адрес',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.primary,
-              ),
+                )
+              : Icon(
+                  Icons.bookmark_outline,
+                  color: theme.colorScheme.primary,
+                ),
+          label: Text(
+            'Сохранить адрес',
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.primary,
             ),
-            style: OutlinedButton.styleFrom(
-              side: BorderSide(color: theme.colorScheme.primary),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          ),
+          style: OutlinedButton.styleFrom(
+            side: BorderSide(color: theme.colorScheme.primary),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
             ),
-          );
-        },
-      ),
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          ),
+        );
+      },
     );
   }
 
@@ -222,6 +213,12 @@ class CustomBottomSheet extends StatelessWidget {
       addressData: addressData,
       contactInfo: contactInfo,
       price: deliveryPrice, // Сохраняем цену доставки на этот адрес
+      onSuccess: () {
+        showToast('Адрес успешно сохранен в шаблоны', isError: false);
+      },
+      onError: (errorMessage) {
+        showToast(errorMessage, isError: true);
+      },
     );
   }
 

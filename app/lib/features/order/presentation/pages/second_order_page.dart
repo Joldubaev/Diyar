@@ -156,14 +156,14 @@ class _SecondOrderPageState extends State<SecondOrderPage> {
         cubit.getDistricts(
           search: query,
           onSuccess: (districts) {
-            final districtModels = districts
-                .map(
-                  (e) => DistrictDataModel(
-                    name: e.name,
-                    price: e.price,
-                  ),
-                )
-                .toList();
+            final districtModels = districts.map(
+              (e) {
+                return DistrictDataModel(
+                  name: e.name,
+                  price: e.price,
+                );
+              },
+            ).toList();
             completer.complete(districtModels);
           },
           onError: (errorMessage) {
