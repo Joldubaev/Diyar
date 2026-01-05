@@ -9,11 +9,6 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i53;
-import 'package:diyar/core/core.dart' as _i59;
-import 'package:diyar/core/shared/presentation/pages/main_home/home_page.dart'
-    as _i12;
-import 'package:diyar/core/shared/presentation/pages/main_home/main_page.dart'
-    as _i13;
 import 'package:diyar/features/about_us/presentation/pages/about/about_us_page.dart'
     as _i1;
 import 'package:diyar/features/about_us/presentation/pages/about/coffe_page.dart'
@@ -77,6 +72,10 @@ import 'package:diyar/features/home_content/presentation/pages/news/news_page.da
     as _i21;
 import 'package:diyar/features/home_content/presentation/pages/sale/sale_page.dart'
     as _i36;
+import 'package:diyar/features/main_home/presentation/pages/home_tab_page.dart'
+    as _i12;
+import 'package:diyar/features/main_home/presentation/pages/main_home_page.dart'
+    as _i13;
 import 'package:diyar/features/map/presentation/user_map/order_map_page.dart'
     as _i24;
 import 'package:diyar/features/menu/domain/domain.dart' as _i58;
@@ -111,6 +110,7 @@ import 'package:diyar/features/payments/presentation/pages/qr/qr_code_page.dart'
     as _i33;
 import 'package:diyar/features/pick_up/presentation/pages/pickup_page.dart'
     as _i27;
+import 'package:diyar/features/profile/data/data.dart' as _i59;
 import 'package:diyar/features/profile/presentation/pages/profile/profile_page.dart'
     as _i31;
 import 'package:diyar/features/profile/presentation/pages/profile_info/profile_info_page.dart'
@@ -395,39 +395,39 @@ class HistoryRoute extends _i53.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i12.HomePage]
-class HomeRoute extends _i53.PageRouteInfo<void> {
-  const HomeRoute({List<_i53.PageRouteInfo>? children})
+/// [_i12.HomeTabPage]
+class HomeTabRoute extends _i53.PageRouteInfo<void> {
+  const HomeTabRoute({List<_i53.PageRouteInfo>? children})
       : super(
-          HomeRoute.name,
+          HomeTabRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'HomeRoute';
+  static const String name = 'HomeTabRoute';
 
   static _i53.PageInfo page = _i53.PageInfo(
     name,
     builder: (data) {
-      return const _i12.HomePage();
+      return const _i12.HomeTabPage();
     },
   );
 }
 
 /// generated route for
-/// [_i13.MainPage]
-class MainRoute extends _i53.PageRouteInfo<void> {
-  const MainRoute({List<_i53.PageRouteInfo>? children})
+/// [_i13.MainHomePage]
+class MainHomeRoute extends _i53.PageRouteInfo<void> {
+  const MainHomeRoute({List<_i53.PageRouteInfo>? children})
       : super(
-          MainRoute.name,
+          MainHomeRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'MainRoute';
+  static const String name = 'MainHomeRoute';
 
   static _i53.PageInfo page = _i53.PageInfo(
     name,
     builder: (data) {
-      return const _i13.MainPage();
+      return const _i13.MainHomePage();
     },
   );
 }

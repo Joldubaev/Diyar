@@ -95,7 +95,7 @@ class _SetNewPinCodePageState extends State<SetNewPinCodePage> {
     if (role == "Courier") {
       targetRoute = const CurierRoute();
     } else {
-      targetRoute = const MainRoute();
+      targetRoute = const MainHomeRoute();
     }
 
     context.router.pushAndPopUntil(targetRoute, predicate: (_) => false);

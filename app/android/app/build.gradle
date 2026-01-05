@@ -35,16 +35,16 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace "kg.cdt.diyar_guest"
-    compileSdkVersion 35
+    compileSdkVersion 36
     ndkVersion flutter.ndkVersion
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+  compileOptions {
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
     }
 
-    kotlinOptions {
-        jvmTarget = '1.8'
+   kotlinOptions {
+        jvmTarget = '21'
     }
 
     sourceSets {
@@ -53,8 +53,8 @@ android {
 
     defaultConfig {
         applicationId "kg.cdt.diyar_guest"
-        minSdk = 23
-        targetSdk = 35
+        minSdk = 26
+        targetSdk = 36
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true

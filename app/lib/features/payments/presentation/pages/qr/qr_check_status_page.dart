@@ -39,7 +39,7 @@ class _QrCheckStatusPageState extends State<QrCheckStatusPage> {
   }
 
   void _goToMain() {
-    context.router.pushAndPopUntil(const MainRoute(), predicate: (_) => false);
+    context.router.pushAndPopUntil(const MainHomeRoute(), predicate: (_) => false);
   }
 
   @override

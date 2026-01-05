@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:diyar/core/core.dart';
+import 'package:diyar/features/profile/profile.dart';
 import 'package:injectable/injectable.dart';
 
 abstract class ProfileRemoteDataSource {

@@ -114,6 +114,7 @@ import '../../features/menu/data/repositories/menu_repository.dart' as _i1024;
 import '../../features/menu/domain/domain.dart' as _i872;
 import '../../features/menu/menu.dart' as _i660;
 import '../../features/menu/presentation/bloc/menu_bloc.dart' as _i395;
+import '../../features/menu/presentation/cubit/popular_cubit.dart' as _i739;
 import '../../features/order/data/datasources/order_remote_datasource.dart'
     as _i773;
 import '../../features/order/data/repository/order_repository.dart' as _i576;
@@ -195,7 +196,6 @@ import '../../features/templates/presentation/cubit/templates_list_cubit.dart'
 import '../core.dart' as _i351;
 import '../remote_config/diyar_remote_config.dart' as _i1020;
 import '../shared/presentation/bloc/internet_bloc.dart' as _i231;
-import '../shared/presentation/cubit/popular_cubit.dart' as _i1012;
 import '../shared/presentation/theme_cubit/theme_cubit.dart' as _i489;
 import '../utils/storage/local_storage.dart' as _i31;
 import 'register_module.dart' as _i291;
@@ -419,8 +419,10 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i838.MbankConfimUsecase>(),
           gh<_i838.MbankStatusUsecase>(),
         ));
-    gh.factory<_i1012.PopularCubit>(
-        () => _i1012.PopularCubit(gh<_i872.MenuRepository>()));
+    gh.factory<_i370.PickUpCubit>(
+        () => _i370.PickUpCubit(gh<_i292.PickUpRepositories>()));
+    gh.factory<_i739.PopularCubit>(
+        () => _i739.PopularCubit(gh<_i872.MenuRepository>()));
     gh.factory<_i395.MenuBloc>(
         () => _i395.MenuBloc(gh<_i872.MenuRepository>()));
     gh.factory<_i360.GenerateQrUseCase>(
@@ -441,8 +443,6 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i232.HistoryCubit(gh<_i408.HistoryRepository>()));
     gh.factory<_i781.SignUpCubit>(
         () => _i781.SignUpCubit(gh<_i140.AuthRepository>()));
-    gh.factory<_i370.PickUpCubit>(
-        () => _i370.PickUpCubit(gh<_i292.PickUpRepositories>()));
     gh.factory<_i110.CurierCubit>(
         () => _i110.CurierCubit(gh<_i566.CurierRepository>()));
     gh.factory<_i431.DeliveryFormCubit>(() => _i431.DeliveryFormCubit(

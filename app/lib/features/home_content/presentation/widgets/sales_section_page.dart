@@ -157,11 +157,11 @@ class SaleCard extends StatelessWidget {
       top: SalesSection._defaultPadding,
       left: SalesSection._defaultPadding,
       bottom: SalesSection._defaultPadding,
-      width: constraints.maxWidth * 0.55, // Adjust width factor as needed
+      width: constraints.maxWidth * 0.55,
       child: Container(
-        padding: const EdgeInsets.all(SalesSection._defaultPadding / 2), // Reduced padding a bit
+        padding: const EdgeInsets.all(SalesSection._defaultPadding / 2),
         decoration: BoxDecoration(
-          color: Colors.black.withValues(alpha: 0.6), // Darker overlay for white text
+          color: Colors.black.withValues(alpha: 0.6),
           borderRadius: BorderRadius.circular(_buttonRadius),
         ),
         child: Column(
@@ -171,17 +171,17 @@ class SaleCard extends StatelessWidget {
             Text(
               sale.name ?? 'Название акции',
               style: theme.textTheme.headlineSmall?.copyWith(
-                color: theme.colorScheme.primary, // Assuming primary is orange
+                color: theme.colorScheme.primary,
                 fontWeight: FontWeight.bold,
               ),
-              maxLines: 3, // Increased max lines
+              maxLines: 3,
               overflow: TextOverflow.ellipsis,
             ),
-            const SizedBox(height: 6), // Adjusted spacing
+            const SizedBox(height: 6),
             Text(
               '${sale.discount ?? 0}% скидка',
               style: theme.textTheme.titleMedium?.copyWith(
-                color: Colors.white, // White text for better contrast on dark overlay
+                color: Colors.white,
               ),
             ),
           ],
@@ -197,21 +197,21 @@ class SaleCard extends StatelessWidget {
       child: ElevatedButton(
         onPressed: () => context.router.push(SaleRoute(sale: sale)),
         style: ElevatedButton.styleFrom(
-          backgroundColor: theme.colorScheme.surface, // Typically white
-          foregroundColor: theme.colorScheme.primary, // Orange text
+          backgroundColor: theme.colorScheme.surface,
+          foregroundColor: theme.colorScheme.primary,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(_buttonRadius),
           ),
           padding: const EdgeInsets.symmetric(
             horizontal: SalesSection._defaultPadding,
-            vertical: SalesSection._defaultPadding / 2, // Adjusted vertical padding
+            vertical: SalesSection._defaultPadding / 2,
           ),
         ),
         child: Text(
           'Подробнее',
           style: theme.textTheme.labelLarge?.copyWith(
             fontWeight: FontWeight.bold,
-            color: theme.colorScheme.primary, // Orange text
+            color: theme.colorScheme.primary,
           ),
         ),
       ),

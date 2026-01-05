@@ -139,7 +139,7 @@ class _PaymentStatusPageState extends State<PaymentStatusPage> {
           buttonText: 'Готово',
           onButtonTap: _status == PaymentStatusType.success
               ? () => context.router.pushAndPopUntil(
-                    MainRoute(),
+                    MainHomeRoute(),
                     predicate: (route) => false,
                   )
               : null,

@@ -88,7 +88,7 @@ class CustomBottomSheet extends StatelessWidget {
                           Navigator.of(dialogContext).pop();
                           Navigator.of(context).pop();
                           context.router.pushAndPopUntil(
-                            const MainRoute(),
+                            const MainHomeRoute(),
                             predicate: (route) => false,
                           );
                         },

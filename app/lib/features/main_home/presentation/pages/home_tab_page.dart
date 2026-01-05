@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 @RoutePage()
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class HomeTabPage extends StatefulWidget {
+  const HomeTabPage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomeTabPage> createState() => _HomeTabPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomeTabPageState extends State<HomeTabPage> {
   List<FoodEntity> menu = [];
   @override
   void initState() {

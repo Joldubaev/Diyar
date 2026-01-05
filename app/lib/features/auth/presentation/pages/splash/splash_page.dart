@@ -64,7 +64,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       log('[Splash] Is first launch: $isFirstLaunch');
       if (isFirstLaunch) {
         log("[Splash] First launch detected. Navigating to SignInRoute.");
-        _navigateTo(const MainRoute());
+        _navigateTo(const MainHomeRoute());
         return;
       }
       final String? refreshToken = _localStorage.getString(AppConst.refreshToken);

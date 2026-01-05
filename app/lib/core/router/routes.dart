@@ -11,9 +11,9 @@ class AppRouter extends RootStackRouter {
   @override
   List<AutoRoute> get routes => [
         AutoRoute(
-          page: MainRoute.page,
+          page: MainHomeRoute.page,
           children: [
-            AutoRoute(page: HomeRoute.page),
+            AutoRoute(page: HomeTabRoute.page),
             AutoRoute(page: MenuRoute.page),
             AutoRoute(page: OrderHistoryRoute.page),
             AutoRoute(page: ProfileRoute.page, guards: [AuthGuard()]),
@@ -101,11 +101,11 @@ class AuthGuard extends AutoRouteGuard {
     } else if (role == 'admin') {
       log('AuthGuard: Роль Admin. Перенаправление на MainRoute.');
       resolver.next(false);
-      router.replace(const MainRoute()); // Заменяем стек
+      router.replace(const MainHomeRoute()); // Заменяем стек
     } else {
       log('AuthGuard: Роль User или другая (не Courier/Admin, роль: ${role ?? "null"}). Перенаправление на MainRoute.');
       resolver.next(false);
-      router.replace(const MainRoute()); // Заменяем стек
+      router.replace(const MainHomeRoute()); // Заменяем стек
     }
   }
 }

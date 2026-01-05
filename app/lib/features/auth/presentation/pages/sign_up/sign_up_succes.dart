@@ -46,7 +46,7 @@ class SignUpSucces extends StatelessWidget {
             var role = sl<SharedPreferences>().getString(AppConst.userRole);
             if (role?.toLowerCase() == "user".toLowerCase()) {
               context.router.pushAndPopUntil(
-                const MainRoute(),
+                const MainHomeRoute(),
                 predicate: (_) => false,
               );
             } else {
