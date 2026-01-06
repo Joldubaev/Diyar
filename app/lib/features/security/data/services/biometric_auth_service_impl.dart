@@ -1,18 +1,38 @@
+import 'package:diyar/features/security/domain/services/biometric_auth_service.dart';
+import 'package:diyar/features/security/domain/services/secure_storage_service.dart';
+import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:flutter/services.dart';
-import 'package:diyar/core/utils/storage/local_storage.dart';
-import 'package:diyar/core/constants/app_const/app_const.dart';
 
-/// Use case для аутентификации по биометрии
-@injectable
-class AuthenticateWithBiometricsUseCase {
+@LazySingleton(as: BiometricAuthService)
+class BiometricAuthServiceImpl implements BiometricAuthService {
   final LocalAuthentication _localAuth;
-  final LocalStorage _localStorage;
+  final SecureStorageService _secureStorage;
 
-  AuthenticateWithBiometricsUseCase(this._localAuth, this._localStorage);
+  BiometricAuthServiceImpl(
+    this._localAuth,
+    this._secureStorage,
+  );
 
-  Future<BiometricAuthResult> call() async {
+  @override
+  Future<BiometricAvailabilityResult> checkAvailability() async {
+    try {
+      final canCheckBiometrics = await _localAuth.canCheckBiometrics;
+      final isDeviceSupported = await _localAuth.isDeviceSupported();
+
+      if (canCheckBiometrics && isDeviceSupported) {
+        final isEnabled = await _secureStorage.getBiometricPreference();
+        return BiometricAvailabilityResult.available(isEnabled);
+      } else {
+        return BiometricAvailabilityResult.notAvailable();
+      }
+    } catch (e) {
+      return BiometricAvailabilityResult.notAvailable();
+    }
+  }
+
+  @override
+  Future<BiometricAuthResult> authenticate() async {
     try {
       // Проверка доступности
       final canCheckBiometrics = await _localAuth.canCheckBiometrics;
@@ -22,7 +42,7 @@ class AuthenticateWithBiometricsUseCase {
         return BiometricAuthResult.failure('Биометрия недоступна на этом устройстве');
       }
 
-      final isEnabled = _localStorage.getBool(AppConst.biometricPrefKey) ?? false;
+      final isEnabled = await _secureStorage.getBiometricPreference();
       if (!isEnabled) {
         return BiometricAuthResult.failure('Вход по биометрии не включен в настройках');
       }
@@ -49,13 +69,3 @@ class AuthenticateWithBiometricsUseCase {
   }
 }
 
-/// Результат аутентификации по биометрии
-class BiometricAuthResult {
-  final bool isSuccess;
-  final String? errorMessage;
-
-  BiometricAuthResult._({required this.isSuccess, this.errorMessage});
-
-  factory BiometricAuthResult.success() => BiometricAuthResult._(isSuccess: true);
-  factory BiometricAuthResult.failure(String message) => BiometricAuthResult._(isSuccess: false, errorMessage: message);
-}

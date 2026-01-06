@@ -4,7 +4,6 @@ import 'package:diyar/features/auth/domain/domain.dart';
 import 'package:diyar/features/auth/data/datasources/remote/auth_remote_data_source.dart';
 import 'package:diyar/features/auth/data/datasources/local/auth_local_data_source.dart';
 import 'package:diyar/features/auth/data/models/user_model.dart';
-import 'package:diyar/features/auth/data/models/reset_password_model.dart';
 import 'package:injectable/injectable.dart';
 
 @LazySingleton(as: AuthRepository)
@@ -40,28 +39,8 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, void>> sendForgotPasswordCodeToPhone(String phone) {
-    return remoteDataSource.sendForgotPasswordCodeToPhone(phone);
-  }
-
-  @override
-  Future<Either<Failure, void>> resetPassword(ResetPasswordEntity model) {
-    return remoteDataSource.confirmResetPassword(ResetPasswordModel.fromEntity(model));
-  }
-
-  @override
   Future<Either<Failure, void>> refreshToken() {
     return remoteDataSource.refreshToken();
-  }
-
-  @override
-  Future<void> setPinCode(String code) {
-    return localDataSource.setPinCode(code);
-  }
-
-  @override
-  Future<String?> getPinCode() {
-    return localDataSource.getPinCode();
   }
 
   @override

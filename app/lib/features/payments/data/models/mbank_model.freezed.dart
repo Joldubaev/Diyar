@@ -20,9 +20,7 @@ mixin _$MbankModel {
   String? get quid => throw _privateConstructorUsedError;
   DateTime? get dateTime => throw _privateConstructorUsedError;
 
-  /// Create a copy of MbankModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $MbankModelCopyWith<MbankModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -46,8 +44,6 @@ class _$MbankModelCopyWithImpl<$Res, $Val extends MbankModel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of MbankModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -91,8 +87,6 @@ class __$$MbankModelImplCopyWithImpl<$Res>
       _$MbankModelImpl _value, $Res Function(_$MbankModelImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of MbankModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -148,9 +142,7 @@ class _$MbankModelImpl implements _MbankModel {
   @override
   int get hashCode => Object.hash(runtimeType, amount, quid, dateTime);
 
-  /// Create a copy of MbankModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$MbankModelImplCopyWith<_$MbankModelImpl> get copyWith =>
@@ -169,11 +161,8 @@ abstract class _MbankModel implements MbankModel {
   String? get quid;
   @override
   DateTime? get dateTime;
-
-  /// Create a copy of MbankModel
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$MbankModelImplCopyWith<_$MbankModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

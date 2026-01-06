@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
-import 'package:diyar/features/auth/auth.dart';
 import 'package:diyar/injection_container.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
@@ -73,7 +72,6 @@ class AppRouter extends RootStackRouter {
 
 class AuthGuard extends AutoRouteGuard {
   final prefs = sl<LocalStorage>();
-  final authDataSource = sl<AuthRemoteDataSource>();
 
   @override
   void onNavigation(NavigationResolver resolver, StackRouter router) async {

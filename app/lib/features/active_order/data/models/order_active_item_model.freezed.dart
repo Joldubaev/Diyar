@@ -42,12 +42,8 @@ mixin _$OrderActiveItemModel {
   int? get deliveryPrice => throw _privateConstructorUsedError;
   int? get sdacha => throw _privateConstructorUsedError;
 
-  /// Serializes this OrderActiveItemModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of OrderActiveItemModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $OrderActiveItemModelCopyWith<OrderActiveItemModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -93,8 +89,6 @@ class _$OrderActiveItemModelCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of OrderActiveItemModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -249,8 +243,6 @@ class __$$OrderActiveItemModelImplCopyWithImpl<$Res>
       $Res Function(_$OrderActiveItemModelImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of OrderActiveItemModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -491,7 +483,7 @@ class _$OrderActiveItemModelImpl implements _OrderActiveItemModel {
             (identical(other.sdacha, sdacha) || other.sdacha == sdacha));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hashAll([
         runtimeType,
@@ -518,9 +510,7 @@ class _$OrderActiveItemModelImpl implements _OrderActiveItemModel {
         sdacha
       ]);
 
-  /// Create a copy of OrderActiveItemModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$OrderActiveItemModelImplCopyWith<_$OrderActiveItemModelImpl>
@@ -605,11 +595,8 @@ abstract class _OrderActiveItemModel implements OrderActiveItemModel {
   int? get deliveryPrice;
   @override
   int? get sdacha;
-
-  /// Create a copy of OrderActiveItemModel
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$OrderActiveItemModelImplCopyWith<_$OrderActiveItemModelImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

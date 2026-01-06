@@ -26,12 +26,8 @@ mixin _$SaleModel {
   String? get photoLink => throw _privateConstructorUsedError;
   int? get discount => throw _privateConstructorUsedError;
 
-  /// Serializes this SaleModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of SaleModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $SaleModelCopyWith<SaleModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -59,8 +55,6 @@ class _$SaleModelCopyWithImpl<$Res, $Val extends SaleModel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of SaleModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -119,8 +113,6 @@ class __$$SaleModelImplCopyWithImpl<$Res>
       _$SaleModelImpl _value, $Res Function(_$SaleModelImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of SaleModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -195,14 +187,12 @@ class _$SaleModelImpl implements _SaleModel {
                 other.discount == discount));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode =>
       Object.hash(runtimeType, id, name, description, photoLink, discount);
 
-  /// Create a copy of SaleModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$SaleModelImplCopyWith<_$SaleModelImpl> get copyWith =>
@@ -237,11 +227,8 @@ abstract class _SaleModel implements SaleModel {
   String? get photoLink;
   @override
   int? get discount;
-
-  /// Create a copy of SaleModel
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$SaleModelImplCopyWith<_$SaleModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

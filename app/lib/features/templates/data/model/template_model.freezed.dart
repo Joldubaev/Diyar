@@ -22,9 +22,7 @@ mixin _$TemplateModel {
   ContactInfoModel get contactInfo => throw _privateConstructorUsedError;
   int? get price => throw _privateConstructorUsedError;
 
-  /// Create a copy of TemplateModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $TemplateModelCopyWith<TemplateModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -56,8 +54,6 @@ class _$TemplateModelCopyWithImpl<$Res, $Val extends TemplateModel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of TemplateModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -91,8 +87,6 @@ class _$TemplateModelCopyWithImpl<$Res, $Val extends TemplateModel>
     ) as $Val);
   }
 
-  /// Create a copy of TemplateModel
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $AddressModelCopyWith<$Res> get addressData {
@@ -101,8 +95,6 @@ class _$TemplateModelCopyWithImpl<$Res, $Val extends TemplateModel>
     });
   }
 
-  /// Create a copy of TemplateModel
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $ContactInfoModelCopyWith<$Res> get contactInfo {
@@ -141,8 +133,6 @@ class __$$TemplateModelImplCopyWithImpl<$Res>
       _$TemplateModelImpl _value, $Res Function(_$TemplateModelImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of TemplateModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -222,9 +212,7 @@ class _$TemplateModelImpl implements _TemplateModel {
   int get hashCode => Object.hash(
       runtimeType, id, templateName, addressData, contactInfo, price);
 
-  /// Create a copy of TemplateModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$TemplateModelImplCopyWith<_$TemplateModelImpl> get copyWith =>
@@ -249,11 +237,8 @@ abstract class _TemplateModel implements TemplateModel {
   ContactInfoModel get contactInfo;
   @override
   int? get price;
-
-  /// Create a copy of TemplateModel
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$TemplateModelImplCopyWith<_$TemplateModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

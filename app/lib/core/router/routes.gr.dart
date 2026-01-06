@@ -35,10 +35,6 @@ import 'package:diyar/features/active_order/presentation/pages/order_detail_page
 import 'package:diyar/features/auth/domain/domain.dart' as _i61;
 import 'package:diyar/features/auth/presentation/pages/pin_code/pin_code_page.dart'
     as _i28;
-import 'package:diyar/features/auth/presentation/pages/pin_code/set_new_pin_code_page.dart'
-    as _i40;
-import 'package:diyar/features/auth/presentation/pages/reset_password/reset_password_page.dart'
-    as _i34;
 import 'package:diyar/features/auth/presentation/pages/sign_in/sign_in_otp_page.dart'
     as _i41;
 import 'package:diyar/features/auth/presentation/pages/sign_in/sign_in_page.dart'
@@ -89,6 +85,8 @@ import 'package:diyar/features/order/presentation/pages/delivery_page.dart'
     as _i9;
 import 'package:diyar/features/order/presentation/pages/second_order_page.dart'
     as _i38;
+import 'package:diyar/features/password_reset/presentation/pages/reset_password/reset_password_page.dart'
+    as _i34;
 import 'package:diyar/features/payments/presentation/pages/mbank/mbank_check_status_page.dart'
     as _i14;
 import 'package:diyar/features/payments/presentation/pages/mbank/mbank_confirm_page.dart'
@@ -117,6 +115,8 @@ import 'package:diyar/features/profile/presentation/pages/profile_info/profile_i
     as _i30;
 import 'package:diyar/features/profile/presentation/pages/security/security_page.dart'
     as _i39;
+import 'package:diyar/features/security/presentation/pages/pin_code/set_new_pin_code_page.dart'
+    as _i40;
 import 'package:diyar/features/templates/presentation/pages/templates_page.dart'
     as _i47;
 import 'package:flutter/cupertino.dart' as _i57;

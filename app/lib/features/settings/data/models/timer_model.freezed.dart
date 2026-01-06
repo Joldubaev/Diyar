@@ -25,12 +25,8 @@ mixin _$TimerModel {
   bool? get isTechnicalWork => throw _privateConstructorUsedError;
   String? get serverTime => throw _privateConstructorUsedError;
 
-  /// Serializes this TimerModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of TimerModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $TimerModelCopyWith<TimerModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -58,8 +54,6 @@ class _$TimerModelCopyWithImpl<$Res, $Val extends TimerModel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of TimerModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -112,8 +106,6 @@ class __$$TimerModelImplCopyWithImpl<$Res>
       _$TimerModelImpl _value, $Res Function(_$TimerModelImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of TimerModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -180,14 +172,12 @@ class _$TimerModelImpl implements _TimerModel {
                 other.serverTime == serverTime));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode =>
       Object.hash(runtimeType, startTime, endTime, isTechnicalWork, serverTime);
 
-  /// Create a copy of TimerModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$TimerModelImplCopyWith<_$TimerModelImpl> get copyWith =>
@@ -219,11 +209,8 @@ abstract class _TimerModel implements TimerModel {
   bool? get isTechnicalWork;
   @override
   String? get serverTime;
-
-  /// Create a copy of TimerModel
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$TimerModelImplCopyWith<_$TimerModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

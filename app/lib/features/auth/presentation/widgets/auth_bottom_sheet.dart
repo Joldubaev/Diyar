@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
-import 'package:diyar/features/auth/auth.dart';
+import 'package:diyar/features/password_reset/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -46,7 +46,7 @@ class AuthBottomSheet extends StatelessWidget {
             title: context.l10n.send,
             onTap: () {
               if (resetPasswordPhone.text.isNotEmpty) {
-                context.read<SignInCubit>().sendCode(resetPasswordPhone.text);
+                context.read<PasswordResetCubit>().sendForgotPasswordCode(resetPasswordPhone.text);
                 context.router.push(
                   RessetPasswordRoute(phone: resetPasswordPhone.text),
                 );

@@ -23,12 +23,8 @@ mixin _$ContactInfoModel {
   String get userName => throw _privateConstructorUsedError;
   String get userPhone => throw _privateConstructorUsedError;
 
-  /// Serializes this ContactInfoModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of ContactInfoModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $ContactInfoModelCopyWith<ContactInfoModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -52,8 +48,6 @@ class _$ContactInfoModelCopyWithImpl<$Res, $Val extends ContactInfoModel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of ContactInfoModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -92,8 +86,6 @@ class __$$ContactInfoModelImplCopyWithImpl<$Res>
       $Res Function(_$ContactInfoModelImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of ContactInfoModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -143,13 +135,11 @@ class _$ContactInfoModelImpl implements _ContactInfoModel {
                 other.userPhone == userPhone));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, userName, userPhone);
 
-  /// Create a copy of ContactInfoModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ContactInfoModelImplCopyWith<_$ContactInfoModelImpl> get copyWith =>
@@ -176,11 +166,8 @@ abstract class _ContactInfoModel implements ContactInfoModel {
   String get userName;
   @override
   String get userPhone;
-
-  /// Create a copy of ContactInfoModel
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ContactInfoModelImplCopyWith<_$ContactInfoModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

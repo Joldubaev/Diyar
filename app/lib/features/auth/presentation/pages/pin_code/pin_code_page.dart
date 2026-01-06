@@ -1,7 +1,9 @@
 import 'package:diyar/core/core.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:diyar/features/auth/auth.dart';
-import 'package:diyar/injection_container.dart';
+import 'package:diyar/features/security/presentation/presentation.dart' hide AuthDialogs;
+import 'package:diyar/features/auth/presentation/presentation.dart';
+import 'package:diyar/features/auth/presentation/pages/pin_code/pin_code_dialogs.dart';
+import 'package:diyar/features/app_init/domain/domain.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,8 +26,8 @@ class _PinCodePageState extends State<PinCodePage> {
   @override
   void initState() {
     super.initState();
-    context.read<SignInCubit>().getPinCode();
-    context.read<SignInCubit>().checkBiometricsAvailability();
+    context.read<PinCodeCubit>().getPinCode();
+    context.read<PinCodeCubit>().checkBiometricsAvailability();
   }
 
   void _onNumberPressed(int number, bool isLoadingPin, bool isAuthenticatingBiometric) {
@@ -47,7 +49,7 @@ class _PinCodePageState extends State<PinCodePage> {
 
   void _onBiometricPressed(bool isLoadingPin, bool isAuthenticatingBiometric) {
     if (isLoadingPin || isAuthenticatingBiometric) return;
-    context.read<SignInCubit>().authenticateWithBiometrics();
+    context.read<PinCodeCubit>().authenticateWithBiometrics();
   }
 
   void _onExitPressed(bool isLoadingPin, bool isAuthenticatingBiometric) {
@@ -61,28 +63,24 @@ class _PinCodePageState extends State<PinCodePage> {
     if (_correctPin == null) {
       log("Error: Correct PIN is null during validation.");
       showToast("Не удалось загрузить PIN-код для проверки.", isError: true);
-      context.read<SignInCubit>().getPinCode();
+      context.read<PinCodeCubit>().getPinCode();
       setState(() => _enteredPin = '');
       return;
     }
 
-    if (_enteredPin == _correctPin) {
-      _navigateToHome();
-    } else {
-      showToast("Неверный PIN-код", isError: true);
-      setState(() => _enteredPin = '');
-    }
+    context.read<PinCodeCubit>().validatePinCode(_enteredPin, _correctPin!);
   }
 
-  void _navigateToHome() {
-    final role = sl<LocalStorage>().getString(AppConst.userRole);
-    log("Navigating home with role: $role");
-
+  void _navigateToHome(NavigationRouteType routeType) {
     PageRouteInfo targetRoute;
-    if (role == "Courier") {
-      targetRoute = const CurierRoute();
-    } else {
-      targetRoute = const MainRoute();
+    switch (routeType) {
+      case NavigationRouteType.courier:
+        targetRoute = const CurierRoute();
+        break;
+      case NavigationRouteType.main:
+      default:
+        targetRoute = const MainRoute();
+        break;
     }
 
     context.router.pushAndPopUntil(targetRoute, predicate: (_) => false);
@@ -206,45 +204,50 @@ class _PinCodePageState extends State<PinCodePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: BlocListener<SignInCubit, SignInState>(
-        listener: (context, state) {
-          log("PinCodePage Listener State: ${state.runtimeType}");
-          if (state is PinCodeGetSuccess) {
-            _correctPin = state.pinCode;
-            log("Correct PIN loaded.");
-          } else if (state is PinCodeGetFailure) {
-            showToast("Ошибка загрузки PIN-кода: ${state.message}", isError: true);
-          } else if (state is BiometricAvailable) {
-            setState(() {
-              _isBiometricAvailable = true;
-              _isBiometricEnabled = state.isBiometricEnabled;
-            });
-            log("Biometrics Available: true, Enabled: ${state.isBiometricEnabled}");
-            if (state.isBiometricEnabled) {
-              context.read<SignInCubit>().authenticateWithBiometrics();
-            }
-          } else if (state is BiometricNotAvailable) {
-            setState(() {
-              _isBiometricAvailable = false;
-              _isBiometricEnabled = false;
-            });
-            log("Biometrics Not Available");
-          } else if (state is BiometricAuthenticationSuccess) {
-            log("Biometric Authentication Success via Listener");
-            _navigateToHome();
-          } else if (state is BiometricAuthenticationFailure) {
-            log("Biometric Authentication Failed: ${state.message}");
-            showToast("Ошибка биометрии: ${state.message}", isError: true);
-          } else if (state is LogoutSuccess) {
-            context.router.replace(const SignInRoute());
-          } else if (state is LogoutFailure) {
-            showToast("Ошибка выхода: ${state.message}", isError: true);
-          }
-        },
-        child: BlocBuilder<SignInCubit, SignInState>(
+      body: MultiBlocListener(
+        listeners: [
+          BlocListener<PinCodeCubit, PinCodeState>(
+            listener: (context, state) {
+              log("PinCodePage Listener State: ${state.runtimeType}");
+              if (state is PinCodeGetSuccess) {
+                _correctPin = state.pinCode;
+                log("Correct PIN loaded.");
+              } else if (state is PinCodeGetFailure) {
+                showToast("Ошибка загрузки PIN-кода: ${state.message}", isError: true);
+              } else if (state is PinCodeBiometricAvailable) {
+                setState(() {
+                  _isBiometricAvailable = true;
+                  _isBiometricEnabled = state.isEnabled;
+                });
+                log("Biometrics Available: true, Enabled: ${state.isEnabled}");
+                if (state.isEnabled) {
+                  context.read<PinCodeCubit>().authenticateWithBiometrics();
+                }
+              } else if (state is PinCodeBiometricNotAvailable) {
+                setState(() {
+                  _isBiometricAvailable = false;
+                  _isBiometricEnabled = false;
+                });
+                log("Biometrics Not Available");
+              } else if (state is PinCodeBiometricAuthenticationSuccess) {
+                log("Biometric Authentication Success via Listener");
+                context.read<PinCodeCubit>().getNavigationRoute();
+              } else if (state is PinCodeBiometricAuthenticationFailure) {
+                log("Biometric Authentication Failed: ${state.message}");
+                showToast("Ошибка биометрии: ${state.message}", isError: true);
+              } else if (state is PinCodeNavigationRouteLoaded) {
+                _navigateToHome(state.routeType);
+              } else if (state is PinCodeValidationFailure) {
+                showToast(state.message, isError: true);
+                setState(() => _enteredPin = '');
+              }
+            },
+          ),
+        ],
+        child: BlocBuilder<PinCodeCubit, PinCodeState>(
           builder: (context, state) {
-            final bool isLoadingPin = state is SignInLoading;
-            final bool isAuthenticatingBiometric = state is BiometricAuthenticating;
+            final bool isLoadingPin = state is PinCodeLoading;
+            final bool isAuthenticatingBiometric = state is PinCodeBiometricAuthenticating;
             final bool isDisabled = isLoadingPin || isAuthenticatingBiometric;
 
             return SafeArea(

@@ -25,9 +25,7 @@ mixin _$CreateOrderModel {
   int? get deliveryPrice => throw _privateConstructorUsedError;
   int? get sdacha => throw _privateConstructorUsedError;
 
-  /// Create a copy of CreateOrderModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $CreateOrderModelCopyWith<CreateOrderModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -62,8 +60,6 @@ class _$CreateOrderModelCopyWithImpl<$Res, $Val extends CreateOrderModel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of CreateOrderModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -112,8 +108,6 @@ class _$CreateOrderModelCopyWithImpl<$Res, $Val extends CreateOrderModel>
     ) as $Val);
   }
 
-  /// Create a copy of CreateOrderModel
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $AddressModelCopyWith<$Res>? get addressData {
@@ -126,8 +120,6 @@ class _$CreateOrderModelCopyWithImpl<$Res, $Val extends CreateOrderModel>
     });
   }
 
-  /// Create a copy of CreateOrderModel
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $ContactInfoModelCopyWith<$Res>? get contactInfo {
@@ -173,8 +165,6 @@ class __$$CreateOrderModelImplCopyWithImpl<$Res>
       $Res Function(_$CreateOrderModelImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of CreateOrderModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -300,9 +290,7 @@ class _$CreateOrderModelImpl implements _CreateOrderModel {
       deliveryPrice,
       sdacha);
 
-  /// Create a copy of CreateOrderModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$CreateOrderModelImplCopyWith<_$CreateOrderModelImpl> get copyWith =>
@@ -337,11 +325,8 @@ abstract class _CreateOrderModel implements CreateOrderModel {
   int? get deliveryPrice;
   @override
   int? get sdacha;
-
-  /// Create a copy of CreateOrderModel
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$CreateOrderModelImplCopyWith<_$CreateOrderModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

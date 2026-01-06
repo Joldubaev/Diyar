@@ -35,12 +35,8 @@ mixin _$UserPickupHistoryModel {
   String? get userPhone => throw _privateConstructorUsedError;
   String? get paymentMethod => throw _privateConstructorUsedError;
 
-  /// Serializes this UserPickupHistoryModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of UserPickupHistoryModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $UserPickupHistoryModelCopyWith<UserPickupHistoryModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -78,8 +74,6 @@ class _$UserPickupHistoryModelCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of UserPickupHistoryModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -189,8 +183,6 @@ class __$$UserPickupHistoryModelImplCopyWithImpl<$Res>
       $Res Function(_$UserPickupHistoryModelImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of UserPickupHistoryModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -354,7 +346,7 @@ class _$UserPickupHistoryModelImpl implements _UserPickupHistoryModel {
                 other.paymentMethod == paymentMethod));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -372,9 +364,7 @@ class _$UserPickupHistoryModelImpl implements _UserPickupHistoryModel {
       userPhone,
       paymentMethod);
 
-  /// Create a copy of UserPickupHistoryModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$UserPickupHistoryModelImplCopyWith<_$UserPickupHistoryModelImpl>
@@ -434,11 +424,8 @@ abstract class _UserPickupHistoryModel implements UserPickupHistoryModel {
   String? get userPhone;
   @override
   String? get paymentMethod;
-
-  /// Create a copy of UserPickupHistoryModel
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$UserPickupHistoryModelImplCopyWith<_$UserPickupHistoryModelImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

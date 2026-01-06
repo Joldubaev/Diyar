@@ -1,9 +1,11 @@
-class UserEntities {
-  final String phone;
-  final String? userName;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  UserEntities({
-    required this.phone,
-    this.userName,
-  });
+part 'user_entities.freezed.dart';
+
+@freezed
+class UserEntities with _$UserEntities {
+  const factory UserEntities({
+    required String phone,
+    String? userName,
+  }) = _UserEntities;
 }

@@ -24,12 +24,8 @@ mixin _$CurierFoodModel {
   String? get name => throw _privateConstructorUsedError;
   int? get price => throw _privateConstructorUsedError;
 
-  /// Serializes this CurierFoodModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of CurierFoodModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $CurierFoodModelCopyWith<CurierFoodModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -53,8 +49,6 @@ class _$CurierFoodModelCopyWithImpl<$Res, $Val extends CurierFoodModel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of CurierFoodModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -98,8 +92,6 @@ class __$$CurierFoodModelImplCopyWithImpl<$Res>
       _$CurierFoodModelImpl _value, $Res Function(_$CurierFoodModelImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of CurierFoodModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -155,13 +147,11 @@ class _$CurierFoodModelImpl implements _CurierFoodModel {
             (identical(other.price, price) || other.price == price));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, quantity, name, price);
 
-  /// Create a copy of CurierFoodModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$CurierFoodModelImplCopyWith<_$CurierFoodModelImpl> get copyWith =>
@@ -191,11 +181,8 @@ abstract class _CurierFoodModel implements CurierFoodModel {
   String? get name;
   @override
   int? get price;
-
-  /// Create a copy of CurierFoodModel
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$CurierFoodModelImplCopyWith<_$CurierFoodModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

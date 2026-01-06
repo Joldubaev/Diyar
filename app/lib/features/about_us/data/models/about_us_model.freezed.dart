@@ -24,12 +24,8 @@ mixin _$AboutUsModel {
   String? get description => throw _privateConstructorUsedError;
   List<String>? get photoLinks => throw _privateConstructorUsedError;
 
-  /// Serializes this AboutUsModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of AboutUsModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $AboutUsModelCopyWith<AboutUsModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -53,8 +49,6 @@ class _$AboutUsModelCopyWithImpl<$Res, $Val extends AboutUsModel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of AboutUsModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -98,8 +92,6 @@ class __$$AboutUsModelImplCopyWithImpl<$Res>
       _$AboutUsModelImpl _value, $Res Function(_$AboutUsModelImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of AboutUsModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -165,14 +157,12 @@ class _$AboutUsModelImpl implements _AboutUsModel {
                 .equals(other._photoLinks, _photoLinks));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, name, description,
       const DeepCollectionEquality().hash(_photoLinks));
 
-  /// Create a copy of AboutUsModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$AboutUsModelImplCopyWith<_$AboutUsModelImpl> get copyWith =>
@@ -201,11 +191,8 @@ abstract class _AboutUsModel implements AboutUsModel {
   String? get description;
   @override
   List<String>? get photoLinks;
-
-  /// Create a copy of AboutUsModel
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$AboutUsModelImplCopyWith<_$AboutUsModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

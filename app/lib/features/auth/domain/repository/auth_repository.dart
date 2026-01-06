@@ -11,12 +11,6 @@ abstract class AuthRepository {
 
   // 🔓 Login & Auth
   Future<Either<Failure, void>> verifyCodeForLogin(String phone, String code);
-  Future<Either<Failure, void>> sendForgotPasswordCodeToPhone(String phone);
-  Future<Either<Failure, void>> resetPassword(ResetPasswordEntity model);
   Future<Either<Failure, void>> refreshToken();
   Future<void> logout();
-
-  // pin code
-  Future<void> setPinCode(String code);
-  Future<String?> getPinCode();
 }

@@ -42,12 +42,8 @@ mixin _$CurierOrderModel {
   int? get deliveryPrice => throw _privateConstructorUsedError;
   int? get sdacha => throw _privateConstructorUsedError;
 
-  /// Serializes this CurierOrderModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of CurierOrderModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $CurierOrderModelCopyWith<CurierOrderModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -92,8 +88,6 @@ class _$CurierOrderModelCopyWithImpl<$Res, $Val extends CurierOrderModel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of CurierOrderModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -248,8 +242,6 @@ class __$$CurierOrderModelImplCopyWithImpl<$Res>
       $Res Function(_$CurierOrderModelImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of CurierOrderModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -490,7 +482,7 @@ class _$CurierOrderModelImpl implements _CurierOrderModel {
             (identical(other.sdacha, sdacha) || other.sdacha == sdacha));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hashAll([
         runtimeType,
@@ -517,9 +509,7 @@ class _$CurierOrderModelImpl implements _CurierOrderModel {
         sdacha
       ]);
 
-  /// Create a copy of CurierOrderModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$CurierOrderModelImplCopyWith<_$CurierOrderModelImpl> get copyWith =>
@@ -603,11 +593,8 @@ abstract class _CurierOrderModel implements CurierOrderModel {
   int? get deliveryPrice;
   @override
   int? get sdacha;
-
-  /// Create a copy of CurierOrderModel
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$CurierOrderModelImplCopyWith<_$CurierOrderModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

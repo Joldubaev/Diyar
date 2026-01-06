@@ -1,5 +1,6 @@
 import 'package:auto_route/annotations.dart';
 import 'package:diyar/core/core.dart';
+import 'package:diyar/features/security/presentation/presentation.dart';
 import 'package:diyar/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,7 +19,7 @@ class _SecurityPageState extends State<SecurityPage> {
   @override
   void initState() {
     super.initState();
-    context.read<SignInCubit>().checkBiometricsAvailability();
+    context.read<SecurityCubit>().checkBiometricsAvailability();
   }
 
   @override
@@ -27,10 +28,10 @@ class _SecurityPageState extends State<SecurityPage> {
         appBar: AppBar(
           title: Text('Безопасность'),
         ),
-        body: BlocConsumer<SignInCubit, SignInState>(
+        body: BlocConsumer<SecurityCubit, SecurityState>(
           listener: (context, state) {
             log("SecurityPage State: ${state.runtimeType}");
-            if (state is BiometricPreferenceFailure) {
+            if (state is SecurityBiometricPreferenceFailure) {
               showToast("Ошибка: ${state.message}", isError: true);
             }
           },
@@ -39,17 +40,17 @@ class _SecurityPageState extends State<SecurityPage> {
             bool currentBiometricValue = false;
             String subtitle = 'Включить / Выключить';
 
-            if (state is BiometricAvailable) {
+            if (state is SecurityBiometricAvailable) {
               isBiometricSwitchEnabled = true;
-              currentBiometricValue = state.isBiometricEnabled;
-            } else if (state is BiometricNotAvailable) {
+              currentBiometricValue = state.isEnabled;
+            } else if (state is SecurityBiometricNotAvailable) {
               isBiometricSwitchEnabled = false;
               currentBiometricValue = false;
               subtitle = 'Биометрия недоступна на устройстве';
-            } else if (state is BiometricPreferenceSaved) {
+            } else if (state is SecurityBiometricPreferenceSaved) {
               isBiometricSwitchEnabled = true;
               currentBiometricValue = state.isEnabled;
-            } else if (state is BiometricInitial || state is BiometricAuthenticating) {
+            } else if (state is SecurityInitial || state is SecurityLoading) {
               isBiometricSwitchEnabled = false;
               subtitle = 'Проверка доступности...';
             }
@@ -65,7 +66,7 @@ class _SecurityPageState extends State<SecurityPage> {
                     value: currentBiometricValue,
                     onChanged: isBiometricSwitchEnabled
                         ? (value) {
-                            context.read<SignInCubit>().saveBiometricPreference(value);
+                            context.read<SecurityCubit>().saveBiometricPreference(value);
                           }
                         : null,
                   ),

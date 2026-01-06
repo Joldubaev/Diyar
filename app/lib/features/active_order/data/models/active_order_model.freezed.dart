@@ -24,12 +24,8 @@ mixin _$ActiveOrderModel {
   String? get courierName => throw _privateConstructorUsedError;
   String? get courierNumber => throw _privateConstructorUsedError;
 
-  /// Serializes this ActiveOrderModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of ActiveOrderModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $ActiveOrderModelCopyWith<ActiveOrderModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -58,8 +54,6 @@ class _$ActiveOrderModelCopyWithImpl<$Res, $Val extends ActiveOrderModel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of ActiveOrderModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -83,8 +77,6 @@ class _$ActiveOrderModelCopyWithImpl<$Res, $Val extends ActiveOrderModel>
     ) as $Val);
   }
 
-  /// Create a copy of ActiveOrderModel
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $OrderActiveItemModelCopyWith<$Res>? get order {
@@ -123,8 +115,6 @@ class __$$ActiveOrderModelImplCopyWithImpl<$Res>
       $Res Function(_$ActiveOrderModelImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of ActiveOrderModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -182,14 +172,12 @@ class _$ActiveOrderModelImpl implements _ActiveOrderModel {
                 other.courierNumber == courierNumber));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode =>
       Object.hash(runtimeType, order, courierName, courierNumber);
 
-  /// Create a copy of ActiveOrderModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ActiveOrderModelImplCopyWith<_$ActiveOrderModelImpl> get copyWith =>
@@ -219,11 +207,8 @@ abstract class _ActiveOrderModel implements ActiveOrderModel {
   String? get courierName;
   @override
   String? get courierNumber;
-
-  /// Create a copy of ActiveOrderModel
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ActiveOrderModelImplCopyWith<_$ActiveOrderModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

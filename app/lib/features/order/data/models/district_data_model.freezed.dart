@@ -24,12 +24,8 @@ mixin _$DistrictDataModel {
   String? get name => throw _privateConstructorUsedError;
   dynamic get price => throw _privateConstructorUsedError;
 
-  /// Serializes this DistrictDataModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of DistrictDataModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $DistrictDataModelCopyWith<DistrictDataModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -53,8 +49,6 @@ class _$DistrictDataModelCopyWithImpl<$Res, $Val extends DistrictDataModel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of DistrictDataModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -98,8 +92,6 @@ class __$$DistrictDataModelImplCopyWithImpl<$Res>
       $Res Function(_$DistrictDataModelImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of DistrictDataModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -154,14 +146,12 @@ class _$DistrictDataModelImpl implements _DistrictDataModel {
             const DeepCollectionEquality().equals(other.price, price));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType, id, name, const DeepCollectionEquality().hash(price));
 
-  /// Create a copy of DistrictDataModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$DistrictDataModelImplCopyWith<_$DistrictDataModelImpl> get copyWith =>
@@ -191,11 +181,8 @@ abstract class _DistrictDataModel implements DistrictDataModel {
   String? get name;
   @override
   dynamic get price;
-
-  /// Create a copy of DistrictDataModel
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$DistrictDataModelImplCopyWith<_$DistrictDataModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

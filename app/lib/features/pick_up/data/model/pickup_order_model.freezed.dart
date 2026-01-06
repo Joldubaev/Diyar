@@ -29,12 +29,8 @@ mixin _$PickupOrderModel {
   String? get comment => throw _privateConstructorUsedError;
   String? get paymentMethod => throw _privateConstructorUsedError;
 
-  /// Serializes this PickupOrderModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of PickupOrderModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $PickupOrderModelCopyWith<PickupOrderModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -66,8 +62,6 @@ class _$PickupOrderModelCopyWithImpl<$Res, $Val extends PickupOrderModel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of PickupOrderModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -144,8 +138,6 @@ class __$$PickupOrderModelImplCopyWithImpl<$Res>
       $Res Function(_$PickupOrderModelImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of PickupOrderModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -262,7 +254,7 @@ class _$PickupOrderModelImpl implements _PickupOrderModel {
                 other.paymentMethod == paymentMethod));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -275,9 +267,7 @@ class _$PickupOrderModelImpl implements _PickupOrderModel {
       comment,
       paymentMethod);
 
-  /// Create a copy of PickupOrderModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$PickupOrderModelImplCopyWith<_$PickupOrderModelImpl> get copyWith =>
@@ -322,11 +312,8 @@ abstract class _PickupOrderModel implements PickupOrderModel {
   String? get comment;
   @override
   String? get paymentMethod;
-
-  /// Create a copy of PickupOrderModel
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$PickupOrderModelImplCopyWith<_$PickupOrderModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

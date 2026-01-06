@@ -1,11 +1,12 @@
-class ResetPasswordEntity {
-  final String? phone;
-  final String? newPassword;
-  final int? code;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  ResetPasswordEntity({
-    this.phone,
-    this.newPassword,
-    this.code,
-  });
+part 'reset_password_entity.freezed.dart';
+
+@freezed
+class ResetPasswordEntity with _$ResetPasswordEntity {
+  const factory ResetPasswordEntity({
+    String? phone,
+    String? newPassword,
+    int? code,
+  }) = _ResetPasswordEntity;
 }

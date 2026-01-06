@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
+import 'package:diyar/features/auth/presentation/presentation.dart';
+import 'package:diyar/features/security/presentation/presentation.dart';
 import 'package:diyar/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -128,10 +130,10 @@ class CustomDrawer extends StatelessWidget {
   }
 
   Widget _buildBiometricSection(BuildContext context, ThemeData theme) {
-    return BlocBuilder<SignInCubit, SignInState>(
+    return BlocBuilder<SecurityCubit, SecurityState>(
       builder: (context, state) {
         // Если биометрия недоступна, скрываем всю секцию
-        if (state is BiometricNotAvailable) {
+        if (state is SecurityBiometricNotAvailable) {
           return const SizedBox.shrink();
         }
 
@@ -151,33 +153,23 @@ class CustomDrawer extends StatelessWidget {
                   ),
                 ),
               ),
-              BlocBuilder<SignInCubit, SignInState>(
+              BlocBuilder<SecurityCubit, SecurityState>(
                 builder: (context, consumerState) {
                   log("CustomDrawer Biometric State Builder: ${consumerState.runtimeType}");
                   bool currentSwitchValue = false;
                   bool isSwitchInteractive = true;
                   String subtitleText = 'Биометрия'; // По умолчанию
 
-                  if (consumerState is BiometricAvailable) {
-                    currentSwitchValue = consumerState.isBiometricEnabled;
-                    subtitleText = consumerState.isBiometricEnabled ? 'Включено' : 'Выключено';
-                  } else if (consumerState is BiometricPreferenceSaved) {
+                  if (consumerState is SecurityBiometricAvailable) {
                     currentSwitchValue = consumerState.isEnabled;
                     subtitleText = consumerState.isEnabled ? 'Включено' : 'Выключено';
-                  } else if (consumerState is BiometricAuthenticating) {
-                    isSwitchInteractive = false;
-                    subtitleText = 'Проверка...';
-                    // currentSwitchValue будет тем, что было до начала аутентификации (из предыдущего BiometricAvailable)
-                  } else if (consumerState is BiometricAuthenticationFailure) {
-                    isSwitchInteractive = false;
-                    currentSwitchValue = false; // При ошибке входа - выключен
+                  } else if (consumerState is SecurityBiometricPreferenceSaved) {
+                    currentSwitchValue = consumerState.isEnabled;
+                    subtitleText = consumerState.isEnabled ? 'Включено' : 'Выключено';
+                  } else if (consumerState is SecurityBiometricPreferenceFailure) {
                     subtitleText = 'Ошибка';
-                  } else if (consumerState is BiometricPreferenceFailure) {
-                    // isSwitchInteractive = true; // Оставляем активным для повтора, это значение по умолчанию для isSwitchInteractive
-                    subtitleText = 'Ошибка';
-                    // currentSwitchValue будет тем, что было до ошибки сохранения (из предыдущего BiometricAvailable или BiometricPreferenceSaved)
                   } else {
-                    // Для SignInInitial, SignInLoading и других непредусмотренных состояний
+                    // Для SecurityInitial, SecurityLoading и других непредусмотренных состояний
                     currentSwitchValue = false;
                     isSwitchInteractive = false; // Неактивен, пока состояние не определено
                     subtitleText = 'Выключено'; // или 'Загрузка...' если хотите
@@ -191,7 +183,7 @@ class CustomDrawer extends StatelessWidget {
                       value: currentSwitchValue,
                       onChanged: isSwitchInteractive
                           ? (value) {
-                              context.read<SignInCubit>().saveBiometricPreference(value);
+                              context.read<SecurityCubit>().saveBiometricPreference(value);
                             }
                           : null,
                     ),

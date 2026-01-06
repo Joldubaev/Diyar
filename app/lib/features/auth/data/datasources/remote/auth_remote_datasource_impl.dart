@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'package:dartz/dartz.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/auth/data/models/user_model.dart';
-import 'package:diyar/features/auth/data/models/reset_password_model.dart';
 import 'package:diyar/features/auth/data/datasources/local/auth_local_data_source.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rest_client/rest_client.dart' as rest_client;
@@ -220,25 +219,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     return result.fold(Left.new, (_) => const Right(null));
   }
 
-  @override
-  Future<Either<Failure, void>> sendForgotPasswordCodeToPhone(String phone) async {
-    final result = await _executePost(
-      endpoint: ApiConst.sendCodeToPhone,
-      data: {'phone': phone},
-    );
-
-    return result.fold(Left.new, (_) => const Right(null));
-  }
-
-  @override
-  Future<Either<Failure, void>> confirmResetPassword(ResetPasswordModel model) async {
-    final result = await _executePost(
-      endpoint: ApiConst.resetPsw,
-      data: model.toJson(),
-    );
-
-    return result.fold(Left.new, (_) => const Right(null));
-  }
 
   @override
   Future<Either<Failure, void>> refreshToken() async {

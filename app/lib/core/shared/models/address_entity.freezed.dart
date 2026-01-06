@@ -25,9 +25,7 @@ mixin _$AddressEntity {
   String? get comment => throw _privateConstructorUsedError;
   String? get region => throw _privateConstructorUsedError;
 
-  /// Create a copy of AddressEntity
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $AddressEntityCopyWith<AddressEntity> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -59,8 +57,6 @@ class _$AddressEntityCopyWithImpl<$Res, $Val extends AddressEntity>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of AddressEntity
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -137,8 +133,6 @@ class __$$AddressEntityImplCopyWithImpl<$Res>
       _$AddressEntityImpl _value, $Res Function(_$AddressEntityImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of AddressEntity
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -246,9 +240,7 @@ class _$AddressEntityImpl implements _AddressEntity {
   int get hashCode => Object.hash(runtimeType, address, houseNumber, entrance,
       floor, intercom, kvOffice, comment, region);
 
-  /// Create a copy of AddressEntity
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$AddressEntityImplCopyWith<_$AddressEntityImpl> get copyWith =>
@@ -282,11 +274,8 @@ abstract class _AddressEntity implements AddressEntity {
   String? get comment;
   @override
   String? get region;
-
-  /// Create a copy of AddressEntity
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$AddressEntityImplCopyWith<_$AddressEntityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

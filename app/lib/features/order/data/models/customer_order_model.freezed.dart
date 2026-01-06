@@ -25,12 +25,8 @@ mixin _$CustomerOrderModel {
   String? get address => throw _privateConstructorUsedError;
   String? get status => throw _privateConstructorUsedError;
 
-  /// Serializes this CustomerOrderModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of CustomerOrderModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $CustomerOrderModelCopyWith<CustomerOrderModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -55,8 +51,6 @@ class _$CustomerOrderModelCopyWithImpl<$Res, $Val extends CustomerOrderModel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of CustomerOrderModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -106,8 +100,6 @@ class __$$CustomerOrderModelImplCopyWithImpl<$Res>
       $Res Function(_$CustomerOrderModelImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of CustomerOrderModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -180,14 +172,12 @@ class _$CustomerOrderModelImpl implements _CustomerOrderModel {
             (identical(other.status, status) || other.status == status));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id,
       const DeepCollectionEquality().hash(_foods), address, status);
 
-  /// Create a copy of CustomerOrderModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$CustomerOrderModelImplCopyWith<_$CustomerOrderModelImpl> get copyWith =>
@@ -220,11 +210,8 @@ abstract class _CustomerOrderModel implements CustomerOrderModel {
   String? get address;
   @override
   String? get status;
-
-  /// Create a copy of CustomerOrderModel
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$CustomerOrderModelImplCopyWith<_$CustomerOrderModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

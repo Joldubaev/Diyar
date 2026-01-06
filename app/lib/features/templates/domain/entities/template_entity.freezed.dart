@@ -22,9 +22,7 @@ mixin _$TemplateEntity {
   ContactInfoEntity get contactInfo => throw _privateConstructorUsedError;
   int? get price => throw _privateConstructorUsedError;
 
-  /// Create a copy of TemplateEntity
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $TemplateEntityCopyWith<TemplateEntity> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -56,8 +54,6 @@ class _$TemplateEntityCopyWithImpl<$Res, $Val extends TemplateEntity>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of TemplateEntity
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -91,8 +87,6 @@ class _$TemplateEntityCopyWithImpl<$Res, $Val extends TemplateEntity>
     ) as $Val);
   }
 
-  /// Create a copy of TemplateEntity
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $AddressEntityCopyWith<$Res> get addressData {
@@ -101,8 +95,6 @@ class _$TemplateEntityCopyWithImpl<$Res, $Val extends TemplateEntity>
     });
   }
 
-  /// Create a copy of TemplateEntity
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $ContactInfoEntityCopyWith<$Res> get contactInfo {
@@ -141,8 +133,6 @@ class __$$TemplateEntityImplCopyWithImpl<$Res>
       _$TemplateEntityImpl _value, $Res Function(_$TemplateEntityImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of TemplateEntity
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -222,9 +212,7 @@ class _$TemplateEntityImpl implements _TemplateEntity {
   int get hashCode => Object.hash(
       runtimeType, id, templateName, addressData, contactInfo, price);
 
-  /// Create a copy of TemplateEntity
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$TemplateEntityImplCopyWith<_$TemplateEntityImpl> get copyWith =>
@@ -250,11 +238,8 @@ abstract class _TemplateEntity implements TemplateEntity {
   ContactInfoEntity get contactInfo;
   @override
   int? get price;
-
-  /// Create a copy of TemplateEntity
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$TemplateEntityImplCopyWith<_$TemplateEntityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

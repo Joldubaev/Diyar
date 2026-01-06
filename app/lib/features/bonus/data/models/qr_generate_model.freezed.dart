@@ -23,12 +23,8 @@ mixin _$QrGenerateModel {
   String? get qrData => throw _privateConstructorUsedError;
   String? get expiresAtString => throw _privateConstructorUsedError;
 
-  /// Serializes this QrGenerateModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of QrGenerateModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $QrGenerateModelCopyWith<QrGenerateModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -52,8 +48,6 @@ class _$QrGenerateModelCopyWithImpl<$Res, $Val extends QrGenerateModel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of QrGenerateModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -92,8 +86,6 @@ class __$$QrGenerateModelImplCopyWithImpl<$Res>
       _$QrGenerateModelImpl _value, $Res Function(_$QrGenerateModelImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of QrGenerateModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -141,13 +133,11 @@ class _$QrGenerateModelImpl implements _QrGenerateModel {
                 other.expiresAtString == expiresAtString));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, qrData, expiresAtString);
 
-  /// Create a copy of QrGenerateModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$QrGenerateModelImplCopyWith<_$QrGenerateModelImpl> get copyWith =>
@@ -174,11 +164,8 @@ abstract class _QrGenerateModel implements QrGenerateModel {
   String? get qrData;
   @override
   String? get expiresAtString;
-
-  /// Create a copy of QrGenerateModel
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$QrGenerateModelImplCopyWith<_$QrGenerateModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

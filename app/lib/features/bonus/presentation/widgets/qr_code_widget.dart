@@ -84,10 +84,4 @@ class QrCodeWidget extends StatelessWidget {
       ),
     );
   }
-
-  String _formatDateTime(DateTime dateTime) {
-    final hours = dateTime.hour.toString().padLeft(2, '0');
-    final minutes = dateTime.minute.toString().padLeft(2, '0');
-    return '$hours:$minutes';
-  }
 }

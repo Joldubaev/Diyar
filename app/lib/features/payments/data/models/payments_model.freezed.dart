@@ -26,12 +26,8 @@ mixin _$PaymentsModel {
   String? get pinCode => throw _privateConstructorUsedError;
   String? get otp => throw _privateConstructorUsedError;
 
-  /// Serializes this PaymentsModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of PaymentsModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $PaymentsModelCopyWith<PaymentsModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -60,8 +56,6 @@ class _$PaymentsModelCopyWithImpl<$Res, $Val extends PaymentsModel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of PaymentsModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -120,8 +114,6 @@ class __$$PaymentsModelImplCopyWithImpl<$Res>
       _$PaymentsModelImpl _value, $Res Function(_$PaymentsModelImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of PaymentsModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -194,14 +186,12 @@ class _$PaymentsModelImpl implements _PaymentsModel {
             (identical(other.otp, otp) || other.otp == otp));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode =>
       Object.hash(runtimeType, orderNumber, user, amount, pinCode, otp);
 
-  /// Create a copy of PaymentsModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$PaymentsModelImplCopyWith<_$PaymentsModelImpl> get copyWith =>
@@ -236,11 +226,8 @@ abstract class _PaymentsModel implements PaymentsModel {
   String? get pinCode;
   @override
   String? get otp;
-
-  /// Create a copy of PaymentsModel
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$PaymentsModelImplCopyWith<_$PaymentsModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

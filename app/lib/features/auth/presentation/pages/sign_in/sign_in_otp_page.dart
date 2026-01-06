@@ -1,7 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
-import 'package:diyar/features/auth/presentation/cubit/sign_in/sign_in_cubit.dart';
-import 'package:diyar/injection_container.dart';
+import 'package:diyar/features/auth/presentation/presentation.dart';
+import 'package:diyar/features/app_init/domain/domain.dart';
+import 'package:diyar/features/security/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pinput/pinput.dart';
@@ -76,22 +77,48 @@ class _SignInOtpPageState extends State<SignInOtpPage> with TimerMixin<SignInOtp
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SignInCubit, SignInState>(
-      listener: (context, state) {
-        if (state is SignInSuccessWithUser) {
-          final role = sl<LocalStorage>().getString(AppConst.userRole);
-          final targetRoute = role == "Courier" ? const CurierRoute() : const MainRoute();
-          context.router.pushAndPopUntil(targetRoute, predicate: (_) => false);
-        } else if (state is SignInFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: Colors.red,
-            ),
-          );
-          _codeController.clear();
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<SignInCubit, SignInState>(
+          listener: (context, state) {
+            if (state is SignInSuccessWithUser) {
+              context.read<PinCodeCubit>().getNavigationRoute();
+            } else if (state is SignInFailure) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: Colors.red,
+                ),
+              );
+              _codeController.clear();
+            }
+          },
+        ),
+        BlocListener<PinCodeCubit, PinCodeState>(
+          listener: (context, state) {
+            if (state is PinCodeNavigationRouteLoaded) {
+              PageRouteInfo targetRoute;
+              switch (state.routeType) {
+                case NavigationRouteType.courier:
+                  targetRoute = const CurierRoute();
+                  break;
+                case NavigationRouteType.main:
+                default:
+                  targetRoute = const MainRoute();
+                  break;
+              }
+              context.router.pushAndPopUntil(targetRoute, predicate: (_) => false);
+            } else if (state is PinCodeNavigationRouteFailure) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          },
+        ),
+      ],
       child: Scaffold(
         appBar: AppBar(elevation: 0),
         body: SingleChildScrollView(

@@ -36,6 +36,14 @@ import '../../features/active_order/domain/domain.dart' as _i74;
 import '../../features/active_order/presentation/cubit/active_order_cubit.dart'
     as _i60;
 import '../../features/app/cubit/remote_config_cubit.dart' as _i122;
+import '../../features/app_init/domain/usecases/check_authentication_status_usecase.dart'
+    as _i141;
+import '../../features/app_init/domain/usecases/get_navigation_route_usecase.dart'
+    as _i212;
+import '../../features/app_init/domain/usecases/handle_first_launch_usecase.dart'
+    as _i449;
+import '../../features/app_init/presentation/cubit/splash/splash_cubit.dart'
+    as _i225;
 import '../../features/auth/data/datasources/local/auth_local_data_source.dart'
     as _i835;
 import '../../features/auth/data/datasources/remote/auth_remote_data_source.dart'
@@ -44,14 +52,23 @@ import '../../features/auth/data/datasources/remote/auth_remote_datasource_impl.
     as _i415;
 import '../../features/auth/data/repositories/auth_repository.dart' as _i573;
 import '../../features/auth/domain/domain.dart' as _i140;
-import '../../features/auth/domain/usecases/authenticate_with_biometrics_usecase.dart'
-    as _i349;
-import '../../features/auth/domain/usecases/check_biometrics_availability_usecase.dart'
-    as _i35;
+import '../../features/auth/domain/usecases/check_phone_number_usecase.dart'
+    as _i894;
+import '../../features/auth/domain/usecases/get_user_role_usecase.dart'
+    as _i931;
+import '../../features/auth/domain/usecases/logout_usecase.dart' as _i48;
 import '../../features/auth/domain/usecases/refresh_token_if_needed_usecase.dart'
     as _i550;
+import '../../features/auth/domain/usecases/register_user_usecase.dart'
+    as _i241;
+import '../../features/auth/domain/usecases/send_verification_code_usecase.dart'
+    as _i480;
+import '../../features/auth/domain/usecases/verify_code_for_registration_usecase.dart'
+    as _i739;
 import '../../features/auth/domain/usecases/verify_sms_code_and_handle_first_launch_usecase.dart'
     as _i952;
+import '../../features/auth/domain/usecases/verify_sms_code_usecase.dart'
+    as _i312;
 import '../../features/auth/presentation/cubit/sign_in/sign_in_cubit.dart'
     as _i302;
 import '../../features/auth/presentation/cubit/sign_up/sign_up_cubit.dart'
@@ -122,6 +139,21 @@ import '../../features/order/order.dart' as _i830;
 import '../../features/order/presentation/cubit/delivery_form_cubit.dart'
     as _i431;
 import '../../features/order/presentation/cubit/order_cubit.dart' as _i304;
+import '../../features/password_reset/data/datasources/remote/password_reset_remote_data_source.dart'
+    as _i624;
+import '../../features/password_reset/data/datasources/remote/password_reset_remote_data_source_impl.dart'
+    as _i882;
+import '../../features/password_reset/data/repositories/password_reset_repository.dart'
+    as _i789;
+import '../../features/password_reset/domain/domain.dart' as _i1029;
+import '../../features/password_reset/domain/repository/password_reset_repository.dart'
+    as _i334;
+import '../../features/password_reset/domain/usecases/reset_password_usecase.dart'
+    as _i473;
+import '../../features/password_reset/domain/usecases/send_forgot_password_code_usecase.dart'
+    as _i909;
+import '../../features/password_reset/presentation/cubit/password_reset_cubit.dart'
+    as _i21;
 import '../../features/payments/data/datasource/remote_payments_datasource.dart'
     as _i1005;
 import '../../features/payments/data/repository/payments_repository.dart'
@@ -158,6 +190,36 @@ import '../../features/profile/data/repositories/profile_repository.dart'
     as _i361;
 import '../../features/profile/presentation/cubit/profile_cubit.dart' as _i36;
 import '../../features/profile/profile.dart' as _i315;
+import '../../features/security/data/datasources/local/security_local_data_source.dart'
+    as _i744;
+import '../../features/security/data/repositories/security_repository.dart'
+    as _i69;
+import '../../features/security/data/services/biometric_auth_service_impl.dart'
+    as _i1044;
+import '../../features/security/data/services/secure_storage_service_impl.dart'
+    as _i50;
+import '../../features/security/domain/repository/security_repository.dart'
+    as _i349;
+import '../../features/security/domain/services/biometric_auth_service.dart'
+    as _i1040;
+import '../../features/security/domain/services/secure_storage_service.dart'
+    as _i825;
+import '../../features/security/domain/usecases/authenticate_with_biometrics_usecase.dart'
+    as _i23;
+import '../../features/security/domain/usecases/check_biometrics_availability_usecase.dart'
+    as _i249;
+import '../../features/security/domain/usecases/get_biometric_preference_usecase.dart'
+    as _i772;
+import '../../features/security/domain/usecases/get_pin_code_usecase.dart'
+    as _i277;
+import '../../features/security/domain/usecases/save_biometric_preference_usecase.dart'
+    as _i450;
+import '../../features/security/domain/usecases/set_pin_code_usecase.dart'
+    as _i945;
+import '../../features/security/presentation/cubit/pin_code/pin_code_cubit.dart'
+    as _i22;
+import '../../features/security/presentation/cubit/security_cubit.dart'
+    as _i925;
 import '../../features/settings/data/datasource/remote_settings_datasource.dart'
     as _i300;
 import '../../features/settings/data/repository/settings_repository.dart'
@@ -194,7 +256,6 @@ import '../remote_config/diyar_remote_config.dart' as _i1020;
 import '../shared/presentation/bloc/internet_bloc.dart' as _i231;
 import '../shared/presentation/cubit/popular_cubit.dart' as _i1012;
 import '../shared/presentation/theme_cubit/theme_cubit.dart' as _i489;
-import '../utils/storage/local_storage.dart' as _i31;
 import 'register_module.dart' as _i291;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -238,20 +299,12 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i706.CartHiveDataSource());
     gh.factory<_i489.ThemeCubit>(
         () => _i489.ThemeCubit(gh<_i460.SharedPreferences>()));
+    gh.lazySingleton<_i744.SecurityLocalDataSource>(
+        () => _i744.SecurityLocalDataSourceImpl(gh<_i351.LocalStorage>()));
     gh.lazySingleton<_i243.AboutUsRemoteDataSource>(
         () => _i243.AboutUsRemoteDataSourceImpl(
               gh<_i361.Dio>(),
               gh<_i351.LocalStorage>(),
-            ));
-    gh.factory<_i349.AuthenticateWithBiometricsUseCase>(
-        () => _i349.AuthenticateWithBiometricsUseCase(
-              gh<_i152.LocalAuthentication>(),
-              gh<_i31.LocalStorage>(),
-            ));
-    gh.factory<_i35.CheckBiometricsAvailabilityUseCase>(
-        () => _i35.CheckBiometricsAvailabilityUseCase(
-              gh<_i152.LocalAuthentication>(),
-              gh<_i31.LocalStorage>(),
             ));
     gh.lazySingleton<_i835.AuthLocalDataSource>(
         () => _i835.AuthLocalDataSourceImpl(gh<_i351.LocalStorage>()));
@@ -289,6 +342,8 @@ extension GetItInjectableX on _i174.GetIt {
       () => registerModule.diyarRemoteConfig(gh<_i655.PackageInfo>()),
       preResolve: true,
     );
+    gh.lazySingleton<_i349.SecurityRepository>(
+        () => _i69.SecurityRepositoryImpl(gh<_i744.SecurityLocalDataSource>()));
     gh.lazySingleton<_i773.OrderRemoteDataSource>(
         () => _i773.OrderRemoteDataSourceImpl(
               gh<_i361.Dio>(),
@@ -305,15 +360,15 @@ extension GetItInjectableX on _i174.GetIt {
               gh<_i361.Dio>(),
               gh<_i460.SharedPreferences>(),
             ));
-    gh.lazySingleton<_i520.AuthRemoteDataSource>(
-        () => _i415.AuthRemoteDataSourceImpl(
-              gh<_i1030.RestClient>(instanceName: 'unauthRestClient'),
-              gh<_i835.AuthLocalDataSource>(),
-              gh<_i351.LocalStorage>(),
-            ));
     gh.lazySingleton<_i477.HomeContentRepository>(() =>
         _i347.HomeContentRepositoryImpl(
             remoteDataSource: gh<_i521.HomeContentRemoteDatasource>()));
+    gh.lazySingleton<_i825.SecureStorageService>(
+        () => _i50.SecureStorageServiceImpl(
+              gh<_i744.SecurityLocalDataSource>(),
+              gh<_i835.AuthLocalDataSource>(),
+              gh<_i351.LocalStorage>(),
+            ));
     gh.lazySingleton<_i838.PaymentsRepository>(() =>
         _i944.PaymentsRepositoryImpl(gh<_i1005.RemotePaymentsDatasource>()));
     await gh.factoryAsync<_i26.CartRepository>(
@@ -336,6 +391,29 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i804.OrderCalculationService>(),
           initialItems: gh<List<_i885.CartItemEntity>>(),
         ));
+    gh.factory<_i931.GetUserRoleUseCase>(
+        () => _i931.GetUserRoleUseCase(gh<_i825.SecureStorageService>()));
+    gh.factory<_i277.GetPinCodeUseCase>(
+        () => _i277.GetPinCodeUseCase(gh<_i825.SecureStorageService>()));
+    gh.factory<_i450.SaveBiometricPreferenceUseCase>(() =>
+        _i450.SaveBiometricPreferenceUseCase(gh<_i825.SecureStorageService>()));
+    gh.factory<_i945.SetPinCodeUseCase>(
+        () => _i945.SetPinCodeUseCase(gh<_i825.SecureStorageService>()));
+    gh.factory<_i772.GetBiometricPreferenceUseCase>(() =>
+        _i772.GetBiometricPreferenceUseCase(gh<_i825.SecureStorageService>()));
+    gh.factory<_i449.HandleFirstLaunchUseCase>(
+        () => _i449.HandleFirstLaunchUseCase(gh<_i825.SecureStorageService>()));
+    gh.factory<_i141.CheckAuthenticationStatusUseCase>(() =>
+        _i141.CheckAuthenticationStatusUseCase(
+            gh<_i825.SecureStorageService>()));
+    gh.factory<_i212.GetNavigationRouteUseCase>(() =>
+        _i212.GetNavigationRouteUseCase(gh<_i825.SecureStorageService>()));
+    gh.lazySingleton<_i520.AuthRemoteDataSource>(
+        () => _i415.AuthRemoteDataSourceImpl(
+              gh<_i1030.RestClient>(instanceName: 'unauthRestClient'),
+              gh<_i835.AuthLocalDataSource>(),
+              gh<_i351.LocalStorage>(),
+            ));
     gh.lazySingleton<_i835.AppLocation>(() => _i835.LocationService(
           gh<_i361.Dio>(),
           gh<_i460.SharedPreferences>(),
@@ -351,21 +429,19 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i660.MenuRepository>(
         () => _i1024.MenuRepositoryImpl(gh<_i660.MenuRemoteDataSource>()));
-    gh.lazySingleton<_i140.AuthRepository>(() => _i573.AuthRepositoryImpl(
-          gh<_i520.AuthRemoteDataSource>(),
-          gh<_i835.AuthLocalDataSource>(),
-        ));
     gh.factory<_i122.RemoteConfigCubit>(() => _i122.RemoteConfigCubit(
           packageInfo: gh<_i655.PackageInfo>(),
           remoteConfig: gh<_i1020.DiyarRemoteConfig>(),
         ));
     gh.lazySingleton<_i168.AboutUsRepository>(
         () => _i471.AboutUsRepositoryImpl(gh<_i798.AboutUsRemoteDataSource>()));
-    gh.factory<_i550.RefreshTokenIfNeededUseCase>(
-        () => _i550.RefreshTokenIfNeededUseCase(
-              gh<_i140.AuthRepository>(),
-              gh<_i351.LocalStorage>(),
-            ));
+    gh.lazySingleton<_i624.PasswordResetRemoteDataSource>(() =>
+        _i882.PasswordResetRemoteDataSourceImpl(
+            gh<_i1030.RestClient>(instanceName: 'unauthRestClient')));
+    gh.lazySingleton<_i140.AuthRepository>(() => _i573.AuthRepositoryImpl(
+          gh<_i520.AuthRemoteDataSource>(),
+          gh<_i835.AuthLocalDataSource>(),
+        ));
     gh.lazySingleton<_i251.TemplateRemoteDataSource>(() =>
         _i692.TemplateRemoteDataSourceImpl(
             gh<_i1030.RestClient>(instanceName: 'authRestClient')));
@@ -391,7 +467,15 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i427.MbankConfimUsecase(gh<_i838.PaymentsRepository>()));
     gh.factory<_i286.QrCheckStatusUsecase>(
         () => _i286.QrCheckStatusUsecase(gh<_i838.PaymentsRepository>()));
+    gh.lazySingleton<_i1040.BiometricAuthService>(
+        () => _i1044.BiometricAuthServiceImpl(
+              gh<_i152.LocalAuthentication>(),
+              gh<_i825.SecureStorageService>(),
+            ));
     gh.factory<_i517.CartBloc>(() => _i517.CartBloc(gh<_i26.CartRepository>()));
+    gh.lazySingleton<_i1029.PasswordResetRepository>(() =>
+        _i789.PasswordResetRepositoryImpl(
+            gh<_i624.PasswordResetRemoteDataSource>()));
     gh.factory<_i31.GetNewsUseCase>(
         () => _i31.GetNewsUseCase(gh<_i477.HomeContentRepository>()));
     gh.factory<_i608.GetSalesUseCase>(
@@ -420,23 +504,33 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i74.ActiveOrderRepository>(() =>
         _i243.ActiveOrderRepositoryImpl(
             gh<_i311.ActiveOrderRemoteDataSource>()));
+    gh.factory<_i473.ResetPasswordUseCase>(
+        () => _i473.ResetPasswordUseCase(gh<_i334.PasswordResetRepository>()));
+    gh.factory<_i909.SendForgotPasswordCodeUseCase>(() =>
+        _i909.SendForgotPasswordCodeUseCase(
+            gh<_i334.PasswordResetRepository>()));
     gh.factory<_i1012.PopularCubit>(
         () => _i1012.PopularCubit(gh<_i872.MenuRepository>()));
     gh.factory<_i395.MenuBloc>(
         () => _i395.MenuBloc(gh<_i872.MenuRepository>()));
+    gh.factory<_i739.VerifyCodeForRegistrationUseCase>(() =>
+        _i739.VerifyCodeForRegistrationUseCase(gh<_i140.AuthRepository>()));
+    gh.factory<_i894.CheckPhoneNumberUseCase>(
+        () => _i894.CheckPhoneNumberUseCase(gh<_i140.AuthRepository>()));
+    gh.factory<_i48.LogoutUseCase>(
+        () => _i48.LogoutUseCase(gh<_i140.AuthRepository>()));
+    gh.factory<_i241.RegisterUserUseCase>(
+        () => _i241.RegisterUserUseCase(gh<_i140.AuthRepository>()));
+    gh.factory<_i480.SendVerificationCodeUseCase>(
+        () => _i480.SendVerificationCodeUseCase(gh<_i140.AuthRepository>()));
+    gh.factory<_i312.VerifySmsCodeUseCase>(
+        () => _i312.VerifySmsCodeUseCase(gh<_i140.AuthRepository>()));
     gh.factory<_i360.GenerateQrUseCase>(
         () => _i360.GenerateQrUseCase(gh<_i361.BonusRepository>()));
     gh.lazySingleton<_i566.CurierRepository>(
         () => _i537.CurierRepositoryImpl(gh<_i566.CurierDataSource>()));
-    gh.factory<_i952.VerifySmsCodeAndHandleFirstLaunchUseCase>(
-        () => _i952.VerifySmsCodeAndHandleFirstLaunchUseCase(
-              gh<_i140.AuthRepository>(),
-              gh<_i835.AuthLocalDataSource>(),
-            ));
     gh.factory<_i232.HistoryCubit>(
         () => _i232.HistoryCubit(gh<_i408.HistoryRepository>()));
-    gh.factory<_i781.SignUpCubit>(
-        () => _i781.SignUpCubit(gh<_i140.AuthRepository>()));
     gh.factory<_i370.PickUpCubit>(
         () => _i370.PickUpCubit(gh<_i292.PickUpRepositories>()));
     gh.factory<_i110.CurierCubit>(
@@ -445,19 +539,53 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i804.OrderCalculationService>(),
           gh<_i830.ValidateOrderDataUseCase>(),
         ));
+    gh.factory<_i952.VerifySmsCodeAndHandleFirstLaunchUseCase>(
+        () => _i952.VerifySmsCodeAndHandleFirstLaunchUseCase(
+              gh<_i140.AuthRepository>(),
+              gh<_i825.SecureStorageService>(),
+            ));
+    gh.factory<_i550.RefreshTokenIfNeededUseCase>(
+        () => _i550.RefreshTokenIfNeededUseCase(
+              gh<_i140.AuthRepository>(),
+              gh<_i825.SecureStorageService>(),
+            ));
     gh.factory<_i302.SignInCubit>(() => _i302.SignInCubit(
-          gh<_i140.AuthRepository>(),
-          gh<_i351.LocalStorage>(),
           gh<_i952.VerifySmsCodeAndHandleFirstLaunchUseCase>(),
           gh<_i550.RefreshTokenIfNeededUseCase>(),
-          gh<_i35.CheckBiometricsAvailabilityUseCase>(),
-          gh<_i349.AuthenticateWithBiometricsUseCase>(),
+          gh<_i480.SendVerificationCodeUseCase>(),
+          gh<_i48.LogoutUseCase>(),
         ));
+    gh.factory<_i781.SignUpCubit>(() => _i781.SignUpCubit(
+          gh<_i241.RegisterUserUseCase>(),
+          gh<_i894.CheckPhoneNumberUseCase>(),
+          gh<_i480.SendVerificationCodeUseCase>(),
+          gh<_i739.VerifyCodeForRegistrationUseCase>(),
+        ));
+    gh.factory<_i23.AuthenticateWithBiometricsUseCase>(() =>
+        _i23.AuthenticateWithBiometricsUseCase(
+            gh<_i1040.BiometricAuthService>()));
+    gh.factory<_i249.CheckBiometricsAvailabilityUseCase>(() =>
+        _i249.CheckBiometricsAvailabilityUseCase(
+            gh<_i1040.BiometricAuthService>()));
     gh.lazySingleton<_i411.TemplateRepository>(() =>
         _i843.TemplateRepositoryImpl(gh<_i251.TemplateRemoteDataSource>()));
+    gh.factory<_i22.PinCodeCubit>(() => _i22.PinCodeCubit(
+          gh<_i277.GetPinCodeUseCase>(),
+          gh<_i249.CheckBiometricsAvailabilityUseCase>(),
+          gh<_i23.AuthenticateWithBiometricsUseCase>(),
+          gh<_i212.GetNavigationRouteUseCase>(),
+        ));
+    gh.factory<_i225.SplashCubit>(() => _i225.SplashCubit(
+          gh<_i141.CheckAuthenticationStatusUseCase>(),
+          gh<_i550.RefreshTokenIfNeededUseCase>(),
+        ));
     gh.factory<_i812.HomeContentCubit>(() => _i812.HomeContentCubit(
           getNewsUseCase: gh<_i31.GetNewsUseCase>(),
           getSalesUseCase: gh<_i608.GetSalesUseCase>(),
+        ));
+    gh.factory<_i21.PasswordResetCubit>(() => _i21.PasswordResetCubit(
+          gh<_i909.SendForgotPasswordCodeUseCase>(),
+          gh<_i473.ResetPasswordUseCase>(),
         ));
     gh.factory<_i60.ActiveOrderCubit>(
         () => _i60.ActiveOrderCubit(gh<_i74.ActiveOrderRepository>()));
@@ -465,6 +593,12 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i304.OrderCubit(gh<_i758.OrderRepository>()));
     gh.factory<_i968.BonusCubit>(
         () => _i968.BonusCubit(gh<_i135.GenerateQrUseCase>()));
+    gh.factory<_i925.SecurityCubit>(() => _i925.SecurityCubit(
+          gh<_i945.SetPinCodeUseCase>(),
+          gh<_i450.SaveBiometricPreferenceUseCase>(),
+          gh<_i772.GetBiometricPreferenceUseCase>(),
+          gh<_i249.CheckBiometricsAvailabilityUseCase>(),
+        ));
     gh.factory<_i968.UpdateTemplateUseCase>(
         () => _i968.UpdateTemplateUseCase(gh<_i411.TemplateRepository>()));
     gh.factory<_i844.GetTemplateByIdUseCase>(

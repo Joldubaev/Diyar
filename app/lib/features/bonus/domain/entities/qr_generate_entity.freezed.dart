@@ -19,9 +19,7 @@ mixin _$QrGenerateEntity {
   String? get qrData => throw _privateConstructorUsedError; // URL для QR кода
   String? get expiresAt => throw _privateConstructorUsedError;
 
-  /// Create a copy of QrGenerateEntity
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $QrGenerateEntityCopyWith<QrGenerateEntity> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -45,8 +43,6 @@ class _$QrGenerateEntityCopyWithImpl<$Res, $Val extends QrGenerateEntity>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of QrGenerateEntity
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -85,8 +81,6 @@ class __$$QrGenerateEntityImplCopyWithImpl<$Res>
       $Res Function(_$QrGenerateEntityImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of QrGenerateEntity
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -135,9 +129,7 @@ class _$QrGenerateEntityImpl implements _QrGenerateEntity {
   @override
   int get hashCode => Object.hash(runtimeType, qrData, expiresAt);
 
-  /// Create a copy of QrGenerateEntity
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$QrGenerateEntityImplCopyWith<_$QrGenerateEntityImpl> get copyWith =>
@@ -150,14 +142,11 @@ abstract class _QrGenerateEntity implements QrGenerateEntity {
       {final String? qrData, final String? expiresAt}) = _$QrGenerateEntityImpl;
 
   @override
-  String? get qrData; // URL для QR кода
-  @override
+  String? get qrData;
+  @override // URL для QR кода
   String? get expiresAt;
-
-  /// Create a copy of QrGenerateEntity
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$QrGenerateEntityImplCopyWith<_$QrGenerateEntityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

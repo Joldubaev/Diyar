@@ -22,12 +22,8 @@ CatergoryFoodModel _$CatergoryFoodModelFromJson(Map<String, dynamic> json) {
 mixin _$CatergoryFoodModel {
   List<FoodModel>? get foodModels => throw _privateConstructorUsedError;
 
-  /// Serializes this CatergoryFoodModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of CatergoryFoodModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $CatergoryFoodModelCopyWith<CatergoryFoodModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -51,8 +47,6 @@ class _$CatergoryFoodModelCopyWithImpl<$Res, $Val extends CatergoryFoodModel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of CatergoryFoodModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -86,8 +80,6 @@ class __$$CatergoryFoodModelImplCopyWithImpl<$Res>
       $Res Function(_$CatergoryFoodModelImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of CatergoryFoodModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -135,14 +127,12 @@ class _$CatergoryFoodModelImpl implements _CatergoryFoodModel {
                 .equals(other._foodModels, _foodModels));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType, const DeepCollectionEquality().hash(_foodModels));
 
-  /// Create a copy of CatergoryFoodModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$CatergoryFoodModelImplCopyWith<_$CatergoryFoodModelImpl> get copyWith =>
@@ -166,11 +156,8 @@ abstract class _CatergoryFoodModel implements CatergoryFoodModel {
 
   @override
   List<FoodModel>? get foodModels;
-
-  /// Create a copy of CatergoryFoodModel
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$CatergoryFoodModelImplCopyWith<_$CatergoryFoodModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

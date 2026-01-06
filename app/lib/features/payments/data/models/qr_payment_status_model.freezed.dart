@@ -20,9 +20,7 @@ mixin _$QrPaymentStatusModel {
   String get message => throw _privateConstructorUsedError;
   PaymentStatusEnum get status => throw _privateConstructorUsedError;
 
-  /// Create a copy of QrPaymentStatusModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $QrPaymentStatusModelCopyWith<QrPaymentStatusModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -47,8 +45,6 @@ class _$QrPaymentStatusModelCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of QrPaymentStatusModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -92,8 +88,6 @@ class __$$QrPaymentStatusModelImplCopyWithImpl<$Res>
       $Res Function(_$QrPaymentStatusModelImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of QrPaymentStatusModel
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -149,9 +143,7 @@ class _$QrPaymentStatusModelImpl implements _QrPaymentStatusModel {
   @override
   int get hashCode => Object.hash(runtimeType, code, message, status);
 
-  /// Create a copy of QrPaymentStatusModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$QrPaymentStatusModelImplCopyWith<_$QrPaymentStatusModelImpl>
@@ -172,11 +164,8 @@ abstract class _QrPaymentStatusModel implements QrPaymentStatusModel {
   String get message;
   @override
   PaymentStatusEnum get status;
-
-  /// Create a copy of QrPaymentStatusModel
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$QrPaymentStatusModelImplCopyWith<_$QrPaymentStatusModelImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
