@@ -1,6 +1,9 @@
 import 'dart:developer';
 import 'package:diyar/features/auth/presentation/presentation.dart';
 import 'package:diyar/features/map/presentation/presentation.dart';
+import 'package:diyar/features/app_init/app_init.dart';
+import 'package:diyar/features/security/security.dart';
+import 'package:diyar/features/password_reset/password_reset.dart';
 import 'core/core.dart';
 import 'features/app/cubit/remote_config_cubit.dart';
 import 'features/pick_up/pick_up.dart';
@@ -53,10 +56,13 @@ class App extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => di.sl<InternetBloc>()..add(NetworkObserve())),
+        BlocProvider(create: (context) => di.sl<SplashCubit>()),
+        BlocProvider(create: (context) => di.sl<PinCodeCubit>()),
+        BlocProvider(create: (context) => di.sl<SecurityCubit>()),
+        BlocProvider(create: (context) => di.sl<PasswordResetCubit>()),
         BlocProvider(create: (context) => di.sl<SignUpCubit>()),
         BlocProvider(create: (context) => di.sl<SignInCubit>()),
         BlocProvider(create: (context) => di.sl<ProfileCubit>()),
-        BlocProvider(create: (context) => di.sl<SignInCubit>()),
         BlocProvider(create: (context) => di.sl<CartBloc>()),
         BlocProvider(create: (context) => di.sl<MenuBloc>()),
         BlocProvider(create: (context) => di.sl<PopularCubit>()),
