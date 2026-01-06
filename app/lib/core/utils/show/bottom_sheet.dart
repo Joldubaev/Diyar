@@ -54,7 +54,7 @@ final class AppBottomSheet {
   }
 }
 
-showToast(String msg, {bool isError = false}) {
+void showToast(String msg, {bool isError = false}) {
   Fluttertoast.showToast(
     msg: msg,
     toastLength: Toast.LENGTH_LONG,

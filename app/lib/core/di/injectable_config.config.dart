@@ -130,9 +130,17 @@ import '../../features/menu/menu.dart' as _i660;
 import '../../features/menu/presentation/bloc/menu_bloc.dart' as _i395;
 import '../../features/order/data/datasources/order_remote_datasource.dart'
     as _i773;
+import '../../features/order/data/datasources/remote/order_remote_datasource.dart'
+    as _i953;
 import '../../features/order/data/repository/order_repository.dart' as _i576;
 import '../../features/order/domain/repositories/order_repositories.dart'
     as _i758;
+import '../../features/order/domain/usecases/create_order_usecase.dart'
+    as _i291;
+import '../../features/order/domain/usecases/get_districts_usecase.dart'
+    as _i417;
+import '../../features/order/domain/usecases/get_geo_suggestions_usecase.dart'
+    as _i115;
 import '../../features/order/domain/usecases/validate_order_data_usecase.dart'
     as _i679;
 import '../../features/order/order.dart' as _i830;
@@ -180,8 +188,11 @@ import '../../features/pick_up/data/datasource/remote_pick_up_datasource.dart'
     as _i39;
 import '../../features/pick_up/data/repository/pick_up_repository.dart'
     as _i123;
-import '../../features/pick_up/domain/repositories/pick_up_repositories.dart'
-    as _i292;
+import '../../features/pick_up/domain/domain.dart' as _i1043;
+import '../../features/pick_up/domain/usecases/calculate_minimum_time_usecase.dart'
+    as _i952;
+import '../../features/pick_up/domain/usecases/create_pickup_order_from_cart_usecase.dart'
+    as _i490;
 import '../../features/pick_up/pick_up.dart' as _i54;
 import '../../features/pick_up/presentation/cubit/pick_up_cubit.dart' as _i370;
 import '../../features/profile/data/datasources/profile_remote_data_source.dart'
@@ -286,6 +297,10 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i512.CartCutleryCubit>(() => _i512.CartCutleryCubit());
     gh.factory<_i198.PrepareDeliveryNavigationUseCase>(
         () => _i198.PrepareDeliveryNavigationUseCase());
+    gh.factory<_i952.CalculateMinimumTimeUseCase>(
+        () => _i952.CalculateMinimumTimeUseCase());
+    gh.factory<_i490.CreatePickupOrderFromCartUseCase>(
+        () => _i490.CreatePickupOrderFromCartUseCase());
     gh.singleton<_i231.InternetBloc>(() => _i231.InternetBloc());
     gh.lazySingleton<_i361.Dio>(() => registerModule.dio);
     gh.lazySingleton<_i152.LocalAuthentication>(() => registerModule.localAuth);
@@ -418,6 +433,11 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i361.Dio>(),
           gh<_i460.SharedPreferences>(),
         ));
+    gh.lazySingleton<_i953.OrderRemoteDataSource>(
+        () => _i953.OrderRemoteDataSourceImpl(
+              gh<_i361.Dio>(),
+              gh<_i460.SharedPreferences>(),
+            ));
     gh.factory<_i679.ValidateOrderDataUseCase>(() =>
         _i679.ValidateOrderDataUseCase(gh<_i804.OrderCalculationService>()));
     gh.lazySingleton<_i1030.RestClient>(
@@ -490,8 +510,6 @@ extension GetItInjectableX on _i174.GetIt {
         ));
     gh.lazySingleton<_i408.HistoryRepository>(
         () => _i178.HistoryRepositoryImpl(gh<_i926.HistoryReDatasource>()));
-    gh.lazySingleton<_i758.OrderRepository>(
-        () => _i576.OrderRepositoryImpl(gh<_i773.OrderRemoteDataSource>()));
     gh.factory<_i849.PaymentBloc>(() => _i849.PaymentBloc(
           gh<_i838.MegaCheckUseCase>(),
           gh<_i838.MegaInitiateUsecase>(),
@@ -531,14 +549,19 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i537.CurierRepositoryImpl(gh<_i566.CurierDataSource>()));
     gh.factory<_i232.HistoryCubit>(
         () => _i232.HistoryCubit(gh<_i408.HistoryRepository>()));
-    gh.factory<_i370.PickUpCubit>(
-        () => _i370.PickUpCubit(gh<_i292.PickUpRepositories>()));
+    gh.factory<_i370.PickUpCubit>(() => _i370.PickUpCubit(
+          gh<_i1043.PickUpRepositories>(),
+          gh<_i1043.CreatePickupOrderFromCartUseCase>(),
+          gh<_i1043.CalculateMinimumTimeUseCase>(),
+        ));
     gh.factory<_i110.CurierCubit>(
         () => _i110.CurierCubit(gh<_i566.CurierRepository>()));
     gh.factory<_i431.DeliveryFormCubit>(() => _i431.DeliveryFormCubit(
           gh<_i804.OrderCalculationService>(),
           gh<_i830.ValidateOrderDataUseCase>(),
         ));
+    gh.lazySingleton<_i758.OrderRepository>(
+        () => _i576.OrderRepositoryImpl(gh<_i953.OrderRemoteDataSource>()));
     gh.factory<_i952.VerifySmsCodeAndHandleFirstLaunchUseCase>(
         () => _i952.VerifySmsCodeAndHandleFirstLaunchUseCase(
               gh<_i140.AuthRepository>(),
@@ -589,8 +612,6 @@ extension GetItInjectableX on _i174.GetIt {
         ));
     gh.factory<_i60.ActiveOrderCubit>(
         () => _i60.ActiveOrderCubit(gh<_i74.ActiveOrderRepository>()));
-    gh.factory<_i304.OrderCubit>(
-        () => _i304.OrderCubit(gh<_i758.OrderRepository>()));
     gh.factory<_i968.BonusCubit>(
         () => _i968.BonusCubit(gh<_i135.GenerateQrUseCase>()));
     gh.factory<_i925.SecurityCubit>(() => _i925.SecurityCubit(
@@ -599,6 +620,12 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i772.GetBiometricPreferenceUseCase>(),
           gh<_i249.CheckBiometricsAvailabilityUseCase>(),
         ));
+    gh.factory<_i115.GetGeoSuggestionsUseCase>(
+        () => _i115.GetGeoSuggestionsUseCase(gh<_i758.OrderRepository>()));
+    gh.factory<_i291.CreateOrderUseCase>(
+        () => _i291.CreateOrderUseCase(gh<_i758.OrderRepository>()));
+    gh.factory<_i417.GetDistrictsUseCase>(
+        () => _i417.GetDistrictsUseCase(gh<_i758.OrderRepository>()));
     gh.factory<_i968.UpdateTemplateUseCase>(
         () => _i968.UpdateTemplateUseCase(gh<_i411.TemplateRepository>()));
     gh.factory<_i844.GetTemplateByIdUseCase>(
@@ -609,6 +636,10 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i298.DeleteTemplateUseCase(gh<_i411.TemplateRepository>()));
     gh.factory<_i230.GetTemplatesUseCase>(
         () => _i230.GetTemplatesUseCase(gh<_i411.TemplateRepository>()));
+    gh.factory<_i304.OrderCubit>(() => _i304.OrderCubit(
+          gh<_i291.CreateOrderUseCase>(),
+          gh<_i417.GetDistrictsUseCase>(),
+        ));
     gh.factory<_i423.TemplatesListCubit>(() => _i423.TemplatesListCubit(
           gh<_i230.GetTemplatesUseCase>(),
           gh<_i298.DeleteTemplateUseCase>(),
