@@ -1,5 +1,5 @@
 import 'package:diyar/core/components/input/phone_number.dart';
-import 'package:diyar/features/order/presentation/widgets/widgets.dart';
+import 'package:diyar/features/order/presentation/enum/delivery_enum.dart';
 import 'package:flutter/material.dart';
 import 'package:diyar/core/core.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';

@@ -3,7 +3,7 @@ import 'package:diyar/features/features.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 
-showDistrictSearchBottom(
+void showDistrictSearchBottom(
   BuildContext context, {
   required Function(DistrictDataModel) onDistrictSelected,
   required Future<List<DistrictDataModel>> Function(String) onSearch,

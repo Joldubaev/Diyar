@@ -1,11 +1,12 @@
 import 'dart:developer' show log;
-import 'package:diyar/core/components/input/phone_number.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/order/domain/domain.dart';
-import 'package:diyar/features/order/presentation/presentation.dart';
-import 'package:diyar/features/order/presentation/widgets/change_amount_dialog.dart';
+import 'package:diyar/features/order/presentation/enum/delivery_enum.dart';
+import 'package:diyar/features/order/presentation/widgets/delivery_form/delivery_form_address_fields.dart';
+import 'package:diyar/features/order/presentation/widgets/delivery_form/delivery_form_contact_fields.dart';
+import 'package:diyar/features/order/presentation/widgets/delivery_form/delivery_form_payment_fields.dart';
+import 'package:diyar/features/order/presentation/widgets/delivery_form/delivery_form_submit_button.dart';
 import 'package:flutter/material.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class DeliveryFormWidget extends StatefulWidget {
   const DeliveryFormWidget({
@@ -52,32 +53,18 @@ class DeliveryFormWidget extends StatefulWidget {
 }
 
 class _DeliveryFormWidgetState extends State<DeliveryFormWidget> {
-  TextEditingController get _userName => widget.userName;
-  TextEditingController get _phoneController => widget.phoneController;
-  TextEditingController get _addressController => widget.addressController;
-  TextEditingController get _houseController => widget.houseController;
-  TextEditingController get _entranceController => widget.entranceController;
-  TextEditingController get _floorController => widget.floorController;
-  TextEditingController get _apartmentController => widget.apartmentController;
-  TextEditingController get _intercomController => widget.intercomController;
-  TextEditingController get _sdachaController => widget.sdachaController;
-  TextEditingController get _commentController => widget.commentController;
-  GlobalKey<FormState> get _formKey => widget.formKey;
-
   @override
   void initState() {
     super.initState();
-    log("address2: ${_addressController.text}");
+    log("address2: ${widget.addressController.text}");
   }
 
   @override
   void didUpdateWidget(DeliveryFormWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Сбрасываем поле сдачи при смене типа оплаты с наличных на онлайн
     if (oldWidget.paymentType != widget.paymentType) {
       if (widget.paymentType != PaymentTypeDelivery.cash) {
-        _sdachaController.clear();
-        // Уведомляем родительский виджет об очистке результата
+        widget.sdachaController.clear();
         widget.onChangeAmountSelected?.call(null);
       }
     }
@@ -86,179 +73,44 @@ class _DeliveryFormWidgetState extends State<DeliveryFormWidget> {
   @override
   Widget build(BuildContext context) {
     return Form(
-      key: _formKey,
+      key: widget.formKey,
       child: ListView(
         padding: const EdgeInsets.all(20),
         children: [
+          DeliveryFormContactFields(
+            theme: widget.theme,
+            userName: widget.userName,
+            phoneController: widget.phoneController,
+          ),
+          DeliveryFormAddressFields(
+            theme: widget.theme,
+            addressController: widget.addressController,
+            houseController: widget.houseController,
+            entranceController: widget.entranceController,
+            floorController: widget.floorController,
+            apartmentController: widget.apartmentController,
+            intercomController: widget.intercomController,
+          ),
+          DeliveryFormPaymentFields(
+            theme: widget.theme,
+            paymentType: widget.paymentType,
+            totalOrderCost: widget.totalOrderCost,
+            sdachaController: widget.sdachaController,
+            onChangeAmountSelected: widget.onChangeAmountSelected,
+          ),
           CustomInputWidget(
             titleColor: widget.theme.colorScheme.onSurface,
             filledColor: widget.theme.colorScheme.surface,
-            controller: _userName,
-            hintText: context.l10n.yourName,
-            validator: (value) {
-              if (value!.isEmpty) {
-                return context.l10n.pleaseEnterName;
-              } else if (value.length < 3) {
-                return context.l10n.pleaseEnterCorrectName;
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: 10),
-          PhoneNumberMask(
-            hintText: '+996 (___) __-__-__',
-            textController: _phoneController,
-            hint: context.l10n.phone,
-            formatter: MaskTextInputFormatter(mask: "+996 (###) ##-##-##"),
-            textInputType: TextInputType.phone,
-            validator: (value) {
-              if (value!.isEmpty) {
-                return context.l10n.pleaseEnterPhone;
-              } else if (value.length < 10) {
-                return context.l10n.pleaseEnterCorrectPhone;
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: 10),
-          CustomInputWidget(
-            titleColor: widget.theme.colorScheme.onSurface,
-            filledColor: widget.theme.colorScheme.surface,
-            inputType: TextInputType.text,
-            hintText: context.l10n.adress,
-            controller: _addressController,
-            isReadOnly: true,
-            validator: (value) {
-              if (value!.isEmpty) {
-                return context.l10n.pleaseEnterAddress;
-              } else if (value.length < 3) {
-                return context.l10n.pleaseEnterCorrectAddress;
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: 10),
-          CustomInputWidget(
-            titleColor: widget.theme.colorScheme.onSurface,
-            filledColor: widget.theme.colorScheme.surface,
-            inputType: TextInputType.text,
-            controller: _houseController,
-            hintText: context.l10n.houseNumber,
-            validator: (value) {
-              if (value!.isEmpty) {
-                return context.l10n.pleaseEnterHouseNumber;
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              Expanded(
-                child: CustomInputWidget(
-                  titleColor: widget.theme.colorScheme.onSurface,
-                  filledColor: widget.theme.colorScheme.surface,
-                  inputType: TextInputType.text,
-                  controller: _entranceController,
-                  hintText: 'Подъезд',
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: CustomInputWidget(
-                  titleColor: widget.theme.colorScheme.onSurface,
-                  filledColor: widget.theme.colorScheme.surface,
-                  inputType: TextInputType.text,
-                  controller: _floorController,
-                  hintText: context.l10n.floor,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              Expanded(
-                child: CustomInputWidget(
-                  titleColor: widget.theme.colorScheme.onSurface,
-                  filledColor: widget.theme.colorScheme.surface,
-                  inputType: TextInputType.text,
-                  controller: _apartmentController,
-                  hintText: context.l10n.ofice,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: CustomInputWidget(
-                  titleColor: widget.theme.colorScheme.onSurface,
-                  filledColor: widget.theme.colorScheme.surface,
-                  inputType: TextInputType.text,
-                  controller: _intercomController,
-                  hintText: context.l10n.codeIntercom,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          if (widget.paymentType == PaymentTypeDelivery.cash)
-            CustomInputWidget(
-              titleColor: widget.theme.colorScheme.onSurface,
-              filledColor: widget.theme.colorScheme.surface,
-              inputType: TextInputType.number,
-              controller: _sdachaController,
-              hintText: context.l10n.change,
-              isReadOnly: true,
-              onTap: () async {
-                final result = await ChangeAmountDialog.show(
-                  context: context,
-                  totalOrderCost: widget.totalOrderCost,
-                );
-                if (result != null && mounted) {
-                  setState(() {
-                    _sdachaController.text = result.getDisplayText(widget.totalOrderCost);
-                  });
-                  // Передаем результат в родительский виджет
-                  widget.onChangeAmountSelected?.call(result);
-                }
-              },
-              validator: (value) {
-                // При наличной оплате поле сдачи должно быть заполнено
-                if (widget.paymentType == PaymentTypeDelivery.cash) {
-                  if (value == null || value.isEmpty) {
-                    return 'Пожалуйста, выберите сумму сдачи';
-                  }
-                }
-                return null;
-              },
-            ),
-          if (widget.paymentType == PaymentTypeDelivery.cash) const SizedBox(height: 10),
-          CustomInputWidget(
-            titleColor: widget.theme.colorScheme.onSurface,
-            filledColor: widget.theme.colorScheme.surface,
-            controller: _commentController,
+            controller: widget.commentController,
             hintText: context.l10n.comment,
             validator: (val) => null,
             maxLines: 3,
           ),
           const SizedBox(height: 20),
-          // PaymentTypeSelector(currentPaymentType: widget.paymentType, onChanged: widget.onPaymentTypeChanged),
-          const SizedBox(height: 20),
-          Card(
-            color: widget.theme.colorScheme.primary,
-            child: ListTile(
-              title: Text(
-                'Сумма заказа ${widget.totalOrderCost} сом',
-                style: widget.theme.textTheme.bodyMedium?.copyWith(
-                  color: widget.theme.colorScheme.onTertiaryFixed,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              trailing: Icon(
-                Icons.arrow_forward_ios,
-                color: widget.theme.colorScheme.onTertiaryFixed,
-              ),
-              onTap: widget.onConfirm,
-            ),
+          DeliveryFormSubmitButton(
+            theme: widget.theme,
+            totalOrderCost: widget.totalOrderCost,
+            onConfirm: widget.onConfirm,
           ),
         ],
       ),

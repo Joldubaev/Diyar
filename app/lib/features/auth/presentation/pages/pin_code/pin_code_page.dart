@@ -2,7 +2,6 @@ import 'package:diyar/core/core.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/features/security/presentation/presentation.dart' hide AuthDialogs;
 import 'package:diyar/features/auth/presentation/presentation.dart';
-import 'package:diyar/features/auth/presentation/pages/pin_code/pin_code_dialogs.dart';
 import 'package:diyar/features/app_init/domain/domain.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

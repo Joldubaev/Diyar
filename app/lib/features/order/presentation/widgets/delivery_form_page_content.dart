@@ -120,7 +120,7 @@ class _DeliveryFormPageContentState extends State<DeliveryFormPageContent> {
             ),
             body: DeliveryFormWidget(
               paymentType: state.paymentType,
-              onPaymentTypeChanged: (type) {
+              onPaymentTypeChanged: (PaymentTypeDelivery type) {
                 context.read<DeliveryFormCubit>().changePaymentType(type);
               },
               formKey: _formKey,

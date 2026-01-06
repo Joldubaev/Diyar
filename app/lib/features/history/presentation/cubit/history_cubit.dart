@@ -25,7 +25,7 @@ class HistoryCubit extends Cubit<HistoryState> {
   }
 }
 
-  getPickupHistory() async {
+  Future<void> getPickupHistory() async {
     emit(GetPickupHistoryLoading());
     try {
       final orders = await historyRepository.getPickupHistory();

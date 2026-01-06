@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:diyar/features/order/domain/entities/entities.dart';
-import 'package:diyar/features/order/domain/repositories/order_repositories.dart';
+import 'package:diyar/features/order/domain/usecases/create_order_usecase.dart';
+import 'package:diyar/features/order/domain/usecases/get_districts_usecase.dart';
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 
@@ -8,8 +9,13 @@ part 'order_state.dart';
 
 @injectable
 class OrderCubit extends Cubit<OrderState> {
-  final OrderRepository _orderRepository;
-  OrderCubit(this._orderRepository) : super(OrderInitial());
+  final CreateOrderUseCase _createOrderUseCase;
+  final GetDistrictsUseCase _getDistrictsUseCase;
+
+  OrderCubit(
+    this._createOrderUseCase,
+    this._getDistrictsUseCase,
+  ) : super(OrderInitial());
 
   String address = '';
   int deliveryPrice = 0;
@@ -40,7 +46,7 @@ class OrderCubit extends Cubit<OrderState> {
   }) async {
     emit(DistricLoading());
     try {
-      final result = await _orderRepository.getDistricts(search: search);
+      final result = await _getDistrictsUseCase(search: search);
       result.fold(
         (failure) {
           emit(DistricError(message: failure.message));
@@ -65,7 +71,7 @@ class OrderCubit extends Cubit<OrderState> {
   }) async {
     emit(CreateOrderLoading());
     try {
-      final result = await _orderRepository.createOrder(orderEntity);
+      final result = await _createOrderUseCase(orderEntity);
       result.fold(
         (failure) {
           emit(CreateOrderError(failure.message));

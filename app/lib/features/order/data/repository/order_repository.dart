@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/order/domain/entities/entities.dart';
 import 'package:diyar/features/order/domain/repositories/order_repositories.dart';
-import 'package:diyar/features/order/data/datasources/order_remote_datasource.dart';
+import 'package:diyar/features/order/data/datasources/remote/order_remote_datasource.dart';
 import 'package:diyar/features/order/data/models/model.dart';
 import 'package:diyar/features/map/map.dart';
 import 'package:injectable/injectable.dart';

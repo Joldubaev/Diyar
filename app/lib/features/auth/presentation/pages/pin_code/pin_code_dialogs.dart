@@ -61,7 +61,7 @@ class AuthDialogs {
     }
   }
 
-  static showFailedAuth(BuildContext context) {
+  static void showFailedAuth(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) => CustomDialogWidget(

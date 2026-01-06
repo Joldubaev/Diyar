@@ -56,7 +56,7 @@ class SettingsToggleCard extends StatelessWidget {
                 Switch(
                   inactiveThumbColor: AppColors.grey,
                   inactiveTrackColor: AppColors.grey.withValues(alpha: 0.5),
-                  activeColor: AppColors.primary,
+                  activeThumbColor: AppColors.primary,
                   value: value,
                   onChanged: onChanged,
                 )

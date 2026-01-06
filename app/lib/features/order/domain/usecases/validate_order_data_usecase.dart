@@ -1,5 +1,5 @@
 import 'package:diyar/common/calculiator/order_calculation_service.dart';
-import 'package:diyar/features/order/order.dart';
+import 'package:diyar/features/order/presentation/enum/delivery_enum.dart';
 import 'package:injectable/injectable.dart';
 
 /// Результат валидации данных заказа

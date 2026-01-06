@@ -1,14 +1,12 @@
-import 'dart:developer';
-import 'package:auto_route/auto_route.dart';
-import 'package:diyar/core/core.dart';
-import 'package:diyar/features/cart/cart.dart';
-import 'package:diyar/features/order/order.dart';
-import 'package:diyar/features/order/presentation/widgets/save_template_dialog.dart';
-import 'package:diyar/features/templates/presentation/cubit/templates_list_cubit.dart';
+import 'package:diyar/features/order/presentation/enum/delivery_enum.dart';
+import 'package:diyar/features/order/presentation/pages/delivery_page.dart';
+import 'package:diyar/features/order/presentation/widgets/delivery_form_controllers.dart';
+import 'package:diyar/features/order/presentation/widgets/order_confirmation/order_confirmation_bottom_sheet.dart';
+import 'package:diyar/features/order/presentation/widgets/order_confirmation/order_confirmation_handlers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'info_dialog_widget.dart';
 
+/// Bottom sheet для подтверждения заказа (legacy wrapper)
+/// Использует новые компоненты из order_confirmation/
 class CustomBottomSheet extends StatelessWidget {
   final ThemeData theme;
   final DeliveryFormPage widget;
@@ -51,269 +49,59 @@ class CustomBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DraggableScrollableSheet(
-      initialChildSize: 0.4,
-      minChildSize: 0.35,
-      maxChildSize: 0.7,
-      expand: false,
-      builder: (context, scrollController) {
-        return Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surface,
-            borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(16),
-            ),
-          ),
-          child: SingleChildScrollView(
-            controller: scrollController,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _buildHeader(context),
-                const SizedBox(height: 15),
-                _buildDetails(context),
-                const Divider(),
-                _buildSaveTemplateButton(context),
-                const SizedBox(height: 12),
-                BlocBuilder<OrderCubit, OrderState>(
-                  builder: (context, state) {
-                    return SubmitButtonWidget(
-                      textStyle: theme.textTheme.bodyMedium!.copyWith(color: theme.colorScheme.onPrimary),
-                      title: context.l10n.confirm,
-                      bgColor: AppColors.green,
-                      isLoading: state is CreateOrderLoading,
-                      onTap: () => _onConfirmOrder(context),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      },
+    final controllers = DeliveryFormControllers(
+      initialPhone: phoneController.text,
+      initialUserName: userName.text,
+      initialAddress: addressController.text,
+      initialHouseNumber: houseController.text,
     );
-  }
 
-  Widget _buildHeader(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          context.l10n.orderConfirmation,
-          style: theme.textTheme.bodyLarge!.copyWith(color: theme.colorScheme.onSurface),
-        ),
-        IconButton(
-          icon: const Icon(Icons.close),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ],
-    );
-  }
+    // Обновляем контроллеры из переданных значений
+    controllers.phoneController.text = phoneController.text;
+    controllers.userName.text = userName.text;
+    controllers.addressController.text = addressController.text;
+    controllers.houseController.text = houseController.text;
+    controllers.commentController.text = commentController.text;
+    controllers.apartmentController.text = apartmentController.text;
+    controllers.intercomController.text = intercomController.text;
+    controllers.floorController.text = floorController.text;
+    controllers.entranceController.text = entranceController.text;
 
-  Widget _buildDetails(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        InfoDialogWidget(
-          title: context.l10n.orderAmount,
-          description: '${widget.totalPrice} сом',
-        ),
-        InfoDialogWidget(
-          title: context.l10n.deliveryCost,
-          description: '$deliveryPrice сом',
-        ),
-        InfoDialogWidget(
-          title: context.l10n.total,
-          description: '$totalOrderCost сом',
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSaveTemplateButton(BuildContext context) {
-    return BlocBuilder<TemplatesListCubit, TemplatesListState>(
-      builder: (context, state) {
-        final isLoading = state is TemplateCreateLoading;
-        return OutlinedButton.icon(
-          onPressed: isLoading ? null : () => _onSaveTemplate(context),
-          icon: isLoading
-              ? SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      theme.colorScheme.primary,
-                    ),
-                  ),
-                )
-              : Icon(
-                  Icons.bookmark_outline,
-                  color: theme.colorScheme.primary,
-                ),
-          label: Text(
-            'Сохранить адрес',
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.primary,
-            ),
-          ),
-          style: OutlinedButton.styleFrom(
-            side: BorderSide(color: theme.colorScheme.primary),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-          ),
-        );
-      },
-    );
-  }
-
-  Future<void> _onSaveTemplate(BuildContext context) async {
-    // Получаем cubit до async gap, чтобы избежать использования context после await
-    final templatesCubit = context.read<TemplatesListCubit>();
-
-    // Формируем название по умолчанию из адреса
-    final defaultName = addressController.text.isNotEmpty ? addressController.text : 'Новый адрес';
-
-    // Показываем диалог для ввода имени шаблона
-    final templateName = await SaveTemplateDialog.show(
-      context: context,
-      defaultName: defaultName,
+    return OrderConfirmationBottomSheet(
       theme: theme,
-    );
-
-    if (templateName == null || templateName.isEmpty) {
-      return; // Пользователь отменил
-    }
-
-    // Создаем AddressEntity из данных формы
-    final addressData = AddressEntity(
-      address: addressController.text,
-      houseNumber: houseController.text,
-      comment: commentController.text.isEmpty ? null : commentController.text,
-      entrance: entranceController.text.isEmpty ? null : entranceController.text,
-      floor: floorController.text.isEmpty ? null : floorController.text,
-      intercom: intercomController.text.isEmpty ? null : intercomController.text,
-      kvOffice: apartmentController.text.isEmpty ? null : apartmentController.text,
-      region: region,
-    );
-
-    // Создаем ContactInfoEntity из данных формы
-    final contactInfo = ContactInfoEntity(
-      userName: userName.text,
-      userPhone: phoneController.text,
-    );
-
-    // Вызываем метод создания шаблона через Cubit (используем сохраненную ссылку)
-    templatesCubit.createTemplateFromOrder(
-      templateName: templateName,
-      addressData: addressData,
-      contactInfo: contactInfo,
-      price: deliveryPrice, // Сохраняем цену доставки на этот адрес
-      onSuccess: () {
-        showToast('Адрес успешно сохранен в шаблоны', isError: false);
+      totalPrice: widget.totalPrice,
+      deliveryPrice: deliveryPrice,
+      totalOrderCost: totalOrderCost,
+      onConfirmOrder: () {
+        OrderConfirmationHandlers.handleConfirmOrder(
+          context: context,
+          cart: widget.cart,
+          totalPrice: widget.totalPrice,
+          deliveryPrice: deliveryPrice,
+          dishCount: dishCount,
+          sdacha: sdacha,
+          paymentType: paymentType,
+          totalOrderCost: totalOrderCost,
+          controllers: controllers,
+          region: region,
+        );
       },
-      onError: (errorMessage) {
-        showToast(errorMessage, isError: true);
-      },
-    );
-  }
-
-  void _onConfirmOrder(BuildContext context) {
-    final orderCubit = context.read<OrderCubit>();
-
-    final addressData = AddressEntity(
-      address: addressController.text,
-      houseNumber: houseController.text,
-      comment: commentController.text.isEmpty ? null : commentController.text,
-      entrance: entranceController.text.isEmpty ? null : entranceController.text,
-      floor: floorController.text.isEmpty ? null : floorController.text,
-      intercom: intercomController.text.isEmpty ? null : intercomController.text,
-      kvOffice: apartmentController.text.isEmpty ? null : apartmentController.text,
-      region: region,
-    );
-
-    final contactInfo = ContactInfoEntity(
-      userName: userName.text.trim(),
-      userPhone: phoneController.text.trim(),
-    );
-
-    // Логирование для отладки
-    log('Creating order with contactInfo: userName="${contactInfo.userName}", userPhone="${contactInfo.userPhone}"');
-
-    orderCubit.createOrder(
-      CreateOrderEntity(
-        addressData: addressData,
-        contactInfo: contactInfo,
-        price: widget.totalPrice,
-        deliveryPrice: deliveryPrice,
-        paymentMethod: paymentType.name,
-        dishesCount: dishCount,
-        sdacha: sdacha,
-        foods: widget.cart
-            .map(
-              (e) => FoodItemOrderEntity(
-                dishId: '${e.food?.id}',
-                name: e.food?.name ?? '',
-                price: e.food?.price ?? 0,
-                quantity: e.quantity ?? 1,
-              ),
-            )
-            .toList(),
-      ),
-      onSuccess: (orderNumber) {
-        if (paymentType == PaymentTypeDelivery.online) {
-          context.router.push(
-            PaymentsRoute(
-              orderNumber: orderNumber,
-              amount: totalOrderCost.toString(),
-            ),
-          );
-          Navigator.of(context).pop();
-        } else {
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (dialogContext) {
-              return PopScope(
-                canPop: false,
-                child: AlertDialog(
-                  title: Text(
-                    context.l10n.yourOrdersConfirm,
-                    style: theme.textTheme.bodyLarge!.copyWith(color: theme.colorScheme.onSurface),
-                  ),
-                  content: Text(
-                    context.l10n.operatorContact,
-                    style: theme.textTheme.bodyMedium!.copyWith(color: theme.colorScheme.onSurface),
-                    maxLines: 2,
-                  ),
-                  actions: [
-                    SubmitButtonWidget(
-                      textStyle: theme.textTheme.bodyMedium!.copyWith(color: theme.colorScheme.onPrimary),
-                      title: context.l10n.ok,
-                      bgColor: AppColors.green,
-                      onTap: () {
-                        Navigator.of(dialogContext).pop();
-                        Navigator.of(context).pop();
-                        context.router.pushAndPopUntil(
-                          const MainRoute(),
-                          predicate: (route) => false,
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              );
-            },
-          );
-        }
-        context.read<CartBloc>().add(ClearCart());
-      },
-      onError: (errorMessage) {
-        showToast(errorMessage, isError: true);
+      onSaveTemplate: () {
+        OrderConfirmationHandlers.handleSaveTemplate(
+          context: context,
+          theme: theme,
+          addressController: addressController,
+          houseController: houseController,
+          commentController: commentController,
+          entranceController: entranceController,
+          floorController: floorController,
+          intercomController: intercomController,
+          apartmentController: apartmentController,
+          userName: userName,
+          phoneController: phoneController,
+          deliveryPrice: deliveryPrice,
+          region: region,
+        );
       },
     );
   }

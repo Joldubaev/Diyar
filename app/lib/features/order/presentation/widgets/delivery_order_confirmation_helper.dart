@@ -1,8 +1,5 @@
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/order/order.dart';
-import 'package:diyar/features/order/presentation/pages/delivery_page.dart';
-import 'package:diyar/features/order/presentation/widgets/custom_bottom_sheet.dart';
-import 'package:diyar/features/order/presentation/widgets/delivery_form_controllers.dart';
 import 'package:flutter/material.dart';
 
 /// Утилита для показа bottom sheet подтверждения заказа
