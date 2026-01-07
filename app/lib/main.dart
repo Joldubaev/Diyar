@@ -17,7 +17,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'features/app/view/app_listener.dart';
-import 'core/shared/presentation/pages/app_wrapper_connection_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
