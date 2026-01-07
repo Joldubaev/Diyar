@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 @RoutePage()
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class HomeTabPage extends StatefulWidget {
+  const HomeTabPage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomeTabPage> createState() => _HomeTabPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomeTabPageState extends State<HomeTabPage> {
   List<FoodEntity> menu = [];
   @override
   void initState() {
@@ -24,6 +24,10 @@ class _HomePageState extends State<HomePage> {
     context.read<PopularCubit>().getPopularProducts();
     context.read<ProfileCubit>().getUser();
     context.read<HomeContentCubit>().getSales();
+    // Загружаем активные заказы, если пользователь авторизован
+    if (UserHelper.isAuth()) {
+      context.read<ActiveOrderCubit>().getActiveOrders();
+    }
   }
 
   @override
@@ -48,7 +52,8 @@ class _HomePageState extends State<HomePage> {
                 spacing: 20,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 20),
+                  SizedBox(height: 10),
+                  const ActiveOrdersBannerWidget(),
                   const BonusCardWidget(),
                   // const SalesSectionWidget(),
                   RowTextWidget(text: context.l10n.popularFood, theme: Theme.of(context)),

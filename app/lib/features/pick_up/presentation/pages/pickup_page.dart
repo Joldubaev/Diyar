@@ -194,7 +194,7 @@ class _PickupFormPageState extends State<PickupFormPage> {
                           onTap: () {
                             Navigator.of(dialogContext).pop();
                             context.router.pushAndPopUntil(
-                              const MainRoute(),
+                              const MainHomeRoute(),
                               predicate: (_) => false,
                             );
                           },

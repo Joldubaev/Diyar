@@ -5,6 +5,7 @@ export 'order/order.dart';
 export 'history/history.dart';
 export 'templates/template.dart';
 export 'home_content/home_content.dart';
+export 'main_home/main_home.dart';
 export 'profile/profile.dart';
 export 'active_order/active_order.dart';
 export 'curier/curier.dart';

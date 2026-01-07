@@ -27,9 +27,7 @@ class NavIcon extends StatelessWidget {
             Radius.circular(30),
           ),
           child: ColoredBox(
-            color: isActive
-                ? AppColors.primary
-                : theme.onSurface.withValues(alpha: 0.1),
+            color: isActive ? AppColors.primary : theme.onSurface.withValues(alpha: 0.1),
             child: Center(
               child: SvgPicture.asset(
                 iconPath,

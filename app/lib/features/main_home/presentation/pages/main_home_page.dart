@@ -8,14 +8,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 @RoutePage()
-class MainPage extends StatefulWidget {
-  const MainPage({super.key});
+class MainHomePage extends StatefulWidget {
+  const MainHomePage({super.key});
 
   @override
-  State<MainPage> createState() => _MainPageState();
+  State<MainHomePage> createState() => _MainHomePageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _MainHomePageState extends State<MainHomePage> {
   @override
   void initState() {
     super.initState();
@@ -30,7 +30,7 @@ class _MainPageState extends State<MainPage> {
     final theme = Theme.of(context);
     return AutoTabsRouter(
       routes: const [
-        HomeRoute(),
+        HomeTabRoute(),
         MenuRoute(),
         OrderHistoryRoute(),
         ProfileRoute(),

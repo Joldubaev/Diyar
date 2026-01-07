@@ -69,7 +69,7 @@ class _CurierPageState extends State<CurierPage> {
                   context.read<SignInCubit>().logout().then((value) {
                     if (context.mounted) {
                       context.router.pushAndPopUntil(
-                        const MainRoute(),
+                        const MainHomeRoute(),
                         predicate: (_) => false,
                       );
                     }
@@ -94,7 +94,7 @@ class _CurierPageState extends State<CurierPage> {
             cubit.logout().then((value) {
               if (context.mounted) {
                 context.router.pushAndPopUntil(
-                  const MainRoute(),
+                  const MainHomeRoute(),
                   predicate: (_) => false,
                 );
               }

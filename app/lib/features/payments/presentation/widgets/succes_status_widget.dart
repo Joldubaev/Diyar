@@ -96,7 +96,7 @@ class SuccessStatusWidget extends StatelessWidget {
               title: 'Готово',
               bgColor: theme.primaryColor,
               onTap: () => context.router.pushAndPopUntil(
-                const MainRoute(),
+                const MainHomeRoute(),
                 predicate: (_) => false,
               ),
             ),

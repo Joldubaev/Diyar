@@ -23,7 +23,7 @@ class RowTextWidget extends StatelessWidget {
                 colors: [
                   Colors.transparent,
                   AppColors.primary.shade400.withValues(alpha: 0.3),
-                  AppColors.primary..shade200,
+                  AppColors.primary.shade200,
                 ],
                 stops: const [0.0, 0.3, 1.0],
               ),
@@ -41,13 +41,12 @@ class RowTextWidget extends StatelessWidget {
           ),
         ),
         Expanded(
-          // flex: 3,
           child: Container(
             height: 2,
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  AppColors.primary..shade200,
+                  AppColors.primary.shade200,
                   AppColors.primary.shade400.withValues(alpha: 0.3),
                   Colors.transparent,
                 ],

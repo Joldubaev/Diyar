@@ -80,7 +80,7 @@ class _SignInOtpPageState extends State<SignInOtpPage> with TimerMixin<SignInOtp
       listener: (context, state) {
         if (state is SignInSuccessWithUser) {
           final role = sl<LocalStorage>().getString(AppConst.userRole);
-          final targetRoute = role == "Courier" ? const CurierRoute() : const MainRoute();
+          final targetRoute = role == "Courier" ? const CurierRoute() : const MainHomeRoute();
           context.router.pushAndPopUntil(targetRoute, predicate: (_) => false);
         } else if (state is SignInFailure) {
           ScaffoldMessenger.of(context).showSnackBar(

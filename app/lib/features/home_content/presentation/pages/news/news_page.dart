@@ -31,7 +31,7 @@ class _NewsPageState extends State<NewsPage> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: AppColors.white),
           onPressed: () {
-            context.pushRoute(MainRoute());
+            context.pushRoute(MainHomeRoute());
           },
         ),
         title: Text(
