@@ -1,182 +1,139 @@
-import 'dart:async';
+// import 'dart:async';
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/auth/auth.dart';
 import 'package:diyar/features/curier/curier.dart';
+import 'package:diyar/features/curier/presentation/widgets/drawer/custom_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:yandex_mapkit/yandex_mapkit.dart';
+// import 'package:yandex_mapkit/yandex_mapkit.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'curier_order_card.dart';
+import '../widgets/state_widgets.dart';
 
 @RoutePage()
 class CurierPage extends StatefulWidget {
   const CurierPage({super.key});
+
   @override
   State<CurierPage> createState() => _CurierPageState();
 }
 
 class _CurierPageState extends State<CurierPage> {
-  final mapControllerCompleter = Completer<YandexMapController>();
-  List<CurierEntity> orders = [];
-
   @override
   void initState() {
-    context.read<CurierCubit>().getUser().then(
-      (value) {
-        if (mounted) {
-          context.read<CurierCubit>().getCurierOrders();
-        }
-      },
-    );
     super.initState();
-  }
-
-  Future<void> makePhoneCall(String phoneNumber) async {
-    final Uri launchUri = Uri(
-      scheme: 'tel',
-      path: phoneNumber,
-    );
-    await launchUrl(launchUri);
-  }
-
-  Future<void> _refresh() async {
-    context.read<CurierCubit>().getCurierOrders();
+    context.read<CurierCubit>().getUser();
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = context.l10n;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: theme.colorScheme.primary,
         title: Text(
-          context.l10n.activeOrders,
-          style: Theme.of(context).textTheme.titleMedium!.copyWith(color: theme.colorScheme.onPrimary),
+          l10n.activeOrders,
+          style: theme.textTheme.titleMedium?.copyWith(color: Colors.white),
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.logout, color: theme.colorScheme.onPrimary),
-            onPressed: () {
-              AppAlert.showConfirmDialog(
-                context: context,
-                title: context.l10n.exit,
-                content: Text(context.l10n.areYouSure),
-                cancelText: context.l10n.no,
-                confirmText: context.l10n.yes,
-                cancelPressed: () => Navigator.pop(context),
-                confirmPressed: () {
-                  context.read<SignInCubit>().logout().then((value) {
-                    if (context.mounted) {
-                      context.router.pushAndPopUntil(
-                        const MainHomeRoute(),
-                        predicate: (_) => false,
-                      );
-                    }
-                  });
-                },
-              );
-            },
+            icon: const Icon(Icons.logout, color: Colors.white),
+            onPressed: () => _showLogoutDialog(context),
           ),
         ],
       ),
-      drawerScrimColor: theme.colorScheme.onSurface.withValues(alpha: 0.6),
       drawer: Theme(
-        data: Theme.of(context).copyWith(
-          iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
-        ),
+        data: theme.copyWith(iconTheme: IconThemeData(color: theme.colorScheme.onSurface)),
         child: const CustomDrawer(),
       ),
       body: BlocConsumer<CurierCubit, CurierState>(
         listener: (context, state) {
-          if (state is GetUserError) {
-            final cubit = context.read<SignInCubit>();
-            cubit.logout().then((value) {
-              if (context.mounted) {
-                context.router.pushAndPopUntil(
-                  const MainHomeRoute(),
-                  predicate: (_) => false,
-                );
-              }
-            });
+          if (state is UserError) {
+            _handleLogout(context);
+          } else if (state is UserLoaded) {
+            context.read<CurierCubit>().getCurierOrders();
+          } else if (state is FinishOrderSuccess) {
+            context.read<CurierCubit>().getCurierOrders();
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.orderCompleted)));
+          } else if (state is FinishOrderError) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
           }
         },
         builder: (context, state) {
-          if (state is GetCourierOrdersError) {
-            return const Center(child: EmptyCurierOrder());
-          } else if (state is GetCourierOrdersLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is GetCourierOrdersLoaded) {
-            orders = state.curiers;
+          if (state is OrdersLoading || state is UserLoading) {
+            return context.loadingIndicator;
           }
-          return orders.isEmpty
-              ? const EmptyCurierOrder()
-              : RefreshIndicator(
-                  onRefresh: _refresh,
-                  child: ListView.separated(
-                    separatorBuilder: (context, index) => const SizedBox(height: 10),
-                    padding: const EdgeInsets.all(20),
-                    itemCount: orders.length,
-                    itemBuilder: (context, index) {
-                      final order = orders[index];
+
+          if (state is OrdersLoaded) {
+            if (state.orders.isEmpty) return const EmptyCurierOrder();
+
+            return RefreshIndicator(
+              onRefresh: () async => context.read<CurierCubit>().getCurierOrders(),
+              child: ListView.separated(
+                padding: const EdgeInsets.all(20),
+                itemCount: state.orders.length,
+                separatorBuilder: (_, __) => const SizedBox(height: 10),
+                itemBuilder: (context, index) {
+                  final order = state.orders[index];
+                  return CurierOrderCard(
+                    order: order,
+                    onFinish: () => context.read<CurierCubit>().getFinishOrder(order.orderNumber ?? 0),
+                    onOpenMap: () async {
                       final address = '${order.address ?? ''} ${order.houseNumber ?? ''}';
-                      return CurierOrderCard(
-                        order: order,
-                        onFinish: () => _finishOrder(order.orderNumber ?? 0, context: context),
-                        onOpenMap: () => _openAddressIn2GIS(address, context: context),
-                        onDetails: () => context.router.push(
-                          OrderDetailRoute(orderNumber: "${order.orderNumber}"),
-                        ),
-                        onCall: () => makePhoneCall('+${order.userPhone ?? ''}'),
-                      );
+                      final url = 'https://2gis.kg/kyrgyzstan/search/${Uri.encodeComponent(address)}';
+                      if (await canLaunchUrl(Uri.parse(url))) {
+                        await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+                      }
                     },
-                  ),
-                );
+                    onDetails: () => context.router.push(OrderDetailRoute(orderNumber: "${order.orderNumber}")),
+                    onCall: () async {
+                      final uri = Uri(scheme: 'tel', path: '+${order.userPhone ?? ''}');
+                      if (await canLaunchUrl(uri)) await launchUrl(uri);
+                    },
+                  );
+                },
+              ),
+            );
+          }
+          return const EmptyCurierOrder();
         },
       ),
       bottomSheet: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 40),
         child: SubmitButtonWidget(
-          onTap: () => _refresh(),
+          onTap: () => context.read<CurierCubit>().getCurierOrders(),
           title: 'Обновить',
           bgColor: AppColors.primary,
-          textStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(color: AppColors.white),
+          textStyle: theme.textTheme.bodyLarge?.copyWith(color: Colors.white),
         ),
       ),
     );
   }
 
-  Future<void> _finishOrder(int orderNumber, {required BuildContext context}) async {
-    final cubit = context.read<CurierCubit>();
-    final snackBar = ScaffoldMessenger.of(context);
-    try {
-      await cubit.getFinishOrder(orderNumber);
+  // Оставляем только те методы, которые реально переиспользуются или слишком тяжелые для build
+  void _handleLogout(BuildContext context) {
+    context.read<SignInCubit>().logout().then((_) {
       if (context.mounted) {
-        snackBar.showSnackBar(
-          SnackBar(content: Text(context.l10n.orderCompleted)),
-        );
+        context.router.pushAndPopUntil(const MainHomeRoute(), predicate: (_) => false);
       }
-      if (context.mounted) {
-        cubit.getCurierOrders();
-      }
-    } catch (error) {
-      if (context.mounted) {
-        snackBar.showSnackBar(
-          SnackBar(content: Text(context.l10n.errorCompletingOrder)),
-        );
-      }
-    }
+    });
   }
 
-  void _openAddressIn2GIS(String address, {required BuildContext context}) async {
-    final encodedAddress = Uri.encodeComponent(address);
-    final url = 'https://2gis.kg/kyrgyzstan/search/$encodedAddress';
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
-    } else {
-      if (context.mounted) {
-        throw Text('${context.l10n.couldNotLaunch}$url');
-      }
-    }
+  void _showLogoutDialog(BuildContext context) {
+    AppAlert.showConfirmDialog(
+      context: context,
+      title: context.l10n.exit,
+      content: Text(context.l10n.areYouSure),
+      confirmPressed: () {
+        Navigator.pop(context);
+        _handleLogout(context);
+      },
+      cancelPressed: () => Navigator.pop(context),
+      confirmText: context.l10n.yes,
+      cancelText: context.l10n.no,
+    );
   }
 }

@@ -1,6 +1,7 @@
 class ApiConst {
   ApiConst._();
   static const baseUrl = "https://api.diyar.kg/api/v1";
+  static const baseUrl1_2 = "https://api.diyar.kg/api/v1.2";
   static const baseUrl2 = "https://api.diyar.kg/api/v2";
 
   // AUTH
@@ -70,9 +71,9 @@ class ApiConst {
   static const getOrderHistory = "$baseUrl/orders/get-history";
 
   // COURIER
-  static const getCuriersFinis = "$baseUrl/courier/finished-orders";
-  static const getCuriersAllOrder = "$baseUrl/courier/get-actual-orders-by-courier";
-  static const getCuriereOrderHistory = "$baseUrl/courier/get-closed-orders-by-courier";
+  static const getCuriersFinis = "$baseUrl1_2/courier/finished-orders";
+  static const getCuriersAllOrder = "$baseUrl1_2/courier/get-actual-orders-by-courier";
+  static const getCuriereOrderHistory = "$baseUrl1_2/courier/get-closed-orders-by-courier";
 
   // DISTRICTS
   static const getDistricts = "$baseUrl/districts/get-all-districts";

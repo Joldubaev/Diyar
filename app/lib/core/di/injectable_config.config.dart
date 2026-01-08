@@ -443,12 +443,12 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i232.HistoryCubit(gh<_i408.HistoryRepository>()));
     gh.factory<_i781.SignUpCubit>(
         () => _i781.SignUpCubit(gh<_i140.AuthRepository>()));
-    gh.factory<_i110.CurierCubit>(
-        () => _i110.CurierCubit(gh<_i566.CurierRepository>()));
     gh.factory<_i431.DeliveryFormCubit>(() => _i431.DeliveryFormCubit(
           gh<_i804.OrderCalculationService>(),
           gh<_i830.ValidateOrderDataUseCase>(),
         ));
+    gh.factory<_i110.CurierCubit>(
+        () => _i110.CurierCubit(gh<_i566.CurierRepository>()));
     gh.factory<_i302.SignInCubit>(() => _i302.SignInCubit(
           gh<_i140.AuthRepository>(),
           gh<_i351.LocalStorage>(),
