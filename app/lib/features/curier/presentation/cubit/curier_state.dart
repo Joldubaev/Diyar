@@ -1,54 +1,105 @@
 part of 'curier_cubit.dart';
 
-@immutable
-sealed class CurierState {}
-
-final class CurierInitial extends CurierState {}
-
-final class GetCourierOrdersLoading extends CurierState {}
-
-final class GetCourierOrdersLoaded extends CurierState {
-  final List<CurierEntity> curiers;
-
-  GetCourierOrdersLoaded(this.curiers);
+sealed class CurierState {
+  final GetUserEntity? user;
+  const CurierState({this.user});
 }
 
-final class GetCourierOrdersError extends CurierState {
+/* ================= USER ================= */
+
+final class UserInitial extends CurierState {
+  const UserInitial();
+}
+
+final class UserLoading extends CurierState {
+  const UserLoading();
+}
+
+final class UserLoaded extends CurierState {
+  const UserLoaded(GetUserEntity user) : super(user: user);
+}
+
+final class UserError extends CurierState {
+  final String message;
+  const UserError(this.message);
+}
+
+/* ================= ORDERS ================= */
+
+final class OrdersLoading extends CurierState {
+  const OrdersLoading({required GetUserEntity user}) : super(user: user);
+}
+
+final class OrdersLoaded extends CurierState {
+  final List<CurierEntity> orders;
+
+  const OrdersLoaded({
+    required GetUserEntity user,
+    required this.orders,
+  }) : super(user: user);
+}
+
+final class OrdersError extends CurierState {
   final String message;
 
-  GetCourierOrdersError(this.message);
+  const OrdersError({
+    required this.message,
+    required GetUserEntity user,
+  }) : super(user: user);
 }
 
-class GetCurierHistoryLoading extends CurierState {}
+/* ================= HISTORY ================= */
 
-class GetCurierHistoryLoaded extends CurierState {
-  final List<CurierEntity> curiers;
-
-  GetCurierHistoryLoaded(this.curiers);
+final class CurierHistoryLoading extends CurierState {
+  const CurierHistoryLoading({required GetUserEntity user}) : super(user: user);
 }
 
-class GetCurierHistoryError extends CurierState {
+final class CurierHistoryLoaded extends CurierState {
+  final List<CurierEntity> orders;
+  final bool hasMore;
+  final int currentPage;
+
+  const CurierHistoryLoaded({
+    required GetUserEntity user,
+    required this.orders,
+    this.hasMore = false,
+    this.currentPage = 1,
+  }) : super(user: user);
+}
+
+final class CurierHistoryLoadingMore extends CurierState {
+  final List<CurierEntity> orders;
+  final int currentPage;
+
+  const CurierHistoryLoadingMore({
+    required GetUserEntity user,
+    required this.orders,
+    required this.currentPage,
+  }) : super(user: user);
+}
+
+final class CurierHistoryError extends CurierState {
   final String message;
 
-  GetCurierHistoryError(this.message);
+  const CurierHistoryError({
+    required this.message,
+    required GetUserEntity user,
+  }) : super(user: user);
 }
 
-class GetUserLoading extends CurierState {}
-
-class GetUserLoaded extends CurierState {
-  final GetUserEntity user;
-
-  GetUserLoaded(this.user);
+final class FinishOrderLoading extends CurierState {
+  const FinishOrderLoading({required GetUserEntity user}) : super(user: user);
 }
 
-class GetUserError extends CurierState {
+final class FinishOrderSuccess extends CurierState {
+  const FinishOrderSuccess({required GetUserEntity user}) : super(user: user);
+}
+
+final class FinishOrderError extends CurierState {
   final String message;
 
-  GetUserError(this.message);
+  const FinishOrderError({
+    required this.message,
+    required GetUserEntity user,
+  }) : super(user: user);
 }
-
-class GetFinishedOrdersLoading extends CurierState {}
-
-class GetFinishedOrdersLoaded extends CurierState {}
-
-class GetFinishedOrdersError extends CurierState {}

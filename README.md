@@ -107,4 +107,5 @@ melos run-build-runner-all
 Diyar — ваш быстрый и удобный способ заказать еду онлайн!
 flutter build appbundle --analyze-size --target-platform android-arm64
 
+flutter build apk --analyze-size --target-platform android-arm64
 

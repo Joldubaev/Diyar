@@ -58,6 +58,12 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
+        
+        // Оставляем только реальные архитектуры устройств (исключаем x86/x86_64 для эмуляторов)
+        // Это уменьшит размер APK с ~165 MB до ~80-90 MB
+        ndk {
+            abiFilters 'armeabi-v7a', 'arm64-v8a'
+        }
     }
 
     signingConfigs {

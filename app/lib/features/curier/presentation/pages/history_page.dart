@@ -1,8 +1,14 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
+import 'package:diyar/core/theme/theme_extenstion.dart';
 import 'package:diyar/features/curier/curier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
+import 'package:intl/intl.dart';
+import '../widgets/data_filter_widget.dart';
+import '../widgets/history_card_widget.dart';
+import '../widgets/state_widgets.dart';
 
 @RoutePage()
 class HistoryPage extends StatefulWidget {
@@ -13,92 +19,178 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
-  List<CurierEntity> orders = [];
+  DateTime? _startDate;
+  DateTime? _endDate;
 
   @override
   void initState() {
-    context.read<CurierCubit>().getCurierHistory();
     super.initState();
+    _loadHistory();
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          context.l10n.orderHistory,
-          style: Theme.of(context).textTheme.titleSmall,
-        ),
+        title: Text(context.l10n.orderHistory, style: context.textTheme.titleSmall),
+        actions: [
+          if (_startDate != null || _endDate != null)
+            IconButton(icon: const Icon(Icons.clear_all), onPressed: _clearFilters),
+        ],
       ),
-      body: BlocConsumer<CurierCubit, CurierState>(
-        listener: (context, state) {
-          if (state is GetCurierHistoryError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(context.l10n.errorLoadingData),
-              ),
-            );
-          }
-        },
-        builder: (context, state) {
-          if (state is GetCurierHistoryLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is GetCurierHistoryError) {
-            return Center(child: Text(context.l10n.errorLoadingData));
-          } else if (state is GetCurierHistoryLoaded) {
-            orders = state.curiers;
-            if (state.curiers.isEmpty) {
-              return Center(child: Text(context.l10n.noOrders));
-            }
-          }
-          return ListView.separated(
-            padding: const EdgeInsets.all(10),
-            separatorBuilder: (context, index) => const SizedBox(height: 5),
-            itemCount: orders.length,
-            itemBuilder: (context, index) {
-              final order = orders[index];
-              return Container(
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.surface,
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  border: Border.all(
-                    color: AppColors.black1.withValues(alpha: 0.2),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
-                      blurRadius: 10,
-                      offset: const Offset(0, 2),
+      body: Column(
+        children: [
+          // Виджет фильтров
+          DateFiltersSection(
+            startDate: _startDate,
+            endDate: _endDate,
+            onPick: _showPicker,
+          ),
+          // Виджет списка
+          Expanded(
+            child: BlocConsumer<CurierCubit, CurierState>(
+              listener: (context, state) {
+                if (state is CurierHistoryError) context.showSnack(state.message, isError: true);
+              },
+              builder: (context, state) {
+                return switch (state) {
+                  CurierHistoryLoading() => context.loadingIndicator,
+                  CurierHistoryError(:final message) => context.errorState(message),
+                  CurierHistoryLoaded(:final orders, :final hasMore) => orders.isEmpty
+                      ? context.emptyState(icon: Icons.history, message: context.l10n.noOrders)
+                      : RefreshIndicator(
+                          onRefresh: () async => _loadHistory(),
+                          child: _OrdersListView(
+                            orders: orders,
+                            hasMore: hasMore,
+                            onLoadMore: () => _loadMore(),
+                          ),
+                        ),
+                  CurierHistoryLoadingMore(:final orders) => RefreshIndicator(
+                      onRefresh: () async => _loadHistory(),
+                      child: _OrdersListView(
+                        orders: orders,
+                        hasMore: true,
+                        isLoadingMore: true,
+                      ),
                     ),
-                  ],
-                ),
-                child: ListTile(
-                  title: Text('${context.l10n.orderNumber} ${order.orderNumber ?? ""}',
-                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: theme.colorScheme.onSurface)),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '${context.l10n.name}: ${order.userName ?? ""}',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      Text(
-                        '${context.l10n.addressD}${order.address ?? ""}',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                      Text(
-                        '${context.l10n.totalAmount}${(order.price ?? 0) + (order.deliveryPrice ?? 0)}',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
-        },
+                  _ => context.loadingIndicator,
+                };
+              },
+            ),
+          ),
+        ],
       ),
+    );
+  }
+
+  // --- Логика (оставляем в родителе для управления состоянием) ---
+  void _showPicker({required bool isStart}) {
+    DatePicker.showDatePicker(
+      context,
+      showTitleActions: true,
+      minTime: isStart ? DateTime(2020) : (_startDate ?? DateTime(2020)),
+      maxTime: DateTime.now(),
+      onConfirm: (date) {
+        setState(() {
+          if (isStart) {
+            _startDate = date;
+            if (_endDate != null && _endDate!.isBefore(_startDate!)) _endDate = null;
+          } else {
+            _endDate = date;
+          }
+        });
+        _loadHistory();
+      },
+      currentTime: (isStart ? _startDate : _endDate) ?? DateTime.now(),
+      locale: LocaleType.ru,
+    );
+  }
+
+  void _clearFilters() {
+    setState(() {
+      _startDate = null;
+      _endDate = null;
+    });
+    _loadHistory();
+  }
+
+  void _loadHistory() {
+    final fmt = DateFormat('yyyy-MM-dd');
+    context.read<CurierCubit>().getCurierHistory(
+          startDate: _startDate != null ? fmt.format(_startDate!) : null,
+          endDate: _endDate != null ? fmt.format(_endDate!) : null,
+        );
+  }
+
+  void _loadMore() {
+    final fmt = DateFormat('yyyy-MM-dd');
+    context.read<CurierCubit>().getCurierHistory(
+          startDate: _startDate != null ? fmt.format(_startDate!) : null,
+          endDate: _endDate != null ? fmt.format(_endDate!) : null,
+          loadMore: true,
+        );
+  }
+}
+
+class _OrdersListView extends StatefulWidget {
+  final List<CurierEntity> orders;
+  final bool hasMore;
+  final bool isLoadingMore;
+  final VoidCallback? onLoadMore;
+
+  const _OrdersListView({
+    required this.orders,
+    this.hasMore = false,
+    this.isLoadingMore = false,
+    this.onLoadMore,
+  });
+
+  @override
+  State<_OrdersListView> createState() => _OrdersListViewState();
+}
+
+class _OrdersListViewState extends State<_OrdersListView> {
+  final _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent * 0.8) {
+      if (widget.hasMore && !widget.isLoadingMore && widget.onLoadMore != null) {
+        widget.onLoadMore!();
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      controller: _scrollController,
+      padding: const EdgeInsets.all(16),
+      itemCount: widget.orders.length + (widget.hasMore && widget.isLoadingMore ? 1 : 0),
+      separatorBuilder: (_, __) => const SizedBox(height: 12),
+      itemBuilder: (context, index) {
+        if (index >= widget.orders.length) {
+          return const Center(
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+        return HistoryCardWidget(order: widget.orders[index]);
+      },
     );
   }
 }
