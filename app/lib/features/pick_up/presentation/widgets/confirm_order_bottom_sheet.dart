@@ -4,11 +4,13 @@ import 'package:diyar/features/order/presentation/widgets/info_dialog_widget.dar
 
 class ConfirmOrderBottomSheet extends StatelessWidget {
   final int totalPrice;
+  final double? bonusAmount;
   final VoidCallback onConfirmTap;
 
   const ConfirmOrderBottomSheet({
     super.key,
     required this.totalPrice,
+    this.bonusAmount,
     required this.onConfirmTap,
   });
 
@@ -43,6 +45,11 @@ class ConfirmOrderBottomSheet extends StatelessWidget {
           const Divider(),
           const SizedBox(height: 10),
           InfoDialogWidget(title: l10n.orderAmount, description: '$totalPrice сом'),
+          if (bonusAmount != null && bonusAmount! > 0)
+            InfoDialogWidget(
+              title: 'Будет списано бонусов',
+              description: bonusAmount!.toStringAsFixed(0),
+            ),
           const SizedBox(height: 20),
           SubmitButtonWidget(
             textStyle: theme.textTheme.bodyMedium!.copyWith(color: theme.colorScheme.surface),

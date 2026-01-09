@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/cart.dart';
@@ -10,55 +9,27 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'info_dialog_widget.dart';
 
 class CustomBottomSheet extends StatelessWidget {
-  final ThemeData theme;
-  final DeliveryFormPage widget;
-  final int deliveryPrice;
-  final int totalOrderCost;
-  final int dishCount;
-  final int sdacha;
-  final String? region;
-  final TextEditingController phoneController;
-  final TextEditingController userName;
-  final TextEditingController addressController;
-  final TextEditingController commentController;
-  final TextEditingController houseController;
-  final TextEditingController apartmentController;
-  final TextEditingController intercomController;
-  final TextEditingController floorController;
-  final TextEditingController entranceController;
-  final PaymentTypeDelivery paymentType;
+  final DeliveryFormLoaded state;
+  final List<CartItemEntity> cart;
 
   const CustomBottomSheet({
     super.key,
-    required this.theme,
-    required this.widget,
-    required this.dishCount,
-    required this.deliveryPrice,
-    required this.totalOrderCost,
-    required this.sdacha,
-    required this.phoneController,
-    required this.userName,
-    required this.addressController,
-    required this.commentController,
-    required this.houseController,
-    required this.apartmentController,
-    required this.intercomController,
-    required this.floorController,
-    required this.entranceController,
-    required this.paymentType,
-    required this.region,
+    required this.state,
+    required this.cart,
   });
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<OrderCubit, OrderState>(
-      listener: (context, state) {
-        if (state is CreateOrderLoaded) {
-          if (paymentType == PaymentTypeDelivery.online) {
+    final theme = Theme.of(context);
+
+    return BlocListener<DeliveryFormCubit, DeliveryFormState>(
+      listener: (context, currentState) {
+        if (currentState is DeliveryFormLoaded && currentState.successMessage != null) {
+          if (currentState.paymentType == PaymentTypeDelivery.online) {
             context.router.push(
               PaymentsRoute(
-                orderNumber: state.res,
-                amount: totalOrderCost.toString(),
+                orderNumber: currentState.successMessage!,
+                amount: currentState.totalOrderCost.toString(),
               ),
             );
             Navigator.of(context).pop();
@@ -100,8 +71,8 @@ class CustomBottomSheet extends StatelessWidget {
             );
           }
           context.read<CartBloc>().add(ClearCart());
-        } else if (state is CreateOrderError) {
-          showToast(state.message, isError: true);
+        } else if (currentState is DeliveryFormLoaded && currentState.validationError != null) {
+          showToast(currentState.validationError!, isError: true);
         }
       },
       child: DraggableScrollableSheet(
@@ -130,13 +101,14 @@ class CustomBottomSheet extends StatelessWidget {
                   const Divider(),
                   _buildSaveTemplateButton(context),
                   const SizedBox(height: 12),
-                  BlocBuilder<OrderCubit, OrderState>(
-                    builder: (context, state) {
+                  BlocBuilder<DeliveryFormCubit, DeliveryFormState>(
+                    builder: (context, currentState) {
+                      final isLoading = currentState is DeliveryFormLoaded && currentState.isSubmitting;
                       return SubmitButtonWidget(
                         textStyle: theme.textTheme.bodyMedium!.copyWith(color: theme.colorScheme.onPrimary),
                         title: context.l10n.confirm,
                         bgColor: AppColors.green,
-                        isLoading: state is CreateOrderLoading,
+                        isLoading: isLoading,
                         onTap: () => _onConfirmOrder(context),
                       );
                     },
@@ -151,6 +123,7 @@ class CustomBottomSheet extends StatelessWidget {
   }
 
   Widget _buildHeader(BuildContext context) {
+    final theme = Theme.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -167,37 +140,44 @@ class CustomBottomSheet extends StatelessWidget {
   }
 
   Widget _buildDetails(BuildContext context) {
+    Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         InfoDialogWidget(
           title: context.l10n.orderAmount,
-          description: '${widget.totalPrice} сом',
+          description: '${state.subtotalPrice} сом',
         ),
         InfoDialogWidget(
           title: context.l10n.deliveryCost,
-          description: '$deliveryPrice сом',
+          description: '${state.deliveryPrice.toInt()} сом',
         ),
         InfoDialogWidget(
           title: context.l10n.total,
-          description: '$totalOrderCost сом',
+          description: '${state.totalOrderCost} сом',
         ),
+        if (state.bonusAmount != null && state.bonusAmount! > 0)
+          InfoDialogWidget(
+            title: 'Будет списано бонусов',
+            description: state.bonusAmount!.toStringAsFixed(0),
+          ),
       ],
     );
   }
 
   Widget _buildSaveTemplateButton(BuildContext context) {
+    final theme = Theme.of(context);
     return BlocListener<TemplatesListCubit, TemplatesListState>(
-      listener: (context, state) {
-        if (state is TemplateCreateSuccess) {
+      listener: (context, templateState) {
+        if (templateState is TemplateCreateSuccess) {
           showToast('Адрес успешно сохранен в шаблоны', isError: false);
-        } else if (state is TemplateCreateFailure) {
-          showToast(state.message, isError: true);
+        } else if (templateState is TemplateCreateFailure) {
+          showToast(templateState.message, isError: true);
         }
       },
       child: BlocBuilder<TemplatesListCubit, TemplatesListState>(
-        builder: (context, state) {
-          final isLoading = state is TemplateCreateLoading;
+        builder: (context, templateState) {
+          final isLoading = templateState is TemplateCreateLoading;
           return OutlinedButton.icon(
             onPressed: isLoading ? null : () => _onSaveTemplate(context),
             icon: isLoading
@@ -235,11 +215,11 @@ class CustomBottomSheet extends StatelessWidget {
   }
 
   Future<void> _onSaveTemplate(BuildContext context) async {
-    // Получаем cubit до async gap, чтобы избежать использования context после await
     final templatesCubit = context.read<TemplatesListCubit>();
+    final theme = Theme.of(context);
 
     // Формируем название по умолчанию из адреса
-    final defaultName = addressController.text.isNotEmpty ? addressController.text : 'Новый адрес';
+    final defaultName = state.address.isNotEmpty ? state.address : 'Новый адрес';
 
     // Показываем диалог для ввода имени шаблона
     final templateName = await SaveTemplateDialog.show(
@@ -252,75 +232,37 @@ class CustomBottomSheet extends StatelessWidget {
       return; // Пользователь отменил
     }
 
-    // Создаем AddressEntity из данных формы
+    // Создаем AddressEntity из state
     final addressData = AddressEntity(
-      address: addressController.text,
-      houseNumber: houseController.text,
-      comment: commentController.text.isEmpty ? null : commentController.text,
-      entrance: entranceController.text.isEmpty ? null : entranceController.text,
-      floor: floorController.text.isEmpty ? null : floorController.text,
-      intercom: intercomController.text.isEmpty ? null : intercomController.text,
-      kvOffice: apartmentController.text.isEmpty ? null : apartmentController.text,
-      region: region,
+      address: state.address,
+      houseNumber: state.houseNumber,
+      comment: state.comment.isEmpty ? null : state.comment,
+      entrance: state.entrance.isEmpty ? null : state.entrance,
+      floor: state.floor.isEmpty ? null : state.floor,
+      intercom: state.intercom.isEmpty ? null : state.intercom,
+      kvOffice: state.apartment.isEmpty ? null : state.apartment,
+      region: state.address, // Используем address как region
     );
 
-    // Создаем ContactInfoEntity из данных формы
+    // Создаем ContactInfoEntity из state
     final contactInfo = ContactInfoEntity(
-      userName: userName.text,
-      userPhone: phoneController.text,
+      userName: state.userName,
+      userPhone: state.userPhone,
     );
 
-    // Вызываем метод создания шаблона через Cubit (используем сохраненную ссылку)
+    // Вызываем метод создания шаблона через Cubit
     templatesCubit.createTemplateFromOrder(
       templateName: templateName,
       addressData: addressData,
       contactInfo: contactInfo,
-      price: deliveryPrice, // Сохраняем цену доставки на этот адрес
+      price: state.deliveryPrice.toInt(),
     );
   }
 
   void _onConfirmOrder(BuildContext context) {
-    final orderCubit = context.read<OrderCubit>();
-
-    final addressData = AddressEntity(
-      address: addressController.text,
-      houseNumber: houseController.text,
-      comment: commentController.text.isEmpty ? null : commentController.text,
-      entrance: entranceController.text.isEmpty ? null : entranceController.text,
-      floor: floorController.text.isEmpty ? null : floorController.text,
-      intercom: intercomController.text.isEmpty ? null : intercomController.text,
-      kvOffice: apartmentController.text.isEmpty ? null : apartmentController.text,
-      region: region,
-    );
-
-    final contactInfo = ContactInfoEntity(
-      userName: userName.text.trim(),
-      userPhone: phoneController.text.trim(),
-    );
-
-    // Логирование для отладки
-    log('Creating order with contactInfo: userName="${contactInfo.userName}", userPhone="${contactInfo.userPhone}"');
-
-    orderCubit.createOrder(
-      CreateOrderEntity(
-        addressData: addressData,
-        contactInfo: contactInfo,
-        price: widget.totalPrice,
-        deliveryPrice: deliveryPrice,
-        paymentMethod: paymentType.name,
-        dishesCount: dishCount,
-        sdacha: sdacha,
-        foods: widget.cart
-            .map(
-              (e) => FoodItemOrderEntity(
-                dishId: '${e.food?.id}',
-                name: e.food?.name ?? '',
-                price: e.food?.price ?? 0,
-                quantity: e.quantity ?? 1,
-              ),
-            )
-            .toList(),
-      ),
-    );
+    context.read<DeliveryFormCubit>().confirmOrder(
+          cart: cart,
+          region: state.address, // Используем address как region
+        );
   }
 }

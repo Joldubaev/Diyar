@@ -21,6 +21,7 @@ export 'forms/contact_form_controllers.dart';
 export 'forms/address_fields_widget.dart';
 export 'forms/contact_fields_widget.dart';
 export 'navigation/custom_bottom_navigation_bar.dart';
+export 'navigation/custom_app_bar.dart';
 export 'navigation/nav_icon.dart';
 export 'carousel/carousel_widget.dart';
 export 'text/row_text_widget.dart';

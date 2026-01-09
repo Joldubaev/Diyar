@@ -48,7 +48,7 @@ class _OrderDetailContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final totalPrice = (order.price ?? 0) + (order.deliveryPrice ?? 0);
+    final totalPrice = (order.price ?? 0) + (order.deliveryPrice ?? 0) - (order.amountToReduce ?? 0);
 
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -67,6 +67,7 @@ class _OrderDetailContent extends StatelessWidget {
               value: order.foods?.map((e) => "${e.name} (${e.quantity})").join('\n') ?? "",
             ),
             DetailItem(icon: 'cutler', title: context.l10n.cutlery, value: "${order.dishesCount}"),
+            DetailItem(icon: 'reduce', title: 'Скидка', value: "${order.amountToReduce ?? 0} сом"),
             DetailItem(icon: 'del', title: 'Итого', value: "$totalPrice сом"),
           ]),
           const SizedBox(height: 16),

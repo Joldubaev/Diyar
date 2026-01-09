@@ -16,6 +16,7 @@ class PickupOrderModel with _$PickupOrderModel {
     String? userPhone,
     String? comment,
     String? paymentMethod,
+    double? amountToReduce,
   }) = _PickupOrderModel;
 
   factory PickupOrderModel.fromJson(Map<String, dynamic> json) => _$PickupOrderModelFromJson(json);
@@ -29,6 +30,7 @@ class PickupOrderModel with _$PickupOrderModel {
         userPhone: entity.userPhone,
         comment: entity.comment,
         paymentMethod: entity.paymentMethod,
+        amountToReduce: entity.amountToReduce,
       );
 }
 
@@ -42,5 +44,6 @@ extension PickupOrderModelX on PickupOrderModel {
         userPhone: userPhone ?? '',
         comment: comment,
         paymentMethod: paymentMethod,
+        amountToReduce: amountToReduce,
       );
 }

@@ -50,10 +50,13 @@ class OrderCalculationService {
   }
 
   /// 6. 💵 Рассчитывает полную общую стоимость заказа (Subtotal + Доставка).
+  /// Бонусы не вычитаются на фронтенде, они передаются отдельно в amountToReduce.
   double calculateFinalTotalPrice({
     required double subtotalPrice,
     required double deliveryPrice,
+    double amountToReduce = 0,
   }) {
+    // Всегда возвращаем полную сумму без вычитания бонусов
     return subtotalPrice + deliveryPrice;
   }
 

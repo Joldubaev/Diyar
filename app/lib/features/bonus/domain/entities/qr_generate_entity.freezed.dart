@@ -16,25 +16,28 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$QrGenerateEntity {
-  String? get qrData => throw _privateConstructorUsedError; // URL для QR кода
+  String? get qrData => throw _privateConstructorUsedError;
   String? get expiresAt => throw _privateConstructorUsedError;
 
   /// Create a copy of QrGenerateEntity
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $QrGenerateEntityCopyWith<QrGenerateEntity> get copyWith => throw _privateConstructorUsedError;
+  $QrGenerateEntityCopyWith<QrGenerateEntity> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $QrGenerateEntityCopyWith<$Res> {
-  factory $QrGenerateEntityCopyWith(QrGenerateEntity value, $Res Function(QrGenerateEntity) then) =
+  factory $QrGenerateEntityCopyWith(
+          QrGenerateEntity value, $Res Function(QrGenerateEntity) then) =
       _$QrGenerateEntityCopyWithImpl<$Res, QrGenerateEntity>;
   @useResult
   $Res call({String? qrData, String? expiresAt});
 }
 
 /// @nodoc
-class _$QrGenerateEntityCopyWithImpl<$Res, $Val extends QrGenerateEntity> implements $QrGenerateEntityCopyWith<$Res> {
+class _$QrGenerateEntityCopyWithImpl<$Res, $Val extends QrGenerateEntity>
+    implements $QrGenerateEntityCopyWith<$Res> {
   _$QrGenerateEntityCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
@@ -64,8 +67,10 @@ class _$QrGenerateEntityCopyWithImpl<$Res, $Val extends QrGenerateEntity> implem
 }
 
 /// @nodoc
-abstract class _$$QrGenerateEntityImplCopyWith<$Res> implements $QrGenerateEntityCopyWith<$Res> {
-  factory _$$QrGenerateEntityImplCopyWith(_$QrGenerateEntityImpl value, $Res Function(_$QrGenerateEntityImpl) then) =
+abstract class _$$QrGenerateEntityImplCopyWith<$Res>
+    implements $QrGenerateEntityCopyWith<$Res> {
+  factory _$$QrGenerateEntityImplCopyWith(_$QrGenerateEntityImpl value,
+          $Res Function(_$QrGenerateEntityImpl) then) =
       __$$QrGenerateEntityImplCopyWithImpl<$Res>;
   @override
   @useResult
@@ -73,9 +78,11 @@ abstract class _$$QrGenerateEntityImplCopyWith<$Res> implements $QrGenerateEntit
 }
 
 /// @nodoc
-class __$$QrGenerateEntityImplCopyWithImpl<$Res> extends _$QrGenerateEntityCopyWithImpl<$Res, _$QrGenerateEntityImpl>
+class __$$QrGenerateEntityImplCopyWithImpl<$Res>
+    extends _$QrGenerateEntityCopyWithImpl<$Res, _$QrGenerateEntityImpl>
     implements _$$QrGenerateEntityImplCopyWith<$Res> {
-  __$$QrGenerateEntityImplCopyWithImpl(_$QrGenerateEntityImpl _value, $Res Function(_$QrGenerateEntityImpl) _then)
+  __$$QrGenerateEntityImplCopyWithImpl(_$QrGenerateEntityImpl _value,
+      $Res Function(_$QrGenerateEntityImpl) _then)
       : super(_value, _then);
 
   /// Create a copy of QrGenerateEntity
@@ -101,12 +108,11 @@ class __$$QrGenerateEntityImplCopyWithImpl<$Res> extends _$QrGenerateEntityCopyW
 
 /// @nodoc
 
-class _$QrGenerateEntityImpl extends QrGenerateEntity implements _QrGenerateEntity {
+class _$QrGenerateEntityImpl extends _QrGenerateEntity {
   const _$QrGenerateEntityImpl({this.qrData, this.expiresAt}) : super._();
 
   @override
   final String? qrData;
-// URL для QR кода
   @override
   final String? expiresAt;
 
@@ -121,7 +127,8 @@ class _$QrGenerateEntityImpl extends QrGenerateEntity implements _QrGenerateEnti
         (other.runtimeType == runtimeType &&
             other is _$QrGenerateEntityImpl &&
             (identical(other.qrData, qrData) || other.qrData == qrData) &&
-            (identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt));
+            (identical(other.expiresAt, expiresAt) ||
+                other.expiresAt == expiresAt));
   }
 
   @override
@@ -133,14 +140,17 @@ class _$QrGenerateEntityImpl extends QrGenerateEntity implements _QrGenerateEnti
   @override
   @pragma('vm:prefer-inline')
   _$$QrGenerateEntityImplCopyWith<_$QrGenerateEntityImpl> get copyWith =>
-      __$$QrGenerateEntityImplCopyWithImpl<_$QrGenerateEntityImpl>(this, _$identity);
+      __$$QrGenerateEntityImplCopyWithImpl<_$QrGenerateEntityImpl>(
+          this, _$identity);
 }
 
-abstract class _QrGenerateEntity implements QrGenerateEntity {
-  const factory _QrGenerateEntity({final String? qrData, final String? expiresAt}) = _$QrGenerateEntityImpl;
+abstract class _QrGenerateEntity extends QrGenerateEntity {
+  const factory _QrGenerateEntity(
+      {final String? qrData, final String? expiresAt}) = _$QrGenerateEntityImpl;
+  const _QrGenerateEntity._() : super._();
 
   @override
-  String? get qrData; // URL для QR кода
+  String? get qrData;
   @override
   String? get expiresAt;
 
@@ -148,5 +158,6 @@ abstract class _QrGenerateEntity implements QrGenerateEntity {
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$QrGenerateEntityImplCopyWith<_$QrGenerateEntityImpl> get copyWith => throw _privateConstructorUsedError;
+  _$$QrGenerateEntityImplCopyWith<_$QrGenerateEntityImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }

@@ -109,3 +109,4 @@ flutter build appbundle --analyze-size --target-platform android-arm64
 
 flutter build apk --analyze-size --target-platform android-arm64
 
+flutter build apk --split-per-abi --release

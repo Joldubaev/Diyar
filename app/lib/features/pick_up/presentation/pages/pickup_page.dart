@@ -30,7 +30,10 @@ class _PickupFormPageState extends State<PickupFormPage> {
   final _phoneController = TextEditingController(text: '+996');
   final _timeController = TextEditingController();
   final _commentController = TextEditingController();
+  final _bonusController = TextEditingController();
   PaymentTypeDelivery _paymentType = PaymentTypeDelivery.cash;
+  bool _useBonus = false;
+  double? _bonusAmount;
 
   @override
   void initState() {
@@ -46,6 +49,7 @@ class _PickupFormPageState extends State<PickupFormPage> {
     _phoneController.dispose();
     _timeController.dispose();
     _commentController.dispose();
+    _bonusController.dispose();
     super.dispose();
   }
 
@@ -152,6 +156,7 @@ class _PickupFormPageState extends State<PickupFormPage> {
         if (state is CreatePickUpOrderLoaded) {
           context.read<CartBloc>().add(ClearCart());
           if (_paymentType == PaymentTypeDelivery.online) {
+            // Бонусы не вычитаются на фронтенде, отправляем полную сумму
             context.router.push(
               PaymentsRoute(
                 orderNumber: state.message,
@@ -240,26 +245,70 @@ class _PickupFormPageState extends State<PickupFormPage> {
                 _paymentType = value;
               });
             },
+            bonusController: _bonusController,
+            useBonus: _useBonus,
+            onBonusToggleChanged: (value) {
+              setState(() {
+                _useBonus = value;
+                if (!_useBonus) {
+                  _bonusController.clear();
+                  _bonusAmount = null;
+                }
+              });
+            },
+            onBonusAmountChanged: (amount) {
+              setState(() {
+                _bonusAmount = amount;
+              });
+            },
+            totalPrice: widget.totalPrice,
             onConfirmTap: () {
               if (_formKey.currentState!.validate()) {
-                final order = PickupOrderEntity(
-                  userName: _userNameController.text,
-                  userPhone: _phoneController.text,
-                  prepareFor: _timeController.text,
-                  comment: _commentController.text,
-                  paymentMethod: _paymentType.name,
-                  price: widget.totalPrice,
-                  dishesCount: widget.dishCount ?? 0,
-                  foods: widget.cart
-                      .map((cartItem) => FoodItemOrderEntity(
-                            dishId: cartItem.food?.id ?? '',
-                            name: cartItem.food?.name ?? '',
-                            price: cartItem.food?.price ?? 0,
-                            quantity: cartItem.quantity ?? 1,
-                          ))
-                      .toList(),
-                );
-                context.read<PickUpCubit>().submitPickupOrder(order);
+                // Валидация бонусов перед созданием заказа
+                double? finalBonusAmount = _bonusAmount;
+
+                // Если бонусы включены, проверяем значение из контроллера
+                if (_useBonus) {
+                  final bonusText = _bonusController.text.trim();
+                  if (bonusText.isNotEmpty) {
+                    final parsedBonus = double.tryParse(bonusText.replaceAll(',', '.'));
+                    if (parsedBonus != null && parsedBonus > 0) {
+                      finalBonusAmount = parsedBonus;
+                    }
+                  }
+                }
+
+                // Валидация бонусов (если они указаны)
+                if (finalBonusAmount != null && finalBonusAmount > 0) {
+                  // Проверка баланса пользователя
+                  final profileState = context.read<ProfileCubit>().state;
+                  final userBalance =
+                      (profileState is ProfileGetLoaded) ? (profileState.userModel.balance ?? 0).toDouble() : 0.0;
+
+                  if (finalBonusAmount > userBalance) {
+                    showToast('Недостаточно бонусов. Доступно: ${userBalance.toStringAsFixed(2)} сом', isError: true);
+                    return;
+                  }
+
+                  // Проверка суммы заказа - бонусы не могут превышать стоимость заказа
+                  if (finalBonusAmount > widget.totalPrice) {
+                    showToast('Сумма бонусов не может превышать стоимость заказа', isError: true);
+                    return;
+                  }
+                }
+
+                // Вызываем метод Cubit с сырыми данными
+                context.read<PickUpCubit>().createPickupOrder(
+                      cart: widget.cart,
+                      userName: _userNameController.text,
+                      phone: _phoneController.text,
+                      time: _timeController.text,
+                      comment: _commentController.text,
+                      paymentMethod: _paymentType.name,
+                      totalPrice: widget.totalPrice,
+                      dishCount: widget.dishCount,
+                      bonusAmount: finalBonusAmount,
+                    );
               }
             },
           ),

@@ -30,8 +30,7 @@ Future<void> main() async {
   };
   Bloc.observer = const AppBlocObserver(onLog: log);
 
-  Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await di.init();
 
   SystemChrome.setPreferredOrientations([
@@ -55,11 +54,10 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => di.sl<SignUpCubit>()),
         BlocProvider(create: (context) => di.sl<SignInCubit>()),
         BlocProvider(create: (context) => di.sl<ProfileCubit>()),
-        BlocProvider(create: (context) => di.sl<SignInCubit>()),
         BlocProvider(create: (context) => di.sl<CartBloc>()),
         BlocProvider(create: (context) => di.sl<MenuBloc>()),
         BlocProvider(create: (context) => di.sl<PopularCubit>()),
-        BlocProvider(create: (context) => di.sl<OrderCubit>()),
+        // BlocProvider(create: (context) => di.sl<OrderCubit>()),
         BlocProvider(create: (context) => di.sl<AboutUsCubit>()),
         BlocProvider(create: (context) => di.sl<HomeContentCubit>()),
         BlocProvider(create: (context) => di.sl<HistoryCubit>()),
