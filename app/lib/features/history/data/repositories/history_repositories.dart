@@ -1,5 +1,5 @@
 import 'package:diyar/features/active_order/active_order.dart';
-import 'package:diyar/features/history/history.dart';
+import 'package:diyar/features/history/data/data.dart';
 import 'package:diyar/features/history/domain/domain.dart';
 import 'package:injectable/injectable.dart';
 
@@ -16,8 +16,15 @@ class HistoryRepositoryImpl implements HistoryRepository {
   }
 
   @override
-  Future<List<UserPickupHistoryEntity>> getPickupHistory() async {
-    final models = await historyReDatasource.getPickupHistory();
-    return models.map((model) => model.toEntity()).toList();
+  Future<PickupHistoryResponseEntity> getPickupHistory({int pageNumber = 1, int pageSize = 10}) async {
+    final PickupHistoryResponseModel responseModel =
+        await historyReDatasource.getPickupHistory(pageNumber: pageNumber, pageSize: pageSize);
+    return PickupHistoryResponseEntity(
+      orders: responseModel.orders.map((model) => model.toEntity()).toList(),
+      totalCount: responseModel.totalCount,
+      currentPage: responseModel.currentPage,
+      pageSize: responseModel.pageSize,
+      totalPages: responseModel.totalPages,
+    );
   }
 }

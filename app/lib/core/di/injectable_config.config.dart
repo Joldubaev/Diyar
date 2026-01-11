@@ -87,12 +87,12 @@ import '../../features/curier/data/datasource/curier_data_source.dart' as _i614;
 import '../../features/curier/data/repositories/curier_repository.dart'
     as _i537;
 import '../../features/curier/presentation/cubit/curier_cubit.dart' as _i110;
+import '../../features/history/data/data.dart' as _i368;
 import '../../features/history/data/data_source/history_re_datasource.dart'
     as _i49;
 import '../../features/history/data/repositories/history_repositories.dart'
     as _i178;
 import '../../features/history/domain/domain.dart' as _i408;
-import '../../features/history/history.dart' as _i926;
 import '../../features/history/presentation/cubit/history_cubit.dart' as _i232;
 import '../../features/home_content/data/datasource/home_content_remote_datasource.dart'
     as _i521;
@@ -405,7 +405,7 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i835.AppLocation>(),
         ));
     gh.lazySingleton<_i408.HistoryRepository>(
-        () => _i178.HistoryRepositoryImpl(gh<_i926.HistoryReDatasource>()));
+        () => _i178.HistoryRepositoryImpl(gh<_i368.HistoryReDatasource>()));
     gh.factory<_i849.PaymentBloc>(() => _i849.PaymentBloc(
           gh<_i838.MegaCheckUseCase>(),
           gh<_i838.MegaInitiateUsecase>(),
@@ -451,6 +451,10 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i35.CheckBiometricsAvailabilityUseCase>(),
           gh<_i349.AuthenticateWithBiometricsUseCase>(),
         ));
+    gh.factory<_i968.BonusCubit>(() => _i968.BonusCubit(
+          gh<_i135.GenerateQrUseCase>(),
+          gh<_i135.BonusRepository>(),
+        ));
     gh.lazySingleton<_i411.TemplateRepository>(() =>
         _i843.TemplateRepositoryImpl(gh<_i251.TemplateRemoteDataSource>()));
     gh.factory<_i110.CurierCubit>(
@@ -459,8 +463,6 @@ extension GetItInjectableX on _i174.GetIt {
           getNewsUseCase: gh<_i31.GetNewsUseCase>(),
           getSalesUseCase: gh<_i608.GetSalesUseCase>(),
         ));
-    gh.factory<_i968.BonusCubit>(
-        () => _i968.BonusCubit(gh<_i135.GenerateQrUseCase>()));
     gh.factory<_i968.UpdateTemplateUseCase>(
         () => _i968.UpdateTemplateUseCase(gh<_i411.TemplateRepository>()));
     gh.factory<_i844.GetTemplateByIdUseCase>(

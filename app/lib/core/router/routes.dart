@@ -59,6 +59,7 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: PaymentsRoute.page),
         AutoRoute(page: MegaCheckUserRoute.page),
         AutoRoute(page: BonusQrRoute.page),
+        AutoRoute(page: BonusTransactionsRoute.page),
         AutoRoute(page: MegaOtpRoute.page),
         AutoRoute(page: MegaPaymentStatusRoute.page),
         AutoRoute(page: QrCodeRoute.page),

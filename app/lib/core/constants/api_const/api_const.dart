@@ -100,6 +100,7 @@ class ApiConst {
 
   // BONUS
   static const generateBonusQr = "$baseUrl/bonus/generate-qr";
+  static const getBonusTransactions = "$baseUrl/admin/bonus/transactions";
   static const deleteTemplate = "$baseUrl/templates/delete-template";
   // with query templateId
   static const getAllTemplates = "$baseUrl/templates/get-all-templates";

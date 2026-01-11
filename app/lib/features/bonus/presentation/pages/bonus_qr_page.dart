@@ -16,7 +16,11 @@ class BonusQrPage extends StatelessWidget {
           builder: (context, state) {
             return animatedSwitcher(
               child: switch (state) {
-                BonusInitial() || BonusQrLoading() => const _LoadingView(),
+                BonusInitial() => const _LoadingView(),
+                BonusQrLoading() => const _LoadingView(),
+                BonusTransactionsLoading() => const _LoadingView(),
+                BonusTransactionsLoaded() => const _LoadingView(),
+                BonusTransactionsError() => const _LoadingView(),
                 BonusQrFailure(message: final msg) => _ErrorView(message: msg),
                 BonusQrLoaded(qrData: final data) => _SuccessView(qrData: data),
               },

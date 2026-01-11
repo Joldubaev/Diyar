@@ -23,11 +23,11 @@ class HistoryCubit extends Cubit<HistoryState> {
     }
   }
 
-  Future<void> getPickupHistory() async {
+  Future<void> getPickupHistory({int pageNumber = 1, int pageSize = 10}) async {
     emit(GetPickupHistoryLoading());
     try {
-      final orders = await historyRepository.getPickupHistory();
-      emit(GetPickupHistoryLoaded(orders));
+      final response = await historyRepository.getPickupHistory(pageNumber: pageNumber, pageSize: pageSize);
+      emit(GetPickupHistoryLoaded(response));
     } catch (e) {
       emit(GetPickupHistoryError());
     }

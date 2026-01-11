@@ -51,7 +51,7 @@ class _ChangeAmountDialogState extends State<ChangeAmountDialog> {
           // Иконка доллара из макета
           CircleAvatar(
             radius: 30,
-            backgroundColor: Colors.green.withOpacity(0.1),
+            backgroundColor: Colors.green.withValues(alpha: 0.1),
             child: const Icon(Icons.attach_money, color: Colors.green, size: 30),
           ),
           const SizedBox(height: 16),
@@ -63,7 +63,7 @@ class _ChangeAmountDialogState extends State<ChangeAmountDialog> {
           const SizedBox(height: 8),
           const Text('Курьер принесет вам сдачу.', style: TextStyle(color: Colors.grey)),
           const SizedBox(height: 20),
-          
+
           // Поле ввода суммы
           TextField(
             controller: _controller,

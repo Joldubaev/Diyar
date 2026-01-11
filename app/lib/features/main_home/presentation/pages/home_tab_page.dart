@@ -46,28 +46,31 @@ class _HomeTabPageState extends State<HomeTabPage> {
             }
           },
           builder: (context, state) {
-            return SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                spacing: 20,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 10),
-                  const ActiveOrdersBannerWidget(),
-                  const BonusCardWidget(),
-                  // const SalesSectionWidget(),
-                  RowTextWidget(text: context.l10n.popularFood, theme: Theme.of(context)),
-                  if (menu.isNotEmpty) PopularFoodSectionWidget(menu: menu),
-                  RowTextWidget(text: 'Анонсы', theme: Theme.of(context)),
-                  NewsWidgets(
-                    subtitle: context.l10n.news,
-                    title: 'Дияр',
-                    image: 'assets/images/news_da.png',
-                    onTap: () => context.router.push(const NewsRoute()),
-                  ),
-                  RowTextWidget(text: 'Инфоцентр', theme: Theme.of(context)),
-                  const ContactTileWidget(),
-                ],
+            return RefreshIndicator(
+              onRefresh: _initializeData,
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  spacing: 20,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 10),
+                    const ActiveOrdersBannerWidget(),
+                    const BonusCardWidget(),
+                    // const SalesSectionWidget(),
+                    RowTextWidget(text: context.l10n.popularFood, theme: Theme.of(context)),
+                    if (menu.isNotEmpty) PopularFoodSectionWidget(menu: menu),
+                    RowTextWidget(text: 'Анонсы', theme: Theme.of(context)),
+                    NewsWidgets(
+                      subtitle: context.l10n.news,
+                      title: 'Дияр',
+                      image: 'assets/images/news_da.png',
+                      onTap: () => context.router.push(const NewsRoute()),
+                    ),
+                    RowTextWidget(text: 'Инфоцентр', theme: Theme.of(context)),
+                    const ContactTileWidget(),
+                  ],
+                ),
               ),
             );
           },

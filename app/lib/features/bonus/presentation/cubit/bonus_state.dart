@@ -32,3 +32,25 @@ final class BonusQrFailure extends BonusState {
   @override
   List<Object?> get props => [message];
 }
+
+final class BonusTransactionsLoading extends BonusState {
+  const BonusTransactionsLoading();
+}
+
+final class BonusTransactionsLoaded extends BonusState {
+  final BonusTransactionResponseEntity response;
+
+  const BonusTransactionsLoaded(this.response);
+
+  @override
+  List<Object?> get props => [response];
+}
+
+final class BonusTransactionsError extends BonusState {
+  final String message;
+
+  const BonusTransactionsError(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}

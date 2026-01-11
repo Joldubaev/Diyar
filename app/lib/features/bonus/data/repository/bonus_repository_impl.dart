@@ -16,4 +16,26 @@ class BonusRepositoryImpl with RepositoryErrorHandler implements BonusRepository
       return model.toEntity();
     });
   }
+
+  @override
+  Future<Either<Failure, BonusTransactionResponseEntity>> getBonusTransactions({
+    int page = 1,
+    int pageSize = 50,
+    String? userId,
+    String? transactionType,
+    String? dateFrom,
+    String? dateTo,
+  }) {
+    return makeRequest(() async {
+      final model = await _remoteDataSource.getBonusTransactions(
+        page: page,
+        pageSize: pageSize,
+        userId: userId,
+        transactionType: transactionType,
+        dateFrom: dateFrom,
+        dateTo: dateTo,
+      );
+      return model.toEntity();
+    });
+  }
 }

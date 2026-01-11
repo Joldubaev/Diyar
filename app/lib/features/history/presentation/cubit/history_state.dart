@@ -20,9 +20,9 @@ final class GetHistoryOrdersError extends HistoryState {}
 final class GetPickupHistoryLoading extends HistoryState {}
 
 final class GetPickupHistoryLoaded extends HistoryState {
-  final List<UserPickupHistoryEntity> orders;
+  final PickupHistoryResponseEntity response;
 
-  GetPickupHistoryLoaded(this.orders);
+  GetPickupHistoryLoaded(this.response);
 }
 
 final class GetPickupHistoryError extends HistoryState {}

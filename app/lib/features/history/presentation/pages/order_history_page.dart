@@ -44,6 +44,13 @@ class OrderHistoryPage extends StatelessWidget {
                   context.router.push(const UserOrderHistoryRoute());
                 },
               ),
+              OrderButton(
+                text: "История бонусов",
+                icon: 'assets/icons/bonus.svg',
+                onPressed: () {
+                  context.router.push(const BonusTransactionsRoute());
+                },
+              ),
             ],
           ),
         ),

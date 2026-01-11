@@ -13,28 +13,47 @@ class OrderDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Вызываем загрузку конкретного заказа через Cubit
-    // Примечание: Если в Cubit нет метода getOrderItem, его нужно добавить в UseCase
-    // Либо просто искать заказ в текущем списке ActiveOrdersLoaded
-
     return Scaffold(
       appBar: AppBar(title: Text(context.l10n.orderDetails)),
       body: BlocBuilder<ActiveOrderCubit, ActiveOrderState>(
-        builder: (context, state) {
-          // Ищем нужный заказ в загруженном списке, если Cubit хранит список
-          if (state is ActiveOrdersLoaded) {
-            final order = state.orders.firstWhereOrNull((o) => o.orderNumber.toString() == orderNumber);
-
-            if (order == null) return const Center(child: Text('Заказ не найден'));
-
-            return _OrderDetailContent(order: order);
+        builder: (context, activeState) {
+          // Ищем в активных заказах
+          if (activeState is ActiveOrdersLoaded) {
+            final order = activeState.orders.firstWhereOrNull((o) => o.orderNumber.toString() == orderNumber);
+            if (order != null) {
+              return _OrderDetailContent(order: order);
+            }
           }
 
-          if (state is ActiveOrdersLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
+          // Если не нашли в активных, ищем в истории
+          return BlocBuilder<HistoryCubit, HistoryState>(
+            builder: (context, historyState) {
+              // Загружаем историю, если она еще не загружена
+              if (historyState is HistoryInitial || historyState is GetHistoryOrdersError) {
+                context.read<HistoryCubit>().getHistoryOrders();
+                return const Center(child: CircularProgressIndicator());
+              }
 
-          return const Center(child: Text('Ошибка загрузки данных'));
+              if (historyState is GetHistoryOrdersLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              if (historyState is GetHistoryOrdersLoaded) {
+                final order = historyState.orders.firstWhereOrNull((o) => o.orderNumber.toString() == orderNumber);
+                if (order != null) {
+                  return _OrderDetailContent(order: order);
+                }
+              }
+
+              // Проверяем состояние активных заказов
+              if (activeState is ActiveOrdersLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              // Если заказ не найден ни в активных, ни в истории
+              return const Center(child: Text('Заказ не найден'));
+            },
+          );
         },
       ),
     );
@@ -48,7 +67,8 @@ class _OrderDetailContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final totalPrice = (order.price ?? 0) + (order.deliveryPrice ?? 0) - (order.amountToReduce ?? 0);
+    // Бонусы не вычитаются из итоговой суммы, отправляем полную стоимость
+    final totalPrice = (order.price ?? 0) + (order.deliveryPrice ?? 0);
 
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -67,7 +87,8 @@ class _OrderDetailContent extends StatelessWidget {
               value: order.foods?.map((e) => "${e.name} (${e.quantity})").join('\n') ?? "",
             ),
             DetailItem(icon: 'cutler', title: context.l10n.cutlery, value: "${order.dishesCount}"),
-            DetailItem(icon: 'reduce', title: 'Скидка', value: "${order.amountToReduce ?? 0} сом"),
+            if (order.amountToReduce != null && order.amountToReduce! > 0)
+              DetailItem(icon: 'check', title: 'Бонусы', value: "${order.amountToReduce!.toStringAsFixed(0)} сом"),
             DetailItem(icon: 'del', title: 'Итого', value: "$totalPrice сом"),
           ]),
           const SizedBox(height: 16),
