@@ -19,6 +19,7 @@ _$PickupOrderModelImpl _$$PickupOrderModelImplFromJson(
       userPhone: json['userPhone'] as String?,
       comment: json['comment'] as String?,
       paymentMethod: json['paymentMethod'] as String?,
+      amountToReduce: (json['amountToReduce'] as num?)?.toDouble(),
     );
 
 Map<String, dynamic> _$$PickupOrderModelImplToJson(
@@ -32,4 +33,5 @@ Map<String, dynamic> _$$PickupOrderModelImplToJson(
       'userPhone': instance.userPhone,
       'comment': instance.comment,
       'paymentMethod': instance.paymentMethod,
+      'amountToReduce': instance.amountToReduce,
     };

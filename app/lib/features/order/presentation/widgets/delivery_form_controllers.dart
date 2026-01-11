@@ -13,6 +13,7 @@ class DeliveryFormControllers {
   final TextEditingController commentController;
   final TextEditingController userName;
   final TextEditingController sdachaController;
+  final TextEditingController bonusController;
 
   DeliveryFormControllers({
     String? initialPhone,
@@ -28,7 +29,8 @@ class DeliveryFormControllers {
         floorController = TextEditingController(),
         entranceController = TextEditingController(),
         commentController = TextEditingController(),
-        sdachaController = TextEditingController();
+        sdachaController = TextEditingController(),
+        bonusController = TextEditingController();
 
   /// Обновление значений контроллеров из начальных данных
   void updateFromInitials({
@@ -63,6 +65,7 @@ class DeliveryFormControllers {
     entranceController.clear();
     commentController.clear();
     sdachaController.clear();
+    bonusController.clear();
   }
 
   /// Освобождение всех ресурсов
@@ -77,5 +80,6 @@ class DeliveryFormControllers {
     entranceController.dispose();
     commentController.dispose();
     sdachaController.dispose();
+    bonusController.dispose();
   }
 }

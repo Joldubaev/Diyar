@@ -25,6 +25,7 @@ class OrderActiveItemEntity extends Equatable {
   final String? status;
   final int? deliveryPrice;
   final int? sdacha;
+  final int? amountToReduce;
 
   const OrderActiveItemEntity({
     this.id,
@@ -48,6 +49,7 @@ class OrderActiveItemEntity extends Equatable {
     this.status,
     this.deliveryPrice,
     this.sdacha,
+    this.amountToReduce,
   });
 
   @override
@@ -73,6 +75,7 @@ class OrderActiveItemEntity extends Equatable {
         status,
         deliveryPrice,
         sdacha,
+        amountToReduce,
       ];
 
   OrderActiveItemEntity copyWith({
@@ -97,6 +100,7 @@ class OrderActiveItemEntity extends Equatable {
     ValueGetter<String?>? status,
     ValueGetter<int?>? deliveryPrice,
     ValueGetter<int?>? sdacha,
+    ValueGetter<int?>? amountToReduce,
   }) {
     return OrderActiveItemEntity(
       id: id != null ? id() : this.id,
@@ -120,6 +124,7 @@ class OrderActiveItemEntity extends Equatable {
       status: status != null ? status() : this.status,
       deliveryPrice: deliveryPrice != null ? deliveryPrice() : this.deliveryPrice,
       sdacha: sdacha != null ? sdacha() : this.sdacha,
+      amountToReduce: amountToReduce != null ? amountToReduce() : this.amountToReduce,
     );
   }
 

@@ -14,6 +14,7 @@ class PhoneNumberMask extends StatefulWidget {
     this.isReadOnly,
     this.validator,
     this.title,
+    this.onChanged,
   });
   final TextEditingController textController;
   final MaskTextInputFormatter formatter;
@@ -23,6 +24,7 @@ class PhoneNumberMask extends StatefulWidget {
   final String hintText;
   final TextInputType textInputType;
   final bool? isReadOnly;
+  final void Function(String)? onChanged;
   @override
   PhoneNumberMaskState createState() => PhoneNumberMaskState();
 }
@@ -48,6 +50,7 @@ class PhoneNumberMaskState extends State<PhoneNumberMask> {
           keyboardType: widget.textInputType,
           autovalidateMode: AutovalidateMode.disabled,
           validator: widget.validator,
+          onChanged: widget.onChanged,
           decoration: InputDecoration(
               contentPadding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
               border: InputBorder.none,

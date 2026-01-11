@@ -12,34 +12,34 @@ import 'package:auto_route/auto_route.dart' as _i53;
 import 'package:diyar/features/about_us/presentation/pages/about/about_us_page.dart'
     as _i1;
 import 'package:diyar/features/about_us/presentation/pages/about/coffe_page.dart'
-    as _i6;
+    as _i7;
 import 'package:diyar/features/about_us/presentation/pages/about/hall_page.dart'
-    as _i10;
+    as _i11;
 import 'package:diyar/features/about_us/presentation/pages/about/restoran_page.dart'
-    as _i35;
+    as _i36;
 import 'package:diyar/features/about_us/presentation/pages/about/terasa_page.dart'
     as _i48;
 import 'package:diyar/features/about_us/presentation/pages/about/vip_page.dart'
     as _i52;
 import 'package:diyar/features/about_us/presentation/pages/contact/contact_page.dart'
-    as _i7;
+    as _i8;
 import 'package:diyar/features/active_order/presentation/pages/order_active_page.dart'
     as _i2;
 import 'package:diyar/features/active_order/presentation/pages/order_detail_page.dart'
-    as _i22;
+    as _i23;
 import 'package:diyar/features/auth/domain/domain.dart' as _i61;
 import 'package:diyar/features/auth/presentation/pages/pin_code/pin_code_page.dart'
-    as _i28;
+    as _i29;
 import 'package:diyar/features/auth/presentation/pages/pin_code/set_new_pin_code_page.dart'
     as _i40;
 import 'package:diyar/features/auth/presentation/pages/reset_password/reset_password_page.dart'
-    as _i34;
+    as _i35;
 import 'package:diyar/features/auth/presentation/pages/sign_in/sign_in_otp_page.dart'
     as _i41;
 import 'package:diyar/features/auth/presentation/pages/sign_in/sign_in_page.dart'
     as _i42;
 import 'package:diyar/features/auth/presentation/pages/sign_up/check_phone_number_page.dart'
-    as _i5;
+    as _i6;
 import 'package:diyar/features/auth/presentation/pages/sign_up/sign_up_otp_page.dart'
     as _i43;
 import 'package:diyar/features/auth/presentation/pages/sign_up/sign_up_page.dart'
@@ -50,71 +50,71 @@ import 'package:diyar/features/auth/presentation/pages/splash/splash_page.dart'
     as _i46;
 import 'package:diyar/features/bonus/presentation/pages/bonus_qr_page.dart'
     as _i3;
+import 'package:diyar/features/bonus/presentation/pages/bonus_transactions_page.dart'
+    as _i4;
 import 'package:diyar/features/cart/cart.dart' as _i55;
 import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart'
     as _i56;
-import 'package:diyar/features/cart/presentation/pages/cart_page.dart' as _i4;
+import 'package:diyar/features/cart/presentation/pages/cart_page.dart' as _i5;
 import 'package:diyar/features/curier/presentation/pages/curier_page.dart'
-    as _i8;
+    as _i9;
 import 'package:diyar/features/curier/presentation/pages/history_page.dart'
-    as _i11;
+    as _i12;
 import 'package:diyar/features/history/domain/domain.dart' as _i62;
 import 'package:diyar/features/history/presentation/pages/order_history/user_order_history.dart'
     as _i49;
 import 'package:diyar/features/history/presentation/pages/order_history_page.dart'
-    as _i23;
+    as _i24;
 import 'package:diyar/features/history/presentation/pages/pickup_history/user_pickup_detail_page.dart'
     as _i50;
 import 'package:diyar/features/history/presentation/pages/pickup_history/user_pickup_history_page.dart'
     as _i51;
 import 'package:diyar/features/home_content/domain/domain.dart' as _i60;
 import 'package:diyar/features/home_content/presentation/pages/news/news_page.dart'
-    as _i21;
+    as _i22;
 import 'package:diyar/features/home_content/presentation/pages/sale/sale_page.dart'
-    as _i36;
-import 'package:diyar/features/main_home/presentation/pages/home_tab_page.dart'
-    as _i12;
-import 'package:diyar/features/main_home/presentation/pages/main_home_page.dart'
-    as _i13;
-import 'package:diyar/features/map/presentation/user_map/order_map_page.dart'
-    as _i24;
-import 'package:diyar/features/menu/domain/domain.dart' as _i58;
-import 'package:diyar/features/menu/presentation/pages/menu_page.dart' as _i20;
-import 'package:diyar/features/menu/presentation/pages/product_detail_page.dart'
-    as _i29;
-import 'package:diyar/features/menu/presentation/pages/search_menu_page.dart'
     as _i37;
-import 'package:diyar/features/order/presentation/pages/delivery_page.dart'
-    as _i9;
-import 'package:diyar/features/order/presentation/pages/second_order_page.dart'
-    as _i38;
-import 'package:diyar/features/payments/presentation/pages/mbank/mbank_check_status_page.dart'
+import 'package:diyar/features/main_home/presentation/pages/home_tab_page.dart'
+    as _i13;
+import 'package:diyar/features/main_home/presentation/pages/main_home_page.dart'
     as _i14;
-import 'package:diyar/features/payments/presentation/pages/mbank/mbank_confirm_page.dart'
-    as _i15;
-import 'package:diyar/features/payments/presentation/pages/mbank/mbank_initiate_page.dart'
-    as _i16;
-import 'package:diyar/features/payments/presentation/pages/mega/mega_check_user_page.dart'
-    as _i17;
-import 'package:diyar/features/payments/presentation/pages/mega/mega_otp_page.dart'
-    as _i18;
-import 'package:diyar/features/payments/presentation/pages/mega/mega_payment_status_page.dart'
-    as _i19;
-import 'package:diyar/features/payments/presentation/pages/payment_status_page.dart'
+import 'package:diyar/features/map/presentation/user_map/order_map_page.dart'
     as _i25;
-import 'package:diyar/features/payments/presentation/pages/payments_page.dart'
+import 'package:diyar/features/menu/domain/domain.dart' as _i58;
+import 'package:diyar/features/menu/presentation/pages/menu_page.dart' as _i21;
+import 'package:diyar/features/menu/presentation/pages/product_detail_page.dart'
+    as _i30;
+import 'package:diyar/features/menu/presentation/pages/search_menu_page.dart'
+    as _i38;
+import 'package:diyar/features/order/presentation/pages/delivery_page.dart'
+    as _i10;
+import 'package:diyar/features/payments/presentation/pages/mbank/mbank_check_status_page.dart'
+    as _i15;
+import 'package:diyar/features/payments/presentation/pages/mbank/mbank_confirm_page.dart'
+    as _i16;
+import 'package:diyar/features/payments/presentation/pages/mbank/mbank_initiate_page.dart'
+    as _i17;
+import 'package:diyar/features/payments/presentation/pages/mega/mega_check_user_page.dart'
+    as _i18;
+import 'package:diyar/features/payments/presentation/pages/mega/mega_otp_page.dart'
+    as _i19;
+import 'package:diyar/features/payments/presentation/pages/mega/mega_payment_status_page.dart'
+    as _i20;
+import 'package:diyar/features/payments/presentation/pages/payment_status_page.dart'
     as _i26;
-import 'package:diyar/features/payments/presentation/pages/qr/qr_check_status_page.dart'
-    as _i32;
-import 'package:diyar/features/payments/presentation/pages/qr/qr_code_page.dart'
-    as _i33;
-import 'package:diyar/features/pick_up/presentation/pages/pickup_page.dart'
+import 'package:diyar/features/payments/presentation/pages/payments_page.dart'
     as _i27;
+import 'package:diyar/features/payments/presentation/pages/qr/qr_check_status_page.dart'
+    as _i33;
+import 'package:diyar/features/payments/presentation/pages/qr/qr_code_page.dart'
+    as _i34;
+import 'package:diyar/features/pick_up/presentation/pages/pickup_page.dart'
+    as _i28;
 import 'package:diyar/features/profile/data/data.dart' as _i59;
 import 'package:diyar/features/profile/presentation/pages/profile/profile_page.dart'
-    as _i31;
+    as _i32;
 import 'package:diyar/features/profile/presentation/pages/profile_info/profile_info_page.dart'
-    as _i30;
+    as _i31;
 import 'package:diyar/features/profile/presentation/pages/security/security_page.dart'
     as _i39;
 import 'package:diyar/features/templates/presentation/pages/templates_page.dart'
@@ -180,7 +180,26 @@ class BonusQrRoute extends _i53.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i4.CartPage]
+/// [_i4.BonusTransactionsPage]
+class BonusTransactionsRoute extends _i53.PageRouteInfo<void> {
+  const BonusTransactionsRoute({List<_i53.PageRouteInfo>? children})
+      : super(
+          BonusTransactionsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'BonusTransactionsRoute';
+
+  static _i53.PageInfo page = _i53.PageInfo(
+    name,
+    builder: (data) {
+      return const _i4.BonusTransactionsPage();
+    },
+  );
+}
+
+/// generated route for
+/// [_i5.CartPage]
 class CartRoute extends _i53.PageRouteInfo<void> {
   const CartRoute({List<_i53.PageRouteInfo>? children})
       : super(
@@ -193,13 +212,13 @@ class CartRoute extends _i53.PageRouteInfo<void> {
   static _i53.PageInfo page = _i53.PageInfo(
     name,
     builder: (data) {
-      return const _i4.CartPage();
+      return const _i5.CartPage();
     },
   );
 }
 
 /// generated route for
-/// [_i5.CheckPhoneNumberPage]
+/// [_i6.CheckPhoneNumberPage]
 class CheckPhoneNumberRoute extends _i53.PageRouteInfo<void> {
   const CheckPhoneNumberRoute({List<_i53.PageRouteInfo>? children})
       : super(
@@ -212,13 +231,13 @@ class CheckPhoneNumberRoute extends _i53.PageRouteInfo<void> {
   static _i53.PageInfo page = _i53.PageInfo(
     name,
     builder: (data) {
-      return const _i5.CheckPhoneNumberPage();
+      return const _i6.CheckPhoneNumberPage();
     },
   );
 }
 
 /// generated route for
-/// [_i6.CofePage]
+/// [_i7.CofePage]
 class CofeRoute extends _i53.PageRouteInfo<void> {
   const CofeRoute({List<_i53.PageRouteInfo>? children})
       : super(
@@ -231,13 +250,13 @@ class CofeRoute extends _i53.PageRouteInfo<void> {
   static _i53.PageInfo page = _i53.PageInfo(
     name,
     builder: (data) {
-      return const _i6.CofePage();
+      return const _i7.CofePage();
     },
   );
 }
 
 /// generated route for
-/// [_i7.ContactPage]
+/// [_i8.ContactPage]
 class ContactRoute extends _i53.PageRouteInfo<void> {
   const ContactRoute({List<_i53.PageRouteInfo>? children})
       : super(
@@ -250,13 +269,13 @@ class ContactRoute extends _i53.PageRouteInfo<void> {
   static _i53.PageInfo page = _i53.PageInfo(
     name,
     builder: (data) {
-      return const _i7.ContactPage();
+      return const _i8.ContactPage();
     },
   );
 }
 
 /// generated route for
-/// [_i8.CurierPage]
+/// [_i9.CurierPage]
 class CurierRoute extends _i53.PageRouteInfo<void> {
   const CurierRoute({List<_i53.PageRouteInfo>? children})
       : super(
@@ -269,13 +288,13 @@ class CurierRoute extends _i53.PageRouteInfo<void> {
   static _i53.PageInfo page = _i53.PageInfo(
     name,
     builder: (data) {
-      return const _i8.CurierPage();
+      return const _i9.CurierPage();
     },
   );
 }
 
 /// generated route for
-/// [_i9.DeliveryFormPage]
+/// [_i10.DeliveryFormPage]
 class DeliveryFormRoute extends _i53.PageRouteInfo<DeliveryFormRouteArgs> {
   DeliveryFormRoute({
     _i54.Key? key,
@@ -308,7 +327,7 @@ class DeliveryFormRoute extends _i53.PageRouteInfo<DeliveryFormRouteArgs> {
     name,
     builder: (data) {
       final args = data.argsAs<DeliveryFormRouteArgs>();
-      return _i9.DeliveryFormPage(
+      return _i10.DeliveryFormPage(
         key: args.key,
         address: args.address,
         initialUserName: args.initialUserName,
@@ -357,7 +376,7 @@ class DeliveryFormRouteArgs {
 }
 
 /// generated route for
-/// [_i10.HallPage]
+/// [_i11.HallPage]
 class HallRoute extends _i53.PageRouteInfo<void> {
   const HallRoute({List<_i53.PageRouteInfo>? children})
       : super(
@@ -370,13 +389,13 @@ class HallRoute extends _i53.PageRouteInfo<void> {
   static _i53.PageInfo page = _i53.PageInfo(
     name,
     builder: (data) {
-      return const _i10.HallPage();
+      return const _i11.HallPage();
     },
   );
 }
 
 /// generated route for
-/// [_i11.HistoryPage]
+/// [_i12.HistoryPage]
 class HistoryRoute extends _i53.PageRouteInfo<void> {
   const HistoryRoute({List<_i53.PageRouteInfo>? children})
       : super(
@@ -389,13 +408,13 @@ class HistoryRoute extends _i53.PageRouteInfo<void> {
   static _i53.PageInfo page = _i53.PageInfo(
     name,
     builder: (data) {
-      return const _i11.HistoryPage();
+      return const _i12.HistoryPage();
     },
   );
 }
 
 /// generated route for
-/// [_i12.HomeTabPage]
+/// [_i13.HomeTabPage]
 class HomeTabRoute extends _i53.PageRouteInfo<void> {
   const HomeTabRoute({List<_i53.PageRouteInfo>? children})
       : super(
@@ -408,13 +427,13 @@ class HomeTabRoute extends _i53.PageRouteInfo<void> {
   static _i53.PageInfo page = _i53.PageInfo(
     name,
     builder: (data) {
-      return const _i12.HomeTabPage();
+      return const _i13.HomeTabPage();
     },
   );
 }
 
 /// generated route for
-/// [_i13.MainHomePage]
+/// [_i14.MainHomePage]
 class MainHomeRoute extends _i53.PageRouteInfo<void> {
   const MainHomeRoute({List<_i53.PageRouteInfo>? children})
       : super(
@@ -427,13 +446,13 @@ class MainHomeRoute extends _i53.PageRouteInfo<void> {
   static _i53.PageInfo page = _i53.PageInfo(
     name,
     builder: (data) {
-      return const _i13.MainHomePage();
+      return const _i14.MainHomePage();
     },
   );
 }
 
 /// generated route for
-/// [_i14.MbankCheckStatusPage]
+/// [_i15.MbankCheckStatusPage]
 class MbankCheckStatusRoute
     extends _i53.PageRouteInfo<MbankCheckStatusRouteArgs> {
   MbankCheckStatusRoute({
@@ -457,7 +476,7 @@ class MbankCheckStatusRoute
     name,
     builder: (data) {
       final args = data.argsAs<MbankCheckStatusRouteArgs>();
-      return _i14.MbankCheckStatusPage(
+      return _i15.MbankCheckStatusPage(
         key: args.key,
         amount: args.amount,
         orderNumber: args.orderNumber,
@@ -486,7 +505,7 @@ class MbankCheckStatusRouteArgs {
 }
 
 /// generated route for
-/// [_i15.MbankConfirmPage]
+/// [_i16.MbankConfirmPage]
 class MbankConfirmRoute extends _i53.PageRouteInfo<MbankConfirmRouteArgs> {
   MbankConfirmRoute({
     _i54.Key? key,
@@ -514,7 +533,7 @@ class MbankConfirmRoute extends _i53.PageRouteInfo<MbankConfirmRouteArgs> {
     builder: (data) {
       final args = data.argsAs<MbankConfirmRouteArgs>(
           orElse: () => const MbankConfirmRouteArgs());
-      return _i15.MbankConfirmPage(
+      return _i16.MbankConfirmPage(
         key: args.key,
         phone: args.phone,
         amount: args.amount,
@@ -551,7 +570,7 @@ class MbankConfirmRouteArgs {
 }
 
 /// generated route for
-/// [_i16.MbankInitiatePage]
+/// [_i17.MbankInitiatePage]
 class MbankInitiateRoute extends _i53.PageRouteInfo<MbankInitiateRouteArgs> {
   MbankInitiateRoute({
     _i54.Key? key,
@@ -579,7 +598,7 @@ class MbankInitiateRoute extends _i53.PageRouteInfo<MbankInitiateRouteArgs> {
     builder: (data) {
       final args = data.argsAs<MbankInitiateRouteArgs>(
           orElse: () => const MbankInitiateRouteArgs());
-      return _i16.MbankInitiatePage(
+      return _i17.MbankInitiatePage(
         key: args.key,
         orderNumber: args.orderNumber,
         amount: args.amount,
@@ -616,7 +635,7 @@ class MbankInitiateRouteArgs {
 }
 
 /// generated route for
-/// [_i17.MegaCheckUserPage]
+/// [_i18.MegaCheckUserPage]
 class MegaCheckUserRoute extends _i53.PageRouteInfo<MegaCheckUserRouteArgs> {
   MegaCheckUserRoute({
     _i54.Key? key,
@@ -644,7 +663,7 @@ class MegaCheckUserRoute extends _i53.PageRouteInfo<MegaCheckUserRouteArgs> {
     builder: (data) {
       final args = data.argsAs<MegaCheckUserRouteArgs>(
           orElse: () => const MegaCheckUserRouteArgs());
-      return _i17.MegaCheckUserPage(
+      return _i18.MegaCheckUserPage(
         key: args.key,
         orderNumber: args.orderNumber,
         amount: args.amount,
@@ -681,7 +700,7 @@ class MegaCheckUserRouteArgs {
 }
 
 /// generated route for
-/// [_i18.MegaOtpPage]
+/// [_i19.MegaOtpPage]
 class MegaOtpRoute extends _i53.PageRouteInfo<MegaOtpRouteArgs> {
   MegaOtpRoute({
     _i54.Key? key,
@@ -709,7 +728,7 @@ class MegaOtpRoute extends _i53.PageRouteInfo<MegaOtpRouteArgs> {
     builder: (data) {
       final args =
           data.argsAs<MegaOtpRouteArgs>(orElse: () => const MegaOtpRouteArgs());
-      return _i18.MegaOtpPage(
+      return _i19.MegaOtpPage(
         key: args.key,
         phone: args.phone,
         amount: args.amount,
@@ -746,7 +765,7 @@ class MegaOtpRouteArgs {
 }
 
 /// generated route for
-/// [_i19.MegaPaymentStatusPage]
+/// [_i20.MegaPaymentStatusPage]
 class MegaPaymentStatusRoute
     extends _i53.PageRouteInfo<MegaPaymentStatusRouteArgs> {
   MegaPaymentStatusRoute({
@@ -770,7 +789,7 @@ class MegaPaymentStatusRoute
     name,
     builder: (data) {
       final args = data.argsAs<MegaPaymentStatusRouteArgs>();
-      return _i19.MegaPaymentStatusPage(
+      return _i20.MegaPaymentStatusPage(
         key: args.key,
         amount: args.amount,
         orderNumber: args.orderNumber,
@@ -799,7 +818,7 @@ class MegaPaymentStatusRouteArgs {
 }
 
 /// generated route for
-/// [_i20.MenuPage]
+/// [_i21.MenuPage]
 class MenuRoute extends _i53.PageRouteInfo<void> {
   const MenuRoute({List<_i53.PageRouteInfo>? children})
       : super(
@@ -812,13 +831,13 @@ class MenuRoute extends _i53.PageRouteInfo<void> {
   static _i53.PageInfo page = _i53.PageInfo(
     name,
     builder: (data) {
-      return const _i20.MenuPage();
+      return const _i21.MenuPage();
     },
   );
 }
 
 /// generated route for
-/// [_i21.NewsPage]
+/// [_i22.NewsPage]
 class NewsRoute extends _i53.PageRouteInfo<void> {
   const NewsRoute({List<_i53.PageRouteInfo>? children})
       : super(
@@ -831,13 +850,13 @@ class NewsRoute extends _i53.PageRouteInfo<void> {
   static _i53.PageInfo page = _i53.PageInfo(
     name,
     builder: (data) {
-      return const _i21.NewsPage();
+      return const _i22.NewsPage();
     },
   );
 }
 
 /// generated route for
-/// [_i22.OrderDetailPage]
+/// [_i23.OrderDetailPage]
 class OrderDetailRoute extends _i53.PageRouteInfo<OrderDetailRouteArgs> {
   OrderDetailRoute({
     _i54.Key? key,
@@ -858,7 +877,7 @@ class OrderDetailRoute extends _i53.PageRouteInfo<OrderDetailRouteArgs> {
     name,
     builder: (data) {
       final args = data.argsAs<OrderDetailRouteArgs>();
-      return _i22.OrderDetailPage(
+      return _i23.OrderDetailPage(
         key: args.key,
         orderNumber: args.orderNumber,
       );
@@ -883,7 +902,7 @@ class OrderDetailRouteArgs {
 }
 
 /// generated route for
-/// [_i23.OrderHistoryPage]
+/// [_i24.OrderHistoryPage]
 class OrderHistoryRoute extends _i53.PageRouteInfo<void> {
   const OrderHistoryRoute({List<_i53.PageRouteInfo>? children})
       : super(
@@ -896,13 +915,13 @@ class OrderHistoryRoute extends _i53.PageRouteInfo<void> {
   static _i53.PageInfo page = _i53.PageInfo(
     name,
     builder: (data) {
-      return const _i23.OrderHistoryPage();
+      return const _i24.OrderHistoryPage();
     },
   );
 }
 
 /// generated route for
-/// [_i24.OrderMapPage]
+/// [_i25.OrderMapPage]
 class OrderMapRoute extends _i53.PageRouteInfo<OrderMapRouteArgs> {
   OrderMapRoute({
     _i54.Key? key,
@@ -927,7 +946,7 @@ class OrderMapRoute extends _i53.PageRouteInfo<OrderMapRouteArgs> {
     name,
     builder: (data) {
       final args = data.argsAs<OrderMapRouteArgs>();
-      return _i24.OrderMapPage(
+      return _i25.OrderMapPage(
         key: args.key,
         cart: args.cart,
         totalPrice: args.totalPrice,
@@ -960,7 +979,7 @@ class OrderMapRouteArgs {
 }
 
 /// generated route for
-/// [_i25.PaymentStatusPage]
+/// [_i26.PaymentStatusPage]
 class PaymentStatusRoute extends _i53.PageRouteInfo<PaymentStatusRouteArgs> {
   PaymentStatusRoute({
     _i54.Key? key,
@@ -983,7 +1002,7 @@ class PaymentStatusRoute extends _i53.PageRouteInfo<PaymentStatusRouteArgs> {
     name,
     builder: (data) {
       final args = data.argsAs<PaymentStatusRouteArgs>();
-      return _i25.PaymentStatusPage(
+      return _i26.PaymentStatusPage(
         key: args.key,
         amount: args.amount,
         orderNumber: args.orderNumber,
@@ -1012,7 +1031,7 @@ class PaymentStatusRouteArgs {
 }
 
 /// generated route for
-/// [_i26.PaymentsPage]
+/// [_i27.PaymentsPage]
 class PaymentsRoute extends _i53.PageRouteInfo<PaymentsRouteArgs> {
   PaymentsRoute({
     _i54.Key? key,
@@ -1036,7 +1055,7 @@ class PaymentsRoute extends _i53.PageRouteInfo<PaymentsRouteArgs> {
     builder: (data) {
       final args = data.argsAs<PaymentsRouteArgs>(
           orElse: () => const PaymentsRouteArgs());
-      return _i26.PaymentsPage(
+      return _i27.PaymentsPage(
         key: args.key,
         orderNumber: args.orderNumber,
         amount: args.amount,
@@ -1065,7 +1084,7 @@ class PaymentsRouteArgs {
 }
 
 /// generated route for
-/// [_i27.PickupFormPage]
+/// [_i28.PickupFormPage]
 class PickupFormRoute extends _i53.PageRouteInfo<PickupFormRouteArgs> {
   PickupFormRoute({
     _i57.Key? key,
@@ -1090,7 +1109,7 @@ class PickupFormRoute extends _i53.PageRouteInfo<PickupFormRouteArgs> {
     name,
     builder: (data) {
       final args = data.argsAs<PickupFormRouteArgs>();
-      return _i27.PickupFormPage(
+      return _i28.PickupFormPage(
         key: args.key,
         cart: args.cart,
         totalPrice: args.totalPrice,
@@ -1123,7 +1142,7 @@ class PickupFormRouteArgs {
 }
 
 /// generated route for
-/// [_i28.PinCodePage]
+/// [_i29.PinCodePage]
 class PinCodeRoute extends _i53.PageRouteInfo<void> {
   const PinCodeRoute({List<_i53.PageRouteInfo>? children})
       : super(
@@ -1136,13 +1155,13 @@ class PinCodeRoute extends _i53.PageRouteInfo<void> {
   static _i53.PageInfo page = _i53.PageInfo(
     name,
     builder: (data) {
-      return const _i28.PinCodePage();
+      return const _i29.PinCodePage();
     },
   );
 }
 
 /// generated route for
-/// [_i29.ProductDetailPage]
+/// [_i30.ProductDetailPage]
 class ProductDetailRoute extends _i53.PageRouteInfo<ProductDetailRouteArgs> {
   ProductDetailRoute({
     _i54.Key? key,
@@ -1165,7 +1184,7 @@ class ProductDetailRoute extends _i53.PageRouteInfo<ProductDetailRouteArgs> {
     name,
     builder: (data) {
       final args = data.argsAs<ProductDetailRouteArgs>();
-      return _i29.ProductDetailPage(
+      return _i30.ProductDetailPage(
         key: args.key,
         food: args.food,
         quantity: args.quantity,
@@ -1194,7 +1213,7 @@ class ProductDetailRouteArgs {
 }
 
 /// generated route for
-/// [_i30.ProfileInfoPage]
+/// [_i31.ProfileInfoPage]
 class ProfileInfoRoute extends _i53.PageRouteInfo<ProfileInfoRouteArgs> {
   ProfileInfoRoute({
     _i54.Key? key,
@@ -1215,7 +1234,7 @@ class ProfileInfoRoute extends _i53.PageRouteInfo<ProfileInfoRouteArgs> {
     name,
     builder: (data) {
       final args = data.argsAs<ProfileInfoRouteArgs>();
-      return _i30.ProfileInfoPage(
+      return _i31.ProfileInfoPage(
         key: args.key,
         user: args.user,
       );
@@ -1240,7 +1259,7 @@ class ProfileInfoRouteArgs {
 }
 
 /// generated route for
-/// [_i31.ProfilePage]
+/// [_i32.ProfilePage]
 class ProfileRoute extends _i53.PageRouteInfo<void> {
   const ProfileRoute({List<_i53.PageRouteInfo>? children})
       : super(
@@ -1253,13 +1272,13 @@ class ProfileRoute extends _i53.PageRouteInfo<void> {
   static _i53.PageInfo page = _i53.PageInfo(
     name,
     builder: (data) {
-      return const _i31.ProfilePage();
+      return const _i32.ProfilePage();
     },
   );
 }
 
 /// generated route for
-/// [_i32.QrCheckStatusPage]
+/// [_i33.QrCheckStatusPage]
 class QrCheckStatusRoute extends _i53.PageRouteInfo<QrCheckStatusRouteArgs> {
   QrCheckStatusRoute({
     _i54.Key? key,
@@ -1284,7 +1303,7 @@ class QrCheckStatusRoute extends _i53.PageRouteInfo<QrCheckStatusRouteArgs> {
     name,
     builder: (data) {
       final args = data.argsAs<QrCheckStatusRouteArgs>();
-      return _i32.QrCheckStatusPage(
+      return _i33.QrCheckStatusPage(
         key: args.key,
         transactionId: args.transactionId,
         orderNumber: args.orderNumber,
@@ -1317,7 +1336,7 @@ class QrCheckStatusRouteArgs {
 }
 
 /// generated route for
-/// [_i33.QrCodePage]
+/// [_i34.QrCodePage]
 class QrCodeRoute extends _i53.PageRouteInfo<QrCodeRouteArgs> {
   QrCodeRoute({
     _i54.Key? key,
@@ -1340,7 +1359,7 @@ class QrCodeRoute extends _i53.PageRouteInfo<QrCodeRouteArgs> {
     name,
     builder: (data) {
       final args = data.argsAs<QrCodeRouteArgs>();
-      return _i33.QrCodePage(
+      return _i34.QrCodePage(
         key: args.key,
         initialAmount: args.initialAmount,
         orderNumber: args.orderNumber,
@@ -1369,7 +1388,7 @@ class QrCodeRouteArgs {
 }
 
 /// generated route for
-/// [_i34.RessetPasswordPage]
+/// [_i35.RessetPasswordPage]
 class RessetPasswordRoute extends _i53.PageRouteInfo<RessetPasswordRouteArgs> {
   RessetPasswordRoute({
     _i54.Key? key,
@@ -1391,7 +1410,7 @@ class RessetPasswordRoute extends _i53.PageRouteInfo<RessetPasswordRouteArgs> {
     builder: (data) {
       final args = data.argsAs<RessetPasswordRouteArgs>(
           orElse: () => const RessetPasswordRouteArgs());
-      return _i34.RessetPasswordPage(
+      return _i35.RessetPasswordPage(
         key: args.key,
         phone: args.phone,
       );
@@ -1416,7 +1435,7 @@ class RessetPasswordRouteArgs {
 }
 
 /// generated route for
-/// [_i35.RestorantPage]
+/// [_i36.RestorantPage]
 class RestorantRoute extends _i53.PageRouteInfo<void> {
   const RestorantRoute({List<_i53.PageRouteInfo>? children})
       : super(
@@ -1429,13 +1448,13 @@ class RestorantRoute extends _i53.PageRouteInfo<void> {
   static _i53.PageInfo page = _i53.PageInfo(
     name,
     builder: (data) {
-      return const _i35.RestorantPage();
+      return const _i36.RestorantPage();
     },
   );
 }
 
 /// generated route for
-/// [_i36.SalePage]
+/// [_i37.SalePage]
 class SaleRoute extends _i53.PageRouteInfo<SaleRouteArgs> {
   SaleRoute({
     _i54.Key? key,
@@ -1457,7 +1476,7 @@ class SaleRoute extends _i53.PageRouteInfo<SaleRouteArgs> {
     builder: (data) {
       final args =
           data.argsAs<SaleRouteArgs>(orElse: () => const SaleRouteArgs());
-      return _i36.SalePage(
+      return _i37.SalePage(
         key: args.key,
         sale: args.sale,
       );
@@ -1482,7 +1501,7 @@ class SaleRouteArgs {
 }
 
 /// generated route for
-/// [_i37.SearchMenuPage]
+/// [_i38.SearchMenuPage]
 class SearchMenuRoute extends _i53.PageRouteInfo<void> {
   const SearchMenuRoute({List<_i53.PageRouteInfo>? children})
       : super(
@@ -1495,67 +1514,9 @@ class SearchMenuRoute extends _i53.PageRouteInfo<void> {
   static _i53.PageInfo page = _i53.PageInfo(
     name,
     builder: (data) {
-      return const _i37.SearchMenuPage();
+      return const _i38.SearchMenuPage();
     },
   );
-}
-
-/// generated route for
-/// [_i38.SecondOrderPage]
-class SecondOrderRoute extends _i53.PageRouteInfo<SecondOrderRouteArgs> {
-  SecondOrderRoute({
-    _i54.Key? key,
-    required List<_i56.CartItemEntity> cart,
-    required int dishCount,
-    required int totalPrice,
-    List<_i53.PageRouteInfo>? children,
-  }) : super(
-          SecondOrderRoute.name,
-          args: SecondOrderRouteArgs(
-            key: key,
-            cart: cart,
-            dishCount: dishCount,
-            totalPrice: totalPrice,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'SecondOrderRoute';
-
-  static _i53.PageInfo page = _i53.PageInfo(
-    name,
-    builder: (data) {
-      final args = data.argsAs<SecondOrderRouteArgs>();
-      return _i38.SecondOrderPage(
-        key: args.key,
-        cart: args.cart,
-        dishCount: args.dishCount,
-        totalPrice: args.totalPrice,
-      );
-    },
-  );
-}
-
-class SecondOrderRouteArgs {
-  const SecondOrderRouteArgs({
-    this.key,
-    required this.cart,
-    required this.dishCount,
-    required this.totalPrice,
-  });
-
-  final _i54.Key? key;
-
-  final List<_i56.CartItemEntity> cart;
-
-  final int dishCount;
-
-  final int totalPrice;
-
-  @override
-  String toString() {
-    return 'SecondOrderRouteArgs{key: $key, cart: $cart, dishCount: $dishCount, totalPrice: $totalPrice}';
-  }
 }
 
 /// generated route for

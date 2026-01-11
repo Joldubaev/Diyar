@@ -8,50 +8,130 @@ sealed class DeliveryFormState extends Equatable {
 }
 
 final class DeliveryFormInitial extends DeliveryFormState {}
-
-/// Состояние загруженной формы
-/// Содержит только актуальное состояние формы
 final class DeliveryFormLoaded extends DeliveryFormState {
+  // Данные для заказа
+  final String address;
+  final int subtotalPrice;
+  final double deliveryPrice;
   final int totalOrderCost;
+  
+  // Поля формы (контактные данные)
+  final String userName;
+  final String userPhone;
+  
+  // Поля формы (адрес)
+  final String houseNumber;
+  final String entrance;
+  final String floor;
+  final String apartment;
+  final String intercom;
+  final String comment;
+  
+  // Сдача
+  final int? changeAmount;
+  
+  // Поля формы (бонусы и оплата)
+  final bool useBonus;
+  final double? bonusAmount;
   final PaymentTypeDelivery paymentType;
-  final ChangeAmountResult? changeAmountResult;
+  
+  // Статусы процесса (вместо кучи мелких стейтов)
+  final bool isSubmitting; // Заменяет CreateOrderLoading
   final String? validationError;
-
-  // Monotonic token для одноразовых событий подтверждения заказа
-  // Увеличивается при каждой успешной валидации, не требует ручного сброса
+  final String? successMessage; // Если заказ создан
   final int confirmationRequestId;
 
   const DeliveryFormLoaded({
+    required this.address,
+    required this.subtotalPrice,
+    required this.deliveryPrice,
     required this.totalOrderCost,
-    required this.paymentType,
-    this.changeAmountResult,
+    this.userName = '',
+    this.userPhone = '+996',
+    this.houseNumber = '',
+    this.entrance = '',
+    this.floor = '',
+    this.apartment = '',
+    this.intercom = '',
+    this.comment = '',
+    this.changeAmount,
+    this.useBonus = false,
+    this.bonusAmount,
+    this.paymentType = PaymentTypeDelivery.cash,
     this.validationError,
+    this.successMessage,
+    this.isSubmitting = false,
     this.confirmationRequestId = 0,
   });
 
+
   DeliveryFormLoaded copyWith({
+    String? address,
+    int? subtotalPrice,
+    double? deliveryPrice,
     int? totalOrderCost,
+    String? userName,
+    String? userPhone,
+    String? houseNumber,
+    String? entrance,
+    String? floor,
+    String? apartment,
+    String? intercom,
+    String? comment,
+    int? changeAmount,
+    bool? useBonus,
+    double? bonusAmount,
     PaymentTypeDelivery? paymentType,
-    ChangeAmountResult? changeAmountResult,
     String? validationError,
+    String? successMessage,
+    bool? isSubmitting,
     int? confirmationRequestId,
-    bool clearValidationError = false,
   }) {
     return DeliveryFormLoaded(
+      address: address ?? this.address,
+      subtotalPrice: subtotalPrice ?? this.subtotalPrice,
+      deliveryPrice: deliveryPrice ?? this.deliveryPrice,
       totalOrderCost: totalOrderCost ?? this.totalOrderCost,
+      userName: userName ?? this.userName,
+      userPhone: userPhone ?? this.userPhone,
+      houseNumber: houseNumber ?? this.houseNumber,
+      entrance: entrance ?? this.entrance,
+      floor: floor ?? this.floor,
+      apartment: apartment ?? this.apartment,
+      intercom: intercom ?? this.intercom,
+      comment: comment ?? this.comment,
+      changeAmount: changeAmount ?? this.changeAmount,
+      useBonus: useBonus ?? this.useBonus,
+      bonusAmount: bonusAmount ?? this.bonusAmount,
       paymentType: paymentType ?? this.paymentType,
-      changeAmountResult: changeAmountResult ?? this.changeAmountResult,
-      validationError: clearValidationError ? null : (validationError ?? this.validationError),
+      validationError: validationError,
+      successMessage: successMessage,
+      isSubmitting: isSubmitting ?? this.isSubmitting,
       confirmationRequestId: confirmationRequestId ?? this.confirmationRequestId,
     );
   }
 
   @override
   List<Object?> get props => [
+        address,
+        subtotalPrice,
+        deliveryPrice,
         totalOrderCost,
+        userName,
+        userPhone,
+        houseNumber,
+        entrance,
+        floor,
+        apartment,
+        intercom,
+        comment,
+        changeAmount,
+        useBonus,
+        bonusAmount,
         paymentType,
-        changeAmountResult,
+        isSubmitting,
         validationError,
+        successMessage,
         confirmationRequestId,
       ];
 }

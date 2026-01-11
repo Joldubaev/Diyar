@@ -3,5 +3,5 @@ import 'package:diyar/features/history/domain/domain.dart';
 
 abstract class HistoryRepository {
   Future<List<OrderActiveItemEntity>> getHistoryOrders();
-  Future<List<UserPickupHistoryEntity>> getPickupHistory();
+  Future<PickupHistoryResponseEntity> getPickupHistory({int pageNumber = 1, int pageSize = 10});
 }

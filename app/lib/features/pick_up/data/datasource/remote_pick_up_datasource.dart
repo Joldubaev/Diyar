@@ -37,7 +37,13 @@ class RemotePickUpDataSourceImpl implements RemotePickUpDataSource {
       log('Error in getPickupOrder: $e');
       log('Stacktrace: $stacktrace');
       if (e is DioException) {
-        return Left(ServerFailure(e.message ?? 'Network error during pickup order', e.response?.statusCode));
+        // Логируем ответ сервера для отладки
+        if (e.response != null) {
+          log('Response data: ${e.response?.data}');
+          log('Response status: ${e.response?.statusCode}');
+        }
+        // Используем fromDio для лучшей обработки ошибок
+        return Left(ServerFailure.fromDio(e));
       }
       return Left(ServerFailure('Exception during pickup order: ${e.toString()}', null));
     }

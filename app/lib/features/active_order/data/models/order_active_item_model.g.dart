@@ -32,6 +32,7 @@ _$OrderActiveItemModelImpl _$$OrderActiveItemModelImplFromJson(
       status: json['status'] as String?,
       deliveryPrice: (json['deliveryPrice'] as num?)?.toInt(),
       sdacha: (json['sdacha'] as num?)?.toInt(),
+      amountToReduce: (json['amountToReduce'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$$OrderActiveItemModelImplToJson(
@@ -58,4 +59,5 @@ Map<String, dynamic> _$$OrderActiveItemModelImplToJson(
       'status': instance.status,
       'deliveryPrice': instance.deliveryPrice,
       'sdacha': instance.sdacha,
+      'amountToReduce': instance.amountToReduce,
     };

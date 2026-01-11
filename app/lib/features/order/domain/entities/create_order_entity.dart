@@ -11,6 +11,7 @@ class CreateOrderEntity extends Equatable {
   final int price; // Общая стоимость заказа
   final int deliveryPrice;
   final int? sdacha; // Сумма, с которой нужна сдача
+  final double? amountToReduce; // Сумма бонусов для списания
 
   const CreateOrderEntity({
     required this.addressData,
@@ -21,6 +22,7 @@ class CreateOrderEntity extends Equatable {
     required this.price,
     required this.deliveryPrice,
     this.sdacha,
+    this.amountToReduce,
   });
 
   @override
@@ -33,5 +35,6 @@ class CreateOrderEntity extends Equatable {
         price,
         deliveryPrice,
         sdacha,
+        amountToReduce,
       ];
 }

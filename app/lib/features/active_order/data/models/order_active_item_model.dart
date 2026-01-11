@@ -29,6 +29,7 @@ class OrderActiveItemModel with _$OrderActiveItemModel {
     String? status,
     int? deliveryPrice,
     int? sdacha,
+    int? amountToReduce,
   }) = _OrderActiveItemModel;
 
   factory OrderActiveItemModel.fromJson(Map<String, dynamic> json) => _$OrderActiveItemModelFromJson(json);
@@ -55,6 +56,7 @@ class OrderActiveItemModel with _$OrderActiveItemModel {
         status: entity.status,
         deliveryPrice: entity.deliveryPrice,
         sdacha: entity.sdacha,
+        amountToReduce: entity.amountToReduce,
       );
 }
 
@@ -81,5 +83,6 @@ extension OrderActiveItemModelX on OrderActiveItemModel {
         status: status,
         deliveryPrice: deliveryPrice,
         sdacha: sdacha,
+        amountToReduce: amountToReduce,
       );
 }

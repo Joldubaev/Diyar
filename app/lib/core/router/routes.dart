@@ -50,7 +50,7 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: UserPickupDetailRoute.page),
         AutoRoute(page: ProductDetailRoute.page),
         AutoRoute(page: TerasaRoute.page),
-        AutoRoute(page: SecondOrderRoute.page),
+        // AutoRoute(page: SecondOrderRoute.page),
         // AutoRoute(page: OrderHistoryRoute.page),
 
         AutoRoute(page: PinCodeRoute.page),
@@ -59,6 +59,7 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: PaymentsRoute.page),
         AutoRoute(page: MegaCheckUserRoute.page),
         AutoRoute(page: BonusQrRoute.page),
+        AutoRoute(page: BonusTransactionsRoute.page),
         AutoRoute(page: MegaOtpRoute.page),
         AutoRoute(page: MegaPaymentStatusRoute.page),
         AutoRoute(page: QrCodeRoute.page),

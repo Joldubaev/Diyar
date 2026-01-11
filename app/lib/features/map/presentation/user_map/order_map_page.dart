@@ -2,9 +2,7 @@ import 'dart:async';
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
-import 'package:diyar/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:diyar/features/map/map.dart';
-import 'package:diyar/features/order/order.dart';
 import 'package:diyar/features/profile/profile.dart';
 import 'package:diyar/injection_container.dart';
 import 'package:flutter/material.dart';
@@ -351,14 +349,6 @@ class _OrderMapPageState extends State<OrderMapPage> {
     if (_address == null || _address == context.l10n.addressIsNotFounded) {
       return;
     }
-
-    final cartState = context.read<CartBloc>().state;
-    if (cartState is CartLoaded) {}
-
-    context.read<OrderCubit>()
-      ..changeAddress(_address!)
-      ..changeAddressSearch(false)
-      ..selectDeliveryPrice(_deliveryPrice);
 
     // Получаем данные пользователя из ProfileCubit
     final profileCubit = context.read<ProfileCubit>();

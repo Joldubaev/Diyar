@@ -37,7 +37,7 @@ class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
         return Right(categories);
       }
 
-      return const Left(Failure('Ошибка при получении категорий'));
+      return const Left(ServerFailure('Ошибка при получении категорий'));
     } catch (e) {
       return Left(_handleError(e, 'Ошибка при получении категорий'));
     }
@@ -57,7 +57,7 @@ class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
         final foods = messageList.map((e) => FoodModel.fromJson(e as Map<String, dynamic>)).toList();
         return Right(CatergoryFoodModel(foodModels: foods));
       }
-      return const Left(Failure('Ошибка при получении блюд'));
+      return const Left(ServerFailure('Ошибка при получении блюд'));
     } catch (e) {
       return Left(_handleError(e, 'Ошибка при получении блюд'));
     }
@@ -80,7 +80,7 @@ class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
         final foods = list.map((e) => FoodModel.fromJson(e as Map<String, dynamic>)).toList();
         return Right(foods);
       }
-      return const Left(Failure('Некорректный формат ответа сервера'));
+      return const Left(ServerFailure('Некорректный формат ответа сервера'));
     } catch (e) {
       return Left(_handleError(e, 'Ошибка при поиске блюд'));
     }
@@ -98,7 +98,7 @@ class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
         final list = res.data['message'] as List;
         return Right(list.map((e) => FoodModel.fromJson(e)).toList());
       }
-      return const Left(Failure('Ошибка при получении популярных блюд'));
+      return const Left(ServerFailure('Ошибка при получении популярных блюд'));
     } catch (e) {
       return Left(_handleError(e, 'Ошибка при получении популярных блюд'));
     }
@@ -109,8 +109,8 @@ class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
       final msg = e.response?.data is Map && e.response?.data['message'] != null
           ? e.response?.data['message'].toString()
           : fallbackMessage;
-      return Failure(msg!);
+      return ServerFailure(msg!);
     }
-    return Failure(fallbackMessage);
+    return ServerFailure(fallbackMessage);
   }
 }

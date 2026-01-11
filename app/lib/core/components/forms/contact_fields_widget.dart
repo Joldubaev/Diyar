@@ -40,7 +40,11 @@ class ContactFieldsWidget extends StatelessWidget {
           formatter: MaskTextInputFormatter(mask: "+996 (###) ##-##-##"),
           textInputType: TextInputType.phone,
           validator: (value) {
-            final phone = value?.replaceAll(RegExp(r'[^0-9]'), '') ?? '';
+            final phone = value
+                    ?.split('')
+                    .where((char) => char.isNotEmpty && char.codeUnitAt(0) >= 48 && char.codeUnitAt(0) <= 57)
+                    .join('') ??
+                '';
             if (phone.isEmpty) {
               return context.l10n.pleaseEnterPhone;
             } else if (phone.length < 12) {

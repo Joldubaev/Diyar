@@ -28,6 +28,7 @@ mixin _$PickupOrderModel {
   String? get userPhone => throw _privateConstructorUsedError;
   String? get comment => throw _privateConstructorUsedError;
   String? get paymentMethod => throw _privateConstructorUsedError;
+  double? get amountToReduce => throw _privateConstructorUsedError;
 
   /// Serializes this PickupOrderModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -53,7 +54,8 @@ abstract class $PickupOrderModelCopyWith<$Res> {
       String? userName,
       String? userPhone,
       String? comment,
-      String? paymentMethod});
+      String? paymentMethod,
+      double? amountToReduce});
 }
 
 /// @nodoc
@@ -79,6 +81,7 @@ class _$PickupOrderModelCopyWithImpl<$Res, $Val extends PickupOrderModel>
     Object? userPhone = freezed,
     Object? comment = freezed,
     Object? paymentMethod = freezed,
+    Object? amountToReduce = freezed,
   }) {
     return _then(_value.copyWith(
       dishesCount: freezed == dishesCount
@@ -113,6 +116,10 @@ class _$PickupOrderModelCopyWithImpl<$Res, $Val extends PickupOrderModel>
           ? _value.paymentMethod
           : paymentMethod // ignore: cast_nullable_to_non_nullable
               as String?,
+      amountToReduce: freezed == amountToReduce
+          ? _value.amountToReduce
+          : amountToReduce // ignore: cast_nullable_to_non_nullable
+              as double?,
     ) as $Val);
   }
 }
@@ -133,7 +140,8 @@ abstract class _$$PickupOrderModelImplCopyWith<$Res>
       String? userName,
       String? userPhone,
       String? comment,
-      String? paymentMethod});
+      String? paymentMethod,
+      double? amountToReduce});
 }
 
 /// @nodoc
@@ -157,6 +165,7 @@ class __$$PickupOrderModelImplCopyWithImpl<$Res>
     Object? userPhone = freezed,
     Object? comment = freezed,
     Object? paymentMethod = freezed,
+    Object? amountToReduce = freezed,
   }) {
     return _then(_$PickupOrderModelImpl(
       dishesCount: freezed == dishesCount
@@ -191,6 +200,10 @@ class __$$PickupOrderModelImplCopyWithImpl<$Res>
           ? _value.paymentMethod
           : paymentMethod // ignore: cast_nullable_to_non_nullable
               as String?,
+      amountToReduce: freezed == amountToReduce
+          ? _value.amountToReduce
+          : amountToReduce // ignore: cast_nullable_to_non_nullable
+              as double?,
     ));
   }
 }
@@ -206,7 +219,8 @@ class _$PickupOrderModelImpl implements _PickupOrderModel {
       this.userName,
       this.userPhone,
       this.comment,
-      this.paymentMethod})
+      this.paymentMethod,
+      this.amountToReduce})
       : _foods = foods;
 
   factory _$PickupOrderModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -236,10 +250,12 @@ class _$PickupOrderModelImpl implements _PickupOrderModel {
   final String? comment;
   @override
   final String? paymentMethod;
+  @override
+  final double? amountToReduce;
 
   @override
   String toString() {
-    return 'PickupOrderModel(dishesCount: $dishesCount, foods: $foods, prepareFor: $prepareFor, price: $price, userName: $userName, userPhone: $userPhone, comment: $comment, paymentMethod: $paymentMethod)';
+    return 'PickupOrderModel(dishesCount: $dishesCount, foods: $foods, prepareFor: $prepareFor, price: $price, userName: $userName, userPhone: $userPhone, comment: $comment, paymentMethod: $paymentMethod, amountToReduce: $amountToReduce)';
   }
 
   @override
@@ -259,7 +275,9 @@ class _$PickupOrderModelImpl implements _PickupOrderModel {
                 other.userPhone == userPhone) &&
             (identical(other.comment, comment) || other.comment == comment) &&
             (identical(other.paymentMethod, paymentMethod) ||
-                other.paymentMethod == paymentMethod));
+                other.paymentMethod == paymentMethod) &&
+            (identical(other.amountToReduce, amountToReduce) ||
+                other.amountToReduce == amountToReduce));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -273,7 +291,8 @@ class _$PickupOrderModelImpl implements _PickupOrderModel {
       userName,
       userPhone,
       comment,
-      paymentMethod);
+      paymentMethod,
+      amountToReduce);
 
   /// Create a copy of PickupOrderModel
   /// with the given fields replaced by the non-null parameter values.
@@ -301,7 +320,8 @@ abstract class _PickupOrderModel implements PickupOrderModel {
       final String? userName,
       final String? userPhone,
       final String? comment,
-      final String? paymentMethod}) = _$PickupOrderModelImpl;
+      final String? paymentMethod,
+      final double? amountToReduce}) = _$PickupOrderModelImpl;
 
   factory _PickupOrderModel.fromJson(Map<String, dynamic> json) =
       _$PickupOrderModelImpl.fromJson;
@@ -322,6 +342,8 @@ abstract class _PickupOrderModel implements PickupOrderModel {
   String? get comment;
   @override
   String? get paymentMethod;
+  @override
+  double? get amountToReduce;
 
   /// Create a copy of PickupOrderModel
   /// with the given fields replaced by the non-null parameter values.

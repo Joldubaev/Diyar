@@ -10,6 +10,7 @@ class PickupOrderEntity extends Equatable {
   final String userPhone;
   final String? comment;
   final String? paymentMethod;
+  final double? amountToReduce; // Сумма бонусов для списания
 
   const PickupOrderEntity({
     required this.dishesCount,
@@ -20,6 +21,7 @@ class PickupOrderEntity extends Equatable {
     required this.userPhone,
     this.comment,
     this.paymentMethod,
+    this.amountToReduce,
   });
 
   @override
@@ -32,5 +34,6 @@ class PickupOrderEntity extends Equatable {
         userPhone,
         comment,
         paymentMethod,
+        amountToReduce,
       ];
 }

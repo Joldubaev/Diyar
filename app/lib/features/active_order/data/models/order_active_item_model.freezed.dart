@@ -41,6 +41,7 @@ mixin _$OrderActiveItemModel {
   String? get status => throw _privateConstructorUsedError;
   int? get deliveryPrice => throw _privateConstructorUsedError;
   int? get sdacha => throw _privateConstructorUsedError;
+  int? get amountToReduce => throw _privateConstructorUsedError;
 
   /// Serializes this OrderActiveItemModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -79,7 +80,8 @@ abstract class $OrderActiveItemModelCopyWith<$Res> {
       String? courierId,
       String? status,
       int? deliveryPrice,
-      int? sdacha});
+      int? sdacha,
+      int? amountToReduce});
 }
 
 /// @nodoc
@@ -119,6 +121,7 @@ class _$OrderActiveItemModelCopyWithImpl<$Res,
     Object? status = freezed,
     Object? deliveryPrice = freezed,
     Object? sdacha = freezed,
+    Object? amountToReduce = freezed,
   }) {
     return _then(_value.copyWith(
       id: freezed == id
@@ -205,6 +208,10 @@ class _$OrderActiveItemModelCopyWithImpl<$Res,
           ? _value.sdacha
           : sdacha // ignore: cast_nullable_to_non_nullable
               as int?,
+      amountToReduce: freezed == amountToReduce
+          ? _value.amountToReduce
+          : amountToReduce // ignore: cast_nullable_to_non_nullable
+              as int?,
     ) as $Val);
   }
 }
@@ -238,7 +245,8 @@ abstract class _$$OrderActiveItemModelImplCopyWith<$Res>
       String? courierId,
       String? status,
       int? deliveryPrice,
-      int? sdacha});
+      int? sdacha,
+      int? amountToReduce});
 }
 
 /// @nodoc
@@ -275,6 +283,7 @@ class __$$OrderActiveItemModelImplCopyWithImpl<$Res>
     Object? status = freezed,
     Object? deliveryPrice = freezed,
     Object? sdacha = freezed,
+    Object? amountToReduce = freezed,
   }) {
     return _then(_$OrderActiveItemModelImpl(
       id: freezed == id
@@ -361,6 +370,10 @@ class __$$OrderActiveItemModelImplCopyWithImpl<$Res>
           ? _value.sdacha
           : sdacha // ignore: cast_nullable_to_non_nullable
               as int?,
+      amountToReduce: freezed == amountToReduce
+          ? _value.amountToReduce
+          : amountToReduce // ignore: cast_nullable_to_non_nullable
+              as int?,
     ));
   }
 }
@@ -389,7 +402,8 @@ class _$OrderActiveItemModelImpl implements _OrderActiveItemModel {
       this.courierId,
       this.status,
       this.deliveryPrice,
-      this.sdacha})
+      this.sdacha,
+      this.amountToReduce})
       : _foods = foods;
 
   factory _$OrderActiveItemModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -445,10 +459,12 @@ class _$OrderActiveItemModelImpl implements _OrderActiveItemModel {
   final int? deliveryPrice;
   @override
   final int? sdacha;
+  @override
+  final int? amountToReduce;
 
   @override
   String toString() {
-    return 'OrderActiveItemModel(id: $id, userId: $userId, userName: $userName, userPhone: $userPhone, orderNumber: $orderNumber, dishesCount: $dishesCount, foods: $foods, address: $address, houseNumber: $houseNumber, kvOffice: $kvOffice, intercom: $intercom, floor: $floor, entrance: $entrance, comment: $comment, paymentMethod: $paymentMethod, price: $price, timeRequest: $timeRequest, courierId: $courierId, status: $status, deliveryPrice: $deliveryPrice, sdacha: $sdacha)';
+    return 'OrderActiveItemModel(id: $id, userId: $userId, userName: $userName, userPhone: $userPhone, orderNumber: $orderNumber, dishesCount: $dishesCount, foods: $foods, address: $address, houseNumber: $houseNumber, kvOffice: $kvOffice, intercom: $intercom, floor: $floor, entrance: $entrance, comment: $comment, paymentMethod: $paymentMethod, price: $price, timeRequest: $timeRequest, courierId: $courierId, status: $status, deliveryPrice: $deliveryPrice, sdacha: $sdacha, amountToReduce: $amountToReduce)';
   }
 
   @override
@@ -488,7 +504,9 @@ class _$OrderActiveItemModelImpl implements _OrderActiveItemModel {
             (identical(other.status, status) || other.status == status) &&
             (identical(other.deliveryPrice, deliveryPrice) ||
                 other.deliveryPrice == deliveryPrice) &&
-            (identical(other.sdacha, sdacha) || other.sdacha == sdacha));
+            (identical(other.sdacha, sdacha) || other.sdacha == sdacha) &&
+            (identical(other.amountToReduce, amountToReduce) ||
+                other.amountToReduce == amountToReduce));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -515,7 +533,8 @@ class _$OrderActiveItemModelImpl implements _OrderActiveItemModel {
         courierId,
         status,
         deliveryPrice,
-        sdacha
+        sdacha,
+        amountToReduce
       ]);
 
   /// Create a copy of OrderActiveItemModel
@@ -558,7 +577,8 @@ abstract class _OrderActiveItemModel implements OrderActiveItemModel {
       final String? courierId,
       final String? status,
       final int? deliveryPrice,
-      final int? sdacha}) = _$OrderActiveItemModelImpl;
+      final int? sdacha,
+      final int? amountToReduce}) = _$OrderActiveItemModelImpl;
 
   factory _OrderActiveItemModel.fromJson(Map<String, dynamic> json) =
       _$OrderActiveItemModelImpl.fromJson;
@@ -605,6 +625,8 @@ abstract class _OrderActiveItemModel implements OrderActiveItemModel {
   int? get deliveryPrice;
   @override
   int? get sdacha;
+  @override
+  int? get amountToReduce;
 
   /// Create a copy of OrderActiveItemModel
   /// with the given fields replaced by the non-null parameter values.
