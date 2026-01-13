@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/cart.dart';
-import 'package:diyar/features/order/order.dart';
+import 'package:diyar/features/order/presentation/enum/delivery_enum.dart';
 import 'package:diyar/features/order/presentation/widgets/info_dialog_widget.dart';
 import 'package:diyar/features/pick_up/pick_up.dart';
 import 'package:flutter/material.dart';

@@ -1,4 +1,4 @@
-export 'auth/auth.dart';
+export 'app_init/app_init.dart';
 export 'menu/menu.dart';
 export 'about_us/about_us.dart';
 export 'order/order.dart';
@@ -12,3 +12,4 @@ export 'curier/curier.dart';
 export 'payments/payments.dart';
 export 'settings/settings.dart';
 export 'bonus/bonus.dart';
+export 'security/security.dart';

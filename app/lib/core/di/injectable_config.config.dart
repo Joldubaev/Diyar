@@ -43,6 +43,14 @@ import '../../features/active_order/domain/usecases/get_active_orders_usecase.da
 import '../../features/active_order/presentation/cubit/active_order_cubit.dart'
     as _i60;
 import '../../features/app/cubit/remote_config_cubit.dart' as _i122;
+import '../../features/app_init/domain/usecases/check_authentication_status_usecase.dart'
+    as _i141;
+import '../../features/app_init/domain/usecases/get_navigation_route_usecase.dart'
+    as _i212;
+import '../../features/app_init/domain/usecases/handle_first_launch_usecase.dart'
+    as _i449;
+import '../../features/app_init/presentation/cubit/splash/splash_cubit.dart'
+    as _i225;
 import '../../features/auth/data/datasources/local/auth_local_data_source.dart'
     as _i835;
 import '../../features/auth/data/datasources/remote/auth_remote_data_source.dart'
@@ -151,8 +159,11 @@ import '../../features/pick_up/data/datasource/remote_pick_up_datasource.dart'
     as _i39;
 import '../../features/pick_up/data/repository/pick_up_repository.dart'
     as _i123;
-import '../../features/pick_up/domain/repositories/pick_up_repositories.dart'
-    as _i292;
+import '../../features/pick_up/domain/domain.dart' as _i1043;
+import '../../features/pick_up/domain/usecases/calculate_minimum_time_usecase.dart'
+    as _i952;
+import '../../features/pick_up/domain/usecases/create_pickup_order_from_cart_usecase.dart'
+    as _i490;
 import '../../features/pick_up/pick_up.dart' as _i54;
 import '../../features/pick_up/presentation/cubit/pick_up_cubit.dart' as _i370;
 import '../../features/profile/data/datasources/profile_remote_data_source.dart'
@@ -161,6 +172,20 @@ import '../../features/profile/data/repositories/profile_repository.dart'
     as _i361;
 import '../../features/profile/presentation/cubit/profile_cubit.dart' as _i36;
 import '../../features/profile/profile.dart' as _i315;
+import '../../features/security/data/datasources/local/security_local_data_source.dart'
+    as _i744;
+import '../../features/security/data/repositories/security_repository.dart'
+    as _i69;
+import '../../features/security/data/services/biometric_auth_service_impl.dart'
+    as _i1044;
+import '../../features/security/data/services/secure_storage_service_impl.dart'
+    as _i50;
+import '../../features/security/domain/repository/security_repository.dart'
+    as _i349;
+import '../../features/security/domain/services/biometric_auth_service.dart'
+    as _i1040;
+import '../../features/security/domain/services/secure_storage_service.dart'
+    as _i825;
 import '../../features/settings/data/datasource/remote_settings_datasource.dart'
     as _i300;
 import '../../features/settings/data/repository/settings_repository.dart'
@@ -225,6 +250,10 @@ extension GetItInjectableX on _i174.GetIt {
       preResolve: true,
     );
     gh.factory<_i512.CartCutleryCubit>(() => _i512.CartCutleryCubit());
+    gh.factory<_i952.CalculateMinimumTimeUseCase>(
+        () => _i952.CalculateMinimumTimeUseCase());
+    gh.factory<_i490.CreatePickupOrderFromCartUseCase>(
+        () => _i490.CreatePickupOrderFromCartUseCase());
     gh.singleton<_i231.InternetBloc>(() => _i231.InternetBloc());
     gh.lazySingleton<_i361.Dio>(() => registerModule.dio);
     gh.lazySingleton<_i152.LocalAuthentication>(() => registerModule.localAuth);
@@ -240,6 +269,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i489.ThemeCubit(gh<_i460.SharedPreferences>()));
     gh.lazySingleton<_i697.OrderStatusService>(
         () => _i697.OrderStatusService(gh<_i460.SharedPreferences>()));
+    gh.lazySingleton<_i744.SecurityLocalDataSource>(
+        () => _i744.SecurityLocalDataSourceImpl(gh<_i351.LocalStorage>()));
     gh.lazySingleton<_i887.ActiveOrderRemoteDataSource>(
         () => _i887.ActiveOrderRemoteDataSourceImpl(gh<_i361.Dio>()));
     gh.lazySingleton<_i243.AboutUsRemoteDataSource>(
@@ -280,6 +311,16 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i481.OrderRemoteDataSourceImpl(gh<_i361.Dio>()));
     gh.lazySingleton<_i300.RemoteSettingsDataSource>(
         () => _i300.RemoteSettingsDataSourceImpl(gh<_i361.Dio>()));
+    gh.lazySingleton<_i520.AuthRemoteDataSource>(
+        () => _i415.AuthRemoteDataSourceImpl(
+              gh<_i1030.RestClient>(instanceName: 'unauthRestClient'),
+              gh<_i835.AuthLocalDataSource>(),
+              gh<_i351.LocalStorage>(),
+            ));
+    gh.lazySingleton<_i140.AuthRepository>(() => _i573.AuthRepositoryImpl(
+          gh<_i520.AuthRemoteDataSource>(),
+          gh<_i835.AuthLocalDataSource>(),
+        ));
     gh.lazySingleton<_i805.BonusRemoteDataSource>(
         () => _i805.BonusRemoteDataSourceImpl(gh<_i361.Dio>()));
     gh.lazySingleton<_i879.SettingsRepository>(() =>
@@ -292,22 +333,31 @@ extension GetItInjectableX on _i174.GetIt {
       () => registerModule.diyarRemoteConfig(gh<_i655.PackageInfo>()),
       preResolve: true,
     );
+    gh.lazySingleton<_i349.SecurityRepository>(
+        () => _i69.SecurityRepositoryImpl(gh<_i744.SecurityLocalDataSource>()));
+    gh.lazySingleton<_i825.SecureStorageService>(
+        () => _i50.SecureStorageServiceImpl(
+              gh<_i744.SecurityLocalDataSource>(),
+              gh<_i835.AuthLocalDataSource>(),
+              gh<_i351.LocalStorage>(),
+            ));
     gh.lazySingleton<_i659.PriceRepository>(
         () => _i659.PriceRepositoryImpl(gh<_i337.RemoteDataSource>()));
     gh.lazySingleton<_i614.CurierDataSource>(() => _i614.CurierDataSourceImpl(
           gh<_i361.Dio>(),
           gh<_i460.SharedPreferences>(),
         ));
+    gh.factory<_i781.SignUpCubit>(
+        () => _i781.SignUpCubit(gh<_i140.AuthRepository>()));
     gh.lazySingleton<_i39.RemotePickUpDataSource>(
         () => _i39.RemotePickUpDataSourceImpl(
               gh<_i361.Dio>(),
               gh<_i460.SharedPreferences>(),
             ));
-    gh.lazySingleton<_i520.AuthRemoteDataSource>(
-        () => _i415.AuthRemoteDataSourceImpl(
-              gh<_i1030.RestClient>(instanceName: 'unauthRestClient'),
+    gh.factory<_i952.VerifySmsCodeAndHandleFirstLaunchUseCase>(
+        () => _i952.VerifySmsCodeAndHandleFirstLaunchUseCase(
+              gh<_i140.AuthRepository>(),
               gh<_i835.AuthLocalDataSource>(),
-              gh<_i351.LocalStorage>(),
             ));
     gh.lazySingleton<_i477.HomeContentRepository>(() =>
         _i347.HomeContentRepositoryImpl(
@@ -329,6 +379,13 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i804.OrderCalculationService>(),
           initialItems: gh<List<_i885.CartItemEntity>>(),
         ));
+    gh.factory<_i449.HandleFirstLaunchUseCase>(
+        () => _i449.HandleFirstLaunchUseCase(gh<_i825.SecureStorageService>()));
+    gh.factory<_i141.CheckAuthenticationStatusUseCase>(() =>
+        _i141.CheckAuthenticationStatusUseCase(
+            gh<_i825.SecureStorageService>()));
+    gh.factory<_i212.GetNavigationRouteUseCase>(() =>
+        _i212.GetNavigationRouteUseCase(gh<_i825.SecureStorageService>()));
     gh.lazySingleton<_i835.AppLocation>(() => _i835.LocationService(
           gh<_i361.Dio>(),
           gh<_i460.SharedPreferences>(),
@@ -345,10 +402,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i660.MenuRepository>(
         () => _i1024.MenuRepositoryImpl(gh<_i660.MenuRemoteDataSource>()));
-    gh.lazySingleton<_i140.AuthRepository>(() => _i573.AuthRepositoryImpl(
-          gh<_i520.AuthRemoteDataSource>(),
-          gh<_i835.AuthLocalDataSource>(),
-        ));
     gh.lazySingleton<_i74.ActiveOrderRepository>(() =>
         _i243.ActiveOrderRepositoryImpl(
             gh<_i311.ActiveOrderRemoteDataSource>()));
@@ -392,6 +445,11 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i427.MbankConfimUsecase(gh<_i838.PaymentsRepository>()));
     gh.factory<_i286.QrCheckStatusUsecase>(
         () => _i286.QrCheckStatusUsecase(gh<_i838.PaymentsRepository>()));
+    gh.lazySingleton<_i1040.BiometricAuthService>(
+        () => _i1044.BiometricAuthServiceImpl(
+              gh<_i152.LocalAuthentication>(),
+              gh<_i825.SecureStorageService>(),
+            ));
     gh.factory<_i517.CartBloc>(() => _i517.CartBloc(gh<_i26.CartRepository>()));
     gh.factory<_i31.GetNewsUseCase>(
         () => _i31.GetNewsUseCase(gh<_i477.HomeContentRepository>()));
@@ -416,8 +474,6 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i838.MbankConfimUsecase>(),
           gh<_i838.MbankStatusUsecase>(),
         ));
-    gh.factory<_i370.PickUpCubit>(
-        () => _i370.PickUpCubit(gh<_i292.PickUpRepositories>()));
     gh.factory<_i739.PopularCubit>(
         () => _i739.PopularCubit(gh<_i872.MenuRepository>()));
     gh.factory<_i395.MenuBloc>(
@@ -426,6 +482,10 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i360.GenerateQrUseCase(gh<_i361.BonusRepository>()));
     gh.lazySingleton<_i566.CurierRepository>(
         () => _i537.CurierRepositoryImpl(gh<_i566.CurierDataSource>()));
+    gh.factory<_i225.SplashCubit>(() => _i225.SplashCubit(
+          gh<_i141.CheckAuthenticationStatusUseCase>(),
+          gh<_i550.RefreshTokenIfNeededUseCase>(),
+        ));
     gh.factory<_i60.ActiveOrderCubit>(() => _i60.ActiveOrderCubit(
           gh<_i31.GetActiveOrdersUseCase>(),
           gh<_i777.CancelOrderUseCase>(),
@@ -435,15 +495,8 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i804.OrderCalculationService>(),
           gh<_i752.CreateOrderUseCase>(),
         ));
-    gh.factory<_i952.VerifySmsCodeAndHandleFirstLaunchUseCase>(
-        () => _i952.VerifySmsCodeAndHandleFirstLaunchUseCase(
-              gh<_i140.AuthRepository>(),
-              gh<_i835.AuthLocalDataSource>(),
-            ));
     gh.factory<_i232.HistoryCubit>(
         () => _i232.HistoryCubit(gh<_i408.HistoryRepository>()));
-    gh.factory<_i781.SignUpCubit>(
-        () => _i781.SignUpCubit(gh<_i140.AuthRepository>()));
     gh.factory<_i302.SignInCubit>(() => _i302.SignInCubit(
           gh<_i140.AuthRepository>(),
           gh<_i351.LocalStorage>(),
@@ -458,6 +511,11 @@ extension GetItInjectableX on _i174.GetIt {
         ));
     gh.lazySingleton<_i411.TemplateRepository>(() =>
         _i843.TemplateRepositoryImpl(gh<_i251.TemplateRemoteDataSource>()));
+    gh.factory<_i370.PickUpCubit>(() => _i370.PickUpCubit(
+          gh<_i1043.PickUpRepositories>(),
+          gh<_i1043.CreatePickupOrderFromCartUseCase>(),
+          gh<_i1043.CalculateMinimumTimeUseCase>(),
+        ));
     gh.factory<_i110.CurierCubit>(
         () => _i110.CurierCubit(gh<_i566.CurierRepository>()));
     gh.factory<_i812.HomeContentCubit>(() => _i812.HomeContentCubit(

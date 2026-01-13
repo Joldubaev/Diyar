@@ -34,7 +34,8 @@ class TemplateListItem extends StatelessWidget {
           );
 
           if (confirmed == true && context.mounted) {
-            context.read<TemplatesListCubit>().deleteTemplate(template.id!);
+            final cubit = context.read<TemplatesListCubit>();
+            cubit.deleteTemplate(template.id!);
           }
 
           return false;

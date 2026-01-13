@@ -4,5 +4,3 @@ export 'widgets/contact_type.dart';
 export 'widgets/hall_card.dart';
 export 'widgets/custom_about_widget.dart';
 export 'widgets/about_us_type.dart';
-export 'widgets/about_us_widget.dart';
-export 'widgets/contact_tile_widget.dart';

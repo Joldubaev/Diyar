@@ -2,6 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/features.dart';
+import 'package:diyar/features/order/presentation/widgets/adress_section_widget.dart';
+import 'package:diyar/features/order/presentation/widgets/bonus_and_total_section.dart';
 import 'package:diyar/features/order/presentation/widgets/change_amoun_section.dart';
 import 'package:diyar/injection_container.dart' as di;
 import 'package:flutter/material.dart';

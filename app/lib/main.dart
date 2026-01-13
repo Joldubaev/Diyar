@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:diyar/features/auth/auth.dart';
 import 'package:diyar/features/auth/presentation/cubit/sign_up/sign_up_cubit.dart';
 import 'package:diyar/features/map/presentation/presentation.dart';
 import 'core/core.dart';
@@ -51,6 +52,7 @@ class App extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => di.sl<InternetBloc>()..add(NetworkObserve())),
+        BlocProvider(create: (context) => di.sl<SplashCubit>()),
         BlocProvider(create: (context) => di.sl<SignUpCubit>()),
         BlocProvider(create: (context) => di.sl<SignInCubit>()),
         BlocProvider(create: (context) => di.sl<ProfileCubit>()),

@@ -68,7 +68,6 @@ class _HomeTabPageState extends State<HomeTabPage> {
                       onTap: () => context.router.push(const NewsRoute()),
                     ),
                     RowTextWidget(text: 'Инфоцентр', theme: Theme.of(context)),
-                    const ContactTileWidget(),
                   ],
                 ),
               ),
