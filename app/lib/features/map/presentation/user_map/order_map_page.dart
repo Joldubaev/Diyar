@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
+import 'package:diyar/common/calculiator/order_calculation_service.dart';
 import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
+import 'package:diyar/features/cart/presentation/pages/cart_price_calculator.dart';
+import 'package:diyar/features/features.dart';
 import 'package:diyar/features/map/map.dart';
 import 'package:diyar/features/profile/profile.dart';
 import 'package:diyar/injection_container.dart';
@@ -350,12 +353,30 @@ class _OrderMapPageState extends State<OrderMapPage> {
       return;
     }
 
+    // Пересчитываем totalPrice с учетом containerPrice
+    final calculationService = sl<OrderCalculationService>();
+    final priceCalculator = CartPriceCalculator(calculationService);
+
+    // Получаем процент скидки из HomeContentCubit, если доступен
+    double discountPercentage = 0.0;
+    final homeContentState = context.maybeRead<HomeContentCubit>()?.state;
+    if (homeContentState is GetSalesLoaded && homeContentState.sales.isNotEmpty) {
+      discountPercentage = priceCalculator.getDiscountPercentage(homeContentState.sales);
+    }
+
+    // Рассчитываем правильную цену с учетом containerPrice
+    final priceResult = priceCalculator.calculatePrices(
+      cartItems: widget.cart,
+      discountPercentage: discountPercentage,
+    );
+    final calculatedTotalPrice = priceResult.subtotalPrice.toInt();
+
     // Получаем данные пользователя из ProfileCubit
     final profileCubit = context.read<ProfileCubit>();
     final user = profileCubit.user;
 
     context.router.push(DeliveryFormRoute(
-        totalPrice: widget.totalPrice,
+        totalPrice: calculatedTotalPrice,
         cart: widget.cart,
         dishCount: widget.dishCount ?? 0,
         address: _address!,

@@ -101,7 +101,7 @@ class _ChangeAmountDialogState extends State<ChangeAmountDialog> {
             child: ElevatedButton(
               onPressed: () {
                 if (_isExactAmount) {
-                  Navigator.pop(context, 0); // 0 значит "Без сдачи"
+                  Navigator.pop(context, widget.totalOrderCost);
                 } else {
                   final val = int.tryParse(_controller.text);
                   if (val != null && val >= widget.totalOrderCost) {

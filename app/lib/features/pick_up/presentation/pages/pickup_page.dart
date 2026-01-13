@@ -53,6 +53,42 @@ class _PickupFormPageState extends State<PickupFormPage> {
     super.dispose();
   }
 
+  void _showConfirmBottomSheet(BuildContext context, double? bonusAmount) {
+    final pickUpCubit = context.read<PickUpCubit>();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (bottomSheetContext) => BlocProvider.value(
+        value: pickUpCubit,
+        child: ConfirmOrderBottomSheet(
+          totalPrice: widget.totalPrice,
+          bonusAmount: bonusAmount,
+          userName: _userNameController.text,
+          userPhone: _phoneController.text,
+          time: _timeController.text,
+          comment: _commentController.text,
+          paymentType: _paymentType,
+          onConfirmTap: () {
+            // Отправляем заказ
+            context.read<PickUpCubit>().createPickupOrder(
+                  cart: widget.cart,
+                  userName: _userNameController.text,
+                  phone: _phoneController.text,
+                  time: _timeController.text,
+                  comment: _commentController.text,
+                  paymentMethod: _paymentType.name,
+                  totalPrice: widget.totalPrice,
+                  dishCount: widget.dishCount,
+                  bonusAmount: bonusAmount,
+                );
+          },
+        ),
+      ),
+    );
+  }
+
   void _selectTime(BuildContext context) async {
     DateTime now = DateTime.now();
     DateTime pickerInitialTime = now.add(const Duration(
@@ -151,70 +187,7 @@ class _PickupFormPageState extends State<PickupFormPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = context.l10n;
-    return BlocConsumer<PickUpCubit, PickUpState>(
-      listener: (context, state) {
-        if (state is CreatePickUpOrderLoaded) {
-          context.read<CartBloc>().add(ClearCart());
-          if (_paymentType == PaymentTypeDelivery.online) {
-            // Бонусы не вычитаются на фронтенде, отправляем полную сумму
-            context.router.push(
-              PaymentsRoute(
-                orderNumber: state.message,
-                amount: widget.totalPrice.toString(),
-              ),
-            );
-            Navigator.of(context).pop();
-          } else {
-            context.read<CartBloc>().add(ClearCart());
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (dialogContext) {
-                return PopScope(
-                  canPop: false,
-                  child: AlertDialog(
-                    title: Text(
-                      l10n.yourOrdersConfirm,
-                      style: theme.textTheme.bodyLarge!.copyWith(
-                        fontSize: 16,
-                      ),
-                    ),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          l10n.operatorContact,
-                          style: theme.textTheme.bodyMedium!.copyWith(
-                            color: theme.colorScheme.onSurface,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        SubmitButtonWidget(
-                          textStyle: theme.textTheme.bodyMedium!.copyWith(
-                            color: theme.colorScheme.surface,
-                          ),
-                          title: l10n.ok,
-                          bgColor: AppColors.green,
-                          onTap: () {
-                            Navigator.of(dialogContext).pop();
-                            context.router.pushAndPopUntil(
-                              const MainHomeRoute(),
-                              predicate: (_) => false,
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            );
-          }
-        } else if (state is CreatePickUpOrderError) {
-          showToast(state.message, isError: true);
-        }
-      },
+    return BlocBuilder<PickUpCubit, PickUpState>(
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
@@ -297,18 +270,11 @@ class _PickupFormPageState extends State<PickupFormPage> {
                   }
                 }
 
-                // Вызываем метод Cubit с сырыми данными
-                context.read<PickUpCubit>().createPickupOrder(
-                      cart: widget.cart,
-                      userName: _userNameController.text,
-                      phone: _phoneController.text,
-                      time: _timeController.text,
-                      comment: _commentController.text,
-                      paymentMethod: _paymentType.name,
-                      totalPrice: widget.totalPrice,
-                      dishCount: widget.dishCount,
-                      bonusAmount: finalBonusAmount,
-                    );
+                // Показываем bottom sheet с данными заказа
+                _showConfirmBottomSheet(
+                  context,
+                  finalBonusAmount,
+                );
               }
             },
           ),

@@ -61,7 +61,6 @@ class CartPriceCubit extends Cubit<CartPriceState> {
       emit(const CartPriceCalculated(
         itemsPrice: 0.0,
         containerPrice: 0.0,
-        discountPercentage: 0.0,
         monetaryDiscount: 0.0,
         subtotalPrice: 0.0,
       ));
@@ -76,7 +75,6 @@ class CartPriceCubit extends Cubit<CartPriceState> {
     emit(CartPriceCalculated(
       itemsPrice: result.itemsPrice,
       containerPrice: result.containerPrice,
-      discountPercentage: result.discountPercentage,
       monetaryDiscount: result.monetaryDiscount,
       subtotalPrice: result.subtotalPrice,
     ));

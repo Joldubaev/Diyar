@@ -225,8 +225,6 @@ extension GetItInjectableX on _i174.GetIt {
       preResolve: true,
     );
     gh.factory<_i512.CartCutleryCubit>(() => _i512.CartCutleryCubit());
-    gh.factory<_i198.PrepareDeliveryNavigationUseCase>(
-        () => _i198.PrepareDeliveryNavigationUseCase());
     gh.singleton<_i231.InternetBloc>(() => _i231.InternetBloc());
     gh.lazySingleton<_i361.Dio>(() => registerModule.dio);
     gh.lazySingleton<_i152.LocalAuthentication>(() => registerModule.localAuth);
@@ -335,6 +333,9 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i361.Dio>(),
           gh<_i460.SharedPreferences>(),
         ));
+    gh.factory<_i198.PrepareDeliveryNavigationUseCase>(() =>
+        _i198.PrepareDeliveryNavigationUseCase(
+            gh<_i804.OrderCalculationService>()));
     gh.lazySingleton<_i1030.RestClient>(
       () => registerModule.authRestClient(
         gh<_i361.Dio>(),
