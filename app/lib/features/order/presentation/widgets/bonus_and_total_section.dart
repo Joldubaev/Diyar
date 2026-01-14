@@ -117,16 +117,21 @@ class _BonusAndTotalSectionState extends State<BonusAndTotalSection> {
                       'Вам доступно ${userBalance.toStringAsFixed(0)} бонусов',
                       style: theme.textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w500,
+                        color: userBalance == 0 
+                            ? theme.colorScheme.onSurface.withOpacity(0.5)
+                            : theme.colorScheme.onSurface,
                       ),
                     ),
                     Switch(
                       value: deliveryFormState.useBonus,
-                      onChanged: (value) {
-                        context.read<DeliveryFormCubit>().toggleBonus(value);
-                        if (!value) {
-                          widget.controllers.bonusController.clear();
-                        }
-                      },
+                      onChanged: userBalance > 0 
+                          ? (value) {
+                              context.read<DeliveryFormCubit>().toggleBonus(value);
+                              if (!value) {
+                                widget.controllers.bonusController.clear();
+                              }
+                            }
+                          : null, // Отключаем переключатель, если бонусов нет
                     ),
                   ],
                 ),
