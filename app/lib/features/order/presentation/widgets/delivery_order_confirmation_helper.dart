@@ -24,7 +24,6 @@ class DeliveryOrderConfirmationHelper {
       builder: (bottomSheetContext) => BlocProvider.value(
         value: deliveryFormCubit,
         child: CustomBottomSheet(
-          state: state,
           cart: cart,
         ),
       ),

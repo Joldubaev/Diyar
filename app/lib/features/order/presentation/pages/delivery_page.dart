@@ -160,7 +160,6 @@ class _DeliveryFormViewState extends State<DeliveryFormView> {
       builder: (bottomSheetContext) => BlocProvider.value(
         value: deliveryFormCubit,
         child: CustomBottomSheet(
-          state: state,
           cart: widget.cart,
         ),
       ),
