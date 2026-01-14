@@ -6,7 +6,6 @@ import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:diyar/features/cart/presentation/pages/cart_price_calculator.dart';
 import 'package:diyar/features/features.dart';
 import 'package:diyar/features/map/map.dart';
-import 'package:diyar/features/profile/profile.dart';
 import 'package:diyar/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
