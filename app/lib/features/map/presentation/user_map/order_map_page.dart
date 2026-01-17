@@ -383,7 +383,7 @@ class _OrderMapPageState extends State<OrderMapPage> {
       CameraUpdate.newCameraPosition(
         CameraPosition(
           target: Point(latitude: latitude, longitude: longitude),
-          zoom: 14.0,
+          zoom: 16.0,
           azimuth: 0.0,
           tilt: 0.0,
         ),
