@@ -25,3 +25,7 @@ export 'navigation/custom_app_bar.dart';
 export 'navigation/nav_icon.dart';
 export 'carousel/carousel_widget.dart';
 export 'text/row_text_widget.dart';
+export 'search/search_bar_widget.dart';
+export 'search/search_result_item_widget.dart';
+export 'search/empty_search_state_widget.dart';
+export 'search/draggable_bottom_sheet_handle.dart';

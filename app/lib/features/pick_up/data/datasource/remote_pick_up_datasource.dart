@@ -20,15 +20,17 @@ class RemotePickUpDataSourceImpl implements RemotePickUpDataSource {
   @override
   Future<Either<Failure, String>> getPickupOrder(PickupOrderModel order) async {
     try {
+      final requestData = order.toApiJson();
+      log('Pickup order request data: $requestData');
       var res = await _dio.post(
         ApiConst.getPickupOrder,
-        data: order.toJson(),
+        data: requestData,
         options: Options(
           headers: ApiConst.authMap(_prefs.getString(AppConst.accessToken) ?? ''),
         ),
       );
       if ([200, 201].contains(res.statusCode)) {
-        return  Right(res.data['message'] );
+        return Right(res.data['message']);
       } else {
         log('Failed to pickup order: ${res.statusCode} ${res.data}');
         return Left(ServerFailure(res.data?['message']?.toString() ?? 'Failed to pickup order', res.statusCode));

@@ -5,6 +5,8 @@ import 'package:diyar/features/auth/domain/usecases/verify_sms_code_and_handle_f
 import 'package:diyar/features/auth/domain/usecases/refresh_token_if_needed_usecase.dart';
 import 'package:diyar/features/auth/domain/usecases/check_biometrics_availability_usecase.dart';
 import 'package:diyar/features/auth/domain/usecases/authenticate_with_biometrics_usecase.dart';
+import 'package:diyar/features/auth/domain/usecases/send_verification_code_usecase.dart';
+import 'package:diyar/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
 
@@ -19,6 +21,8 @@ class SignInCubit extends Cubit<SignInState> {
     this._refreshTokenUseCase,
     this._checkBiometricsUseCase,
     this._authenticateBiometricsUseCase,
+    this._sendVerificationCodeUseCase,
+    this._logoutUseCase,
   ) : super(SignInInitial());
 
   final AuthRepository _authRepository;
@@ -27,12 +31,14 @@ class SignInCubit extends Cubit<SignInState> {
   final RefreshTokenIfNeededUseCase _refreshTokenUseCase;
   final CheckBiometricsAvailabilityUseCase _checkBiometricsUseCase;
   final AuthenticateWithBiometricsUseCase _authenticateBiometricsUseCase;
+  final SendVerificationCodeUseCase _sendVerificationCodeUseCase;
+  final LogoutUseCase _logoutUseCase;
 
   /// Отправка SMS кода для логина
   Future<void> sendSmsCode(String phone) async {
     emit(SignInLoading());
 
-    final result = await _authRepository.sendVerificationCode(phone);
+    final result = await _sendVerificationCodeUseCase(phone);
     result.fold(
       (failure) => emit(SignInFailure(failure.message)),
       (_) => emit(SmsCodeSentForLogin(phone)),
@@ -162,8 +168,7 @@ class SignInCubit extends Cubit<SignInState> {
   /// Выход
   Future<void> logout() async {
     try {
-      await _localStorage.delete(AppConst.biometricPrefKey);
-      await _authRepository.logout();
+      await _logoutUseCase();
       emit(LogoutSuccess());
     } catch (e) {
       emit(LogoutFailure('Ошибка при выходе: ${e.toString()}'));

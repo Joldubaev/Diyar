@@ -1,4 +1,6 @@
 // import 'dart:async';
+import 'dart:developer';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/auth/auth.dart';
@@ -78,6 +80,7 @@ class _CurierPageState extends State<CurierPage> {
                 separatorBuilder: (_, __) => const SizedBox(height: 10),
                 itemBuilder: (context, index) {
                   final order = state.orders[index];
+                  log('CurierPage: Building order card for order number ${order.orderNumber}');
                   return CurierOrderCard(
                     order: order,
                     onFinish: () => context.read<CurierCubit>().getFinishOrder(order.orderNumber ?? 0),

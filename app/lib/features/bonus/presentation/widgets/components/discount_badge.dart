@@ -31,7 +31,7 @@ class DiscountBadge extends StatelessWidget {
           ),
           const SizedBox(width: 6),
           Text(
-            'Скидка $discount%',
+            'Кэшбэк $discount%',
             style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,

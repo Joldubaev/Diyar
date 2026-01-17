@@ -86,6 +86,10 @@ final class DeliveryFormLoaded extends DeliveryFormState {
     String? successMessage,
     bool? isSubmitting,
     int? confirmationRequestId,
+    bool clearBonusAmount = false,
+    bool clearChangeAmount = false,
+    bool clearValidationError = false,
+    bool clearSuccessMessage = false,
   }) {
     return DeliveryFormLoaded(
       address: address ?? this.address,
@@ -100,12 +104,12 @@ final class DeliveryFormLoaded extends DeliveryFormState {
       apartment: apartment ?? this.apartment,
       intercom: intercom ?? this.intercom,
       comment: comment ?? this.comment,
-      changeAmount: changeAmount ?? this.changeAmount,
+      changeAmount: clearChangeAmount ? null : (changeAmount ?? this.changeAmount),
       useBonus: useBonus ?? this.useBonus,
-      bonusAmount: bonusAmount ?? this.bonusAmount,
+      bonusAmount: clearBonusAmount ? null : (bonusAmount ?? this.bonusAmount),
       paymentType: paymentType ?? this.paymentType,
-      validationError: validationError,
-      successMessage: successMessage,
+      validationError: clearValidationError ? null : (validationError ?? this.validationError),
+      successMessage: clearSuccessMessage ? null : (successMessage ?? this.successMessage),
       isSubmitting: isSubmitting ?? this.isSubmitting,
       confirmationRequestId: confirmationRequestId ?? this.confirmationRequestId,
     );

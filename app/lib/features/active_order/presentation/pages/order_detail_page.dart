@@ -3,6 +3,8 @@ import 'package:collection/collection.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/active_order/active_order.dart';
 import 'package:diyar/features/history/history.dart';
+import 'package:diyar/features/curier/curier.dart';
+import 'package:diyar/features/menu/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -25,37 +27,92 @@ class OrderDetailPage extends StatelessWidget {
             }
           }
 
-          // Если не нашли в активных, ищем в истории
-          return BlocBuilder<HistoryCubit, HistoryState>(
-            builder: (context, historyState) {
-              // Загружаем историю, если она еще не загружена
-              if (historyState is HistoryInitial || historyState is GetHistoryOrdersError) {
-                context.read<HistoryCubit>().getHistoryOrders();
-                return const Center(child: CircularProgressIndicator());
-              }
-
-              if (historyState is GetHistoryOrdersLoading) {
-                return const Center(child: CircularProgressIndicator());
-              }
-
-              if (historyState is GetHistoryOrdersLoaded) {
-                final order = historyState.orders.firstWhereOrNull((o) => o.orderNumber.toString() == orderNumber);
-                if (order != null) {
+          // Если не нашли в активных, проверяем заказы курьера
+          return BlocBuilder<CurierCubit, CurierState>(
+            builder: (context, curierState) {
+              if (curierState is OrdersLoaded) {
+                final curierOrder = curierState.orders.firstWhereOrNull(
+                  (o) => o.orderNumber?.toString() == orderNumber,
+                );
+                if (curierOrder != null) {
+                  // Конвертируем CurierEntity в OrderActiveItemEntity
+                  final order = _convertCurierToOrderActive(curierOrder);
                   return _OrderDetailContent(order: order);
                 }
               }
 
-              // Проверяем состояние активных заказов
-              if (activeState is ActiveOrdersLoading) {
-                return const Center(child: CircularProgressIndicator());
-              }
+              // Если не нашли в заказах курьера, ищем в истории
+              return BlocBuilder<HistoryCubit, HistoryState>(
+                builder: (context, historyState) {
+                  // Загружаем историю, если она еще не загружена
+                  if (historyState is HistoryInitial || historyState is GetHistoryOrdersError) {
+                    context.read<HistoryCubit>().getHistoryOrders();
+                    return const Center(child: CircularProgressIndicator());
+                  }
 
-              // Если заказ не найден ни в активных, ни в истории
-              return const Center(child: Text('Заказ не найден'));
+                  if (historyState is GetHistoryOrdersLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  if (historyState is GetHistoryOrdersLoaded) {
+                    final order = historyState.orders.firstWhereOrNull((o) => o.orderNumber.toString() == orderNumber);
+                    if (order != null) {
+                      return _OrderDetailContent(order: order);
+                    }
+                  }
+
+                  // Проверяем состояние активных заказов
+                  if (activeState is ActiveOrdersLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  // Если заказ не найден ни в активных, ни в истории, ни в заказах курьера
+                  return const Center(child: Text('Заказ не найден'));
+                },
+              );
             },
           );
         },
       ),
+    );
+  }
+
+  /// Конвертирует CurierEntity в OrderActiveItemEntity
+  OrderActiveItemEntity _convertCurierToOrderActive(CurierEntity curierOrder) {
+    // Конвертируем CurierFoodEntity в FoodEntity
+    final foods = curierOrder.foods?.map((curierFood) {
+      return FoodEntity(
+        id: null, // У CurierFoodEntity нет id
+        name: curierFood.name,
+        price: curierFood.price,
+        quantity: curierFood.quantity,
+        // Остальные поля FoodEntity могут быть null
+      );
+    }).toList();
+
+    return OrderActiveItemEntity(
+      id: curierOrder.id,
+      userId: curierOrder.userId,
+      userName: curierOrder.userName,
+      userPhone: curierOrder.userPhone,
+      orderNumber: curierOrder.orderNumber,
+      dishesCount: curierOrder.dishesCount,
+      foods: foods,
+      address: curierOrder.address,
+      houseNumber: curierOrder.houseNumber,
+      kvOffice: curierOrder.kvOffice,
+      intercom: curierOrder.intercom,
+      floor: curierOrder.floor,
+      entrance: curierOrder.entrance,
+      comment: curierOrder.comment,
+      paymentMethod: curierOrder.paymentMethod,
+      price: curierOrder.price,
+      timeRequest: curierOrder.timeRequest,
+      courierId: curierOrder.courierId,
+      status: curierOrder.status,
+      deliveryPrice: curierOrder.deliveryPrice,
+      sdacha: curierOrder.sdacha,
+      amountToReduce: null, // У CurierEntity нет amountToReduce
     );
   }
 }

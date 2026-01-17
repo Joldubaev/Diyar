@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
+import 'package:diyar/common/calculiator/order_calculation_service.dart';
 import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
+import 'package:diyar/features/cart/presentation/pages/cart_price_calculator.dart';
+import 'package:diyar/features/features.dart';
 import 'package:diyar/features/map/map.dart';
-import 'package:diyar/features/profile/profile.dart';
 import 'package:diyar/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -79,11 +82,14 @@ class _OrderMapPageState extends State<OrderMapPage> {
           return Stack(
             children: [
               MapWidget(
+                key: const ValueKey('yandex_map'),
                 mapObjects: _mapObjects,
                 onCameraPositionChanged: _onCameraPositionChanged,
                 onMapCreated: (controller) {
-                  _mapControllerCompleter.complete(controller);
-                  _fetchCurrentLocation();
+                  if (!_mapControllerCompleter.isCompleted) {
+                    _mapControllerCompleter.complete(controller);
+                    _fetchCurrentLocation();
+                  }
                 },
               ),
               const Positioned(
@@ -169,7 +175,35 @@ class _OrderMapPageState extends State<OrderMapPage> {
         address: _address,
         deliveryPrice: _deliveryPrice,
         onAddressCardTap: _onAddressCardTap,
-        onSearchPressed: () => showMapSearchBottom(context, onSearch: _searchMap),
+        onSearchPressed: () => showMapSearchBottom(
+          context,
+          onSearch: (addressName, latitude, longitude) {
+            log('[ON_SEARCH] Получен адрес: name="$addressName", lat=$latitude, lon=$longitude');
+
+            if (latitude != null && longitude != null) {
+              log('[ON_SEARCH] Координаты предоставлены, перемещение напрямую');
+              // Если есть координаты, перемещаемся напрямую
+              if (_isPointInKyrgyzstan(latitude, longitude)) {
+                log('[ON_SEARCH] Координаты в пределах Кыргызстана');
+                _moveToCurrentLocation(latitude, longitude);
+                setState(() {
+                  _lat = latitude;
+                  _long = longitude;
+                  _address = addressName;
+                });
+                log('[ON_SEARCH] Состояние обновлено: lat=$_lat, lon=$_long, address="$_address"');
+                context.read<UserMapCubit>().getDeliveryPrice(_lat, _long);
+              } else {
+                log('[ON_SEARCH] Координаты за пределами Кыргызстана');
+                showToast('Адрес находится за пределами Кыргызстана', isError: true);
+              }
+            } else {
+              log('[ON_SEARCH] Координаты не предоставлены, выполнение поиска по названию');
+              // Если координат нет, делаем поиск по названию
+              _searchMap(addressName);
+            }
+          },
+        ),
       ),
     );
   }
@@ -188,35 +222,76 @@ class _OrderMapPageState extends State<OrderMapPage> {
   }
 
   Future<void> _searchMap(String searchText) async {
+    log('[SEARCH_MAP] Начало поиска адреса на карте: "$searchText"');
+    String searchQuery = searchText.trim();
+    final lowerQuery = searchQuery.toLowerCase();
+    if (!lowerQuery.contains('бишкек') &&
+        !lowerQuery.contains('bishkek') &&
+        !lowerQuery.contains('кыргызстан') &&
+        !lowerQuery.contains('kyrgyzstan')) {
+      searchQuery = '$searchQuery Бишкек';
+      log('[SEARCH_MAP] Добавлен "Бишкек" к запросу. Итоговый запрос: "$searchQuery"');
+    } else {
+      log('[SEARCH_MAP] Запрос уже содержит город/страну. Итоговый запрос: "$searchQuery"');
+    }
+
+    log('[SEARCH_MAP] Вызов YandexSearch.searchByText с запросом: "$searchQuery"');
+
     final searchResult = await YandexSearch.searchByText(
-      searchText: searchText,
+      searchText: searchQuery,
       searchOptions: const SearchOptions(),
       geometry: Geometry.fromBoundingBox(_kyrgyzstanBounds),
     );
 
+    log('[SEARCH_MAP] Получен ответ от YandexSearch, ожидание результата...');
     final result = await searchResult.$2;
-    if (!mounted) return;
+
+    if (!mounted) {
+      log('[SEARCH_MAP] Context не mounted, прерывание');
+      return;
+    }
+
     if (result.items == null || result.items!.isEmpty) {
+      log('[SEARCH_MAP] Результаты не найдены');
       showToast(context.l10n.addressIsNotFounded, isError: true);
       return;
     }
 
-    final point = result.items!.first.geometry.first.point;
+    log('[SEARCH_MAP] Найдено результатов: ${result.items!.length}');
+    final firstItem = result.items!.first;
+    log('[SEARCH_MAP] Первый результат: name="${firstItem.name}"');
+
+    if (firstItem.geometry.isEmpty) {
+      log('[SEARCH_MAP] Ошибка: geometry пустой');
+      showToast(context.l10n.addressIsNotFounded, isError: true);
+      return;
+    }
+
+    final point = firstItem.geometry.first.point;
     if (point != null) {
+      log('[SEARCH_MAP] Координаты найдены: lat=${point.latitude}, lon=${point.longitude}');
+
       if (_isPointInKyrgyzstan(point.latitude, point.longitude)) {
+        log('[SEARCH_MAP] Координаты в пределах Кыргызстана, перемещение карты...');
         _moveToCurrentLocation(point.latitude, point.longitude);
 
         setState(() {
           _lat = point.latitude;
           _long = point.longitude;
+          _address = firstItem.name; // Обновляем адрес из результата поиска
         });
 
+        log('[SEARCH_MAP] Состояние обновлено: lat=$_lat, lon=$_long, address="$_address"');
+
         context.read<UserMapCubit>().getDeliveryPrice(_lat, _long);
+        log('[SEARCH_MAP] Запрос цены доставки отправлен');
       } else {
+        log('[SEARCH_MAP] Координаты за пределами Кыргызстана');
         setState(() => _address = context.l10n.addressIsNotFounded);
         showToast('Адрес находится за пределами Кыргызстана', isError: true);
       }
     } else {
+      log('[SEARCH_MAP] Ошибка: point равен null');
       showToast(context.l10n.addressIsNotFounded, isError: true);
     }
   }
@@ -299,7 +374,11 @@ class _OrderMapPageState extends State<OrderMapPage> {
   }
 
   Future<void> _moveToCurrentLocation(double latitude, double longitude) async {
+    log('[MOVE_CAMERA] Начало перемещения камеры: lat=$latitude, lon=$longitude');
+
     final controller = await _mapControllerCompleter.future;
+    log('[MOVE_CAMERA] Контроллер карты получен');
+
     controller.moveCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
@@ -311,7 +390,10 @@ class _OrderMapPageState extends State<OrderMapPage> {
       ),
     );
 
+    log('[MOVE_CAMERA] Команда перемещения камеры отправлена');
+
     if (!_isPointInKyrgyzstan(latitude, longitude)) {
+      log('[MOVE_CAMERA] Предупреждение: точка за пределами Кыргызстана');
       showToast('Адрес находится за пределами Кыргызстана', isError: true);
     }
   }
@@ -350,12 +432,30 @@ class _OrderMapPageState extends State<OrderMapPage> {
       return;
     }
 
+    // Пересчитываем totalPrice с учетом containerPrice
+    final calculationService = sl<OrderCalculationService>();
+    final priceCalculator = CartPriceCalculator(calculationService);
+
+    // Получаем процент скидки из HomeContentCubit, если доступен
+    double discountPercentage = 0.0;
+    final homeContentState = context.maybeRead<HomeContentCubit>()?.state;
+    if (homeContentState is GetSalesLoaded && homeContentState.sales.isNotEmpty) {
+      discountPercentage = priceCalculator.getDiscountPercentage(homeContentState.sales);
+    }
+
+    // Рассчитываем правильную цену с учетом containerPrice
+    final priceResult = priceCalculator.calculatePrices(
+      cartItems: widget.cart,
+      discountPercentage: discountPercentage,
+    );
+    final calculatedTotalPrice = priceResult.subtotalPrice.toInt();
+
     // Получаем данные пользователя из ProfileCubit
     final profileCubit = context.read<ProfileCubit>();
     final user = profileCubit.user;
 
     context.router.push(DeliveryFormRoute(
-        totalPrice: widget.totalPrice,
+        totalPrice: calculatedTotalPrice,
         cart: widget.cart,
         dishCount: widget.dishCount ?? 0,
         address: _address!,

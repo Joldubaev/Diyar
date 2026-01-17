@@ -23,7 +23,6 @@ class CartPriceSection extends StatelessWidget {
           child: TotalPriceWidget(
             itemsPrice: priceData.itemsPrice,
             containerPrice: priceData.containerPrice,
-            discountRatePercentage: priceData.discountPercentage,
             monetaryDiscountAmount: priceData.monetaryDiscount,
             finalTotalPrice: priceData.subtotalPrice,
           ),

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 class TotalPriceWidget extends StatelessWidget {
   final double itemsPrice;
   final double containerPrice;
-  final double discountRatePercentage;
   final double monetaryDiscountAmount;
   final double finalTotalPrice;
 
@@ -13,7 +12,6 @@ class TotalPriceWidget extends StatelessWidget {
     super.key,
     required this.itemsPrice,
     required this.containerPrice,
-    required this.discountRatePercentage,
     required this.monetaryDiscountAmount,
     required this.finalTotalPrice,
   });
@@ -46,11 +44,6 @@ class TotalPriceWidget extends StatelessWidget {
         children: [
           PriceRowWidget(label: l10n.costOfMeal, value: itemsPrice),
           if (containerPrice > 0) PriceRowWidget(label: 'Стоимость контейнера', value: containerPrice),
-          PriceRowWidget(
-            label: "Скидка (${discountRatePercentage.toInt()}%)",
-            value: -monetaryDiscountAmount,
-            valueColor: theme.colorScheme.error,
-          ),
           const Divider(height: 20, thickness: 1),
           PriceRowWidget(
             label: l10n.total,
@@ -59,9 +52,7 @@ class TotalPriceWidget extends StatelessWidget {
           ),
           Text(
             'Цена без учета доставки',
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-            ),
+            style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.error),
           ),
         ],
       ),

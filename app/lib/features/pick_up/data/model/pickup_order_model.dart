@@ -47,3 +47,27 @@ extension PickupOrderModelX on PickupOrderModel {
         amountToReduce: amountToReduce,
       );
 }
+
+/// Выносим логику формирования JSON для API в расширение-маппер
+/// Это позволяет API менять структуру, не меняя нашу модель данных
+extension PickupOrderApiExtension on PickupOrderModel {
+  Map<String, dynamic> toApiJson() {
+    // Убеждаемся, что userName и userPhone не null
+    final userNameValue = userName ?? '';
+    final userPhoneValue = userPhone ?? '';
+    
+    // Согласно документации API, данные отправляются в плоской структуре (без обертки dto)
+    return <String, dynamic>{
+      'userName': userNameValue,
+      'userPhone': userPhoneValue,
+      'foods': foods?.map((e) => e.toJson()).toList() ?? [],
+      'prepareFor': prepareFor ?? '',
+      'dishesCount': dishesCount ?? 0,
+      'price': price ?? 0,
+      if (comment != null && comment!.isNotEmpty) 'comment': comment,
+      if (paymentMethod != null && paymentMethod!.isNotEmpty) 'paymentMethod': paymentMethod,
+      // Включаем amountToReduce только если он не null и > 0
+      if (amountToReduce != null && amountToReduce! > 0) 'amountToReduce': amountToReduce,
+    };
+  }
+}

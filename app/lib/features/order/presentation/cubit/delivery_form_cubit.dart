@@ -54,7 +54,7 @@ class DeliveryFormCubit extends Cubit<DeliveryFormState> {
     if (!use) {
       emit(currentState.copyWith(
         useBonus: false,
-        bonusAmount: null,
+        clearBonusAmount: true,
       ));
     } else {
       emit(currentState.copyWith(useBonus: true));
@@ -69,8 +69,8 @@ class DeliveryFormCubit extends Cubit<DeliveryFormState> {
     // Если amount null или 0, просто обнуляем бонусы
     if (amount == null || amount == 0) {
       emit(currentState.copyWith(
-        bonusAmount: null,
-        validationError: null,
+        clearBonusAmount: true,
+        clearValidationError: true,
       ));
       return;
     }
@@ -91,7 +91,7 @@ class DeliveryFormCubit extends Cubit<DeliveryFormState> {
     // Сохраняем сумму бонусов (без вычитания из totalOrderCost)
     emit(currentState.copyWith(
       bonusAmount: amount,
-      validationError: null,
+      clearValidationError: true,
     ));
   }
 
@@ -100,7 +100,11 @@ class DeliveryFormCubit extends Cubit<DeliveryFormState> {
     final currentState = state;
     if (currentState is! DeliveryFormLoaded) return;
 
-    emit(currentState.copyWith(isSubmitting: true, validationError: null, successMessage: null));
+    emit(currentState.copyWith(
+      isSubmitting: true,
+      clearValidationError: true,
+      clearSuccessMessage: true,
+    ));
 
     final result = await _createOrderUseCase(orderEntity);
 

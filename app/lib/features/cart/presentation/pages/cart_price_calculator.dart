@@ -6,14 +6,12 @@ import 'package:diyar/features/home_content/domain/domain.dart';
 class CartCalculationResult {
   final double itemsPrice;
   final double containerPrice;
-  final double discountPercentage;
   final double monetaryDiscount;
   final double subtotalPrice;
 
   const CartCalculationResult({
     required this.itemsPrice,
     required this.containerPrice,
-    required this.discountPercentage,
     required this.monetaryDiscount,
     required this.subtotalPrice,
   });
@@ -41,7 +39,6 @@ class CartPriceCalculator {
       return const CartCalculationResult(
         itemsPrice: 0.0,
         containerPrice: 0.0,
-        discountPercentage: 0.0,
         monetaryDiscount: 0.0,
         subtotalPrice: 0.0,
       );
@@ -62,7 +59,6 @@ class CartPriceCalculator {
     return CartCalculationResult(
       itemsPrice: itemsPrice,
       containerPrice: containerPrice,
-      discountPercentage: discountPercentage,
       monetaryDiscount: monetaryDiscount,
       subtotalPrice: subtotalPrice,
     );

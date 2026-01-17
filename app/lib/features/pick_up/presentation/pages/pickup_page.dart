@@ -1,10 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/cart.dart';
-import 'package:diyar/features/order/presentation/widgets/widgets.dart';
+import 'package:diyar/features/order/presentation/enum/delivery_enum.dart';
 import 'package:diyar/features/pick_up/pick_up.dart';
 import 'package:diyar/features/profile/profile.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -31,16 +30,28 @@ class _PickupFormPageState extends State<PickupFormPage> {
   final _timeController = TextEditingController();
   final _commentController = TextEditingController();
   final _bonusController = TextEditingController();
-  PaymentTypeDelivery _paymentType = PaymentTypeDelivery.cash;
   bool _useBonus = false;
   double? _bonusAmount;
 
   @override
   void initState() {
-    context.read<ProfileCubit>().getUser();
-    _userNameController.text = context.read<ProfileCubit>().user?.userName ?? '';
-    _phoneController.text = context.read<ProfileCubit>().user?.phone ?? '+996';
     super.initState();
+    _initializeForm();
+  }
+
+  void _initializeForm() {
+    context.read<ProfileCubit>().getUser();
+    final profileCubit = context.read<ProfileCubit>();
+    final userName = profileCubit.user?.userName ?? '';
+    final userPhone = profileCubit.user?.phone ?? '+996';
+
+    _userNameController.text = userName;
+    _phoneController.text = userPhone;
+
+    context.read<PickUpCubit>().initializeForm(
+          userName: userName,
+          userPhone: userPhone,
+        );
   }
 
   @override
@@ -53,98 +64,76 @@ class _PickupFormPageState extends State<PickupFormPage> {
     super.dispose();
   }
 
-  void _selectTime(BuildContext context) async {
-    DateTime now = DateTime.now();
-    DateTime pickerInitialTime = now.add(const Duration(
-      minutes: 15,
-    ));
-    final currentTimeFromState = _timeController.text;
-    if (currentTimeFromState.isNotEmpty) {
-      final parts = currentTimeFromState.split(':');
-      if (parts.length == 2) {
-        final hour = int.tryParse(parts[0]);
-        final minute = int.tryParse(parts[1]);
-        if (hour != null && minute != null) {
-          final todaySelection = DateTime(
-            now.year,
-            now.month,
-            now.day,
-            hour,
-            minute,
-          );
-          if (todaySelection.isAfter(pickerInitialTime)) {
-            pickerInitialTime = todaySelection;
-          }
-        }
+  void _showConfirmBottomSheet(BuildContext context, double? bonusAmount, PaymentTypeDelivery paymentType) {
+    final pickUpCubit = context.read<PickUpCubit>();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (bottomSheetContext) => BlocProvider.value(
+        value: pickUpCubit,
+        child: ConfirmOrderBottomSheet(
+          totalPrice: widget.totalPrice,
+          bonusAmount: bonusAmount,
+          userName: _userNameController.text,
+          userPhone: _phoneController.text,
+          time: _timeController.text,
+          comment: _commentController.text,
+          paymentType: paymentType,
+          onConfirmTap: () {
+            // Отправляем заказ
+            context.read<PickUpCubit>().createPickupOrder(
+                  cart: widget.cart,
+                  userName: _userNameController.text,
+                  phone: _phoneController.text,
+                  time: _timeController.text,
+                  comment: _commentController.text,
+                  paymentMethod: paymentType.name,
+                  totalPrice: widget.totalPrice,
+                  dishCount: widget.dishCount,
+                  bonusAmount: bonusAmount,
+                );
+          },
+        ),
+      ),
+    );
+  }
+
+  void _selectTime(BuildContext context) {
+    final cubit = context.read<PickUpCubit>();
+    final minimumTime = cubit.getMinimumTime();
+    DateTime initialTime = minimumTime;
+
+    // Если уже выбрано время, используем его как начальное
+    if (_timeController.text.isNotEmpty) {
+      final parsedTime = cubit.parseTimeString(_timeController.text);
+      if (parsedTime != null && parsedTime.isAfter(minimumTime)) {
+        initialTime = parsedTime;
       }
     }
-    DateTime selectedTime = pickerInitialTime;
+
     showDialog(
       context: context,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          title: Text(
-            'Внимание! Время подготовки заказа займет не менее 15 минут',
-            style: Theme.of(dialogContext).textTheme.bodyMedium!.copyWith(
-                  fontSize: 16,
-                  color: Theme.of(dialogContext).colorScheme.error,
-                ),
-            textAlign: TextAlign.center,
-          ),
-          content: SizedBox(
-              height: 240,
-              child: Column(children: [
-                SizedBox(
-                    height: 160,
-                    child: CupertinoDatePicker(
-                      mode: CupertinoDatePickerMode.time,
-                      initialDateTime: pickerInitialTime,
-                      minuteInterval: 1,
-                      use24hFormat: true,
-                      onDateTimeChanged: (DateTime newTime) {
-                        selectedTime = newTime;
-                      },
-                    )),
-                Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                  TextButton(
-                    onPressed: () => Navigator.of(dialogContext).pop(),
-                    child: Text(
-                      'Отмена',
-                      style: Theme.of(dialogContext).textTheme.bodyMedium!.copyWith(
-                            fontSize: 16,
-                            color: Theme.of(dialogContext).colorScheme.primary,
-                          ),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      final minSelectableTime = now.add(
-                        const Duration(minutes: 15),
-                      );
-                      String timeToSet;
-                      if (selectedTime.isAfter(minSelectableTime) || selectedTime.isAtSameMomentAs(minSelectableTime)) {
-                        timeToSet =
-                            '${selectedTime.hour.toString().padLeft(2, '0')}:${selectedTime.minute.toString().padLeft(2, '0')}';
-                      } else {
-                        timeToSet =
-                            '${minSelectableTime.hour.toString().padLeft(2, '0')}:${minSelectableTime.minute.toString().padLeft(2, '0')}';
-                      }
-                      _timeController.text = timeToSet;
-                      Navigator.of(dialogContext).pop();
-                    },
-                    child: Text(
-                      'Подтвердить',
-                      style: Theme.of(dialogContext).textTheme.bodyMedium!.copyWith(
-                            fontSize: 16,
-                            color: Theme.of(dialogContext).colorScheme.primary,
-                          ),
-                    ),
-                  ),
-                ])
-              ])),
-        );
-      },
+      builder: (dialogContext) => PickupTimePickerDialog(
+        initialTime: initialTime,
+        minimumTime: minimumTime,
+        onTimeSelected: (selectedTime) {
+          cubit.validateAndSetTime(selectedTime);
+          _timeController.text = cubit.formatTime(selectedTime);
+        },
+      ),
     );
+  }
+
+  PaymentTypeDelivery _getPaymentTypeFromState(PickUpState state) {
+    if (state is PickUpFormLoaded) {
+      return PaymentTypeDelivery.values.firstWhere(
+        (e) => e.name == state.paymentType,
+        orElse: () => PaymentTypeDelivery.cash,
+      );
+    }
+    return PaymentTypeDelivery.cash;
   }
 
   @override
@@ -155,67 +144,28 @@ class _PickupFormPageState extends State<PickupFormPage> {
       listener: (context, state) {
         if (state is CreatePickUpOrderLoaded) {
           context.read<CartBloc>().add(ClearCart());
-          if (_paymentType == PaymentTypeDelivery.online) {
-            // Бонусы не вычитаются на фронтенде, отправляем полную сумму
+          final paymentType = PaymentTypeDelivery.values.firstWhere(
+            (e) => e.name == state.paymentType,
+            orElse: () => PaymentTypeDelivery.cash,
+          );
+
+          if (paymentType == PaymentTypeDelivery.online) {
             context.router.push(
               PaymentsRoute(
                 orderNumber: state.message,
-                amount: widget.totalPrice.toString(),
+                amount: state.totalPrice.toString(),
               ),
             );
             Navigator.of(context).pop();
           } else {
-            context.read<CartBloc>().add(ClearCart());
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (dialogContext) {
-                return PopScope(
-                  canPop: false,
-                  child: AlertDialog(
-                    title: Text(
-                      l10n.yourOrdersConfirm,
-                      style: theme.textTheme.bodyLarge!.copyWith(
-                        fontSize: 16,
-                      ),
-                    ),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          l10n.operatorContact,
-                          style: theme.textTheme.bodyMedium!.copyWith(
-                            color: theme.colorScheme.onSurface,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        SubmitButtonWidget(
-                          textStyle: theme.textTheme.bodyMedium!.copyWith(
-                            color: theme.colorScheme.surface,
-                          ),
-                          title: l10n.ok,
-                          bgColor: AppColors.green,
-                          onTap: () {
-                            Navigator.of(dialogContext).pop();
-                            context.router.pushAndPopUntil(
-                              const MainHomeRoute(),
-                              predicate: (_) => false,
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            );
+            _showSuccessDialog(context, theme, l10n);
           }
         } else if (state is CreatePickUpOrderError) {
           showToast(state.message, isError: true);
         }
       },
       builder: (context, state) {
+        final paymentType = _getPaymentTypeFromState(state);
         return Scaffold(
           appBar: AppBar(
             backgroundColor: theme.colorScheme.primary,
@@ -239,11 +189,9 @@ class _PickupFormPageState extends State<PickupFormPage> {
             timeController: _timeController,
             commentController: _commentController,
             onTimeSelect: _selectTime,
-            currentPaymentType: _paymentType,
+            currentPaymentType: paymentType,
             onPaymentTypeChanged: (value) {
-              setState(() {
-                _paymentType = value;
-              });
+              context.read<PickUpCubit>().changePaymentType(value);
             },
             bonusController: _bonusController,
             useBonus: _useBonus,
@@ -297,20 +245,69 @@ class _PickupFormPageState extends State<PickupFormPage> {
                   }
                 }
 
-                // Вызываем метод Cubit с сырыми данными
-                context.read<PickUpCubit>().createPickupOrder(
-                      cart: widget.cart,
-                      userName: _userNameController.text,
-                      phone: _phoneController.text,
-                      time: _timeController.text,
-                      comment: _commentController.text,
-                      paymentMethod: _paymentType.name,
-                      totalPrice: widget.totalPrice,
-                      dishCount: widget.dishCount,
-                      bonusAmount: finalBonusAmount,
-                    );
+                // Получаем текущий paymentType из state
+                final currentState = context.read<PickUpCubit>().state;
+                final currentPaymentType = _getPaymentTypeFromState(currentState);
+
+                // Показываем bottom sheet с данными заказа
+                _showConfirmBottomSheet(
+                  context,
+                  finalBonusAmount,
+                  currentPaymentType,
+                );
               }
             },
+          ),
+        );
+      },
+    );
+  }
+
+  void _showSuccessDialog(
+    BuildContext context,
+    ThemeData theme,
+    AppLocalizations l10n,
+  ) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        return PopScope(
+          canPop: false,
+          child: AlertDialog(
+            title: Text(
+              l10n.yourOrdersConfirm,
+              style: theme.textTheme.bodyLarge!.copyWith(
+                fontSize: 16,
+              ),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.operatorContact,
+                  style: theme.textTheme.bodyMedium!.copyWith(
+                    color: theme.colorScheme.onSurface,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                SubmitButtonWidget(
+                  textStyle: theme.textTheme.bodyMedium!.copyWith(
+                    color: theme.colorScheme.surface,
+                  ),
+                  title: l10n.ok,
+                  bgColor: AppColors.green,
+                  onTap: () {
+                    Navigator.of(dialogContext).pop();
+                    context.router.pushAndPopUntil(
+                      const MainHomeRoute(),
+                      predicate: (_) => false,
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         );
       },

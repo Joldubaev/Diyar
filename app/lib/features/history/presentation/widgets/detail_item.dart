@@ -20,7 +20,7 @@ class DetailItem extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SvgPicture.asset('assets/icons/$icon.svg'),
+          SvgPicture.asset('assets/icons/$icon.svg', width: 24, height: 24),
           const SizedBox(width: 10),
           Expanded(
             child: Column(

@@ -9,12 +9,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'info_dialog_widget.dart';
 
 class CustomBottomSheet extends StatelessWidget {
-  final DeliveryFormLoaded state;
   final List<CartItemEntity> cart;
 
   const CustomBottomSheet({
     super.key,
-    required this.state,
     required this.cart,
   });
 
@@ -81,41 +79,53 @@ class CustomBottomSheet extends StatelessWidget {
         maxChildSize: 0.7,
         expand: false,
         builder: (context, scrollController) {
-          return Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surface,
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(16),
-              ),
-            ),
-            child: SingleChildScrollView(
-              controller: scrollController,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _buildHeader(context),
-                  const SizedBox(height: 15),
-                  _buildDetails(context),
-                  const Divider(),
-                  _buildSaveTemplateButton(context),
-                  const SizedBox(height: 12),
-                  BlocBuilder<DeliveryFormCubit, DeliveryFormState>(
-                    builder: (context, currentState) {
-                      final isLoading = currentState is DeliveryFormLoaded && currentState.isSubmitting;
-                      return SubmitButtonWidget(
+          return BlocBuilder<DeliveryFormCubit, DeliveryFormState>(
+            builder: (context, currentState) {
+              if (currentState is! DeliveryFormLoaded) {
+                return Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.surface,
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(16),
+                    ),
+                  ),
+                  child: const Center(child: CircularProgressIndicator()),
+                );
+              }
+
+              return Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surface,
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(16),
+                  ),
+                ),
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _buildHeader(context),
+                      const SizedBox(height: 15),
+                      _buildDetails(context, currentState),
+                      const Divider(),
+                      _buildSaveTemplateButton(context, currentState),
+                      const SizedBox(height: 12),
+                      SubmitButtonWidget(
                         textStyle: theme.textTheme.bodyMedium!.copyWith(color: theme.colorScheme.onPrimary),
                         title: context.l10n.confirm,
                         bgColor: AppColors.green,
-                        isLoading: isLoading,
-                        onTap: () => _onConfirmOrder(context),
-                      );
-                    },
+                        isLoading: currentState.isSubmitting,
+                        onTap: () => _onConfirmOrder(context, currentState),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
+                ),
+              );
+            },
           );
         },
       ),
@@ -139,7 +149,7 @@ class CustomBottomSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildDetails(BuildContext context) {
+  Widget _buildDetails(BuildContext context, DeliveryFormLoaded state) {
     Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -165,7 +175,7 @@ class CustomBottomSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildSaveTemplateButton(BuildContext context) {
+  Widget _buildSaveTemplateButton(BuildContext context, DeliveryFormLoaded state) {
     final theme = Theme.of(context);
     return BlocListener<TemplatesListCubit, TemplatesListState>(
       listener: (context, templateState) {
@@ -179,7 +189,7 @@ class CustomBottomSheet extends StatelessWidget {
         builder: (context, templateState) {
           final isLoading = templateState is TemplateCreateLoading;
           return OutlinedButton.icon(
-            onPressed: isLoading ? null : () => _onSaveTemplate(context),
+            onPressed: isLoading ? null : () => _onSaveTemplate(context, state),
             icon: isLoading
                 ? SizedBox(
                     width: 16,
@@ -214,7 +224,7 @@ class CustomBottomSheet extends StatelessWidget {
     );
   }
 
-  Future<void> _onSaveTemplate(BuildContext context) async {
+  Future<void> _onSaveTemplate(BuildContext context, DeliveryFormLoaded state) async {
     final templatesCubit = context.read<TemplatesListCubit>();
     final theme = Theme.of(context);
 
@@ -259,7 +269,7 @@ class CustomBottomSheet extends StatelessWidget {
     );
   }
 
-  void _onConfirmOrder(BuildContext context) {
+  void _onConfirmOrder(BuildContext context, DeliveryFormLoaded state) {
     context.read<DeliveryFormCubit>().confirmOrder(
           cart: cart,
           region: state.address, // Используем address как region
