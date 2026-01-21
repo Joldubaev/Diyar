@@ -17,18 +17,19 @@ class CreateOrderUseCase {
     }
 
     // 2. Логика бонусов
-    // Бонусы сравниваются с полной стоимостью заказа (price + deliveryPrice)
+    // order.price уже содержит полную сумму (subtotalPrice + deliveryPrice)
+    // Бонусы сравниваются с полной стоимостью заказа
     if (order.amountToReduce != null && order.amountToReduce! > 0) {
-      final totalOrderPrice = order.price + order.deliveryPrice;
-      if (order.amountToReduce! > totalOrderPrice) {
+      if (order.amountToReduce! > order.price) {
         return const Left(ServerFailure('Сумма бонусов не может превышать стоимость заказа'));
       }
     }
 
     // 3. Логика сдачи (только для наличных)
     // Сдача сравнивается с полной суммой заказа (без вычитания бонусов)
+    // order.price уже содержит полную сумму (subtotalPrice + deliveryPrice)
     if (order.paymentMethod == 'cash' && order.sdacha != null) {
-      if (order.sdacha! < (order.price + order.deliveryPrice)) {
+      if (order.sdacha! < order.price) {
         return const Left(ServerFailure('Сумма сдачи меньше итоговой стоимости заказа'));
       }
     }

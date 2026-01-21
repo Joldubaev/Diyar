@@ -52,8 +52,17 @@ class DeliveryFormCubit extends Cubit<DeliveryFormState> {
     if (currentState is! DeliveryFormLoaded) return;
 
     if (!use) {
+      // Пересчитываем totalOrderCost без бонусов
+      final totalOrderCost = _calculationService
+          .calculateFinalTotalPrice(
+            subtotalPrice: currentState.subtotalPrice.toDouble(),
+            deliveryPrice: currentState.deliveryPrice,
+          )
+          .toInt();
+      
       emit(currentState.copyWith(
         useBonus: false,
+        totalOrderCost: totalOrderCost,
         clearBonusAmount: true,
       ));
     } else {
@@ -66,9 +75,17 @@ class DeliveryFormCubit extends Cubit<DeliveryFormState> {
     final currentState = state;
     if (currentState is! DeliveryFormLoaded) return;
 
-    // Если amount null или 0, просто обнуляем бонусы
+    // Если amount null или 0, просто обнуляем бонусы и пересчитываем totalOrderCost
     if (amount == null || amount == 0) {
+      final totalOrderCost = _calculationService
+          .calculateFinalTotalPrice(
+            subtotalPrice: currentState.subtotalPrice.toDouble(),
+            deliveryPrice: currentState.deliveryPrice,
+          )
+          .toInt();
+      
       emit(currentState.copyWith(
+        totalOrderCost: totalOrderCost,
         clearBonusAmount: true,
         clearValidationError: true,
       ));
@@ -82,15 +99,19 @@ class DeliveryFormCubit extends Cubit<DeliveryFormState> {
     }
 
     // Проверка: бонусы не могут превышать полную стоимость заказа
-    final totalOrderCost = currentState.subtotalPrice + currentState.deliveryPrice.toInt();
-    if (amount > totalOrderCost) {
+    final baseTotalOrderCost = currentState.subtotalPrice + currentState.deliveryPrice.toInt();
+    if (amount > baseTotalOrderCost) {
       emit(currentState.copyWith(validationError: 'Сумма бонусов не может превышать стоимость заказа'));
       return;
     }
 
-    // Сохраняем сумму бонусов (без вычитания из totalOrderCost)
+    // Пересчитываем totalOrderCost с учетом бонусов
+    final totalOrderCost = (baseTotalOrderCost - amount).toInt();
+
+    // Сохраняем сумму бонусов и обновляем totalOrderCost
     emit(currentState.copyWith(
       bonusAmount: amount,
+      totalOrderCost: totalOrderCost,
       clearValidationError: true,
     ));
   }
@@ -172,8 +193,8 @@ class DeliveryFormCubit extends Cubit<DeliveryFormState> {
 
     // Дополнительная валидация бонусов перед созданием заказа
     if (currentState.bonusAmount != null && currentState.bonusAmount! > 0) {
-      final totalOrderCost = currentState.subtotalPrice + currentState.deliveryPrice.toInt();
-      if (currentState.bonusAmount! > totalOrderCost) {
+      final baseTotalOrderCost = currentState.subtotalPrice + currentState.deliveryPrice.toInt();
+      if (currentState.bonusAmount! > baseTotalOrderCost) {
         emit(currentState.copyWith(
           validationError: 'Сумма бонусов не может превышать стоимость заказа',
         ));
@@ -215,11 +236,15 @@ class DeliveryFormCubit extends Cubit<DeliveryFormState> {
     // Получаем sdacha из state
     final sdacha = currentState.paymentType == PaymentTypeDelivery.cash ? currentState.changeAmount : null;
 
+    // Вычисляем полную стоимость заказа БЕЗ вычета бонусов (для отправки на сервер)
+    final fullOrderPrice = currentState.subtotalPrice + currentState.deliveryPrice.toInt();
+
     // Создаем CreateOrderEntity
+    // Отправляем полную сумму без вычета бонусов, бонусы передаем отдельно в amountToReduce
     final orderEntity = CreateOrderEntity(
       addressData: addressData,
       contactInfo: contactInfo,
-      price: currentState.subtotalPrice,
+      price: fullOrderPrice, // Полная сумма без вычета бонусов
       deliveryPrice: currentState.deliveryPrice.toInt(),
       paymentMethod: currentState.paymentType.name,
       dishesCount: dishesCount,
