@@ -232,6 +232,7 @@ import '../../features/templates/presentation/cubit/templates_list_cubit.dart'
     as _i423;
 import '../core.dart' as _i351;
 import '../remote_config/diyar_remote_config.dart' as _i1020;
+import '../services/map_service.dart' as _i569;
 import '../shared/presentation/bloc/internet_bloc.dart' as _i231;
 import '../shared/presentation/theme_cubit/theme_cubit.dart' as _i489;
 import '../utils/storage/local_storage.dart' as _i31;
@@ -262,6 +263,7 @@ extension GetItInjectableX on _i174.GetIt {
       () => registerModule.packageInfo,
       preResolve: true,
     );
+    gh.factory<_i569.MapService>(() => _i569.MapService());
     gh.factory<_i512.CartCutleryCubit>(() => _i512.CartCutleryCubit());
     gh.factory<_i952.CalculateMinimumTimeUseCase>(
         () => _i952.CalculateMinimumTimeUseCase());
@@ -404,6 +406,8 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i804.OrderCalculationService>(),
           initialItems: gh<List<_i885.CartItemEntity>>(),
         ));
+    gh.factory<_i931.GetUserRoleUseCase>(
+        () => _i931.GetUserRoleUseCase(gh<_i825.SecureStorageService>()));
     gh.factory<_i449.HandleFirstLaunchUseCase>(
         () => _i449.HandleFirstLaunchUseCase(gh<_i825.SecureStorageService>()));
     gh.factory<_i141.CheckAuthenticationStatusUseCase>(() =>
@@ -411,8 +415,6 @@ extension GetItInjectableX on _i174.GetIt {
             gh<_i825.SecureStorageService>()));
     gh.factory<_i212.GetNavigationRouteUseCase>(() =>
         _i212.GetNavigationRouteUseCase(gh<_i825.SecureStorageService>()));
-    gh.factory<_i931.GetUserRoleUseCase>(
-        () => _i931.GetUserRoleUseCase(gh<_i825.SecureStorageService>()));
     gh.lazySingleton<_i835.AppLocation>(() => _i835.LocationService(
           gh<_i361.Dio>(),
           gh<_i460.SharedPreferences>(),

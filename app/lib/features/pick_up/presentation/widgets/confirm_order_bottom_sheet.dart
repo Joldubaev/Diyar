@@ -8,7 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConfirmOrderBottomSheet extends StatelessWidget {
-  final int totalPrice;
+  final int totalPrice; // Полная сумма заказа (без вычета бонусов)
+  final int totalOrderCost; // Сумма с учетом бонусов (для отображения в UI)
   final double? bonusAmount;
   final String userName;
   final String userPhone;
@@ -20,6 +21,7 @@ class ConfirmOrderBottomSheet extends StatelessWidget {
   const ConfirmOrderBottomSheet({
     super.key,
     required this.totalPrice,
+    required this.totalOrderCost,
     this.bonusAmount,
     required this.userName,
     required this.userPhone,
@@ -42,7 +44,7 @@ class ConfirmOrderBottomSheet extends StatelessWidget {
             context.router.push(
               PaymentsRoute(
                 orderNumber: state.message,
-                amount: totalPrice.toString(),
+                amount: totalOrderCost.toString(), // Используем сумму с учетом бонусов
               ),
             );
             Navigator.of(context).pop();
@@ -196,8 +198,12 @@ class ConfirmOrderBottomSheet extends StatelessWidget {
         if (bonusAmount != null && bonusAmount! > 0)
           InfoDialogWidget(
             title: 'Будет списано бонусов',
-            description: bonusAmount!.toStringAsFixed(0),
+            description: '${bonusAmount!.toStringAsFixed(0)} сом',
           ),
+        InfoDialogWidget(
+          title: 'Итого c учетом бонусов',
+          description: '$totalOrderCost сом',
+        ),
         if (comment.isNotEmpty)
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,

@@ -8,6 +8,7 @@ export 'network/network.dart';
 export 'remote_config/diyar_remote_config.dart';
 export 'router/routes.dart';
 export 'router/routes.gr.dart';
+export 'services/map_service.dart';
 export 'theme/theme.dart';
 export 'constants/constant.dart';
 export 'l10n/l10n.dart';

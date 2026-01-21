@@ -51,6 +51,7 @@ class _PickupFormPageState extends State<PickupFormPage> {
     context.read<PickUpCubit>().initializeForm(
           userName: userName,
           userPhone: userPhone,
+          totalPrice: widget.totalPrice,
         );
   }
 
@@ -64,8 +65,10 @@ class _PickupFormPageState extends State<PickupFormPage> {
     super.dispose();
   }
 
-  void _showConfirmBottomSheet(BuildContext context, double? bonusAmount, PaymentTypeDelivery paymentType) {
+  void _showConfirmBottomSheet(BuildContext context, PaymentTypeDelivery paymentType) {
     final pickUpCubit = context.read<PickUpCubit>();
+    final currentState = pickUpCubit.state;
+    if (currentState is! PickUpFormLoaded) return;
 
     showModalBottomSheet(
       context: context,
@@ -74,8 +77,9 @@ class _PickupFormPageState extends State<PickupFormPage> {
       builder: (bottomSheetContext) => BlocProvider.value(
         value: pickUpCubit,
         child: ConfirmOrderBottomSheet(
-          totalPrice: widget.totalPrice,
-          bonusAmount: bonusAmount,
+          totalOrderCost: currentState.totalOrderCost,
+          totalPrice: currentState.totalPrice,
+          bonusAmount: currentState.bonusAmount,
           userName: _userNameController.text,
           userPhone: _phoneController.text,
           time: _timeController.text,
@@ -90,9 +94,7 @@ class _PickupFormPageState extends State<PickupFormPage> {
                   time: _timeController.text,
                   comment: _commentController.text,
                   paymentMethod: paymentType.name,
-                  totalPrice: widget.totalPrice,
                   dishCount: widget.dishCount,
-                  bonusAmount: bonusAmount,
                 );
           },
         ),
@@ -153,7 +155,7 @@ class _PickupFormPageState extends State<PickupFormPage> {
             context.router.push(
               PaymentsRoute(
                 orderNumber: state.message,
-                amount: state.totalPrice.toString(),
+                amount: state.totalOrderCost.toString(), // Используем сумму с учетом бонусов
               ),
             );
             Navigator.of(context).pop();
@@ -201,6 +203,8 @@ class _PickupFormPageState extends State<PickupFormPage> {
                 if (!_useBonus) {
                   _bonusController.clear();
                   _bonusAmount = null;
+                  // Обнуляем бонусы в cubit
+                  context.read<PickUpCubit>().setBonusAmount(null, 0.0);
                 }
               });
             },
@@ -208,6 +212,11 @@ class _PickupFormPageState extends State<PickupFormPage> {
               setState(() {
                 _bonusAmount = amount;
               });
+              // Обновляем totalOrderCost в cubit
+              final profileState = context.read<ProfileCubit>().state;
+              final userBalance =
+                  (profileState is ProfileGetLoaded) ? (profileState.userModel.balance ?? 0).toDouble() : 0.0;
+              context.read<PickUpCubit>().setBonusAmount(amount, userBalance);
             },
             totalPrice: widget.totalPrice,
             onConfirmTap: () {
@@ -245,6 +254,12 @@ class _PickupFormPageState extends State<PickupFormPage> {
                   }
                 }
 
+                // Обновляем бонусы в cubit перед показом bottom sheet
+                final profileState = context.read<ProfileCubit>().state;
+                final userBalance =
+                    (profileState is ProfileGetLoaded) ? (profileState.userModel.balance ?? 0).toDouble() : 0.0;
+                context.read<PickUpCubit>().setBonusAmount(finalBonusAmount, userBalance);
+
                 // Получаем текущий paymentType из state
                 final currentState = context.read<PickUpCubit>().state;
                 final currentPaymentType = _getPaymentTypeFromState(currentState);
@@ -252,7 +267,6 @@ class _PickupFormPageState extends State<PickupFormPage> {
                 // Показываем bottom sheet с данными заказа
                 _showConfirmBottomSheet(
                   context,
-                  finalBonusAmount,
                   currentPaymentType,
                 );
               }

@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/router/routes.gr.dart';
+import 'package:diyar/features/curier/curier.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'drawer_biometric_section.dart';
 import 'drawer_item.dart';
@@ -16,7 +18,15 @@ class DrawerNavigation extends StatelessWidget {
         DrawerItem(
           icon: Icons.delivery_dining_outlined,
           title: 'Активные заказы',
-          onTap: () => Navigator.pop(context),
+          onTap: () {
+            Navigator.pop(context);
+            // Если мы на странице истории, возвращаемся на главную страницу курьера
+            if (context.router.canPop()) {
+              context.router.maybePop();
+            }
+            // Перезагружаем активные заказы
+            context.read<CurierCubit>().getCurierOrders();
+          },
         ),
         DrawerItem(
           icon: Icons.history_toggle_off_outlined,

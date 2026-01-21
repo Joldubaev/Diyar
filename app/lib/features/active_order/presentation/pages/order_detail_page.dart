@@ -30,13 +30,24 @@ class OrderDetailPage extends StatelessWidget {
           // Если не нашли в активных, проверяем заказы курьера
           return BlocBuilder<CurierCubit, CurierState>(
             builder: (context, curierState) {
-              if (curierState is OrdersLoaded) {
-                final curierOrder = curierState.orders.firstWhereOrNull(
+              if (curierState is CurierMainState) {
+                // Ищем в активных заказах курьера
+                final curierOrder = curierState.activeOrders.firstWhereOrNull(
                   (o) => o.orderNumber?.toString() == orderNumber,
                 );
                 if (curierOrder != null) {
                   // Конвертируем CurierEntity в OrderActiveItemEntity
                   final order = _convertCurierToOrderActive(curierOrder);
+                  return _OrderDetailContent(order: order);
+                }
+
+                // Если не нашли в активных, проверяем историю курьера
+                final historyOrder = curierState.historyOrders.firstWhereOrNull(
+                  (o) => o.orderNumber?.toString() == orderNumber,
+                );
+                if (historyOrder != null) {
+                  // Конвертируем CurierEntity в OrderActiveItemEntity
+                  final order = _convertCurierToOrderActive(historyOrder);
                   return _OrderDetailContent(order: order);
                 }
               }

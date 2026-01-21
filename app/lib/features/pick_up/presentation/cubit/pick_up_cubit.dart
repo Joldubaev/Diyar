@@ -23,11 +23,14 @@ class PickUpCubit extends Cubit<PickUpState> {
   void initializeForm({
     required String userName,
     required String userPhone,
+    required int totalPrice,
   }) {
     emit(PickUpFormLoaded(
       userName: userName,
       userPhone: userPhone,
       paymentType: PaymentTypeDelivery.cash.name,
+      totalPrice: totalPrice,
+      totalOrderCost: totalPrice, // Изначально totalOrderCost = totalPrice (без бонусов)
     ));
   }
 
@@ -43,6 +46,42 @@ class PickUpCubit extends Cubit<PickUpState> {
         userPhone: userPhone,
       ));
     }
+  }
+
+  /// Установка суммы бонусов и пересчет totalOrderCost
+  void setBonusAmount(double? amount, double userBalance) {
+    final currentState = state;
+    if (currentState is! PickUpFormLoaded) return;
+
+    // Если amount null или 0, просто обнуляем бонусы и пересчитываем totalOrderCost
+    if (amount == null || amount == 0) {
+      emit(currentState.copyWith(
+        totalOrderCost: currentState.totalPrice,
+        clearBonusAmount: true,
+      ));
+      return;
+    }
+
+    // Проверка: бонусы не могут превышать баланс пользователя
+    if (amount > userBalance) {
+      // Можно добавить обработку ошибки, если нужно
+      return;
+    }
+
+    // Проверка: бонусы не могут превышать полную стоимость заказа
+    if (amount > currentState.totalPrice) {
+      // Можно добавить обработку ошибки, если нужно
+      return;
+    }
+
+    // Пересчитываем totalOrderCost с учетом бонусов
+    final totalOrderCost = (currentState.totalPrice - amount).toInt();
+
+    // Сохраняем сумму бонусов и обновляем totalOrderCost
+    emit(currentState.copyWith(
+      bonusAmount: amount,
+      totalOrderCost: totalOrderCost,
+    ));
   }
 
   /// Изменение типа оплаты
@@ -97,17 +136,22 @@ class PickUpCubit extends Cubit<PickUpState> {
     required String time,
     required String comment,
     required String paymentMethod,
-    required int totalPrice,
     required int? dishCount,
-    double? bonusAmount,
   }) async {
+    final currentState = state;
+    if (currentState is! PickUpFormLoaded) return;
+
     emit(CreatePickUpOrderLoading());
 
     try {
       // Вычисляем dishesCount из cart
       final calculatedDishesCount = dishCount ?? cart.fold<int>(0, (sum, item) => sum + (item.quantity ?? 0));
 
+      // Получаем полную сумму заказа БЕЗ вычета бонусов (для отправки на сервер)
+      final fullOrderPrice = currentState.totalPrice;
+
       // Используем usecase для создания заказа (с поддержкой бонусов)
+      // Отправляем полную сумму без вычета бонусов, бонусы передаем отдельно в amountToReduce
       final order = _createPickupOrderFromCartUseCase(
         cartItems: cart,
         userName: userName.trim(),
@@ -115,12 +159,12 @@ class PickUpCubit extends Cubit<PickUpState> {
         prepareFor: time.trim(),
         comment: comment.trim().isEmpty ? null : comment.trim(),
         paymentMethod: paymentMethod,
-        totalPrice: totalPrice,
+        totalPrice: fullOrderPrice, // Полная сумма без вычета бонусов
         dishCount: calculatedDishesCount,
-        bonusAmount: bonusAmount,
+        bonusAmount: currentState.bonusAmount, // Бонусы передаем отдельно
       );
 
-      await submitPickupOrderEntity(order, paymentMethod, totalPrice);
+      await submitPickupOrderEntity(order, paymentMethod, fullOrderPrice);
     } catch (e) {
       emit(CreatePickUpOrderError(e.toString()));
     }
@@ -137,11 +181,25 @@ class PickUpCubit extends Cubit<PickUpState> {
       final result = await _pickUpRepository.getPickupOrder(order);
       result.fold(
         (failure) => emit(CreatePickUpOrderError(failure.message)),
-        (entity) => emit(CreatePickUpOrderLoaded(
-          message: entity,
-          paymentType: paymentType,
-          totalPrice: totalPrice,
-        )),
+        (entity) {
+          final currentState = state;
+          if (currentState is PickUpFormLoaded) {
+            emit(CreatePickUpOrderLoaded(
+              message: entity,
+              paymentType: paymentType,
+              totalPrice: totalPrice,
+              totalOrderCost: currentState.totalOrderCost,
+            ));
+          } else {
+            // Fallback, если state не PickUpFormLoaded
+            emit(CreatePickUpOrderLoaded(
+              message: entity,
+              paymentType: paymentType,
+              totalPrice: totalPrice,
+              totalOrderCost: totalPrice,
+            ));
+          }
+        },
       );
     } catch (e) {
       emit(CreatePickUpOrderError(e.toString()));

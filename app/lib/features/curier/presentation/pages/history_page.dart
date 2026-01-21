@@ -50,32 +50,37 @@ class _HistoryPageState extends State<HistoryPage> {
           Expanded(
             child: BlocConsumer<CurierCubit, CurierState>(
               listener: (context, state) {
-                if (state is CurierHistoryError) context.showSnack(state.message, isError: true);
+                if (state.historyError != null) {
+                  context.showSnack(state.historyError!, isError: true);
+                }
               },
               builder: (context, state) {
-                return switch (state) {
-                  CurierHistoryLoading() => context.loadingIndicator,
-                  CurierHistoryError(:final message) => context.errorState(message),
-                  CurierHistoryLoaded(:final orders, :final hasMore) => orders.isEmpty
-                      ? context.emptyState(icon: Icons.history, message: context.l10n.noOrders)
-                      : RefreshIndicator(
-                          onRefresh: () async => _loadHistory(),
-                          child: _OrdersListView(
-                            orders: orders,
-                            hasMore: hasMore,
-                            onLoadMore: () => _loadMore(),
-                          ),
-                        ),
-                  CurierHistoryLoadingMore(:final orders) => RefreshIndicator(
-                      onRefresh: () async => _loadHistory(),
-                      child: _OrdersListView(
-                        orders: orders,
-                        hasMore: true,
-                        isLoadingMore: true,
-                      ),
-                    ),
-                  _ => context.loadingIndicator,
-                };
+                // Если состояние не CurierMainState, показываем загрузку
+                if (state is! CurierMainState) {
+                  return context.loadingIndicator;
+                }
+
+                if (state.isHistoryLoading) {
+                  return context.loadingIndicator;
+                }
+
+                if (state.historyError != null) {
+                  return context.errorState(state.historyError!);
+                }
+
+                if (state.historyOrders.isEmpty) {
+                  return context.emptyState(icon: Icons.history, message: context.l10n.noOrders);
+                }
+
+                return RefreshIndicator(
+                  onRefresh: () async => _loadHistory(),
+                  child: _OrdersListView(
+                    orders: state.historyOrders,
+                    hasMore: state.historyHasMore,
+                    isLoadingMore: state.isHistoryLoadingMore,
+                    onLoadMore: () => _loadMore(),
+                  ),
+                );
               },
             ),
           ),

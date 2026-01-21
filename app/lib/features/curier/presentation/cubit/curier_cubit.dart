@@ -17,36 +17,38 @@ class CurierCubit extends Cubit<CurierState> {
     final result = await _repository.getUser();
     result.fold(
       (failure) => emit(UserError(failure.message)),
-      (user) => emit(UserLoaded(user)),
+      (user) {
+        // После загрузки пользователя создаем CurierMainState
+        emit(CurierMainState(user: user));
+      },
     );
   }
 
+  /// Загружает активные заказы (не перетирает историю)
   Future<void> getCurierOrders() async {
     final user = state.user;
     if (user == null) return;
 
-    emit(OrdersLoading(user: user));
+    // Если состояние не CurierMainState, создаем его
+    final currentState = state is CurierMainState ? state as CurierMainState : CurierMainState(user: user);
+
+    emit(currentState.copyWith(isActiveOrdersLoading: true, clearActiveOrdersError: true));
 
     final result = await _repository.getCurierOrders();
     result.fold(
-      (failure) => emit(OrdersError(message: failure.message, user: user)),
-      (orders) => emit(OrdersLoaded(user: user, orders: orders)),
+      (failure) => emit(currentState.copyWith(
+        isActiveOrdersLoading: false,
+        activeOrdersError: failure.message,
+      )),
+      (orders) => emit(currentState.copyWith(
+        isActiveOrdersLoading: false,
+        activeOrders: orders,
+        clearActiveOrdersError: true,
+      )),
     );
   }
 
-  Future<void> getFinishOrder(int orderId) async {
-    final user = state.user;
-    if (user == null) return;
-
-    emit(FinishOrderLoading(user: user));
-
-    final result = await _repository.getFinishOrder(orderId);
-    result.fold(
-      (failure) => emit(FinishOrderError(message: failure.message, user: user)),
-      (_) => emit(FinishOrderSuccess(user: user)),
-    );
-  }
-
+  /// Загружает историю заказов (не перетирает активные заказы)
   Future<void> getCurierHistory({
     String? startDate,
     String? endDate,
@@ -55,15 +57,17 @@ class CurierCubit extends Cubit<CurierState> {
     final user = state.user;
     if (user == null) return;
 
-    final currentState = state;
-    final currentPage = currentState is CurierHistoryLoaded ? currentState.currentPage : 0;
-    final existingOrders = currentState is CurierHistoryLoaded ? currentState.orders : <CurierEntity>[];
+    // Если состояние не CurierMainState, создаем его
+    final currentState = state is CurierMainState ? state as CurierMainState : CurierMainState(user: user);
 
-    if (loadMore && currentState is CurierHistoryLoaded) {
-      emit(CurierHistoryLoadingMore(user: user, orders: existingOrders, currentPage: currentPage));
-    } else {
-      emit(CurierHistoryLoading(user: user));
-    }
+    final currentPage = loadMore ? currentState.historyCurrentPage : 0;
+    final existingOrders = loadMore ? currentState.historyOrders : <CurierEntity>[];
+
+    emit(currentState.copyWith(
+      isHistoryLoading: !loadMore,
+      isHistoryLoadingMore: loadMore,
+      clearHistoryError: true,
+    ));
 
     final nextPage = loadMore ? currentPage + 1 : 1;
     final result = await _repository.getCurierHistory(
@@ -73,17 +77,54 @@ class CurierCubit extends Cubit<CurierState> {
       pageSize: 10,
     );
     result.fold(
-      (failure) => emit(CurierHistoryError(message: failure.message, user: user)),
+      (failure) => emit(currentState.copyWith(
+        isHistoryLoading: false,
+        isHistoryLoadingMore: false,
+        historyError: failure.message,
+      )),
       (newOrders) {
         final allOrders = loadMore ? [...existingOrders, ...newOrders] : newOrders;
         final sortedOrders = _sortOrdersByDate(allOrders);
         final hasMore = newOrders.length >= 10;
-        emit(CurierHistoryLoaded(
-          user: user,
-          orders: sortedOrders,
-          hasMore: hasMore,
-          currentPage: nextPage,
+        emit(currentState.copyWith(
+          isHistoryLoading: false,
+          isHistoryLoadingMore: false,
+          historyOrders: sortedOrders,
+          historyHasMore: hasMore,
+          historyCurrentPage: nextPage,
+          clearHistoryError: true,
         ));
+      },
+    );
+  }
+
+  Future<void> getFinishOrder(int orderId) async {
+    final user = state.user;
+    if (user == null) return;
+
+    // Сохраняем текущее состояние перед операцией
+    final currentMainState = state is CurierMainState ? state as CurierMainState : null;
+
+    emit(FinishOrderLoading(user: user));
+
+    final result = await _repository.getFinishOrder(orderId);
+    result.fold(
+      (failure) {
+        // Восстанавливаем состояние с ошибкой
+        if (currentMainState != null) {
+          emit(currentMainState.copyWith(activeOrdersError: failure.message));
+        } else {
+          emit(FinishOrderError(message: failure.message, user: user));
+        }
+      },
+      (_) {
+        // Восстанавливаем состояние и перезагружаем активные заказы
+        if (currentMainState != null) {
+          emit(currentMainState);
+          getCurierOrders();
+        } else {
+          emit(FinishOrderSuccess(user: user));
+        }
       },
     );
   }
