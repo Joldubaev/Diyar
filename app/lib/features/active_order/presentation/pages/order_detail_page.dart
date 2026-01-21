@@ -136,7 +136,7 @@ class _OrderDetailContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Бонусы не вычитаются из итоговой суммы, отправляем полную стоимость
-    final totalPrice = (order.price ?? 0) + (order.deliveryPrice ?? 0);
+    final totalPrice = (order.price ?? 0) + (order.deliveryPrice ?? 0) - (order.amountToReduce ?? 0);
 
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 10),
