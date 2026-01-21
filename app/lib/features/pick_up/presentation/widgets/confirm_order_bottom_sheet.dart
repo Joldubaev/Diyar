@@ -195,17 +195,20 @@ class ConfirmOrderBottomSheet extends StatelessWidget {
           title: l10n.orderAmount,
           description: '$totalPrice сом',
         ),
-        if (bonusAmount != null && bonusAmount! > 0)
+        InfoDialogWidget(
+          title: 'Итого без учета бонусов',
+          description: '$totalPrice сом',
+        ),
+        if (bonusAmount != null && bonusAmount! > 0) ...[
           InfoDialogWidget(
             title: 'Будет списано бонусов',
             description: '${bonusAmount!.toStringAsFixed(0)} сом',
           ),
-        // Показываем итоговую сумму С УЧЕТОМ бонусов (для пользователя)
-        // На бэкенд отправляем полную сумму БЕЗ вычета бонусов, бэкенд сам вычтет
-        InfoDialogWidget(
-          title: 'Итого c учетом бонусов',
-          description: '$totalOrderCost сом',
-        ),
+          InfoDialogWidget(
+            title: 'Итого c учетом бонусов',
+            description: '$totalOrderCost сом',
+          ),
+        ],
         if (comment.isNotEmpty)
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,

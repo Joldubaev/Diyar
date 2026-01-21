@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/cart.dart';
@@ -140,19 +142,42 @@ class _DeliveryFormViewState extends State<DeliveryFormView> {
   }
 
   void _showOrderConfirmationBottomSheet(BuildContext context, DeliveryFormLoaded state) {
+    log('[DeliveryPage] _showOrderConfirmationBottomSheet: Начало проверки перед показом bottom sheet');
+    log('[DeliveryPage] _showOrderConfirmationBottomSheet: paymentType=${state.paymentType}');
+    log('[DeliveryPage] _showOrderConfirmationBottomSheet: changeAmount=${state.changeAmount}');
+    log('[DeliveryPage] _showOrderConfirmationBottomSheet: subtotalPrice=${state.subtotalPrice}');
+    log('[DeliveryPage] _showOrderConfirmationBottomSheet: deliveryPrice=${state.deliveryPrice.toInt()}');
+    log('[DeliveryPage] _showOrderConfirmationBottomSheet: bonusAmount=${state.bonusAmount}');
+    log('[DeliveryPage] _showOrderConfirmationBottomSheet: useBonus=${state.useBonus}');
+
     // Проверяем сдачу при наличной оплате
     if (state.paymentType == PaymentTypeDelivery.cash) {
       if (state.changeAmount == null) {
+        log('[DeliveryPage] _showOrderConfirmationBottomSheet: ОШИБКА - changeAmount is null');
         showToast('Пожалуйста, введите сумму с которой нужна сдача', isError: true);
         return;
       }
-      // Сравниваем с полной суммой БЕЗ вычета бонусов
+      // Вычисляем полную сумму БЕЗ вычета бонусов (для отправки на бэкенд)
       final fullOrderPrice = state.subtotalPrice + state.deliveryPrice.toInt();
-      if (state.changeAmount! < fullOrderPrice) {
-        showToast('Сумма должна быть не меньше $fullOrderPrice сом', isError: true);
+
+      // Используем state.totalOrderCost для валидации, так как он уже учитывает бонусы
+      // state.totalOrderCost обновляется в DeliveryFormCubit.setBonusAmount при применении бонусов
+      log('[DeliveryPage] _showOrderConfirmationBottomSheet: fullOrderPrice (без бонусов, для бэкенда)=$fullOrderPrice');
+      log('[DeliveryPage] _showOrderConfirmationBottomSheet: bonusAmount=${state.bonusAmount}');
+      log('[DeliveryPage] _showOrderConfirmationBottomSheet: state.totalOrderCost (с учетом бонусов, для валидации)=${state.totalOrderCost}');
+      log('[DeliveryPage] _showOrderConfirmationBottomSheet: Сравнение: changeAmount=${state.changeAmount} < totalOrderCost=${state.totalOrderCost} = ${state.changeAmount! < state.totalOrderCost}');
+
+      // Валидация сравнивает с state.totalOrderCost (то, что видит пользователь в UI)
+      // На бэкенд отправим fullOrderPrice (без бонусов), бэкенд сам вычтет бонусы
+      if (state.changeAmount! < state.totalOrderCost) {
+        log('[DeliveryPage] _showOrderConfirmationBottomSheet: ОШИБКА - Сумма сдачи меньше итоговой стоимости заказа (с учетом бонусов)');
+        showToast('Сумма должна быть не меньше ${state.totalOrderCost} сом', isError: true);
         return;
       }
+      log('[DeliveryPage] _showOrderConfirmationBottomSheet: Валидация сдачи пройдена успешно');
     }
+
+    log('[DeliveryPage] _showOrderConfirmationBottomSheet: Показываем bottom sheet для подтверждения заказа');
 
     final deliveryFormCubit = context.read<DeliveryFormCubit>();
     showModalBottomSheet(

@@ -17,7 +17,7 @@ class CancelOrderButton extends StatelessWidget {
     return OutlinedButton(
       onPressed: () => _showConfirmDialog(context),
       style: OutlinedButton.styleFrom(foregroundColor: Colors.red),
-      child: const Text('Отменить заказ'),
+      child: const Text('Отменить'),
     );
   }
 

@@ -53,6 +53,9 @@ class DeliveryFormCubit extends Cubit<DeliveryFormState> {
     final currentState = state;
     if (currentState is! DeliveryFormLoaded) return;
 
+    log('[DeliveryFormCubit] toggleBonus: use=$use');
+    log('[DeliveryFormCubit] toggleBonus: Текущее состояние - bonusAmount=${currentState.bonusAmount}, totalOrderCost=${currentState.totalOrderCost}');
+
     if (!use) {
       // Пересчитываем totalOrderCost без бонусов
       final totalOrderCost = _calculationService
@@ -62,13 +65,17 @@ class DeliveryFormCubit extends Cubit<DeliveryFormState> {
           )
           .toInt();
 
+      log('[DeliveryFormCubit] toggleBonus: Выключаем бонусы, totalOrderCost без бонусов=$totalOrderCost');
       emit(currentState.copyWith(
         useBonus: false,
         totalOrderCost: totalOrderCost,
         clearBonusAmount: true,
       ));
+      log('[DeliveryFormCubit] toggleBonus: Состояние обновлено - useBonus=false, totalOrderCost=$totalOrderCost');
     } else {
+      log('[DeliveryFormCubit] toggleBonus: Включаем бонусы, useBonus=true');
       emit(currentState.copyWith(useBonus: true));
+      log('[DeliveryFormCubit] toggleBonus: Состояние обновлено - useBonus=true, totalOrderCost остался=${currentState.totalOrderCost}');
     }
   }
 

@@ -63,46 +63,69 @@ class _OrderStepperState extends State<OrderStepper> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 100,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: List.generate(_steps.length, (index) {
-          final isActive = index == activeStep;
-          final isCompleted = index < activeStep;
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut,
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: isActive
-                      ? AppColors.green
-                      : isCompleted
-                          ? AppColors.primary
-                          : AppColors.grey.withValues(alpha: 0.5),
-                  shape: BoxShape.circle,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Адаптивные размеры в зависимости от ширины экрана
+        final screenWidth = constraints.maxWidth;
+        final isSmallScreen = screenWidth < 360;
+
+        final iconSize = isSmallScreen ? 32.0 : 40.0;
+        final fontSize = isSmallScreen ? 10.0 : 12.0;
+        final spacing = isSmallScreen ? 2.0 : 4.0;
+
+        return SizedBox(
+          height: isSmallScreen ? 80 : 100,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.max,
+            children: List.generate(_steps.length, (index) {
+              final isActive = index == activeStep;
+              final isCompleted = index < activeStep;
+              return Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                      width: iconSize,
+                      height: iconSize,
+                      decoration: BoxDecoration(
+                        color: isActive
+                            ? AppColors.green
+                            : isCompleted
+                                ? AppColors.primary
+                                : AppColors.grey.withValues(alpha: 0.5),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        _steps[index].icon,
+                        color: Colors.white,
+                        size: iconSize * 0.6,
+                      ),
+                    ),
+                    SizedBox(height: spacing),
+                    Flexible(
+                      child: Text(
+                        _steps[index].title,
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: fontSize,
+                          color: isActive || isCompleted ? AppColors.primary : AppColors.grey.withValues(alpha: 0.5),
+                          fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                child: Icon(
-                  _steps[index].icon,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                _steps[index].title,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: isActive || isCompleted ? AppColors.primary : AppColors.grey.withValues(alpha: 0.5),
-                ),
-              ),
-            ],
-          );
-        }),
-      ),
+              );
+            }),
+          ),
+        );
+      },
     );
   }
 }

@@ -53,38 +53,52 @@ class _OrderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: ListTile(
-        title: Text(
-          '${context.l10n.orderNumber} ${order.orderNumber}',
-          style: theme.textTheme.bodyLarge?.copyWith(color: AppColors.primary),
-        ),
-        subtitle: Column(
+      margin: EdgeInsets.zero,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            // Теперь OrderStepper просто берет статус из Entity
-            OrderStepper(
-                orderStatus: OrderStatusEntity(
-              orderNumber: order.orderNumber,
-              status: order.status,
-            )),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Expanded(
-                  child: CancelOrderButton(order: order),
-                ),
-                const SizedBox(width: 8),
-                CustomTextButton(
-                  onPressed: () => context.pushRoute(
-                    OrderDetailRoute(orderNumber: "${order.orderNumber}"),
-                  ),
-                  textButton: context.l10n.orderDetails,
-                ),
-              ],
+            // Номер заказа
+            Text(
+              '${context.l10n.orderNumber} ${order.orderNumber}',
+              style: theme.textTheme.bodyLarge?.copyWith(
+                color: AppColors.primary,
+                fontWeight: FontWeight.w600,
+              ),
             ),
+            const SizedBox(height: 16),
+            // Степпер статуса заказа
+            OrderStepper(
+              orderStatus: OrderStatusEntity(
+                orderNumber: order.orderNumber,
+                status: order.status,
+              ),
+            ),
+            const SizedBox(height: 16),
+            // Кнопки действий
+            _buildActionButtons(context),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildActionButtons(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: CancelOrderButton(order: order),
+        ),
+        const SizedBox(width: 8),
+        CustomTextButton(
+          onPressed: () => context.pushRoute(
+            OrderDetailRoute(orderNumber: "${order.orderNumber}"),
+          ),
+          textButton: context.l10n.orderDetails,
+        ),
+      ],
     );
   }
 }
