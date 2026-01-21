@@ -139,28 +139,17 @@ final class UserError extends CurierState {
 /// Основное состояние с раздельными данными для активных заказов и истории
 final class CurierMainState extends CurierState {
   const CurierMainState({
-    required GetUserEntity user,
-    List<CurierEntity> activeOrders = const [],
-    List<CurierEntity> historyOrders = const [],
-    bool isActiveOrdersLoading = false,
-    bool isHistoryLoading = false,
-    bool isHistoryLoadingMore = false,
-    bool historyHasMore = false,
-    int historyCurrentPage = 1,
-    String? activeOrdersError,
-    String? historyError,
-  }) : super(
-          user: user,
-          activeOrders: activeOrders,
-          historyOrders: historyOrders,
-          isActiveOrdersLoading: isActiveOrdersLoading,
-          isHistoryLoading: isHistoryLoading,
-          isHistoryLoadingMore: isHistoryLoadingMore,
-          historyHasMore: historyHasMore,
-          historyCurrentPage: historyCurrentPage,
-          activeOrdersError: activeOrdersError,
-          historyError: historyError,
-        );
+    required GetUserEntity super.user,
+    super.activeOrders,
+    super.historyOrders,
+    super.isActiveOrdersLoading,
+    super.isHistoryLoading,
+    super.isHistoryLoadingMore,
+    super.historyHasMore,
+    super.historyCurrentPage,
+    super.activeOrdersError,
+    super.historyError,
+  });
 
   @override
   CurierMainState copyWith({

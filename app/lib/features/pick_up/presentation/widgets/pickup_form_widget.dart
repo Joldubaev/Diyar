@@ -186,7 +186,7 @@ class _PickupFormWidgetState extends State<PickupFormWidget> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Вам доступно ${userBalance.toStringAsFixed(0)} бонусов',
+                        'Вам доступно ${userBalance % 1 == 0 ? userBalance.toInt().toString() : userBalance.toStringAsFixed(1)} бонусов',
                         style: theme.textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.w500,
                         ),

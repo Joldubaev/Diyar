@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:diyar/features/cart/cart.dart';
@@ -53,35 +55,45 @@ class PickUpCubit extends Cubit<PickUpState> {
     final currentState = state;
     if (currentState is! PickUpFormLoaded) return;
 
+    log('[PickUpCubit] setBonusAmount: Начало установки суммы бонусов');
+    log('[PickUpCubit] setBonusAmount: amount=$amount, userBalance=$userBalance');
+    log('[PickUpCubit] setBonusAmount: totalPrice=${currentState.totalPrice}');
+
     // Если amount null или 0, просто обнуляем бонусы и пересчитываем totalOrderCost
     if (amount == null || amount == 0) {
+      log('[PickUpCubit] setBonusAmount: amount null или 0, обнуляем бонусы');
       emit(currentState.copyWith(
         totalOrderCost: currentState.totalPrice,
         clearBonusAmount: true,
       ));
+      log('[PickUpCubit] setBonusAmount: totalOrderCost без бонусов=${currentState.totalPrice}');
       return;
     }
 
     // Проверка: бонусы не могут превышать баланс пользователя
     if (amount > userBalance) {
+      log('[PickUpCubit] setBonusAmount: ОШИБКА - Недостаточно бонусов (amount=$amount > userBalance=$userBalance)');
       // Можно добавить обработку ошибки, если нужно
       return;
     }
 
     // Проверка: бонусы не могут превышать полную стоимость заказа
     if (amount > currentState.totalPrice) {
+      log('[PickUpCubit] setBonusAmount: ОШИБКА - Сумма бонусов превышает стоимость заказа (amount=$amount > totalPrice=${currentState.totalPrice})');
       // Можно добавить обработку ошибки, если нужно
       return;
     }
 
     // Пересчитываем totalOrderCost с учетом бонусов
     final totalOrderCost = (currentState.totalPrice - amount).toInt();
+    log('[PickUpCubit] setBonusAmount: totalOrderCost с учетом бонусов=$totalOrderCost (totalPrice=${currentState.totalPrice} - amount=$amount)');
 
     // Сохраняем сумму бонусов и обновляем totalOrderCost
     emit(currentState.copyWith(
       bonusAmount: amount,
       totalOrderCost: totalOrderCost,
     ));
+    log('[PickUpCubit] setBonusAmount: Бонусы успешно установлены: bonusAmount=$amount, totalOrderCost=$totalOrderCost');
   }
 
   /// Изменение типа оплаты
@@ -150,8 +162,15 @@ class PickUpCubit extends Cubit<PickUpState> {
       // Получаем полную сумму заказа БЕЗ вычета бонусов (для отправки на сервер)
       final fullOrderPrice = currentState.totalPrice;
 
+      log('[PickUpCubit] createPickupOrder: Подготовка данных для отправки на бэкенд');
+      log('[PickUpCubit] createPickupOrder: totalPrice (полная сумма БЕЗ бонусов, для бэкенда)=$fullOrderPrice');
+      log('[PickUpCubit] createPickupOrder: bonusAmount (amountToReduce)=${currentState.bonusAmount}');
+      log('[PickUpCubit] createPickupOrder: totalOrderCost (для UI, С УЧЕТОМ бонусов)=${currentState.totalOrderCost}');
+      log('[PickUpCubit] createPickupOrder: Бэкенд сам вычтет бонусы: finalPrice = $fullOrderPrice - ${currentState.bonusAmount ?? 0} = ${fullOrderPrice - (currentState.bonusAmount ?? 0)}');
+
       // Используем usecase для создания заказа (с поддержкой бонусов)
       // Отправляем полную сумму без вычета бонусов, бонусы передаем отдельно в amountToReduce
+      // Бэкенд сам вычтет бонусы из полной суммы
       final order = _createPickupOrderFromCartUseCase(
         cartItems: cart,
         userName: userName.trim(),
@@ -159,10 +178,12 @@ class PickUpCubit extends Cubit<PickUpState> {
         prepareFor: time.trim(),
         comment: comment.trim().isEmpty ? null : comment.trim(),
         paymentMethod: paymentMethod,
-        totalPrice: fullOrderPrice, // Полная сумма без вычета бонусов
+        totalPrice: fullOrderPrice, // Полная сумма без вычета бонусов - бэкенд сам вычтет бонусы
         dishCount: calculatedDishesCount,
         bonusAmount: currentState.bonusAmount, // Бонусы передаем отдельно
       );
+
+      log('[PickUpCubit] createPickupOrder: Отправка заказа на бэкенд: totalPrice=$fullOrderPrice, bonusAmount=${currentState.bonusAmount}');
 
       await submitPickupOrderEntity(order, paymentMethod, fullOrderPrice);
     } catch (e) {

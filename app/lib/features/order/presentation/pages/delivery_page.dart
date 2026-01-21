@@ -146,8 +146,10 @@ class _DeliveryFormViewState extends State<DeliveryFormView> {
         showToast('Пожалуйста, введите сумму с которой нужна сдача', isError: true);
         return;
       }
-      if (state.changeAmount! < state.totalOrderCost) {
-        showToast('Сумма должна быть не меньше ${state.totalOrderCost} сом', isError: true);
+      // Сравниваем с полной суммой БЕЗ вычета бонусов
+      final fullOrderPrice = state.subtotalPrice + state.deliveryPrice.toInt();
+      if (state.changeAmount! < fullOrderPrice) {
+        showToast('Сумма должна быть не меньше $fullOrderPrice сом', isError: true);
         return;
       }
     }

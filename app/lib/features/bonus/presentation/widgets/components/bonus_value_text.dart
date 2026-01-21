@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Переиспользуемый компонент для отображения баланса бонусов
 class BonusValueText extends StatelessWidget {
-  final int balance;
+  final double balance; // Изменено с int на double для поддержки десятичных значений (например, 11.5)
 
   const BonusValueText({
     super.key,
@@ -11,11 +11,16 @@ class BonusValueText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Форматируем баланс: если есть десятичная часть, показываем её, иначе показываем как целое число
+    final formattedBalance = balance % 1 == 0 
+        ? balance.toInt().toString() 
+        : balance.toStringAsFixed(1);
+    
     return RichText(
       text: TextSpan(
         children: [
           TextSpan(
-            text: '$balance',
+            text: formattedBalance,
             style: const TextStyle(
               fontSize: 42,
               fontWeight: FontWeight.w700,

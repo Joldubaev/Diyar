@@ -167,6 +167,8 @@ class CustomBottomSheet extends StatelessWidget {
             title: 'Будет списано бонусов',
             description: '${state.bonusAmount!.toStringAsFixed(0)} сом',
           ),
+        // Показываем итоговую сумму С УЧЕТОМ бонусов (для пользователя)
+        // На бэкенд отправляем полную сумму БЕЗ вычета бонусов, бэкенд сам вычтет
         InfoDialogWidget(
           title: 'Итого c учетом бонусов',
           description: '${state.totalOrderCost} сом',

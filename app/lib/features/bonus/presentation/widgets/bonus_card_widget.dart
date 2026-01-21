@@ -21,7 +21,7 @@ class BonusCardWidget extends StatelessWidget {
         }
 
         final user = state.userModel;
-        final balance = (user.balance ?? 0).toInt();
+        final balance = (user.balance ?? 0.0).toDouble(); // Сохраняем как double для поддержки десятичных значений (например, 11.5)
         final discount = user.discount ?? 0;
 
         return BonusCardBackground(
@@ -49,7 +49,7 @@ class BonusCardWidget extends StatelessWidget {
 
 /// Колонка с информацией о балансе и скидке
 class _CardInfoColumn extends StatelessWidget {
-  final int balance;
+  final double balance; // Изменено с int на double для поддержки десятичных значений (например, 11.5)
   final int discount;
 
   const _CardInfoColumn({
