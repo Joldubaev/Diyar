@@ -59,9 +59,15 @@ class _CurierPageState extends State<CurierPage> {
             context.read<CurierCubit>().getCurierOrders();
           } else if (state is FinishOrderSuccess) {
             context.read<CurierCubit>().getCurierOrders();
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.orderCompleted)));
+            SnackBarMessage().showSuccessSnackBar(
+              message: l10n.orderCompleted,
+              context: context,
+            );
           } else if (state is FinishOrderError) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
+            SnackBarMessage().showErrorSnackBar(
+              message: state.message,
+              context: context,
+            );
           }
         },
         builder: (context, state) {

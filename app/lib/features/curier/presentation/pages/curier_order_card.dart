@@ -1,7 +1,15 @@
 import 'package:diyar/core/theme/theme_extenstion.dart';
 import 'package:flutter/material.dart';
 import 'package:diyar/features/curier/curier.dart';
+import 'package:diyar/common/food_card/utils/food_price_formatter.dart';
+import '../widgets/order_icon_widget.dart';
+import '../widgets/order_title_widget.dart';
+import '../widgets/order_subtitle_widget.dart';
+import '../widgets/order_info_section_widget.dart';
+import '../widgets/order_price_section_widget.dart';
+import '../widgets/order_actions_row_widget.dart';
 
+/// Виджет карточки заказа для курьера
 class CurierOrderCard extends StatelessWidget {
   final CurierEntity order;
   final VoidCallback onFinish;
@@ -18,30 +26,50 @@ class CurierOrderCard extends StatelessWidget {
     required this.onCall,
   });
 
+  // Вычисляемые значения вынесены из build с явными типами
+  int get _totalPrice => (order.price ?? 0) + (order.deliveryPrice ?? 0);
+  String get _formattedAddress => _buildAddress();
+  String get _formattedPrice => FoodPriceFormatter.formatPriceWithCurrency(_totalPrice);
+
+  String _buildAddress() {
+    final address = '${order.address ?? ''} ${order.houseNumber ?? ''}'.trim();
+    return address.isNotEmpty ? address : 'Не указан';
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Используем Card из темы, убираем лишние обертки
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Card(
       margin: EdgeInsets.zero,
-      elevation: 2, // Чуть уменьшил для мягкости, как в современных картах
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(
+          color: colorScheme.outline.withValues(alpha: 0.12),
+          width: 1,
+        ),
+      ),
       child: ExpansionTile(
-        // Убираем дефолтные границы ExpansionTile
         shape: const RoundedRectangleBorder(side: BorderSide.none),
         collapsedShape: const RoundedRectangleBorder(side: BorderSide.none),
-        tilePadding: const EdgeInsets.symmetric(horizontal: 16),
+        tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-        title: Text(
-          'Заказ №${order.orderNumber ?? ""}',
-          style: context.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
-        ),
+        leading: OrderIconWidget(theme: theme),
+        title: OrderTitleWidget(orderNumber: '${order.orderNumber ?? ''}'),
+        subtitle: OrderSubtitleWidget(price: _formattedPrice, theme: theme),
         children: [
-          const Divider(),
-          _OrderMainInfo(order: order),
-          const SizedBox(height: 16),
-          _OrderActionsRow(
+          const Divider(height: 1),
+          _OrderContent(
+            order: order,
+            totalPrice: _totalPrice,
+            formattedPrice: _formattedPrice,
+            formattedAddress: _formattedAddress,
             onDetails: onDetails,
             onFinish: onFinish,
             onOpenMap: onOpenMap,
+            onCall: onCall,
           ),
         ],
       ),
@@ -49,91 +77,54 @@ class CurierOrderCard extends StatelessWidget {
   }
 }
 
-// --- Внутренний виджет информации о заказе ---
-class _OrderMainInfo extends StatelessWidget {
+/// Контент карточки заказа
+class _OrderContent extends StatelessWidget {
   final CurierEntity order;
-  const _OrderMainInfo({required this.order});
-
-  @override
-  Widget build(BuildContext context) {
-    final totalPrice = (order.price ?? 0) + (order.deliveryPrice ?? 0);
-    final address = '${order.address ?? ''} ${order.houseNumber ?? ''}'.trim();
-
-    return Column(
-      children: [
-        Text(
-          address,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          textAlign: TextAlign.center,
-          style: context.textTheme.bodyMedium,
-        ),
-        const SizedBox(height: 8),
-        Text(
-          'Сумма заказа: $totalPrice сом',
-          style: context.textTheme.bodyMedium?.copyWith(
-            color: context.colorScheme.primary,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-// --- Внутренний виджет кнопок действий ---
-class _OrderActionsRow extends StatelessWidget {
+  final int totalPrice;
+  final String formattedPrice;
+  final String formattedAddress;
   final VoidCallback onDetails;
   final VoidCallback onFinish;
   final VoidCallback onOpenMap;
+  final VoidCallback onCall;
 
-  const _OrderActionsRow({
+  const _OrderContent({
+    required this.order,
+    required this.totalPrice,
+    required this.formattedPrice,
+    required this.formattedAddress,
     required this.onDetails,
     required this.onFinish,
     required this.onOpenMap,
+    required this.onCall,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        // Детали (второстепенное действие)
-        Expanded(
-          child: OutlinedButton(
-            onPressed: onDetails,
-            style: OutlinedButton.styleFrom(
-              padding: EdgeInsets.zero,
-              minimumSize: const Size(0, 40),
-            ),
-            child: const Text('Детали'),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          OrderInfoSectionWidget(
+            order: order,
+            formattedAddress: formattedAddress,
           ),
-        ),
-        const SizedBox(width: 8),
-        // Завершить (главное действие)
-        Expanded(
-          child: ElevatedButton(
-            onPressed: onFinish,
-            style: ElevatedButton.styleFrom(
-              padding: EdgeInsets.zero,
-              minimumSize: const Size(0, 40),
-            ),
-            child: const Text('Завершить'),
+          const SizedBox(height: 12),
+          OrderPriceSectionWidget(
+            totalPrice: totalPrice,
+            formattedPrice: formattedPrice,
+            theme: context.theme,
           ),
-        ),
-        const SizedBox(width: 8),
-        // Карта (функциональное действие)
-        Expanded(
-          child: OutlinedButton.icon(
-            onPressed: onOpenMap,
-            icon: const Icon(Icons.map_outlined, size: 16),
-            label: const Text('Карта'),
-            style: OutlinedButton.styleFrom(
-              padding: EdgeInsets.zero,
-              minimumSize: const Size(0, 40),
-            ),
+          const SizedBox(height: 16),
+          OrderActionsRowWidget(
+            onDetails: onDetails,
+            onFinish: onFinish,
+            onOpenMap: onOpenMap,
+            onCall: onCall,
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
