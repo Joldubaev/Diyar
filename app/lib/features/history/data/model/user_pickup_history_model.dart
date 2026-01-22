@@ -21,6 +21,7 @@ class UserPickupHistoryModel with _$UserPickupHistoryModel {
     String? userName,
     String? userPhone,
     String? paymentMethod,
+    double? amountToReduce,
   }) = _UserPickupHistoryModel;
 
   factory UserPickupHistoryModel.fromJson(Map<String, dynamic> json) => _$UserPickupHistoryModelFromJson(json);
@@ -39,6 +40,7 @@ class UserPickupHistoryModel with _$UserPickupHistoryModel {
         userName: entity.userName,
         userPhone: entity.userPhone,
         paymentMethod: entity.paymentMethod,
+        amountToReduce: entity.amountToReduce,
       );
 }
 
@@ -57,5 +59,6 @@ extension UserPickupHistoryModelX on UserPickupHistoryModel {
         userName: userName,
         userPhone: userPhone,
         paymentMethod: paymentMethod,
+        amountToReduce: amountToReduce,
       );
 }

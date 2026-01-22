@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'curier_model.dart';
+part of 'order_detail_model.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,19 +14,19 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-CurierOrderModel _$CurierOrderModelFromJson(Map<String, dynamic> json) {
-  return _CurierOrderModel.fromJson(json);
+OrderDetailModel _$OrderDetailModelFromJson(Map<String, dynamic> json) {
+  return _OrderDetailModel.fromJson(json);
 }
 
 /// @nodoc
-mixin _$CurierOrderModel {
+mixin _$OrderDetailModel {
   String? get id => throw _privateConstructorUsedError;
   String? get userId => throw _privateConstructorUsedError;
   String? get userName => throw _privateConstructorUsedError;
   String? get userPhone => throw _privateConstructorUsedError;
   int? get orderNumber => throw _privateConstructorUsedError;
   int? get dishesCount => throw _privateConstructorUsedError;
-  List<CurierFoodModel>? get foods => throw _privateConstructorUsedError;
+  List<FoodModel>? get foods => throw _privateConstructorUsedError;
   String? get address => throw _privateConstructorUsedError;
   String? get houseNumber => throw _privateConstructorUsedError;
   String? get kvOffice => throw _privateConstructorUsedError;
@@ -41,23 +41,23 @@ mixin _$CurierOrderModel {
   String? get status => throw _privateConstructorUsedError;
   int? get deliveryPrice => throw _privateConstructorUsedError;
   int? get sdacha => throw _privateConstructorUsedError;
-  int? get amountToReduce => throw _privateConstructorUsedError;
+  double? get amountToReduce => throw _privateConstructorUsedError;
 
-  /// Serializes this CurierOrderModel to a JSON map.
+  /// Serializes this OrderDetailModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
-  /// Create a copy of CurierOrderModel
+  /// Create a copy of OrderDetailModel
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $CurierOrderModelCopyWith<CurierOrderModel> get copyWith =>
+  $OrderDetailModelCopyWith<OrderDetailModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $CurierOrderModelCopyWith<$Res> {
-  factory $CurierOrderModelCopyWith(
-          CurierOrderModel value, $Res Function(CurierOrderModel) then) =
-      _$CurierOrderModelCopyWithImpl<$Res, CurierOrderModel>;
+abstract class $OrderDetailModelCopyWith<$Res> {
+  factory $OrderDetailModelCopyWith(
+          OrderDetailModel value, $Res Function(OrderDetailModel) then) =
+      _$OrderDetailModelCopyWithImpl<$Res, OrderDetailModel>;
   @useResult
   $Res call(
       {String? id,
@@ -66,7 +66,7 @@ abstract class $CurierOrderModelCopyWith<$Res> {
       String? userPhone,
       int? orderNumber,
       int? dishesCount,
-      List<CurierFoodModel>? foods,
+      List<FoodModel>? foods,
       String? address,
       String? houseNumber,
       String? kvOffice,
@@ -81,20 +81,20 @@ abstract class $CurierOrderModelCopyWith<$Res> {
       String? status,
       int? deliveryPrice,
       int? sdacha,
-      int? amountToReduce});
+      double? amountToReduce});
 }
 
 /// @nodoc
-class _$CurierOrderModelCopyWithImpl<$Res, $Val extends CurierOrderModel>
-    implements $CurierOrderModelCopyWith<$Res> {
-  _$CurierOrderModelCopyWithImpl(this._value, this._then);
+class _$OrderDetailModelCopyWithImpl<$Res, $Val extends OrderDetailModel>
+    implements $OrderDetailModelCopyWith<$Res> {
+  _$OrderDetailModelCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of CurierOrderModel
+  /// Create a copy of OrderDetailModel
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -150,7 +150,7 @@ class _$CurierOrderModelCopyWithImpl<$Res, $Val extends CurierOrderModel>
       foods: freezed == foods
           ? _value.foods
           : foods // ignore: cast_nullable_to_non_nullable
-              as List<CurierFoodModel>?,
+              as List<FoodModel>?,
       address: freezed == address
           ? _value.address
           : address // ignore: cast_nullable_to_non_nullable
@@ -210,17 +210,17 @@ class _$CurierOrderModelCopyWithImpl<$Res, $Val extends CurierOrderModel>
       amountToReduce: freezed == amountToReduce
           ? _value.amountToReduce
           : amountToReduce // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as double?,
     ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$$CurierOrderModelImplCopyWith<$Res>
-    implements $CurierOrderModelCopyWith<$Res> {
-  factory _$$CurierOrderModelImplCopyWith(_$CurierOrderModelImpl value,
-          $Res Function(_$CurierOrderModelImpl) then) =
-      __$$CurierOrderModelImplCopyWithImpl<$Res>;
+abstract class _$$OrderDetailModelImplCopyWith<$Res>
+    implements $OrderDetailModelCopyWith<$Res> {
+  factory _$$OrderDetailModelImplCopyWith(_$OrderDetailModelImpl value,
+          $Res Function(_$OrderDetailModelImpl) then) =
+      __$$OrderDetailModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -230,7 +230,7 @@ abstract class _$$CurierOrderModelImplCopyWith<$Res>
       String? userPhone,
       int? orderNumber,
       int? dishesCount,
-      List<CurierFoodModel>? foods,
+      List<FoodModel>? foods,
       String? address,
       String? houseNumber,
       String? kvOffice,
@@ -245,18 +245,18 @@ abstract class _$$CurierOrderModelImplCopyWith<$Res>
       String? status,
       int? deliveryPrice,
       int? sdacha,
-      int? amountToReduce});
+      double? amountToReduce});
 }
 
 /// @nodoc
-class __$$CurierOrderModelImplCopyWithImpl<$Res>
-    extends _$CurierOrderModelCopyWithImpl<$Res, _$CurierOrderModelImpl>
-    implements _$$CurierOrderModelImplCopyWith<$Res> {
-  __$$CurierOrderModelImplCopyWithImpl(_$CurierOrderModelImpl _value,
-      $Res Function(_$CurierOrderModelImpl) _then)
+class __$$OrderDetailModelImplCopyWithImpl<$Res>
+    extends _$OrderDetailModelCopyWithImpl<$Res, _$OrderDetailModelImpl>
+    implements _$$OrderDetailModelImplCopyWith<$Res> {
+  __$$OrderDetailModelImplCopyWithImpl(_$OrderDetailModelImpl _value,
+      $Res Function(_$OrderDetailModelImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of CurierOrderModel
+  /// Create a copy of OrderDetailModel
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -284,7 +284,7 @@ class __$$CurierOrderModelImplCopyWithImpl<$Res>
     Object? sdacha = freezed,
     Object? amountToReduce = freezed,
   }) {
-    return _then(_$CurierOrderModelImpl(
+    return _then(_$OrderDetailModelImpl(
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -312,7 +312,7 @@ class __$$CurierOrderModelImplCopyWithImpl<$Res>
       foods: freezed == foods
           ? _value._foods
           : foods // ignore: cast_nullable_to_non_nullable
-              as List<CurierFoodModel>?,
+              as List<FoodModel>?,
       address: freezed == address
           ? _value.address
           : address // ignore: cast_nullable_to_non_nullable
@@ -372,22 +372,22 @@ class __$$CurierOrderModelImplCopyWithImpl<$Res>
       amountToReduce: freezed == amountToReduce
           ? _value.amountToReduce
           : amountToReduce // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as double?,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$CurierOrderModelImpl implements _CurierOrderModel {
-  const _$CurierOrderModelImpl(
+class _$OrderDetailModelImpl implements _OrderDetailModel {
+  const _$OrderDetailModelImpl(
       {this.id,
       this.userId,
       this.userName,
       this.userPhone,
       this.orderNumber,
       this.dishesCount,
-      final List<CurierFoodModel>? foods,
+      final List<FoodModel>? foods,
       this.address,
       this.houseNumber,
       this.kvOffice,
@@ -405,8 +405,8 @@ class _$CurierOrderModelImpl implements _CurierOrderModel {
       this.amountToReduce})
       : _foods = foods;
 
-  factory _$CurierOrderModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$CurierOrderModelImplFromJson(json);
+  factory _$OrderDetailModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$OrderDetailModelImplFromJson(json);
 
   @override
   final String? id;
@@ -420,9 +420,9 @@ class _$CurierOrderModelImpl implements _CurierOrderModel {
   final int? orderNumber;
   @override
   final int? dishesCount;
-  final List<CurierFoodModel>? _foods;
+  final List<FoodModel>? _foods;
   @override
-  List<CurierFoodModel>? get foods {
+  List<FoodModel>? get foods {
     final value = _foods;
     if (value == null) return null;
     if (_foods is EqualUnmodifiableListView) return _foods;
@@ -459,18 +459,18 @@ class _$CurierOrderModelImpl implements _CurierOrderModel {
   @override
   final int? sdacha;
   @override
-  final int? amountToReduce;
+  final double? amountToReduce;
 
   @override
   String toString() {
-    return 'CurierOrderModel(id: $id, userId: $userId, userName: $userName, userPhone: $userPhone, orderNumber: $orderNumber, dishesCount: $dishesCount, foods: $foods, address: $address, houseNumber: $houseNumber, kvOffice: $kvOffice, intercom: $intercom, floor: $floor, entrance: $entrance, comment: $comment, paymentMethod: $paymentMethod, price: $price, timeRequest: $timeRequest, courierId: $courierId, status: $status, deliveryPrice: $deliveryPrice, sdacha: $sdacha, amountToReduce: $amountToReduce)';
+    return 'OrderDetailModel(id: $id, userId: $userId, userName: $userName, userPhone: $userPhone, orderNumber: $orderNumber, dishesCount: $dishesCount, foods: $foods, address: $address, houseNumber: $houseNumber, kvOffice: $kvOffice, intercom: $intercom, floor: $floor, entrance: $entrance, comment: $comment, paymentMethod: $paymentMethod, price: $price, timeRequest: $timeRequest, courierId: $courierId, status: $status, deliveryPrice: $deliveryPrice, sdacha: $sdacha, amountToReduce: $amountToReduce)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$CurierOrderModelImpl &&
+            other is _$OrderDetailModelImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.userName, userName) ||
@@ -536,32 +536,32 @@ class _$CurierOrderModelImpl implements _CurierOrderModel {
         amountToReduce
       ]);
 
-  /// Create a copy of CurierOrderModel
+  /// Create a copy of OrderDetailModel
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$CurierOrderModelImplCopyWith<_$CurierOrderModelImpl> get copyWith =>
-      __$$CurierOrderModelImplCopyWithImpl<_$CurierOrderModelImpl>(
+  _$$OrderDetailModelImplCopyWith<_$OrderDetailModelImpl> get copyWith =>
+      __$$OrderDetailModelImplCopyWithImpl<_$OrderDetailModelImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$CurierOrderModelImplToJson(
+    return _$$OrderDetailModelImplToJson(
       this,
     );
   }
 }
 
-abstract class _CurierOrderModel implements CurierOrderModel {
-  const factory _CurierOrderModel(
+abstract class _OrderDetailModel implements OrderDetailModel {
+  const factory _OrderDetailModel(
       {final String? id,
       final String? userId,
       final String? userName,
       final String? userPhone,
       final int? orderNumber,
       final int? dishesCount,
-      final List<CurierFoodModel>? foods,
+      final List<FoodModel>? foods,
       final String? address,
       final String? houseNumber,
       final String? kvOffice,
@@ -576,10 +576,10 @@ abstract class _CurierOrderModel implements CurierOrderModel {
       final String? status,
       final int? deliveryPrice,
       final int? sdacha,
-      final int? amountToReduce}) = _$CurierOrderModelImpl;
+      final double? amountToReduce}) = _$OrderDetailModelImpl;
 
-  factory _CurierOrderModel.fromJson(Map<String, dynamic> json) =
-      _$CurierOrderModelImpl.fromJson;
+  factory _OrderDetailModel.fromJson(Map<String, dynamic> json) =
+      _$OrderDetailModelImpl.fromJson;
 
   @override
   String? get id;
@@ -594,7 +594,7 @@ abstract class _CurierOrderModel implements CurierOrderModel {
   @override
   int? get dishesCount;
   @override
-  List<CurierFoodModel>? get foods;
+  List<FoodModel>? get foods;
   @override
   String? get address;
   @override
@@ -624,12 +624,12 @@ abstract class _CurierOrderModel implements CurierOrderModel {
   @override
   int? get sdacha;
   @override
-  int? get amountToReduce;
+  double? get amountToReduce;
 
-  /// Create a copy of CurierOrderModel
+  /// Create a copy of OrderDetailModel
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$CurierOrderModelImplCopyWith<_$CurierOrderModelImpl> get copyWith =>
+  _$$OrderDetailModelImplCopyWith<_$OrderDetailModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

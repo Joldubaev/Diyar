@@ -1,20 +1,20 @@
-import 'package:diyar/features/curier/domain/domain.dart';
+import 'package:diyar/features/menu/menu.dart';
+import 'package:diyar/features/order_detail/domain/domain.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'curier_food_model.dart';
 
-part 'curier_model.freezed.dart';
-part 'curier_model.g.dart';
+part 'order_detail_model.freezed.dart';
+part 'order_detail_model.g.dart';
 
 @freezed
-class CurierOrderModel with _$CurierOrderModel {
-  const factory CurierOrderModel({
+class OrderDetailModel with _$OrderDetailModel {
+  const factory OrderDetailModel({
     String? id,
     String? userId,
     String? userName,
     String? userPhone,
     int? orderNumber,
     int? dishesCount,
-    List<CurierFoodModel>? foods,
+    List<FoodModel>? foods,
     String? address,
     String? houseNumber,
     String? kvOffice,
@@ -29,22 +29,36 @@ class CurierOrderModel with _$CurierOrderModel {
     String? status,
     int? deliveryPrice,
     int? sdacha,
-    int? amountToReduce,
+    double? amountToReduce,
+  }) = _OrderDetailModel;
 
-  }) = _CurierOrderModel;
+  factory OrderDetailModel.fromJson(Map<String, dynamic> json) => _$OrderDetailModelFromJson(json);
 
-  factory CurierOrderModel.fromJson(Map<String, dynamic> json) =>
-      _$CurierOrderModelFromJson(json);
-
-  factory CurierOrderModel.fromEntity(CurierEntity entity) =>
-      CurierOrderModel(
+  factory OrderDetailModel.fromEntity(OrderDetailEntity entity) => OrderDetailModel(
         id: entity.id,
         userId: entity.userId,
         userName: entity.userName,
         userPhone: entity.userPhone,
         orderNumber: entity.orderNumber,
         dishesCount: entity.dishesCount,
-        foods: entity.foods?.map((x) => CurierFoodModel.fromEntity(x)).toList(),
+        foods: entity.foods?.map((e) {
+          // Создаем минимальный FoodModel только с нужными полями
+          return FoodModel(
+            id: null,
+            name: e.name,
+            description: null,
+            categoryId: null,
+            price: e.price,
+            weight: null,
+            urlPhoto: null,
+            stopList: null,
+            iDctMax: null,
+            containerName: null,
+            containerCount: null,
+            quantity: e.quantity,
+            containerPrice: null,
+          );
+        }).toList(),
         address: entity.address,
         houseNumber: entity.houseNumber,
         kvOffice: entity.kvOffice,
@@ -63,15 +77,19 @@ class CurierOrderModel with _$CurierOrderModel {
       );
 }
 
-extension CurierOrderModelX on CurierOrderModel {
-  CurierEntity toEntity() => CurierEntity(
+extension OrderDetailModelX on OrderDetailModel {
+  OrderDetailEntity toEntity() => OrderDetailEntity(
         id: id,
         userId: userId,
         userName: userName,
         userPhone: userPhone,
         orderNumber: orderNumber,
         dishesCount: dishesCount,
-        foods: foods?.map((x) => x.toEntity()).toList(),
+        foods: foods?.map((e) => OrderDetailFoodItem(
+          name: e.name ?? '',
+          quantity: e.quantity ?? 0,
+          price: e.price,
+        )).toList(),
         address: address,
         houseNumber: houseNumber,
         kvOffice: kvOffice,

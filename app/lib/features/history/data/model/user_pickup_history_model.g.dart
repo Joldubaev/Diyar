@@ -24,6 +24,7 @@ _$UserPickupHistoryModelImpl _$$UserPickupHistoryModelImplFromJson(
       userName: json['userName'] as String?,
       userPhone: json['userPhone'] as String?,
       paymentMethod: json['paymentMethod'] as String?,
+      amountToReduce: (json['amountToReduce'] as num?)?.toDouble(),
     );
 
 Map<String, dynamic> _$$UserPickupHistoryModelImplToJson(
@@ -42,4 +43,5 @@ Map<String, dynamic> _$$UserPickupHistoryModelImplToJson(
       'userName': instance.userName,
       'userPhone': instance.userPhone,
       'paymentMethod': instance.paymentMethod,
+      'amountToReduce': instance.amountToReduce,
     };

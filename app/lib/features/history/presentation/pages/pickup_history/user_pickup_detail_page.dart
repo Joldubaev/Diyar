@@ -65,9 +65,21 @@ class _UserPickupDetailPageState extends State<UserPickupDetailPage> {
                   title: 'Оплата',
                   value: order.paymentMethod == 'cash' ? 'Наличные' : 'Онлайн оплата',
                 ),
+                if (order.amountToReduce != null && order.amountToReduce! > 0) ...[
+                  DetailItem(
+                    title: 'Стоимость заказа',
+                    value: "${order.price} сом",
+                    icon: 'del',
+                  ),
+                  DetailItem(
+                    title: 'Бонусы',
+                    value: _formatPrice(order.amountToReduce!),
+                    icon: 'del',
+                  ),
+                ],
                 DetailItem(
                   title: context.l10n.total,
-                  value: "${order.price} сом",
+                  value: _formatPrice(_calculateFinalTotal(order)),
                   icon: 'del',
                 ),
               ],
@@ -76,5 +88,15 @@ class _UserPickupDetailPageState extends State<UserPickupDetailPage> {
         ),
       ),
     );
+  }
+
+  String _formatPrice(double price) {
+    return price % 1 == 0 ? '${price.toInt()} сом' : '${price.toStringAsFixed(2)} сом';
+  }
+
+  double _calculateFinalTotal(UserPickupHistoryEntity order) {
+    final price = order.price ?? 0;
+    final bonus = order.amountToReduce ?? 0.0;
+    return price - bonus;
   }
 }

@@ -1,14 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'curier_model.dart';
+part of 'order_detail_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$CurierOrderModelImpl _$$CurierOrderModelImplFromJson(
+_$OrderDetailModelImpl _$$OrderDetailModelImplFromJson(
         Map<String, dynamic> json) =>
-    _$CurierOrderModelImpl(
+    _$OrderDetailModelImpl(
       id: json['id'] as String?,
       userId: json['userId'] as String?,
       userName: json['userName'] as String?,
@@ -16,7 +16,7 @@ _$CurierOrderModelImpl _$$CurierOrderModelImplFromJson(
       orderNumber: (json['orderNumber'] as num?)?.toInt(),
       dishesCount: (json['dishesCount'] as num?)?.toInt(),
       foods: (json['foods'] as List<dynamic>?)
-          ?.map((e) => CurierFoodModel.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => FoodModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       address: json['address'] as String?,
       houseNumber: json['houseNumber'] as String?,
@@ -32,11 +32,11 @@ _$CurierOrderModelImpl _$$CurierOrderModelImplFromJson(
       status: json['status'] as String?,
       deliveryPrice: (json['deliveryPrice'] as num?)?.toInt(),
       sdacha: (json['sdacha'] as num?)?.toInt(),
-      amountToReduce: (json['amountToReduce'] as num?)?.toInt(),
+      amountToReduce: (json['amountToReduce'] as num?)?.toDouble(),
     );
 
-Map<String, dynamic> _$$CurierOrderModelImplToJson(
-        _$CurierOrderModelImpl instance) =>
+Map<String, dynamic> _$$OrderDetailModelImplToJson(
+        _$OrderDetailModelImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'userId': instance.userId,

@@ -4,7 +4,6 @@ import 'package:diyar/features/active_order/data/data.dart';
 import 'package:injectable/injectable.dart';
 
 abstract class ActiveOrderRemoteDataSource {
-  Future<OrderActiveItemModel> getOrderItem({required int num});
   Future<List<OrderActiveItemModel>> getActiveOrders();
   Future<void> cancelOrder({required int orderNumber, required bool isPickup});
 }
@@ -14,26 +13,6 @@ class ActiveOrderRemoteDataSourceImpl implements ActiveOrderRemoteDataSource {
   final Dio _dio;
 
   ActiveOrderRemoteDataSourceImpl(this._dio);
-
-  @override
-  Future<OrderActiveItemModel> getOrderItem({required int num}) async {
-    try {
-      final res = await _dio.post(
-        ApiConst.getOrderItem,
-        data: {"orderNumber": num},
-      );
-
-      // Проверяем внутренний код API
-      _validateResponse(res);
-
-      return OrderActiveItemModel.fromJson(res.data['message']);
-    } on DioException catch (e) {
-      throw ServerException(
-        e.response?.data?['message']?.toString() ?? 'Network error',
-        e.response?.statusCode,
-      );
-    }
-  }
 
   @override
   Future<List<OrderActiveItemModel>> getActiveOrders() async {

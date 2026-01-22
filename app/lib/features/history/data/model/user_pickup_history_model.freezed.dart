@@ -34,6 +34,7 @@ mixin _$UserPickupHistoryModel {
   String? get userName => throw _privateConstructorUsedError;
   String? get userPhone => throw _privateConstructorUsedError;
   String? get paymentMethod => throw _privateConstructorUsedError;
+  double? get amountToReduce => throw _privateConstructorUsedError;
 
   /// Serializes this UserPickupHistoryModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -64,7 +65,8 @@ abstract class $UserPickupHistoryModelCopyWith<$Res> {
       String? userId,
       String? userName,
       String? userPhone,
-      String? paymentMethod});
+      String? paymentMethod,
+      double? amountToReduce});
 }
 
 /// @nodoc
@@ -96,6 +98,7 @@ class _$UserPickupHistoryModelCopyWithImpl<$Res,
     Object? userName = freezed,
     Object? userPhone = freezed,
     Object? paymentMethod = freezed,
+    Object? amountToReduce = freezed,
   }) {
     return _then(_value.copyWith(
       comment: freezed == comment
@@ -150,6 +153,10 @@ class _$UserPickupHistoryModelCopyWithImpl<$Res,
           ? _value.paymentMethod
           : paymentMethod // ignore: cast_nullable_to_non_nullable
               as String?,
+      amountToReduce: freezed == amountToReduce
+          ? _value.amountToReduce
+          : amountToReduce // ignore: cast_nullable_to_non_nullable
+              as double?,
     ) as $Val);
   }
 }
@@ -176,7 +183,8 @@ abstract class _$$UserPickupHistoryModelImplCopyWith<$Res>
       String? userId,
       String? userName,
       String? userPhone,
-      String? paymentMethod});
+      String? paymentMethod,
+      double? amountToReduce});
 }
 
 /// @nodoc
@@ -207,6 +215,7 @@ class __$$UserPickupHistoryModelImplCopyWithImpl<$Res>
     Object? userName = freezed,
     Object? userPhone = freezed,
     Object? paymentMethod = freezed,
+    Object? amountToReduce = freezed,
   }) {
     return _then(_$UserPickupHistoryModelImpl(
       comment: freezed == comment
@@ -261,6 +270,10 @@ class __$$UserPickupHistoryModelImplCopyWithImpl<$Res>
           ? _value.paymentMethod
           : paymentMethod // ignore: cast_nullable_to_non_nullable
               as String?,
+      amountToReduce: freezed == amountToReduce
+          ? _value.amountToReduce
+          : amountToReduce // ignore: cast_nullable_to_non_nullable
+              as double?,
     ));
   }
 }
@@ -281,7 +294,8 @@ class _$UserPickupHistoryModelImpl implements _UserPickupHistoryModel {
       this.userId,
       this.userName,
       this.userPhone,
-      this.paymentMethod})
+      this.paymentMethod,
+      this.amountToReduce})
       : _foods = foods;
 
   factory _$UserPickupHistoryModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -321,10 +335,12 @@ class _$UserPickupHistoryModelImpl implements _UserPickupHistoryModel {
   final String? userPhone;
   @override
   final String? paymentMethod;
+  @override
+  final double? amountToReduce;
 
   @override
   String toString() {
-    return 'UserPickupHistoryModel(comment: $comment, dishesCount: $dishesCount, foods: $foods, id: $id, orderNumber: $orderNumber, prepareFor: $prepareFor, price: $price, status: $status, timeRequest: $timeRequest, userId: $userId, userName: $userName, userPhone: $userPhone, paymentMethod: $paymentMethod)';
+    return 'UserPickupHistoryModel(comment: $comment, dishesCount: $dishesCount, foods: $foods, id: $id, orderNumber: $orderNumber, prepareFor: $prepareFor, price: $price, status: $status, timeRequest: $timeRequest, userId: $userId, userName: $userName, userPhone: $userPhone, paymentMethod: $paymentMethod, amountToReduce: $amountToReduce)';
   }
 
   @override
@@ -351,7 +367,9 @@ class _$UserPickupHistoryModelImpl implements _UserPickupHistoryModel {
             (identical(other.userPhone, userPhone) ||
                 other.userPhone == userPhone) &&
             (identical(other.paymentMethod, paymentMethod) ||
-                other.paymentMethod == paymentMethod));
+                other.paymentMethod == paymentMethod) &&
+            (identical(other.amountToReduce, amountToReduce) ||
+                other.amountToReduce == amountToReduce));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -370,7 +388,8 @@ class _$UserPickupHistoryModelImpl implements _UserPickupHistoryModel {
       userId,
       userName,
       userPhone,
-      paymentMethod);
+      paymentMethod,
+      amountToReduce);
 
   /// Create a copy of UserPickupHistoryModel
   /// with the given fields replaced by the non-null parameter values.
@@ -403,7 +422,8 @@ abstract class _UserPickupHistoryModel implements UserPickupHistoryModel {
       final String? userId,
       final String? userName,
       final String? userPhone,
-      final String? paymentMethod}) = _$UserPickupHistoryModelImpl;
+      final String? paymentMethod,
+      final double? amountToReduce}) = _$UserPickupHistoryModelImpl;
 
   factory _UserPickupHistoryModel.fromJson(Map<String, dynamic> json) =
       _$UserPickupHistoryModelImpl.fromJson;
@@ -434,6 +454,8 @@ abstract class _UserPickupHistoryModel implements UserPickupHistoryModel {
   String? get userPhone;
   @override
   String? get paymentMethod;
+  @override
+  double? get amountToReduce;
 
   /// Create a copy of UserPickupHistoryModel
   /// with the given fields replaced by the non-null parameter values.

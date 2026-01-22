@@ -13,14 +13,6 @@ class ActiveOrderRepositoryImpl with RepositoryErrorHandler implements ActiveOrd
   ActiveOrderRepositoryImpl(this._dataSource);
 
   @override
-  Future<Either<Failure, OrderActiveItemEntity>> getOrderItem({required int num}) {
-    return makeRequest(() async {
-      final model = await _dataSource.getOrderItem(num: num);
-      return model.toEntity();
-    });
-  }
-
-  @override
   Future<Either<Failure, List<OrderActiveItemEntity>>> getActiveOrders() {
     return makeRequest(() async {
       final models = await _dataSource.getActiveOrders();

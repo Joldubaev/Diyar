@@ -28,8 +28,13 @@ class CurierOrderCard extends StatelessWidget {
 
   // Вычисляемые значения вынесены из build с явными типами
   int get _totalPrice => (order.price ?? 0) + (order.deliveryPrice ?? 0);
+  double get _finalTotal => _totalPrice - (order.amountToReduce?.toDouble() ?? 0);
   String get _formattedAddress => _buildAddress();
   String get _formattedPrice => FoodPriceFormatter.formatPriceWithCurrency(_totalPrice);
+  String get _formattedFinalPrice {
+    final finalTotal = _finalTotal;
+    return finalTotal % 1 == 0 ? '${finalTotal.toInt()} сом' : '${finalTotal.toStringAsFixed(2)} сом';
+  }
 
   String _buildAddress() {
     final address = '${order.address ?? ''} ${order.houseNumber ?? ''}'.trim();
@@ -58,7 +63,7 @@ class CurierOrderCard extends StatelessWidget {
         childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         leading: OrderIconWidget(theme: theme),
         title: OrderTitleWidget(orderNumber: '${order.orderNumber ?? ''}'),
-        subtitle: OrderSubtitleWidget(price: _formattedPrice, theme: theme),
+        subtitle: OrderSubtitleWidget(price: _formattedFinalPrice, theme: theme),
         children: [
           const Divider(height: 1),
           _OrderContent(
@@ -114,6 +119,7 @@ class _OrderContent extends StatelessWidget {
           OrderPriceSectionWidget(
             totalPrice: totalPrice,
             formattedPrice: formattedPrice,
+            bonusAmount: order.amountToReduce?.toDouble(),
             theme: context.theme,
           ),
           const SizedBox(height: 16),

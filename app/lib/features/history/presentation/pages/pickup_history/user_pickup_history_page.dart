@@ -84,7 +84,19 @@ class _UserPickupHistoryPageState extends State<UserPickupHistoryPage> {
                                       ],
                                     ),
                                     Divider(color: theme.colorScheme.onSurface.withValues(alpha: 0.5), thickness: 1),
-                                    CustomTile(title: 'Стоимость заказа:', trailing: '${orders[index].price} сoм'),
+                                    CustomTile(title: 'Стоимость заказа:', trailing: '${orders[index].price} сом'),
+                                    if (orders[index].amountToReduce != null && orders[index].amountToReduce! > 0) ...[
+                                      const SizedBox(height: 4),
+                                      CustomTile(
+                                        title: 'Бонусы:',
+                                        trailing: _formatPrice(orders[index].amountToReduce!),
+                                      ),
+                                    ],
+                                    const SizedBox(height: 4),
+                                    CustomTile(
+                                      title: 'Итого:',
+                                      trailing: _formatPrice(_calculateFinalTotal(orders[index])),
+                                    ),
                                     const SizedBox(height: 10),
                                     Align(
                                       alignment: Alignment.centerRight,
@@ -137,5 +149,15 @@ class _UserPickupHistoryPageState extends State<UserPickupHistoryPage> {
         ),
       ),
     );
+  }
+
+  String _formatPrice(double price) {
+    return price % 1 == 0 ? '${price.toInt()} сом' : '${price.toStringAsFixed(2)} сом';
+  }
+
+  double _calculateFinalTotal(UserPickupHistoryEntity order) {
+    final price = order.price ?? 0;
+    final bonus = order.amountToReduce ?? 0.0;
+    return price - bonus;
   }
 }

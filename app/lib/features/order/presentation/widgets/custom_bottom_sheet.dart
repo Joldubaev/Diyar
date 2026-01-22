@@ -152,10 +152,11 @@ class CustomBottomSheet extends StatelessWidget {
   Widget _buildDetails(BuildContext context, DeliveryFormLoaded state) {
     Theme.of(context);
 
-    // Вычисляем полную сумму БЕЗ вычета бонусов
+    // Полная сумма БЕЗ вычета бонусов
     final fullOrderPrice = state.subtotalPrice + state.deliveryPrice.toInt();
-    // Итоговая сумма С УЧЕТОМ бонусов (то, что видит пользователь)
-    final finalTotal = state.totalOrderCost;
+    // Итоговая сумма С УЧЕТОМ бонусов
+    final finalTotal = state.totalOrderCost.toDouble();
+    final bonusAmount = state.bonusAmount ?? 0.0;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -172,18 +173,22 @@ class CustomBottomSheet extends StatelessWidget {
           title: 'Итого без учета бонусов',
           description: '$fullOrderPrice сом',
         ),
-        if (state.bonusAmount != null && state.bonusAmount! > 0) ...[
+        if (bonusAmount > 0) ...[
           InfoDialogWidget(
-            title: 'Будет списано бонусов',
-            description: '${state.bonusAmount!.toStringAsFixed(0)} сом',
+            title: 'Бонусы',
+            description: _formatPrice(bonusAmount),
           ),
           InfoDialogWidget(
-            title: 'Итого c учетом бонусов',
-            description: '$finalTotal сом',
+            title: 'Итого с учетом бонусов',
+            description: _formatPrice(finalTotal),
           ),
         ],
       ],
     );
+  }
+
+  String _formatPrice(double price) {
+    return price % 1 == 0 ? '${price.toInt()} сом' : '${price.toStringAsFixed(2)} сом';
   }
 
   Widget _buildSaveTemplateButton(BuildContext context, DeliveryFormLoaded state) {

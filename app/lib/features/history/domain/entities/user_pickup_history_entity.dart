@@ -15,7 +15,8 @@ class UserPickupHistoryEntity extends Equatable {
   final String? userId;
   final String? userName;
   final String? userPhone;
-    final String? paymentMethod;
+  final String? paymentMethod;
+  final double? amountToReduce;
 
   const UserPickupHistoryEntity({
     this.comment,
@@ -31,6 +32,7 @@ class UserPickupHistoryEntity extends Equatable {
     this.userName,
     this.userPhone,
     this.paymentMethod,
+    this.amountToReduce,
   });
 
   @override
@@ -48,5 +50,6 @@ class UserPickupHistoryEntity extends Equatable {
         userName,
         userPhone,
         paymentMethod,
+        amountToReduce,
       ];
 }

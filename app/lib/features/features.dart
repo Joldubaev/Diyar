@@ -8,6 +8,7 @@ export 'home_content/home_content.dart';
 export 'main_home/main_home.dart';
 export 'profile/profile.dart';
 export 'active_order/active_order.dart';
+export 'order_detail/order_detail.dart';
 export 'curier/curier.dart';
 export 'payments/payments.dart';
 export 'settings/settings.dart';

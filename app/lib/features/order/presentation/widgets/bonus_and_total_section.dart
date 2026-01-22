@@ -140,9 +140,9 @@ class _BonusAndTotalSectionState extends State<BonusAndTotalSection> {
                   TextField(
                     controller: widget.controllers.bonusController,
                     focusNode: _bonusFocusNode,
-                    keyboardType: TextInputType.number,
+                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
                     inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+                      FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                     ],
                     onSubmitted: _onBonusAmountSubmitted,
                     decoration: InputDecoration(

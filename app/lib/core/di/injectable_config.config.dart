@@ -146,6 +146,15 @@ import '../../features/order/domain/repositories/order_repositories.dart'
 import '../../features/order/domain/usecases/order_usecase.dart' as _i752;
 import '../../features/order/presentation/cubit/delivery_form_cubit.dart'
     as _i431;
+import '../../features/order_detail/data/datasource/order_detail_remote_data_source.dart'
+    as _i294;
+import '../../features/order_detail/data/repository/order_detail_repository.dart'
+    as _i703;
+import '../../features/order_detail/domain/domain.dart' as _i900;
+import '../../features/order_detail/domain/usecases/get_order_detail_usecase.dart'
+    as _i127;
+import '../../features/order_detail/presentation/cubit/order_detail_cubit.dart'
+    as _i236;
 import '../../features/payments/data/datasource/remote_payments_datasource.dart'
     as _i1005;
 import '../../features/payments/data/repository/payments_repository.dart'
@@ -342,6 +351,8 @@ extension GetItInjectableX on _i174.GetIt {
         _i87.SettingsRepositoryImpl(gh<_i300.RemoteSettingsDataSource>()));
     gh.lazySingleton<_i433.MenuRemoteDataSource>(
         () => _i433.MenuRemoteDataSourceImpl(gh<_i361.Dio>()));
+    gh.lazySingleton<_i294.OrderDetailRemoteDataSource>(
+        () => _i294.OrderDetailRemoteDataSourceImpl(gh<_i361.Dio>()));
     gh.factory<_i739.VerifyCodeForRegistrationUseCase>(() =>
         _i739.VerifyCodeForRegistrationUseCase(gh<_i140.AuthRepository>()));
     gh.factory<_i894.CheckPhoneNumberUseCase>(
@@ -440,6 +451,9 @@ extension GetItInjectableX on _i174.GetIt {
         ));
     gh.lazySingleton<_i168.AboutUsRepository>(
         () => _i471.AboutUsRepositoryImpl(gh<_i798.AboutUsRemoteDataSource>()));
+    gh.lazySingleton<_i900.OrderDetailRepository>(() =>
+        _i703.OrderDetailRepositoryImpl(
+            gh<_i294.OrderDetailRemoteDataSource>()));
     gh.factory<_i550.RefreshTokenIfNeededUseCase>(
         () => _i550.RefreshTokenIfNeededUseCase(
               gh<_i140.AuthRepository>(),
@@ -454,6 +468,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i777.CancelOrderUseCase(gh<_i74.ActiveOrderRepository>()));
     gh.lazySingleton<_i475.BonusRepository>(
         () => _i966.BonusRepositoryImpl(gh<_i475.BonusRemoteDataSource>()));
+    gh.factory<_i127.GetOrderDetailUseCase>(
+        () => _i127.GetOrderDetailUseCase(gh<_i900.OrderDetailRepository>()));
     gh.factory<_i36.ProfileCubit>(
         () => _i36.ProfileCubit(gh<_i315.ProfileRepository>()));
     gh.factory<_i573.AboutUsCubit>(
@@ -503,6 +519,8 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i838.MbankConfimUsecase>(),
           gh<_i838.MbankStatusUsecase>(),
         ));
+    gh.factory<_i236.OrderDetailCubit>(
+        () => _i236.OrderDetailCubit(gh<_i900.GetOrderDetailUseCase>()));
     gh.factory<_i739.PopularCubit>(
         () => _i739.PopularCubit(gh<_i872.MenuRepository>()));
     gh.factory<_i395.MenuBloc>(

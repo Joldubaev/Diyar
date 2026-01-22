@@ -25,8 +25,6 @@ import 'package:diyar/features/about_us/presentation/pages/contact/contact_page.
     as _i8;
 import 'package:diyar/features/active_order/presentation/pages/order_active_page.dart'
     as _i2;
-import 'package:diyar/features/active_order/presentation/pages/order_detail_page.dart'
-    as _i23;
 import 'package:diyar/features/app_init/presentation/pages/splash/splash_page.dart'
     as _i46;
 import 'package:diyar/features/auth/domain/domain.dart' as _i60;
@@ -88,6 +86,8 @@ import 'package:diyar/features/menu/presentation/pages/search_menu_page.dart'
     as _i38;
 import 'package:diyar/features/order/presentation/pages/delivery_page.dart'
     as _i10;
+import 'package:diyar/features/order_detail/presentation/pages/order_detail_page.dart'
+    as _i23;
 import 'package:diyar/features/payments/presentation/pages/mbank/mbank_check_status_page.dart'
     as _i15;
 import 'package:diyar/features/payments/presentation/pages/mbank/mbank_confirm_page.dart'

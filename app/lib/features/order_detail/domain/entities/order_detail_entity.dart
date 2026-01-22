@@ -1,15 +1,15 @@
 import 'package:equatable/equatable.dart';
 
-import 'curier_food_entity.dart';
-
-class CurierEntity extends Equatable {
+/// Общая сущность для отображения деталей заказа
+/// Используется независимо от источника данных (active_order, curier, history)
+class OrderDetailEntity extends Equatable {
   final String? id;
   final String? userId;
   final String? userName;
   final String? userPhone;
   final int? orderNumber;
   final int? dishesCount;
-  final List<CurierFoodEntity>? foods;
+  final List<OrderDetailFoodItem>? foods;
   final String? address;
   final String? houseNumber;
   final String? kvOffice;
@@ -24,9 +24,9 @@ class CurierEntity extends Equatable {
   final String? status;
   final int? deliveryPrice;
   final int? sdacha;
-  final int? amountToReduce;
+  final double? amountToReduce;
 
-  const CurierEntity({
+  const OrderDetailEntity({
     this.id,
     this.userId,
     this.userName,
@@ -50,6 +50,10 @@ class CurierEntity extends Equatable {
     this.sdacha,
     this.amountToReduce,
   });
+
+  String get fullAddress => '${address ?? ''}, д. ${houseNumber ?? ''}'.trim();
+  
+  double get totalPrice => (price ?? 0) + (deliveryPrice ?? 0) - (amountToReduce ?? 0);
 
   @override
   List<Object?> get props => [
@@ -76,4 +80,20 @@ class CurierEntity extends Equatable {
         sdacha,
         amountToReduce,
       ];
+}
+
+/// Упрощенная модель блюда для отображения в деталях заказа
+class OrderDetailFoodItem extends Equatable {
+  final String name;
+  final int quantity;
+  final int? price;
+
+  const OrderDetailFoodItem({
+    required this.name,
+    required this.quantity,
+    this.price,
+  });
+
+  @override
+  List<Object?> get props => [name, quantity, price];
 }
