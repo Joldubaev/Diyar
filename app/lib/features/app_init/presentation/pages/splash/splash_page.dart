@@ -1,8 +1,10 @@
 import 'dart:developer';
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
+import 'package:diyar/core/utils/storage/address_storage_service.dart';
 import 'package:diyar/features/app_init/presentation/presentation.dart';
 import 'package:diyar/features/app_init/domain/domain.dart';
+import 'package:diyar/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -57,27 +59,34 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   void _navigateBasedOnStatus(AuthenticationStatus status) {
     if (!mounted) return;
 
+    final addressStorage = sl<AddressStorageService>();
+
     switch (status) {
       case AuthenticationStatus.firstLaunch:
-        log("[Splash] First launch detected. Navigating to MainHomeRoute.");
-        context.router.replace(const MainHomeRoute());
+        if (!addressStorage.isAddressSelected()) {
+          log("[Splash] First launch, no address. Navigating to AddressSelectionRoute.");
+          context.router.replace(const AddressSelectionRoute());
+        } else {
+          log("[Splash] First launch, address exists. Navigating to MainHomeRoute.");
+          context.router.replace(const MainHomeRoute());
+        }
         break;
       case AuthenticationStatus.unauthenticated:
         log("[Splash] Unauthenticated. Navigating to SignInRoute.");
         context.router.replace(const SignInRoute());
         break;
-      case AuthenticationStatus.needsPinSetup:
-        log("[Splash] PIN code missing. Navigating to SetNewPinCodeRoute.");
-        context.router.replace(const SetNewPinCodeRoute());
-        break;
-      case AuthenticationStatus.needsPinCode:
-        log("[Splash] PIN code found. Navigating to PinCodeRoute.");
-        context.router.replace(const PinCodeRoute());
-        break;
       case AuthenticationStatus.authenticated:
-        // This case shouldn't happen in splash, but handle it anyway
-        log("[Splash] Authenticated. Navigating to MainHomeRoute.");
-        context.router.replace(const MainHomeRoute());
+        final role = sl<LocalStorage>().getString(AppConst.userRole);
+        if (role == "Courier") {
+          log("[Splash] Authenticated. Role: Courier. Navigating to CurierRoute.");
+          context.router.replace(const CurierRoute());
+        } else if (!addressStorage.isAddressSelected()) {
+          log("[Splash] Authenticated, no address. Navigating to AddressSelectionRoute.");
+          context.router.replace(const AddressSelectionRoute());
+        } else {
+          log("[Splash] Authenticated. Navigating to MainHomeRoute.");
+          context.router.replace(const MainHomeRoute());
+        }
         break;
     }
   }
@@ -89,7 +98,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
         log("[Splash] Received Cubit State: ${state.runtimeType}");
         if (state is SplashAuthenticationStatusLoaded) {
           final status = state.status;
-          
+
           // Если токен истек, попробуем обновить
           if (status == AuthenticationStatus.unauthenticated) {
             context.read<SplashCubit>().refreshTokenIfNeeded();

@@ -30,10 +30,7 @@ class _CofePageState extends State<CofePage> {
       appBar: AppBar(
         backgroundColor: theme.colorScheme.primary,
         title: Text(context.l10n.ecpessCoffee,
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium!
-                .copyWith(color: AppColors.white)),
+            style: Theme.of(context).textTheme.titleMedium!.copyWith(color: AppColors.white)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: AppColors.white),
           onPressed: () {

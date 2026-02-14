@@ -38,14 +38,12 @@ class ProfileTile extends StatelessWidget {
                 : Image.asset(imgPath),
           ),
           const SizedBox(width: 10),
-          Expanded(
-              child: Text(text, style: Theme.of(context).textTheme.bodyLarge)),
+          Expanded(child: Text(text, style: Theme.of(context).textTheme.bodyLarge)),
           const SizedBox(width: 10),
           Icon(
             Icons.arrow_forward_ios,
             size: 20,
-            color:
-                Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
           ),
         ],
       ),

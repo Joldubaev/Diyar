@@ -1,6 +1,6 @@
 
 import 'package:diyar/core/theme/app_colors.dart';
-import 'package:diyar/core/theme/theme_extenstion.dart';
+import 'package:diyar/core/theme/theme_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

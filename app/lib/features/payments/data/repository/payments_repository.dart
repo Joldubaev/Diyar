@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:diyar/core/network/error/failures.dart';
+import 'package:diyar/core/error/failure.dart';
 import 'package:diyar/features/payments/data/datasource/remote_payments_datasource.dart';
 import 'package:diyar/features/payments/data/models/model.dart';
 import 'package:diyar/features/payments/domain/domain.dart';
@@ -67,12 +67,12 @@ class PaymentsRepositoryImpl implements PaymentsRepository {
   }
 
   @override
-  Future<Either<Failure, QrPaymentStatusEntity>> qrCheckStatus(String transactionId , String orderNumber) async {
+  Future<Either<Failure, QrPaymentStatusEntity>> qrCheckStatus(String transactionId, String orderNumber) async {
     return remotePaymentsDatasource.qrCheckStatus(transactionId, orderNumber).then(
-      (result) => result.fold(
-        (failure) => Left(failure),
-        (model) => Right(model.toEntity()),
-      ),
-    );
+          (result) => result.fold(
+            (failure) => Left(failure),
+            (model) => Right(model.toEntity()),
+          ),
+        );
   }
 }

@@ -1,4 +1,4 @@
-import 'package:diyar/core/theme/theme_extenstion.dart';
+import 'package:diyar/core/theme/theme_extension.dart';
 import 'package:flutter/material.dart';
 
 /// Заголовок заказа

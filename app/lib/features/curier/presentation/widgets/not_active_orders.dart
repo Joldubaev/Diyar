@@ -14,16 +14,12 @@ class EmptyActiveOrders extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SvgPicture.asset('assets/icons/active.svg',
-                width: 200, height: 200),
+            SvgPicture.asset('assets/icons/active.svg', width: 200, height: 200),
             const SizedBox(height: 20),
             FittedBox(
               child: Text(
                 text,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyLarge!
-                    .copyWith(color: AppColors.grey),
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: AppColors.grey),
                 textAlign: TextAlign.center,
               ),
             ),

@@ -21,7 +21,8 @@ class BonusCardWidget extends StatelessWidget {
         }
 
         final user = state.userModel;
-        final balance = (user.balance ?? 0.0).toDouble(); // Сохраняем как double для поддержки десятичных значений (например, 11.5)
+        final balance =
+            (user.balance ?? 0.0).toDouble(); // Сохраняем как double для поддержки десятичных значений (например, 11.5)
         final discount = user.discount ?? 0;
 
         return BonusCardBackground(

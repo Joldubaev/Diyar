@@ -19,7 +19,8 @@ import 'package:rest_client/rest_client.dart' as _i1030;
 import 'package:shared_preferences/shared_preferences.dart' as _i460;
 import 'package:storage/storage.dart' as _i431;
 
-import '../../common/calculiator/order_calculation_service.dart' as _i804;
+import '../utils/storage/address_storage_service.dart' as _i999;
+import '../../common/calculator/order_calculation_service.dart' as _i804;
 import '../../features/about_us/data/data.dart' as _i798;
 import '../../features/about_us/data/remote_datasource/about_us_remote_datasource.dart'
     as _i243;
@@ -285,6 +286,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => registerModule.internetConnection);
     gh.lazySingleton<_i431.PreferencesStorage>(
         () => registerModule.preferencesStorage);
+    gh.lazySingleton<_i999.AddressStorageService>(
+        () => registerModule.addressStorageService(gh<_i351.LocalStorage>()));
     gh.lazySingleton<_i804.OrderCalculationService>(
         () => _i804.OrderCalculationService());
     gh.lazySingleton<_i706.CartLocalDataSource>(

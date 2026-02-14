@@ -61,4 +61,3 @@ class SecureStorageServiceImpl implements SecureStorageService {
     return _localStorage.getString(AppConst.userRole);
   }
 }
-

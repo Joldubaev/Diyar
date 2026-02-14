@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:diyar/core/network/error/failures.dart';
+import 'package:diyar/core/error/failure.dart';
 import 'package:diyar/features/payments/domain/domain.dart';
 import 'package:injectable/injectable.dart';
 
@@ -7,7 +7,7 @@ import 'package:injectable/injectable.dart';
 class QrCodeUsecase {
   final PaymentsRepository repository;
   QrCodeUsecase(this.repository);
-  Future<Either<Failure, QrCodeEntity>> call( int amount) async {
+  Future<Either<Failure, QrCodeEntity>> call(int amount) async {
     return repository.qrGenerate(amount);
   }
 }

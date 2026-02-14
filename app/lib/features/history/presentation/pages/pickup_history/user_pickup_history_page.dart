@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:diyar/common/components/components.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/curier/curier.dart';
 import 'package:diyar/features/history/domain/domain.dart';
@@ -54,10 +55,10 @@ class _UserPickupHistoryPageState extends State<UserPickupHistoryPage> {
             } else if (state is GetPickupHistoryLoaded) {
               response = state.response;
             }
-            
+
             final orders = response?.orders ?? [];
             final totalPages = response?.totalPages ?? 0;
-            
+
             return Column(
               children: [
                 Expanded(
@@ -79,7 +80,8 @@ class _UserPickupHistoryPageState extends State<UserPickupHistoryPage> {
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text('${context.l10n.orderNumber} ${orders[index].orderNumber}',
-                                            style: theme.textTheme.titleSmall!.copyWith(color: theme.colorScheme.onSurface)),
+                                            style: theme.textTheme.titleSmall!
+                                                .copyWith(color: theme.colorScheme.onSurface)),
                                         PickupOrderStatusBadge(status: orders[index].status),
                                       ],
                                     ),
@@ -106,7 +108,8 @@ class _UserPickupHistoryPageState extends State<UserPickupHistoryPage> {
                                         child: SubmitButtonWidget(
                                           title: context.l10n.orderDetailsText,
                                           bgColor: theme.colorScheme.primary,
-                                          textStyle: theme.textTheme.bodyLarge!.copyWith(color: theme.colorScheme.onPrimary),
+                                          textStyle:
+                                              theme.textTheme.bodyLarge!.copyWith(color: theme.colorScheme.onPrimary),
                                           onTap: () {
                                             context.pushRoute(
                                               UserPickupDetailRoute(order: orders[index]),

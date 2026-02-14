@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:diyar/core/router/routes.gr.dart';
-import 'package:diyar/core/utils/fmt/show_alert.dart';
+import 'package:diyar/core/core.dart';
 import 'package:diyar/features/auth/presentation/presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:diyar/core/mixins/repository_error_handler.dart';
-import 'package:diyar/core/network/error/failures.dart';
+import 'package:diyar/core/error/failure.dart';
 import 'package:diyar/features/curier/curier.dart';
 import 'package:injectable/injectable.dart';
 

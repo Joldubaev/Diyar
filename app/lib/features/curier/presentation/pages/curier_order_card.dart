@@ -1,4 +1,4 @@
-import 'package:diyar/core/theme/theme_extenstion.dart';
+import 'package:diyar/core/theme/theme_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:diyar/features/curier/curier.dart';
 import 'package:diyar/common/food_card/utils/food_price_formatter.dart';

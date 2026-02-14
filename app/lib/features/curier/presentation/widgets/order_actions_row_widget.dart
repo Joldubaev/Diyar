@@ -1,4 +1,4 @@
-import 'package:diyar/core/components/components.dart';
+import 'package:diyar/common/components/components.dart';
 import 'package:flutter/material.dart';
 
 /// Строка кнопок действий

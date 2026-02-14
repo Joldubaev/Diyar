@@ -11,8 +11,7 @@ class EmptyAboutUsWidget extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Text(
           context.l10n.emptyText,
-          style: TextStyle(
-              fontSize: 18, color: Theme.of(context).colorScheme.onSurface),
+          style: TextStyle(fontSize: 18, color: Theme.of(context).colorScheme.onSurface),
         ),
       ),
     );

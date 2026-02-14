@@ -9,6 +9,8 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i53;
+import 'package:diyar/features/map/presentation/pages/address_selection_page.dart'
+    as _i62;
 import 'package:diyar/features/about_us/presentation/pages/about/about_us_page.dart'
     as _i1;
 import 'package:diyar/features/about_us/presentation/pages/about/coffe_page.dart'
@@ -1890,6 +1892,25 @@ class VipRoute extends _i53.PageRouteInfo<void> {
     name,
     builder: (data) {
       return const _i52.VipPage();
+    },
+  );
+}
+
+/// generated route for
+/// [_i62.AddressSelectionPage]
+class AddressSelectionRoute extends _i53.PageRouteInfo<void> {
+  const AddressSelectionRoute({List<_i53.PageRouteInfo>? children})
+      : super(
+          AddressSelectionRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'AddressSelectionRoute';
+
+  static _i53.PageInfo page = _i53.PageInfo(
+    name,
+    builder: (data) {
+      return const _i62.AddressSelectionPage();
     },
   );
 }

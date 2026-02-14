@@ -4,6 +4,7 @@ import 'app_colors.dart';
 
 // EXPORTS
 export 'app_colors.dart';
+export 'theme_extension.dart';
 
 final lightTheme = ThemeData(
   primaryColor: AppColors.primary,

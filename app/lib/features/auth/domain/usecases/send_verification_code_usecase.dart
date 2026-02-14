@@ -14,4 +14,3 @@ class SendVerificationCodeUseCase {
     return _repository.sendVerificationCode(phone);
   }
 }
-

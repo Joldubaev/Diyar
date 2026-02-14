@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:diyar/core/network/error/failures.dart';
+import 'package:diyar/core/error/failure.dart';
 import 'package:diyar/features/menu/menu.dart';
 import 'package:injectable/injectable.dart';
 
@@ -10,7 +10,7 @@ class MenuRepositoryImpl implements MenuRepository {
   MenuRepositoryImpl(this._remoteDataSource);
 
   @override
-  Future<Either<Failure,  List<CategoryFoodEntity>>> getProducts({String? foodName}) async {
+  Future<Either<Failure, List<CategoryFoodEntity>>> getProducts({String? foodName}) async {
     final result = await _remoteDataSource.getProducts(foodName: foodName);
     return result.fold(
       (failure) => Left(failure),

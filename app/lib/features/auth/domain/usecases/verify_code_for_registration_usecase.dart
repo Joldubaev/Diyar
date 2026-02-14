@@ -14,4 +14,3 @@ class VerifyCodeForRegistrationUseCase {
     return _repository.verifyCodeForRegistration(phone, code);
   }
 }
-

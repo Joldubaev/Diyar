@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
-import 'package:diyar/common/calculiator/order_calculation_service.dart';
+import 'package:diyar/common/calculator/order_calculation_service.dart';
 import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:diyar/features/cart/presentation/pages/cart_price_calculator.dart';
 import 'package:diyar/features/features.dart';
@@ -41,9 +41,9 @@ class _OrderMapPageState extends State<OrderMapPage> {
   double _currentZoom = 14.0;
   double _deliveryPrice = 0;
 
-  static const _kyrgyzstanBounds = BoundingBox(
-    northEast: Point(latitude: 43.0019, longitude: 80.2754),
-    southWest: Point(latitude: 39.1921, longitude: 69.2638),
+  static const _chuiOblastBounds = BoundingBox(
+    northEast: Point(latitude: 43.10, longitude: 76.00),
+    southWest: Point(latitude: 42.40, longitude: 73.50),
   );
 
   @override
@@ -225,14 +225,11 @@ class _OrderMapPageState extends State<OrderMapPage> {
     log('[SEARCH_MAP] Начало поиска адреса на карте: "$searchText"');
     String searchQuery = searchText.trim();
     final lowerQuery = searchQuery.toLowerCase();
-    if (!lowerQuery.contains('бишкек') &&
-        !lowerQuery.contains('bishkek') &&
-        !lowerQuery.contains('кыргызстан') &&
-        !lowerQuery.contains('kyrgyzstan')) {
-      searchQuery = '$searchQuery Бишкек';
-      log('[SEARCH_MAP] Добавлен "Бишкек" к запросу. Итоговый запрос: "$searchQuery"');
+    if (!lowerQuery.contains('чуйск') && !lowerQuery.contains('бишкек') && !lowerQuery.contains('bishkek')) {
+      searchQuery = '$searchQuery Чуйская область';
+      log('[SEARCH_MAP] Добавлена "Чуйская область" к запросу. Итоговый запрос: "$searchQuery"');
     } else {
-      log('[SEARCH_MAP] Запрос уже содержит город/страну. Итоговый запрос: "$searchQuery"');
+      log('[SEARCH_MAP] Запрос уже содержит регион. Итоговый запрос: "$searchQuery"');
     }
 
     log('[SEARCH_MAP] Вызов YandexSearch.searchByText с запросом: "$searchQuery"');
@@ -240,7 +237,7 @@ class _OrderMapPageState extends State<OrderMapPage> {
     final searchResult = await YandexSearch.searchByText(
       searchText: searchQuery,
       searchOptions: const SearchOptions(),
-      geometry: Geometry.fromBoundingBox(_kyrgyzstanBounds),
+      geometry: Geometry.fromBoundingBox(_chuiOblastBounds),
     );
 
     log('[SEARCH_MAP] Получен ответ от YandexSearch, ожидание результата...');
@@ -258,8 +255,31 @@ class _OrderMapPageState extends State<OrderMapPage> {
     }
 
     log('[SEARCH_MAP] Найдено результатов: ${result.items!.length}');
-    final firstItem = result.items!.first;
-    log('[SEARCH_MAP] Первый результат: name="${firstItem.name}"');
+    for (int i = 0; i < result.items!.length; i++) {
+      log('[SEARCH_MAP] Результат ${i + 1}: name="${result.items![i].name}"');
+    }
+
+    // Ищем наиболее подходящий результат:
+    // приоритет отдаётся результату, чьё имя содержит часть поискового запроса
+    // (чтобы не получить "Бишкек" вместо "проспект Жибек-Жолу")
+    final lowerSearchText = searchText.toLowerCase();
+    final firstItem = result.items!.firstWhere(
+      (item) {
+        final name = item.name.toLowerCase();
+        // Проверяем, содержит ли результат ключевые слова из исходного запроса
+        // (исключая общие слова вроде "бишкек")
+        final keywords = lowerSearchText
+            .replaceAll('бишкек', '')
+            .replaceAll('bishkek', '')
+            .replaceAll(',', ' ')
+            .split(' ')
+            .where((w) => w.trim().length > 2)
+            .toList();
+        return keywords.any((keyword) => name.contains(keyword));
+      },
+      orElse: () => result.items!.first,
+    );
+    log('[SEARCH_MAP] Выбранный результат: name="${firstItem.name}"');
 
     if (firstItem.geometry.isEmpty) {
       log('[SEARCH_MAP] Ошибка: geometry пустой');
@@ -421,10 +441,10 @@ class _OrderMapPageState extends State<OrderMapPage> {
   }
 
   bool _isPointInKyrgyzstan(double latitude, double longitude) {
-    return latitude >= _kyrgyzstanBounds.southWest.latitude &&
-        latitude <= _kyrgyzstanBounds.northEast.latitude &&
-        longitude >= _kyrgyzstanBounds.southWest.longitude &&
-        longitude <= _kyrgyzstanBounds.northEast.longitude;
+    return latitude >= _chuiOblastBounds.southWest.latitude &&
+        latitude <= _chuiOblastBounds.northEast.latitude &&
+        longitude >= _chuiOblastBounds.southWest.longitude &&
+        longitude <= _chuiOblastBounds.northEast.longitude;
   }
 
   void _onAddressCardTap() {

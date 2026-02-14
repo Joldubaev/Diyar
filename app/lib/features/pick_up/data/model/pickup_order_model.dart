@@ -1,4 +1,4 @@
-import 'package:diyar/core/core.dart';
+import 'package:diyar/common/components/components.dart';
 import 'package:diyar/features/pick_up/domain/domain.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -55,7 +55,7 @@ extension PickupOrderApiExtension on PickupOrderModel {
     // Убеждаемся, что userName и userPhone не null
     final userNameValue = userName ?? '';
     final userPhoneValue = userPhone ?? '';
-    
+
     // Согласно документации API, данные отправляются в плоской структуре (без обертки dto)
     return <String, dynamic>{
       'userName': userNameValue,

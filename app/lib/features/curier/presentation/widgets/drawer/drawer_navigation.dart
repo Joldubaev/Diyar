@@ -4,7 +4,6 @@ import 'package:diyar/features/curier/curier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'drawer_biometric_section.dart';
 import 'drawer_item.dart';
 
 class DrawerNavigation extends StatelessWidget {
@@ -36,7 +35,6 @@ class DrawerNavigation extends StatelessWidget {
           },
         ),
         const Divider(),
-        const DrawerBiometricSection(),
       ],
     );
   }

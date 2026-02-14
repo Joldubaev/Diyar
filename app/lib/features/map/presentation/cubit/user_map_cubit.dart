@@ -16,7 +16,7 @@ part 'user_map_state.dart';
 class UserMapCubit extends Cubit<UserMapState> {
   final PriceRepository priceRepository;
   final AppLocation locationService;
-  
+
   UserMapCubit(this.priceRepository, this.locationService) : super(UserMapInitial());
 
   void getDeliveryPrice(double latitude, double longitude) async {

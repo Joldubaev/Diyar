@@ -1,4 +1,4 @@
-import 'package:diyar/core/components/input/phone_number.dart';
+import 'package:diyar/common/components/components.dart';
 import 'package:flutter/material.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/features.dart' hide PaymentTypeDelivery;

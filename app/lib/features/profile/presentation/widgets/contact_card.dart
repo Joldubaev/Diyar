@@ -38,8 +38,7 @@ class ContactCardWidget extends StatelessWidget {
                   children: [
                     Align(
                         alignment: Alignment.centerLeft,
-                        child: Text(title,
-                            style: Theme.of(context).textTheme.bodyLarge)),
+                        child: Text(title, style: Theme.of(context).textTheme.bodyLarge)),
                     const SizedBox(height: 10),
                     Row(
                       children: [
@@ -47,19 +46,17 @@ class ContactCardWidget extends StatelessWidget {
                         const SizedBox(width: 10),
                         Text(
                           subtitle,
-                          style:
-                              Theme.of(context).textTheme.bodyLarge!.copyWith(
-                                    color: AppColors.primary,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                color: AppColors.primary,
+                                fontWeight: FontWeight.w500,
+                              ),
                         ),
                       ],
                     )
                   ],
                 ),
               ),
-              Expanded(
-                  child: SvgPicture.asset(imagePath, width: 50, height: 50)),
+              Expanded(child: SvgPicture.asset(imagePath, width: 50, height: 50)),
             ],
           )),
     );

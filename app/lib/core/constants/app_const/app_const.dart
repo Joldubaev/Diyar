@@ -62,6 +62,13 @@ class AppConst {
   // first launch
   static const firstLaunch = 'FIRST_LAUNCH';
 
+  // saved delivery address
+  static const savedAddress = 'SAVED_ADDRESS';
+  static const savedAddressLat = 'SAVED_ADDRESS_LAT';
+  static const savedAddressLon = 'SAVED_ADDRESS_LON';
+  static const addressConfirmDate = 'ADDRESS_CONFIRM_DATE';
+  static const addressSelected = 'ADDRESS_SELECTED';
+
   // yandex map key
   static const yandexMapKey = '1d3a039d-6ce6-44a2-9ad1-209ee24e3eb1';
 

@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:diyar/common/components/components.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/app/cubit/remote_config_cubit.dart';
 import 'package:diyar/features/cart/cart.dart';
@@ -38,6 +39,7 @@ class _MainHomePageState extends State<MainHomePage> {
       builder: (context, child) {
         final tabsRouter = AutoTabsRouter.of(context);
         return Scaffold(
+          extendBody: true,
           body: child,
           floatingActionButton: _buildFloatingActionButton(context, theme),
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
