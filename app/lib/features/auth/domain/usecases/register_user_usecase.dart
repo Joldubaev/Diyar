@@ -14,4 +14,3 @@ class RegisterUserUseCase {
     return _repository.register(user);
   }
 }
-

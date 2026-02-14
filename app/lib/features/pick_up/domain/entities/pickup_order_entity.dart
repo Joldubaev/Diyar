@@ -1,4 +1,4 @@
-import 'package:diyar/core/components/components.dart';
+import 'package:diyar/common/components/components.dart';
 import 'package:equatable/equatable.dart';
 
 class PickupOrderEntity extends Equatable {

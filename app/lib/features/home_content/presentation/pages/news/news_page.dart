@@ -30,9 +30,7 @@ class _NewsPageState extends State<NewsPage> {
         backgroundColor: theme.colorScheme.primary,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: AppColors.white),
-          onPressed: () {
-            context.pushRoute(MainHomeRoute());
-          },
+          onPressed: () => context.maybePop(),
         ),
         title: Text(
           context.l10n.news,

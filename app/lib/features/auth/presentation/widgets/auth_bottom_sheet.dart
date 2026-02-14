@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:diyar/common/components/components.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/auth/auth.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +28,7 @@ class AuthBottomSheet extends StatelessWidget {
             filledColor: Theme.of(context).colorScheme.surface,
             controller: resetPasswordPhone,
             inputType: TextInputType.phone,
-           phoneFormatType: PhoneFormatType.withPlus,
+            phoneFormatType: PhoneFormatType.withPlus,
             validator: (value) {
               if (value!.isEmpty) {
                 return context.l10n.pleaseEnterPhone;

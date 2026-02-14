@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:diyar/core/network/error/failures.dart';
+import 'package:diyar/core/error/failure.dart';
 import 'package:diyar/features/curier/domain/domain.dart';
 
 abstract class CurierRepository {

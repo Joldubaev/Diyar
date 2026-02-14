@@ -14,4 +14,3 @@ class VerifySmsCodeUseCase {
     return _repository.verifyCodeForLogin(phone, code);
   }
 }
-

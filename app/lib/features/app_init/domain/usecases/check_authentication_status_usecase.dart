@@ -8,10 +8,6 @@ enum AuthenticationStatus {
   firstLaunch,
   /// Токен отсутствует или истек
   unauthenticated,
-  /// Токен валиден, но нужна проверка PIN
-  needsPinCode,
-  /// Токен валиден, PIN не установлен
-  needsPinSetup,
   /// Полностью аутентифицирован
   authenticated,
 }
@@ -41,13 +37,7 @@ class CheckAuthenticationStatusUseCase {
       return AuthenticationStatus.unauthenticated;
     }
 
-    // Проверка PIN кода
-    final pinCode = await _secureStorage.getPinCode();
-    if (pinCode == null || pinCode.isEmpty) {
-      return AuthenticationStatus.needsPinSetup;
-    }
-
-    return AuthenticationStatus.needsPinCode;
+    return AuthenticationStatus.authenticated;
   }
 }
 

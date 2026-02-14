@@ -1,3 +1,4 @@
+import 'package:diyar/common/components/components.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/features.dart';
@@ -51,7 +52,7 @@ class _DeliveryFormPageContentState extends State<DeliveryFormPageContent> {
       initialAddress: parsedAddress.address,
       initialHouseNumber: parsedAddress.houseNumber,
     );
-    
+
     // Синхронизируем извлеченный номер дома с state кубита
     if (parsedAddress.houseNumber != null && parsedAddress.houseNumber!.isNotEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) {

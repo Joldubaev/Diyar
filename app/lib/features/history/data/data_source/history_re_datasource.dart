@@ -57,8 +57,9 @@ class HistoryReDatasourceImpl implements HistoryReDatasource {
         final totalCount = res.data['message']['totalCount'] as int? ?? orders.length;
         final currentPage = res.data['message']['currentPage'] as int? ?? pageNumber;
         final returnedPageSize = res.data['message']['pageSize'] as int? ?? pageSize;
-        final totalPages = res.data['message']['totalPages'] as int? ?? ((totalCount + returnedPageSize - 1) ~/ returnedPageSize);
-        
+        final totalPages =
+            res.data['message']['totalPages'] as int? ?? ((totalCount + returnedPageSize - 1) ~/ returnedPageSize);
+
         return PickupHistoryResponseModel(
           orders: List<UserPickupHistoryModel>.from(
             orders.map((x) => UserPickupHistoryModel.fromJson(x)),

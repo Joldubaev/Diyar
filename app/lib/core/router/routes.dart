@@ -32,6 +32,7 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: SignUpSucces.page),
         AutoRoute(page: AboutUsRoute.page),
         AutoRoute(page: OrderMapRoute.page),
+        AutoRoute(page: AddressSelectionRoute.page),
         AutoRoute(page: DeliveryFormRoute.page),
         AutoRoute(page: OrderDetailRoute.page),
         AutoRoute(page: RessetPasswordRoute.page),
@@ -53,8 +54,6 @@ class AppRouter extends RootStackRouter {
         // AutoRoute(page: SecondOrderRoute.page),
         // AutoRoute(page: OrderHistoryRoute.page),
 
-        AutoRoute(page: PinCodeRoute.page),
-        AutoRoute(page: SetNewPinCodeRoute.page),
         AutoRoute(page: SecurityRoute.page),
         AutoRoute(page: PaymentsRoute.page),
         AutoRoute(page: MegaCheckUserRoute.page),

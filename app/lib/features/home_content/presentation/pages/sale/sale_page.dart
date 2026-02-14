@@ -38,23 +38,16 @@ class _SalePageState extends State<SalePage> {
             },
           ),
           title: Text(context.l10n.sales,
-              style: Theme.of(context)
-                  .textTheme
-                  .titleSmall
-                  ?.copyWith(color: AppColors.white))),
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(color: AppColors.white))),
       body: sale == null
           ? Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SvgPicture.asset('assets/icons/amico.svg',
-                      width: 200, height: 200),
+                  SvgPicture.asset('assets/icons/amico.svg', width: 200, height: 200),
                   const SizedBox(height: 20),
                   Text(context.l10n.emptyText,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge!
-                          .copyWith(color: theme.colorScheme.onSurface)),
+                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: theme.colorScheme.onSurface)),
                 ],
               ),
             )
@@ -71,14 +64,10 @@ class _SalePageState extends State<SalePage> {
                       fit: BoxFit.cover,
                       height: 200,
                       errorWidget: (context, url, error) {
-                        return Image.asset("assets/images/app_icon.png",
-                            fit: BoxFit.cover);
+                        return Image.asset("assets/images/app_icon.png", fit: BoxFit.cover);
                       },
                       placeholder: (context, url) => const Center(
-                        child: SizedBox(
-                            width: 50,
-                            height: 50,
-                            child: CircularProgressIndicator()),
+                        child: SizedBox(width: 50, height: 50, child: CircularProgressIndicator()),
                       ),
                     ),
                   ),

@@ -1,4 +1,3 @@
-
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/cart.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +9,8 @@ class CartContentWrapper extends StatelessWidget {
   final Widget Function()? onEmpty;
   final Widget Function()? onLoading;
 
-  const CartContentWrapper({super.key, 
+  const CartContentWrapper({
+    super.key,
     required this.builder,
     this.onEmpty,
     this.onLoading,

@@ -17,8 +17,7 @@ class EmptyCurierOrder extends StatelessWidget {
             height: 200,
           ),
           const SizedBox(height: 10),
-          Text(context.l10n.noOrders,
-              style: Theme.of(context).textTheme.titleSmall),
+          Text(context.l10n.noOrders, style: Theme.of(context).textTheme.titleSmall),
         ],
       ),
     );

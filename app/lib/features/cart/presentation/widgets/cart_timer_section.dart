@@ -63,8 +63,8 @@ class CartTimerSection extends StatelessWidget {
       totalPrice: totalPrice,
       startWorkTimeString: timer!.startTime.toString(),
       // startWorkTimeString: '00:00',
-      endWorkTimeString: timer.endTime.toString(),
-      // endWorkTimeString: '00:00',
+      // endWorkTimeString: timer.endTime.toString(),
+      endWorkTimeString: '00:00',
       serverTimeString: timer.serverTime!.toString(),
       onDeliveryTap: () async {
         // Используем use case для получения актуальных шаблонов

@@ -19,11 +19,8 @@ class ContactPage extends StatelessWidget {
             onPressed: () {
               context.router.maybePop();
             }),
-        title: Text(context.l10n.contact,
-            style: Theme.of(context)
-                .textTheme
-                .titleSmall!
-                .copyWith(color: AppColors.white)),
+        title:
+            Text(context.l10n.contact, style: Theme.of(context).textTheme.titleSmall!.copyWith(color: AppColors.white)),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -36,21 +33,16 @@ class ContactPage extends StatelessWidget {
                 IconButton(
                   onPressed: () {
                     AppLaunch.launchURL(AppConst.instagram,
-                        context: context,
-                        snackBarText: context.l10n.someThingIsWrong);
+                        context: context, snackBarText: context.l10n.someThingIsWrong);
                   },
-                  icon: SvgPicture.asset('assets/icons/insta.svg',
-                      width: 40, height: 40),
+                  icon: SvgPicture.asset('assets/icons/insta.svg', width: 40, height: 40),
                 ),
                 const SizedBox(width: 40),
                 IconButton(
                   onPressed: () {
-                    AppLaunch.sendEmail(AppConst.email,
-                        context: context,
-                        snackBarText: context.l10n.someThingIsWrong);
+                    AppLaunch.sendEmail(AppConst.email, context: context, snackBarText: context.l10n.someThingIsWrong);
                   },
-                  icon: Image.asset('assets/images/mail.png',
-                      width: 40, height: 40),
+                  icon: Image.asset('assets/images/mail.png', width: 40, height: 40),
                 ),
               ],
             ),
@@ -100,9 +92,7 @@ class _ContactBodyState extends State<ContactBody> {
             subtitle: contactType.getNumber(),
             imagePath: contactType.getAsset,
             title: contactType.getTitle(context),
-            onPressed: _hasCallSupport
-                ? () => _makePhoneCall(contactType.getNumber())
-                : () {});
+            onPressed: _hasCallSupport ? () => _makePhoneCall(contactType.getNumber()) : () {});
       },
     );
   }

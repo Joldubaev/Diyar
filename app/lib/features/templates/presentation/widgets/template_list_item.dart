@@ -1,4 +1,4 @@
-import 'package:diyar/core/core.dart';
+import 'package:diyar/common/components/components.dart';
 import 'package:diyar/features/templates/presentation/widgets/widget.dart';
 import 'package:diyar/features/templates/template.dart';
 import 'package:flutter/material.dart';

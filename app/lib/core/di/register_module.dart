@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/core/network/custom_auth_rest_client.dart';
+import 'package:diyar/core/utils/storage/address_storage_service.dart';
 import 'package:diyar/injection_container.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:injectable/injectable.dart';
@@ -64,6 +65,9 @@ abstract class RegisterModule {
     await diyarRemoteConfig.initialise();
     return diyarRemoteConfig;
   }
+
+  @lazySingleton
+  AddressStorageService addressStorageService(LocalStorage localStorage) => AddressStorageService(localStorage);
 
   @lazySingleton
   PreferencesStorage get preferencesStorage => PreferencesStorageImpl();

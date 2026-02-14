@@ -28,10 +28,8 @@ class _AboutUsPageState extends State<AboutUsPage> {
           ),
           title: Text(
             context.l10n.aboutUs,
-            style: Theme.of(context)
-                .textTheme
-                .titleSmall!
-                .copyWith(color: AppColors.white, fontWeight: FontWeight.w500),
+            style:
+                Theme.of(context).textTheme.titleSmall!.copyWith(color: AppColors.white, fontWeight: FontWeight.w500),
           )),
       body: const SafeArea(
         child: AboutUsBody(),

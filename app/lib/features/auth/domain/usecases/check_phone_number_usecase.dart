@@ -14,4 +14,3 @@ class CheckPhoneNumberUseCase {
     return _repository.checkPhoneNumber(phone);
   }
 }
-

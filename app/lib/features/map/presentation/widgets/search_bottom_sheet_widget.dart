@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:auto_route/auto_route.dart';
+import 'package:diyar/common/components/components.dart';
 import 'package:diyar/core/core.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
@@ -10,9 +11,9 @@ Future<void> showMapSearchBottom(
   BuildContext context, {
   required Function(String, double?, double?) onSearch,
 }) async {
-  const kyrgyzstanBounds = BoundingBox(
-    northEast: Point(latitude: 43.0019, longitude: 80.2754),
-    southWest: Point(latitude: 39.1921, longitude: 69.2638),
+  const chuiOblastBounds = BoundingBox(
+    northEast: Point(latitude: 43.10, longitude: 76.00),
+    southWest: Point(latitude: 42.40, longitude: 73.50),
   );
 
   await showModalBottomSheet<void>(
@@ -23,7 +24,7 @@ Future<void> showMapSearchBottom(
       final theme = Theme.of(context);
       return _MapSearchBottomSheet(
         theme: theme,
-        kyrgyzstanBounds: kyrgyzstanBounds,
+        chuiOblastBounds: chuiOblastBounds,
         onSearch: onSearch,
       );
     },
@@ -32,12 +33,12 @@ Future<void> showMapSearchBottom(
 
 class _MapSearchBottomSheet extends StatefulWidget {
   final ThemeData theme;
-  final BoundingBox kyrgyzstanBounds;
+  final BoundingBox chuiOblastBounds;
   final Function(String, double?, double?) onSearch;
 
   const _MapSearchBottomSheet({
     required this.theme,
-    required this.kyrgyzstanBounds,
+    required this.chuiOblastBounds,
     required this.onSearch,
   });
 
@@ -82,7 +83,7 @@ class _MapSearchBottomSheetState extends State<_MapSearchBottomSheet> {
       log('[SEARCH] Вызов YandexSuggest.getSuggestions');
       final suggestResponse = await YandexSuggest.getSuggestions(
         text: searchQuery,
-        boundingBox: widget.kyrgyzstanBounds,
+        boundingBox: widget.chuiOblastBounds,
         suggestOptions: const SuggestOptions(
           suggestType: SuggestType.unspecified,
           suggestWords: true,
@@ -125,11 +126,8 @@ class _MapSearchBottomSheetState extends State<_MapSearchBottomSheet> {
 
   String _enhanceSearchQuery(String query) {
     final lowerQuery = query.toLowerCase();
-    if (!lowerQuery.contains('бишкек') &&
-        !lowerQuery.contains('bishkek') &&
-        !lowerQuery.contains('кыргызстан') &&
-        !lowerQuery.contains('kyrgyzstan')) {
-      return '$query Бишкек';
+    if (!lowerQuery.contains('чуйск') && !lowerQuery.contains('бишкек') && !lowerQuery.contains('bishkek')) {
+      return '$query Чуйская область';
     }
     return query;
   }
@@ -143,9 +141,19 @@ class _MapSearchBottomSheetState extends State<_MapSearchBottomSheet> {
   }
 
   void _onItemSelected(SuggestItem item) {
-    log('[SELECT] Выбран адрес: title="${item.title}", subtitle="${item.subtitle ?? "нет"}"');
-    widget.onSearch(item.title, null, null);
-    log('[SELECT] Вызов onSearch с адресом: "${item.title}"');
+    log('[SELECT] Выбран адрес: title="${item.title}", subtitle="${item.subtitle ?? "нет"}", center=${item.center}');
+
+    if (item.center != null) {
+      // Передаём координаты напрямую из подсказки — без повторного searchByText
+      log('[SELECT] Координаты из подсказки: lat=${item.center!.latitude}, lon=${item.center!.longitude}');
+      widget.onSearch(item.title, item.center!.latitude, item.center!.longitude);
+    } else {
+      // Fallback: передаём title + subtitle для текстового поиска
+      final fullAddress =
+          item.subtitle != null && item.subtitle!.isNotEmpty ? '${item.title}, ${item.subtitle}' : item.title;
+      log('[SELECT] Нет координат, fallback на текстовый поиск: "$fullAddress"');
+      widget.onSearch(fullAddress, null, null);
+    }
     context.maybePop();
   }
 

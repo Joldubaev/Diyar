@@ -1,4 +1,4 @@
-import 'package:diyar/core/components/components.dart';
+import 'package:diyar/common/components/components.dart';
 import 'package:diyar/core/shared/shared.dart';
 import 'package:diyar/features/order/domain/domain.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';

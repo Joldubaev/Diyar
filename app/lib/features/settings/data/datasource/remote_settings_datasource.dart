@@ -5,7 +5,7 @@ import 'package:injectable/injectable.dart';
 import '../models/timer_model.dart';
 
 abstract class RemoteSettingsDataSource {
- Future<Either<Failure, TimerModel>> getTimer();
+  Future<Either<Failure, TimerModel>> getTimer();
 }
 
 @LazySingleton(as: RemoteSettingsDataSource)
@@ -14,7 +14,7 @@ class RemoteSettingsDataSourceImpl implements RemoteSettingsDataSource {
 
   RemoteSettingsDataSourceImpl(this._dio);
 
-   @override
+  @override
   Future<Either<Failure, TimerModel>> getTimer() async {
     try {
       final res = await _dio.get(ApiConst.getTimer);

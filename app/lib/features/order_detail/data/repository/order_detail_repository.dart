@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:diyar/core/mixins/repository_error_handler.dart';
-import 'package:diyar/core/network/error/failures.dart';
+import 'package:diyar/core/error/failure.dart';
 import 'package:diyar/features/order_detail/data/datasource/order_detail_remote_data_source.dart';
 import 'package:diyar/features/order_detail/data/models/order_detail_model.dart';
 import 'package:diyar/features/order_detail/domain/domain.dart';

@@ -31,4 +31,3 @@ class SecurityLocalDataSourceImpl implements SecurityLocalDataSource {
     }
   }
 }
-

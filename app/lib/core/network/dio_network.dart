@@ -10,7 +10,6 @@ import 'package:flutter/foundation.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class DioNetwork {
   static late Dio appAPI;
   static late Dio retryAPI;
@@ -46,8 +45,7 @@ class DioNetwork {
   /// App Api Queued Interceptor
   static QueuedInterceptorsWrapper appQueuedInterceptorsWrapper() {
     return QueuedInterceptorsWrapper(
-      onRequest:
-          (RequestOptions options, RequestInterceptorHandler handler) async {
+      onRequest: (RequestOptions options, RequestInterceptorHandler handler) async {
         String? token = sl<SharedPreferences>().getString(AppConst.accessToken);
         if (token != null) {
           options.headers['Authorization'] = 'Bearer $token';
@@ -72,8 +70,7 @@ class DioNetwork {
               await sl<AuthRepository>().refreshToken();
 
               // Получаем новый токен
-              var newAccessToken =
-                  sl<SharedPreferences>().getString(AppConst.accessToken);
+              var newAccessToken = sl<SharedPreferences>().getString(AppConst.accessToken);
 
               // Обрабатываем запросы, которые ждали обновления токена
               for (var callback in tokenRequestQueue) {
@@ -84,11 +81,9 @@ class DioNetwork {
 
               // Если токен обновлен, повторяем оригинальный запрос
               if (newAccessToken != null) {
-                error.requestOptions.headers['Authorization'] =
-                    'Bearer $newAccessToken';
+                error.requestOptions.headers['Authorization'] = 'Bearer $newAccessToken';
                 final newRequest = await sl<Dio>().fetch(error.requestOptions);
-                return handler
-                    .resolve(newRequest); // Возвращаем обновленный ответ
+                return handler.resolve(newRequest); // Возвращаем обновленный ответ
               }
             } catch (e) {
               // Обработка ошибки при обновлении токена
@@ -105,8 +100,7 @@ class DioNetwork {
         // Если это не ошибка авторизации, передаем ошибку дальше
         return handler.next(error);
       },
-      onResponse: (Response<dynamic> response,
-          ResponseInterceptorHandler handler) async {
+      onResponse: (Response<dynamic> response, ResponseInterceptorHandler handler) async {
         // Просто продолжаем, если ответ успешный
         return handler.next(response);
       },
@@ -114,12 +108,10 @@ class DioNetwork {
   }
 
   // Функция для добавления запросов в очередь во время обновления токена
-  static Future<void> _addToQueue(
-      RequestOptions requestOptions, ErrorInterceptorHandler handler) async {
+  static Future<void> _addToQueue(RequestOptions requestOptions, ErrorInterceptorHandler handler) async {
     final completer = Completer<void>();
     tokenRequestQueue.add(() async {
-      var newAccessToken =
-          sl<SharedPreferences>().getString(AppConst.accessToken);
+      var newAccessToken = sl<SharedPreferences>().getString(AppConst.accessToken);
       if (newAccessToken != null) {
         requestOptions.headers['Authorization'] = 'Bearer $newAccessToken';
       }
@@ -136,9 +128,7 @@ class DioNetwork {
       onRequest: (RequestOptions options, r) async {
         String? token = sl<SharedPreferences>().getString(AppConst.accessToken);
         log("Token: $token", name: 'AccessToken');
-        Map<String, dynamic> headers = {
-          if (token != null) 'Authorization': 'Bearer $token'
-        };
+        Map<String, dynamic> headers = {if (token != null) 'Authorization': 'Bearer $token'};
 
         options.headers.addAll(headers);
 

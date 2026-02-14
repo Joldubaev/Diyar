@@ -1,5 +1,5 @@
+import 'package:diyar/common/components/components.dart';
 import 'package:flutter/material.dart';
-import 'package:diyar/core/components/input/custom_input_widget.dart';
 
 class BottomSheetWidget extends StatelessWidget {
   final ThemeData theme;
