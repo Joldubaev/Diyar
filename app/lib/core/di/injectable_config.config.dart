@@ -19,8 +19,7 @@ import 'package:rest_client/rest_client.dart' as _i1030;
 import 'package:shared_preferences/shared_preferences.dart' as _i460;
 import 'package:storage/storage.dart' as _i431;
 
-import '../utils/storage/address_storage_service.dart' as _i999;
-import '../../common/calculator/order_calculation_service.dart' as _i804;
+import '../../common/calculator/order_calculation_service.dart' as _i912;
 import '../../features/about_us/data/data.dart' as _i798;
 import '../../features/about_us/data/remote_datasource/about_us_remote_datasource.dart'
     as _i243;
@@ -245,6 +244,7 @@ import '../remote_config/diyar_remote_config.dart' as _i1020;
 import '../services/map_service.dart' as _i569;
 import '../shared/presentation/bloc/internet_bloc.dart' as _i231;
 import '../shared/presentation/theme_cubit/theme_cubit.dart' as _i489;
+import '../utils/storage/address_storage_service.dart' as _i478;
 import '../utils/storage/local_storage.dart' as _i31;
 import 'register_module.dart' as _i291;
 
@@ -286,10 +286,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => registerModule.internetConnection);
     gh.lazySingleton<_i431.PreferencesStorage>(
         () => registerModule.preferencesStorage);
-    gh.lazySingleton<_i999.AddressStorageService>(
-        () => registerModule.addressStorageService(gh<_i351.LocalStorage>()));
-    gh.lazySingleton<_i804.OrderCalculationService>(
-        () => _i804.OrderCalculationService());
+    gh.lazySingleton<_i912.OrderCalculationService>(
+        () => _i912.OrderCalculationService());
     gh.lazySingleton<_i706.CartLocalDataSource>(
         () => _i706.CartHiveDataSource());
     gh.factory<_i489.ThemeCubit>(
@@ -298,6 +296,10 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i697.OrderStatusService(gh<_i460.SharedPreferences>()));
     gh.lazySingleton<_i744.SecurityLocalDataSource>(
         () => _i744.SecurityLocalDataSourceImpl(gh<_i351.LocalStorage>()));
+    gh.factory<_i132.CartPriceCubit>(() => _i132.CartPriceCubit(
+          gh<_i912.OrderCalculationService>(),
+          initialItems: gh<List<_i885.CartItemEntity>>(),
+        ));
     gh.lazySingleton<_i887.ActiveOrderRemoteDataSource>(
         () => _i887.ActiveOrderRemoteDataSourceImpl(gh<_i361.Dio>()));
     gh.lazySingleton<_i243.AboutUsRemoteDataSource>(
@@ -338,6 +340,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i481.OrderRemoteDataSourceImpl(gh<_i361.Dio>()));
     gh.lazySingleton<_i300.RemoteSettingsDataSource>(
         () => _i300.RemoteSettingsDataSourceImpl(gh<_i361.Dio>()));
+    gh.lazySingleton<_i478.AddressStorageService>(
+        () => registerModule.addressStorageService(gh<_i351.LocalStorage>()));
     gh.lazySingleton<_i520.AuthRemoteDataSource>(
         () => _i415.AuthRemoteDataSourceImpl(
               gh<_i1030.RestClient>(instanceName: 'unauthRestClient'),
@@ -403,6 +407,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i477.HomeContentRepository>(() =>
         _i347.HomeContentRepositoryImpl(
             remoteDataSource: gh<_i521.HomeContentRemoteDatasource>()));
+    gh.factory<_i198.PrepareDeliveryNavigationUseCase>(() =>
+        _i198.PrepareDeliveryNavigationUseCase(
+            gh<_i912.OrderCalculationService>()));
     gh.lazySingleton<_i838.PaymentsRepository>(() =>
         _i944.PaymentsRepositoryImpl(gh<_i1005.RemotePaymentsDatasource>()));
     gh.lazySingleton<_i752.CreateOrderUseCase>(
@@ -416,10 +423,6 @@ extension GetItInjectableX on _i174.GetIt {
               gh<_i361.Dio>(),
               gh<_i460.SharedPreferences>(),
             ));
-    gh.factory<_i132.CartPriceCubit>(() => _i132.CartPriceCubit(
-          gh<_i804.OrderCalculationService>(),
-          initialItems: gh<List<_i885.CartItemEntity>>(),
-        ));
     gh.factory<_i931.GetUserRoleUseCase>(
         () => _i931.GetUserRoleUseCase(gh<_i825.SecureStorageService>()));
     gh.factory<_i449.HandleFirstLaunchUseCase>(
@@ -433,9 +436,6 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i361.Dio>(),
           gh<_i460.SharedPreferences>(),
         ));
-    gh.factory<_i198.PrepareDeliveryNavigationUseCase>(() =>
-        _i198.PrepareDeliveryNavigationUseCase(
-            gh<_i804.OrderCalculationService>()));
     gh.lazySingleton<_i1030.RestClient>(
       () => registerModule.authRestClient(
         gh<_i361.Dio>(),
@@ -462,6 +462,10 @@ extension GetItInjectableX on _i174.GetIt {
               gh<_i140.AuthRepository>(),
               gh<_i351.LocalStorage>(),
             ));
+    gh.factory<_i431.DeliveryFormCubit>(() => _i431.DeliveryFormCubit(
+          gh<_i912.OrderCalculationService>(),
+          gh<_i752.CreateOrderUseCase>(),
+        ));
     gh.lazySingleton<_i251.TemplateRemoteDataSource>(() =>
         _i692.TemplateRemoteDataSourceImpl(
             gh<_i1030.RestClient>(instanceName: 'authRestClient')));
@@ -540,10 +544,6 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i31.GetActiveOrdersUseCase>(),
           gh<_i777.CancelOrderUseCase>(),
           gh<_i697.OrderStatusService>(),
-        ));
-    gh.factory<_i431.DeliveryFormCubit>(() => _i431.DeliveryFormCubit(
-          gh<_i804.OrderCalculationService>(),
-          gh<_i752.CreateOrderUseCase>(),
         ));
     gh.factory<_i232.HistoryCubit>(
         () => _i232.HistoryCubit(gh<_i408.HistoryRepository>()));

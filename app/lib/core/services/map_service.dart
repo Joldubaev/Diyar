@@ -1,5 +1,5 @@
 import 'dart:developer';
-import 'package:diyar/core/core.dart';
+import 'package:diyar/common/components/snackbar/snackbar_message.dart';
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:url_launcher/url_launcher.dart';

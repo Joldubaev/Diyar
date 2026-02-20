@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/common/components/components.dart';
 import 'package:diyar/core/core.dart';
-import 'package:diyar/injection_container.dart';
+import 'package:diyar/core/di/injectable_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';

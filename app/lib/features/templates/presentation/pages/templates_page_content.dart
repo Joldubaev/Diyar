@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:diyar/common/components/components.dart';
+import 'package:diyar/common/common.dart';
 import 'package:diyar/core/core.dart';
+import 'package:diyar/core/di/injectable_config.dart';
+import 'package:diyar/core/utils/storage/address_storage_service.dart';
 import 'package:diyar/features/profile/profile.dart';
 import 'package:diyar/features/templates/presentation/presentation.dart';
 import 'package:diyar/features/templates/presentation/widgets/empty_template_widget.dart';
@@ -75,14 +77,28 @@ class _TemplatesPageContentState extends State<TemplatesPageContent> {
               // Сбрасываем состояние навигации после выполнения
               context.read<TemplatesListCubit>().resetNavigation();
             } else if (state is TemplatesNavigationToOrderMapReady) {
-              context.router.push(
-                OrderMapRoute(
-                  cart: state.navigationData.cart,
-                  totalPrice: state.navigationData.totalPrice,
-                  dishCount: state.navigationData.dishCount,
-                ),
-              );
-              // Сбрасываем состояние навигации после выполнения
+              final addressStorage = sl<AddressStorageService>();
+              final hasAddress = addressStorage.isAddressSelected();
+              final address = addressStorage.getAddress();
+              final deliveryPrice = addressStorage.getDeliveryPrice();
+
+              if (hasAddress && address != null) {
+                final profileCubit = context.read<ProfileCubit>();
+                final user = profileCubit.user;
+                context.router.push(
+                  DeliveryFormRoute(
+                    cart: state.navigationData.cart,
+                    totalPrice: state.navigationData.totalPrice,
+                    dishCount: state.navigationData.dishCount,
+                    address: address,
+                    deliveryPrice: deliveryPrice ?? 0.0,
+                    initialUserName: user?.userName,
+                    initialUserPhone: user?.phone,
+                  ),
+                );
+              } else {
+                context.router.push(const AddressSelectionRoute());
+              }
               context.read<TemplatesListCubit>().resetNavigation();
             }
           },

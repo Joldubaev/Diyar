@@ -1,11 +1,14 @@
 import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:diyar/common/components/components.dart';
+import 'package:diyar/common/common.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/core/utils/storage/address_storage_service.dart';
+import 'package:diyar/core/di/injectable_config.dart';
+import 'package:diyar/core/utils/helper/map_helper.dart';
+import 'package:diyar/features/map/data/repositories/price_repository.dart';
 import 'package:diyar/features/map/map.dart';
-import 'package:diyar/injection_container.dart';
+import 'package:diyar/features/map/presentation/widgets/coordinats_backup.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
@@ -43,16 +46,7 @@ class _AddressSelectionPageState extends State<AddressSelectionPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Выберите адрес доставки', style: theme.textTheme.titleSmall),
-        leading: IconButton(
-          icon: const Icon(Icons.close),
-          onPressed: _skip,
-        ),
-        actions: [
-          TextButton(
-            onPressed: _skip,
-            child: Text('Пропустить', style: TextStyle(color: theme.colorScheme.primary)),
-          ),
-        ],
+        automaticallyImplyLeading: false,
       ),
       body: Stack(
         children: [
@@ -165,15 +159,43 @@ class _AddressSelectionPageState extends State<AddressSelectionPage> {
     );
   }
 
-  void _skip() {
-    context.router.replace(const MainHomeRoute());
-  }
-
   Future<void> _confirmAddress() async {
     if (_address == null) return;
 
+    double deliveryPrice = 0;
+    try {
+      final priceRepository = sl<PriceRepository>();
+      final yandexId = MapHelper.getYandexIdForCoordinate(
+        _lat,
+        _long,
+        polygons: Polygons.getPolygons(),
+      );
+      if (yandexId != null) {
+        final priceModel =
+            await priceRepository.getDistrictPrice(yandexId: yandexId.toString());
+        deliveryPrice = priceModel.price?.toDouble() ?? 0;
+      } else {
+        deliveryPrice = MapHelper.isCoordinateInsidePolygons(
+          _lat,
+          _long,
+          polygons: Polygons.getPolygons(),
+        );
+      }
+    } catch (_) {
+      deliveryPrice = MapHelper.isCoordinateInsidePolygons(
+        _lat,
+        _long,
+        polygons: Polygons.getPolygons(),
+      );
+    }
+
     final addressStorage = sl<AddressStorageService>();
-    await addressStorage.saveAddress(_address!, _lat, _long);
+    await addressStorage.saveAddress(
+      _address!,
+      _lat,
+      _long,
+      deliveryPrice: deliveryPrice,
+    );
 
     if (mounted) {
       context.router.replace(const MainHomeRoute());

@@ -1,31 +1,87 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+/// Глобальный BLoC-логгер с цветным выводом
 class AppBlocObserver extends BlocObserver {
   const AppBlocObserver({this.onLog});
 
-  final void Function(String log)? onLog;
+  final void Function(String log, {required String name})? onLog;
+
+  final String divider = '────────────────────────────────────────';
+
+  void _logBlock({
+    required String title,
+    required List<String> body,
+    required String color,
+  }) {
+    const end = '\x1b[0m';
+
+    final buffer = StringBuffer();
+    buffer.writeln('$color$divider$end');
+    buffer.writeln('$color$title$end');
+    buffer.writeln('$color$divider$end');
+
+    for (final l in body) {
+      if (l.trim().isNotEmpty) buffer.writeln(l);
+    }
+
+    buffer.writeln('$color$divider$end');
+
+    onLog?.call(buffer.toString(), name: 'BLOC');
+  }
+
+  String _pretty(dynamic v) => v.toString().replaceAll('\n', '\n   ');
 
   @override
-  void onCreate(BlocBase<dynamic> bloc) {
+  void onCreate(BlocBase bloc) {
     super.onCreate(bloc);
-    onLog?.call('onCreate(${bloc.state})');
+
+    _logBlock(
+      title: 'BLoC CREATED (${bloc.runtimeType})',
+      color: '\x1b[36m', // cyan
+      body: ['• Initial State:', '   ${_pretty(bloc.state)}'],
+    );
   }
 
   @override
-  void onChange(BlocBase<dynamic> bloc, Change<dynamic> change) {
+  void onChange(BlocBase bloc, Change change) {
     super.onChange(bloc, change);
-    onLog?.call('onChange(${bloc.runtimeType}, $change)');
+
+    _logBlock(
+      title: 'BLoC CHANGE (${bloc.runtimeType})',
+      color: '\x1b[94m', // blue
+      body: [
+        '• Current State:',
+        '   ${_pretty(change.currentState)}',
+        '• Next State:',
+        '   ${_pretty(change.nextState)}',
+      ],
+    );
   }
 
   @override
-  void onError(BlocBase<dynamic> bloc, Object error, StackTrace stackTrace) {
-    onLog?.call('onError(${bloc.runtimeType}, $error, $stackTrace)');
+  void onError(BlocBase bloc, Object error, StackTrace stackTrace) {
+    _logBlock(
+      title: 'BLoC ERROR (${bloc.runtimeType})',
+      color: '\x1b[31m', // red
+      body: [
+        '• Error:',
+        '   $error',
+        '• Stack Trace:',
+        '   ${_pretty(stackTrace)}',
+      ],
+    );
+
     super.onError(bloc, error, stackTrace);
   }
 
   @override
-  void onClose(BlocBase<dynamic> bloc) {
+  void onClose(BlocBase bloc) {
+    _logBlock(
+      title: 'BLoC CLOSED (${bloc.runtimeType})',
+      color: '\x1b[90m', // grey
+      body: ['• Final State:', '   ${_pretty(bloc.state)}'],
+    );
+
     super.onClose(bloc);
-    onLog?.call('onClose(${bloc.runtimeType})');
   }
 }

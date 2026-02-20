@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:logging/logging.dart';
 
@@ -14,100 +16,132 @@ class LoggerInterceptor extends Interceptor {
 
   final Logger logger;
 
-  /// Print request [Options]
   bool request;
-
-  /// Print request header [Options.headers]
   bool requestHeader;
-
-  /// Print request data [Options.balanceInfoModel]
   bool requestBody;
-
-  /// Print [Response.data]
   bool responseBody;
-
-  /// Print [Response.headers]
   bool responseHeader;
-
-  /// Print error message
   bool error;
 
-  @override
-  Future onRequest(RequestOptions options, handler) async {
-    logPrint('*** Request ***');
-    _printKV('uri', options.uri);
+  final String divider = '────────────────────────────────────────';
 
-    if (request) {
-      _printKV('method', options.method);
-      _printKV('responseType', options.responseType.toString());
-      _printKV('followRedirects', options.followRedirects);
-      _printKV('connectTimeout', options.connectTimeout?.inSeconds ?? 0);
-      _printKV('receiveTimeout', options.receiveTimeout?.inSeconds ?? 0);
-      _printKV('extra', options.extra);
-    }
-    if (requestHeader) {
-      logPrint('headers:');
-      options.headers.forEach((key, v) => _printKV(' $key', v));
-    }
-    if (requestBody) {
-      logPrint('data:');
-      _printAll(options.data);
-    }
-    logPrint('');
+  @override
+  Future<void> onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
+    _logBlock(
+      title: 'HTTP REQUEST',
+      body: [
+        _kv('URI', options.uri),
+        if (request) ...[
+          _kv('Method', options.method),
+          _kv('ResponseType', options.responseType),
+          _kv('FollowRedirects', options.followRedirects),
+          _kv('ConnectTimeout', options.connectTimeout?.inMilliseconds ?? 0),
+          _kv('ReceiveTimeout', options.receiveTimeout?.inMilliseconds ?? 0),
+          _kv('Extra', options.extra),
+        ],
+        if (requestHeader) _headerToString(options.headers),
+        if (requestBody && options.data != null)
+          _bodyToString('Request Body', options.data),
+      ],
+    );
+
     return super.onRequest(options, handler);
   }
 
   @override
-  Future onError(DioException err, handler) async {
+  Future<void> onError(
+    DioException err,
+    ErrorInterceptorHandler handler,
+  ) async {
     if (error) {
-      _printKVError("", '*** DioError ***:');
-      _printKVError("", 'uri: ${err.requestOptions.uri}');
-      _printKVError("", '$err');
-      if (err.response != null) {
-        _printResponse(err.response!);
-      }
-      logPrint('');
+      _logBlock(
+        title: '🚨 DIO ERROR',
+        isError: true,
+        body: [
+          _kv('URI', err.requestOptions.uri),
+          _kv('Message', err.message),
+          if (err.response != null) ...[
+            _kv('StatusCode', err.response?.statusCode),
+            _headerToString(err.response!.headers.map),
+            if (responseBody)
+              _bodyToString('Error Response', err.response?.data),
+          ],
+        ],
+      );
     }
+
     return super.onError(err, handler);
   }
 
   @override
-  Future onResponse(Response response, handler) async {
-    logPrint('*** Response ***');
-    _printResponse(response);
+  Future<void> onResponse(
+    Response response,
+    ResponseInterceptorHandler handler,
+  ) async {
+    _logBlock(
+      title: 'HTTP RESPONSE',
+      body: [
+        _kv('URI', response.requestOptions.uri),
+        if (responseHeader) ...[
+          _kv('StatusCode', response.statusCode),
+          if (response.isRedirect == true) _kv('Redirect', response.realUri),
+          _headerToString(response.headers.map),
+        ],
+        if (responseBody) _bodyToString('Response Body', response.data),
+      ],
+    );
+
     return super.onResponse(response, handler);
   }
 
-  void _printResponse(Response response) {
-    _printKV('uri', response.requestOptions.uri);
-    if (responseHeader) {
-      _printKV('statusCode', response.statusCode ?? 0);
-      if (response.isRedirect == true) {
-        _printKV('redirect', response.realUri);
-      }
-      logPrint('headers:');
-      response.headers.forEach((key, v) => _printKV(' $key', v.join(',')));
-    }
-    if (responseBody) {
-      logPrint('Response Text:');
-      _printAll(response.toString());
-    }
+  void _logBlock({
+    required String title,
+    required List<String> body,
+    bool isError = false,
+  }) {
+    final color = isError ? '\x1b[31m' : '\x1b[36m'; // red / cyan
+    const end = '\x1b[0m';
+
     logPrint('');
+    logPrint('$color$divider$end');
+    logPrint('$color$title$end');
+    logPrint('$color$divider$end');
+
+    for (final line in body) {
+      if (line.trim().isNotEmpty) logPrint(line);
+    }
+
+    logPrint('$color$divider$end\n');
   }
 
-  void _printKV(String key, Object v) {
-    logPrint('$key: $v');
+  String _kv(String key, Object? value) => '• $key: ${value ?? "null"}';
+
+  String _headerToString(Map<String, dynamic> headers) {
+    if (headers.isEmpty) return '• Headers: {}';
+
+    final buffer = StringBuffer('• Headers:\n');
+    headers.forEach((k, v) {
+      buffer.writeln('   - $k: $v');
+    });
+    return buffer.toString();
   }
 
-  void _printKVError(String key, Object v) {
-    logger.severe('$key: $v');
+  String _bodyToString(String title, dynamic body) {
+    final pretty = _tryPrettyJson(body);
+    return '• $title:\n$pretty';
   }
 
-  void _printAll(Object msg) {
-    msg.toString().split('\n').forEach(logPrint);
+  String _tryPrettyJson(dynamic data) {
+    try {
+      const encoder = JsonEncoder.withIndent('  ');
+      return encoder.convert(data);
+    } catch (_) {
+      return data.toString();
+    }
   }
 
-  void logPrint(String text) {
-    logger.info(text);
-  }
+  void logPrint(String text) => logger.info(text);
 }

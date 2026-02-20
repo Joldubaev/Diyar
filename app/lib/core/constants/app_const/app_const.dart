@@ -66,6 +66,7 @@ class AppConst {
   static const savedAddress = 'SAVED_ADDRESS';
   static const savedAddressLat = 'SAVED_ADDRESS_LAT';
   static const savedAddressLon = 'SAVED_ADDRESS_LON';
+  static const savedDeliveryPrice = 'SAVED_DELIVERY_PRICE';
   static const addressConfirmDate = 'ADDRESS_CONFIRM_DATE';
   static const addressSelected = 'ADDRESS_SELECTED';
 

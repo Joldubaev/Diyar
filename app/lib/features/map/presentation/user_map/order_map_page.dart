@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:auto_route/auto_route.dart';
+import 'package:diyar/common/common.dart';
 import 'package:diyar/core/core.dart';
-import 'package:diyar/common/calculator/order_calculation_service.dart';
 import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:diyar/features/cart/presentation/pages/cart_price_calculator.dart';
 import 'package:diyar/features/features.dart';
 import 'package:diyar/features/map/map.dart';
-import 'package:diyar/injection_container.dart';
+import 'package:diyar/core/di/injectable_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';

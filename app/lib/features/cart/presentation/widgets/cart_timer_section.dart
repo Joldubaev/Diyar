@@ -1,12 +1,13 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:diyar/common/dialogs/cart_dialog_utils.dart';
+import 'package:diyar/common/common.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/cart/presentation/cubit/cart_cutlery_cubit.dart';
 import 'package:diyar/features/cart/presentation/cubit/cart_price_cubit.dart';
 import 'package:diyar/features/features.dart';
 import 'package:diyar/features/settings/domain/entities/timer_entites.dart';
-import 'package:diyar/injection_container.dart';
+import 'package:diyar/core/di/injectable_config.dart';
+import 'package:diyar/core/utils/storage/address_storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -67,33 +68,47 @@ class CartTimerSection extends StatelessWidget {
       endWorkTimeString: '00:00',
       serverTimeString: timer.serverTime!.toString(),
       onDeliveryTap: () async {
-        // Используем use case для получения актуальных шаблонов
+        final addressStorage = sl<AddressStorageService>();
+        final hasAddress = addressStorage.isAddressSelected();
+        final address = addressStorage.getAddress();
+        final deliveryPrice = addressStorage.getDeliveryPrice();
+
+        void goToDeliveryForm() {
+          context.router.push(
+            DeliveryFormRoute(
+              cart: cartItems,
+              totalPrice: totalPrice,
+              dishCount: cutleryCount,
+              address: address,
+              deliveryPrice: deliveryPrice ?? 0.0,
+            ),
+          );
+        }
+
+        if (hasAddress && address != null) {
+          goToDeliveryForm();
+          return;
+        }
+
+        // Сначала получаем шаблоны: если есть — показываем выбор шаблонов
         final getTemplatesUseCase = sl<GetTemplatesUseCase>();
         final templatesResult = await getTemplatesUseCase();
 
         templatesResult.fold(
-          // При ошибке - переходим сразу к карте
           (_) {
-            context.router.push(
-              OrderMapRoute(
-                cart: cartItems,
-                totalPrice: totalPrice,
-                dishCount: cutleryCount,
-              ),
-            );
+            if (hasAddress && address != null) {
+              goToDeliveryForm();
+            } else {
+              context.router.push(const AddressSelectionRoute());
+            }
           },
           (templates) {
-            // Если есть шаблоны - показываем их, иначе карту
             if (templates.isNotEmpty) {
               context.router.push(TemplatesRoute());
+            } else if (hasAddress && address != null) {
+              goToDeliveryForm();
             } else {
-              context.router.push(
-                OrderMapRoute(
-                  cart: cartItems,
-                  totalPrice: totalPrice,
-                  dishCount: cutleryCount,
-                ),
-              );
+              context.router.push(const AddressSelectionRoute());
             }
           },
         );

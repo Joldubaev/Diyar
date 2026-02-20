@@ -1,4 +1,4 @@
-import 'package:diyar/common/components/components.dart';
+import 'package:diyar/common/common.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/features.dart';

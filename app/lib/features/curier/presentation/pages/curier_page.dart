@@ -1,12 +1,12 @@
 import 'dart:developer';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:diyar/common/components/components.dart';
+import 'package:diyar/common/common.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/auth/auth.dart';
 import 'package:diyar/features/curier/curier.dart';
 import 'package:diyar/features/curier/presentation/widgets/drawer/custom_drawer.dart';
-import 'package:diyar/injection_container.dart';
+import 'package:diyar/core/di/injectable_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';

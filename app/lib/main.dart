@@ -8,7 +8,7 @@ import 'features/pick_up/pick_up.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'injection_container.dart' as di;
+import 'core/di/injectable_config.dart' as di;
 import 'features/cart/cart.dart';
 import 'features/cart/data/models/cart_item_model_hive_adapter.dart';
 import 'features/menu/data/models/food_model_hive_adapter.dart';
@@ -29,7 +29,9 @@ Future<void> main() async {
   FlutterError.onError = (details) {
     log(details.exceptionAsString(), stackTrace: details.stack);
   };
-  Bloc.observer = const AppBlocObserver(onLog: log);
+  Bloc.observer = AppBlocObserver(
+    onLog: (message, {required String name}) => log(message, name: name),
+  );
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await di.init();

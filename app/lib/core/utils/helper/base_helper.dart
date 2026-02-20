@@ -1,6 +1,6 @@
 
 import 'package:diyar/core/constants/constant.dart';
-import 'package:diyar/injection_container.dart';
+import 'package:diyar/core/di/injectable_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BaseHelper {

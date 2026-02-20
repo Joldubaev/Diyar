@@ -4,7 +4,7 @@ import 'package:diyar/core/core.dart';
 import 'package:diyar/core/utils/storage/address_storage_service.dart';
 import 'package:diyar/features/app_init/presentation/presentation.dart';
 import 'package:diyar/features/app_init/domain/domain.dart';
-import 'package:diyar/injection_container.dart';
+import 'package:diyar/core/di/injectable_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

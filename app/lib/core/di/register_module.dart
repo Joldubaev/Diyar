@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/core/network/custom_auth_rest_client.dart';
 import 'package:diyar/core/utils/storage/address_storage_service.dart';
-import 'package:diyar/injection_container.dart';
+import 'package:diyar/core/di/injectable_config.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:injectable/injectable.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
