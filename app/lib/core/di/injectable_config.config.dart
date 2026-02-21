@@ -49,7 +49,7 @@ import '../../features/app_init/domain/usecases/get_navigation_route_usecase.dar
     as _i212;
 import '../../features/app_init/domain/usecases/handle_first_launch_usecase.dart'
     as _i449;
-import '../../features/app_init/presentation/cubit/splash/splash_cubit.dart'
+import '../../features/app_init/presentation/cubit/splash_cubit.dart'
     as _i225;
 import '../../features/auth/data/datasources/local/auth_local_data_source.dart'
     as _i835;

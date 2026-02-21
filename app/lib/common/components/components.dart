@@ -1,5 +1,6 @@
 // Компоненты — порядок: кнопки → инпуты/формы → навигация → контент → диалоги
 export 'buttons/action_button_widget.dart';
+export 'buttons/bonus_card_button.dart';
 export 'buttons/confirm_button.dart';
 export 'buttons/custom_text_button.dart';
 export 'buttons/delivery_option_button.dart';
@@ -37,4 +38,3 @@ export 'custom_dialog/delete_confirmation_dialog.dart';
 export 'custom_dialog/register_dialog.dart';
 export 'toast/toast.dart';
 export 'snackbar/snackbar_message.dart';
-export '';

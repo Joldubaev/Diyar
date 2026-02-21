@@ -66,10 +66,13 @@ class _BonusTransactionsPageState extends State<BonusTransactionsPage> {
           onPressed: () {
             context.router.maybePop();
           },
-          icon: const Icon(Icons.arrow_back_ios, color: AppColors.white),
+          icon: const Icon(Icons.arrow_back_ios, color: AppColors.black1),
         ),
-        title: Text('Бонусные транзакции', style: theme.textTheme.bodyLarge!.copyWith(color: AppColors.white)),
-        backgroundColor: theme.colorScheme.primary,
+        title: Text(
+          'Бонусные транзакции',
+          style: theme.textTheme.bodyLarge!.copyWith(color: AppColors.black1),
+        ),
+        backgroundColor: AppColors.backgroundLight,
       ),
       body: BlocConsumer<BonusCubit, BonusState>(
         listener: (context, state) {

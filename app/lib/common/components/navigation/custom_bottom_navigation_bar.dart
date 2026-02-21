@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+import 'glass_navabar_shell.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
   final int currentIndex;
@@ -12,14 +14,14 @@ class CustomBottomNavigationBar extends StatefulWidget {
   });
 
   @override
-  State<CustomBottomNavigationBar> createState() =>
-      _CustomBottomNavigationBarState();
+  State<CustomBottomNavigationBar> createState() => _CustomBottomNavigationBarState();
 }
 
-class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar>
-    with TickerProviderStateMixin {
-  late List<AnimationController> _scaleControllers;
-  late List<Animation<double>> _scaleAnimations;
+class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> with TickerProviderStateMixin {
+  late List<AnimationController> _colorControllers;
+
+  double _dragPosition = 0;
+  bool _isDragging = false;
 
   static const _icons = [
     "assets/icons/home_icon.svg",
@@ -29,160 +31,131 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar>
   ];
 
   static const _labels = ["Главная", "Меню", "История", "Профиль"];
+  static const _unselected = Color(0xFF1A1A1A);
 
   @override
   void initState() {
     super.initState();
-    _scaleControllers = List.generate(
+    _colorControllers = List.generate(
       _icons.length,
-      (_) => AnimationController(
+      (i) => AnimationController(
         vsync: this,
-        duration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 280),
+        value: i == widget.currentIndex ? 1.0 : 0.0,
       ),
     );
-    _scaleAnimations = _scaleControllers.map((controller) {
-      return Tween<double>(begin: 1.0, end: 0.75).animate(
-        CurvedAnimation(parent: controller, curve: Curves.easeInOut),
-      );
-    }).toList();
+  }
+
+  @override
+  void didUpdateWidget(covariant CustomBottomNavigationBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.currentIndex != widget.currentIndex) {
+      _colorControllers[oldWidget.currentIndex].reverse();
+      _colorControllers[widget.currentIndex].forward();
+    }
   }
 
   @override
   void dispose() {
-    for (final controller in _scaleControllers) {
-      controller.dispose();
+    for (final c in _colorControllers) {
+      c.dispose();
     }
     super.dispose();
   }
 
-  void _onTapDown(int index) {
-    _scaleControllers[index].forward();
-  }
-
-  void _onTapUp(int index) {
-    _scaleControllers[index].reverse();
-  }
-
-  void _onTapCancel(int index) {
-    _scaleControllers[index].reverse();
-  }
-
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final primary = Theme.of(context).colorScheme.primary;
 
-    return Container(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 28),
-      color: Colors.transparent,
-      child: Container(
-        height: 64,
-        decoration: BoxDecoration(
-          color: theme.colorScheme.primary,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: theme.colorScheme.primary.withValues(alpha: 0.35),
-              blurRadius: 20,
-              offset: const Offset(0, 8),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: List.generate(_icons.length, (index) {
-            final isSelected = widget.currentIndex == index;
-            return _NavItem(
-              iconPath: _icons[index],
-              label: _labels[index],
-              isSelected: isSelected,
-              scaleAnimation: _scaleAnimations[index],
-              onTapDown: () => _onTapDown(index),
-              onTapUp: () => _onTapUp(index),
-              onTapCancel: () => _onTapCancel(index),
-              onTap: () => widget.onTap(index),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 0, 24, 32),
+      child: GlassNavbarShell(
+        primary: primary,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final itemWidth = constraints.maxWidth / _icons.length;
+
+            return GestureDetector(
+              onHorizontalDragUpdate: (details) {
+                setState(() {
+                  _isDragging = true;
+                  _dragPosition = (_dragPosition + details.delta.dx).clamp(0, constraints.maxWidth - itemWidth);
+                });
+                final idx = (_dragPosition / itemWidth).round();
+                if (idx != widget.currentIndex) widget.onTap(idx);
+              },
+              onHorizontalDragEnd: (_) => setState(() => _isDragging = false),
+              child: SizedBox(
+                height: 72,
+                child: Stack(
+                  children: [
+                    AnimatedPositioned(
+                      duration: const Duration(milliseconds: 320),
+                      curve: Curves.easeInOutCubic,
+                      left: _isDragging ? _dragPosition : (widget.currentIndex * itemWidth),
+                      top: 8,
+                      bottom: 8,
+                      child: Container(
+                        width: itemWidth,
+                        margin: const EdgeInsets.symmetric(horizontal: 8),
+                        decoration: BoxDecoration(
+                          color: primary.withValues(alpha: 0.18),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                    ),
+                    Row(
+                      children: List.generate(_icons.length, (index) {
+                        return Expanded(
+                          child: GestureDetector(
+                            onTap: () => widget.onTap(index),
+                            behavior: HitTestBehavior.opaque,
+                            child: AnimatedBuilder(
+                              animation: _colorControllers[index],
+                              builder: (context, _) {
+                                final t = _colorControllers[index].value;
+                                final color = Color.lerp(_unselected, primary, t)!;
+                                return Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Transform.scale(
+                                      scale: 1.0 + 0.12 * t,
+                                      child: SvgPicture.asset(
+                                        _icons[index],
+                                        height: 27,
+                                        colorFilter: ColorFilter.mode(
+                                          color,
+                                          BlendMode.srcIn,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      _labels[index],
+                                      style: TextStyle(
+                                        color: color,
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.lerp(
+                                          FontWeight.w500,
+                                          FontWeight.w700,
+                                          t,
+                                        ),
+                                        fontFamily: 'Inter',
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
+                        );
+                      }),
+                    ),
+                  ],
+                ),
+              ),
             );
-          }),
-        ),
-      ),
-    );
-  }
-}
-
-class _NavItem extends StatelessWidget {
-  final String iconPath;
-  final String label;
-  final bool isSelected;
-  final Animation<double> scaleAnimation;
-  final VoidCallback onTapDown;
-  final VoidCallback onTapUp;
-  final VoidCallback onTapCancel;
-  final VoidCallback onTap;
-
-  const _NavItem({
-    required this.iconPath,
-    required this.label,
-    required this.isSelected,
-    required this.scaleAnimation,
-    required this.onTapDown,
-    required this.onTapUp,
-    required this.onTapCancel,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: (_) => onTapDown(),
-      onTapUp: (_) {
-        onTapUp();
-        onTap();
-      },
-      onTapCancel: onTapCancel,
-      behavior: HitTestBehavior.opaque,
-      child: ScaleTransition(
-        scale: scaleAnimation,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOutCubic,
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-          decoration: BoxDecoration(
-            color: isSelected
-                ? Colors.white.withValues(alpha: 0.2)
-                : Colors.transparent,
-            borderRadius: BorderRadius.circular(14),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              AnimatedScale(
-                scale: isSelected ? 1.15 : 1.0,
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeOutCubic,
-                child: SvgPicture.asset(
-                  iconPath,
-                  height: 24,
-                  colorFilter: ColorFilter.mode(
-                    isSelected
-                        ? Colors.white
-                        : Colors.white.withValues(alpha: 0.55),
-                    BlendMode.srcIn,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 2),
-              AnimatedDefaultTextStyle(
-                duration: const Duration(milliseconds: 300),
-                style: TextStyle(
-                  color: isSelected
-                      ? Colors.white
-                      : Colors.white.withValues(alpha: 0.55),
-                  fontSize: isSelected ? 11 : 10,
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                ),
-                child: Text(label),
-              ),
-            ],
-          ),
+          },
         ),
       ),
     );

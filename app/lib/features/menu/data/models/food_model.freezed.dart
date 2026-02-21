@@ -33,6 +33,8 @@ mixin _$FoodModel {
   int? get containerCount => throw _privateConstructorUsedError;
   int? get quantity => throw _privateConstructorUsedError;
   num? get containerPrice => throw _privateConstructorUsedError;
+  List<IngredientModel>? get ingredients => throw _privateConstructorUsedError;
+  List<AllergenModel>? get allergens => throw _privateConstructorUsedError;
 
   /// Serializes this FoodModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -62,7 +64,9 @@ abstract class $FoodModelCopyWith<$Res> {
       String? containerName,
       int? containerCount,
       int? quantity,
-      num? containerPrice});
+      num? containerPrice,
+      List<IngredientModel>? ingredients,
+      List<AllergenModel>? allergens});
 }
 
 /// @nodoc
@@ -93,6 +97,8 @@ class _$FoodModelCopyWithImpl<$Res, $Val extends FoodModel>
     Object? containerCount = freezed,
     Object? quantity = freezed,
     Object? containerPrice = freezed,
+    Object? ingredients = freezed,
+    Object? allergens = freezed,
   }) {
     return _then(_value.copyWith(
       id: freezed == id
@@ -147,6 +153,14 @@ class _$FoodModelCopyWithImpl<$Res, $Val extends FoodModel>
           ? _value.containerPrice
           : containerPrice // ignore: cast_nullable_to_non_nullable
               as num?,
+      ingredients: freezed == ingredients
+          ? _value.ingredients
+          : ingredients // ignore: cast_nullable_to_non_nullable
+              as List<IngredientModel>?,
+      allergens: freezed == allergens
+          ? _value.allergens
+          : allergens // ignore: cast_nullable_to_non_nullable
+              as List<AllergenModel>?,
     ) as $Val);
   }
 }
@@ -172,7 +186,9 @@ abstract class _$$FoodModelImplCopyWith<$Res>
       String? containerName,
       int? containerCount,
       int? quantity,
-      num? containerPrice});
+      num? containerPrice,
+      List<IngredientModel>? ingredients,
+      List<AllergenModel>? allergens});
 }
 
 /// @nodoc
@@ -201,6 +217,8 @@ class __$$FoodModelImplCopyWithImpl<$Res>
     Object? containerCount = freezed,
     Object? quantity = freezed,
     Object? containerPrice = freezed,
+    Object? ingredients = freezed,
+    Object? allergens = freezed,
   }) {
     return _then(_$FoodModelImpl(
       id: freezed == id
@@ -255,6 +273,14 @@ class __$$FoodModelImplCopyWithImpl<$Res>
           ? _value.containerPrice
           : containerPrice // ignore: cast_nullable_to_non_nullable
               as num?,
+      ingredients: freezed == ingredients
+          ? _value.ingredients
+          : ingredients // ignore: cast_nullable_to_non_nullable
+              as List<IngredientModel>?,
+      allergens: freezed == allergens
+          ? _value.allergens
+          : allergens // ignore: cast_nullable_to_non_nullable
+              as List<AllergenModel>?,
     ));
   }
 }
@@ -275,7 +301,9 @@ class _$FoodModelImpl implements _FoodModel {
       this.containerName,
       this.containerCount,
       this.quantity,
-      this.containerPrice});
+      this.containerPrice,
+      this.ingredients,
+      this.allergens});
 
   factory _$FoodModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$FoodModelImplFromJson(json);
@@ -306,10 +334,14 @@ class _$FoodModelImpl implements _FoodModel {
   final int? quantity;
   @override
   final num? containerPrice;
+  @override
+  final List<IngredientModel>? ingredients;
+  @override
+  final List<AllergenModel>? allergens;
 
   @override
   String toString() {
-    return 'FoodModel(id: $id, name: $name, description: $description, categoryId: $categoryId, price: $price, weight: $weight, urlPhoto: $urlPhoto, stopList: $stopList, iDctMax: $iDctMax, containerName: $containerName, containerCount: $containerCount, quantity: $quantity, containerPrice: $containerPrice)';
+    return 'FoodModel(id: $id, name: $name, description: $description, categoryId: $categoryId, price: $price, weight: $weight, urlPhoto: $urlPhoto, stopList: $stopList, iDctMax: $iDctMax, containerName: $containerName, containerCount: $containerCount, quantity: $quantity, containerPrice: $containerPrice, ingredients: $ingredients, allergens: $allergens)';
   }
 
   @override
@@ -337,7 +369,11 @@ class _$FoodModelImpl implements _FoodModel {
             (identical(other.quantity, quantity) ||
                 other.quantity == quantity) &&
             (identical(other.containerPrice, containerPrice) ||
-                other.containerPrice == containerPrice));
+                other.containerPrice == containerPrice) &&
+            (identical(other.ingredients, ingredients) ||
+                other.ingredients == ingredients) &&
+            (identical(other.allergens, allergens) ||
+                other.allergens == allergens));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -356,7 +392,9 @@ class _$FoodModelImpl implements _FoodModel {
       containerName,
       containerCount,
       quantity,
-      containerPrice);
+      containerPrice,
+      ingredients,
+      allergens);
 
   /// Create a copy of FoodModel
   /// with the given fields replaced by the non-null parameter values.
@@ -388,7 +426,9 @@ abstract class _FoodModel implements FoodModel {
       final String? containerName,
       final int? containerCount,
       final int? quantity,
-      final num? containerPrice}) = _$FoodModelImpl;
+      final num? containerPrice,
+      final List<IngredientModel>? ingredients,
+      final List<AllergenModel>? allergens}) = _$FoodModelImpl;
 
   factory _FoodModel.fromJson(Map<String, dynamic> json) =
       _$FoodModelImpl.fromJson;
@@ -419,6 +459,10 @@ abstract class _FoodModel implements FoodModel {
   int? get quantity;
   @override
   num? get containerPrice;
+  @override
+  List<IngredientModel>? get ingredients;
+  @override
+  List<AllergenModel>? get allergens;
 
   /// Create a copy of FoodModel
   /// with the given fields replaced by the non-null parameter values.

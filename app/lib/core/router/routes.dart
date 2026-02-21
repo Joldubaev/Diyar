@@ -2,8 +2,11 @@ import 'dart:developer';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
-import 'package:diyar/features/auth/auth.dart';
+import 'package:diyar/core/utils/storage/address_storage_service.dart';
 import 'package:diyar/core/di/injectable_config.dart';
+import 'package:diyar/features/app_init/domain/usecases/check_authentication_status_usecase.dart';
+import 'package:diyar/features/auth/auth.dart';
+import 'package:diyar/features/auth/domain/usecases/refresh_token_if_needed_usecase.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 @AutoRouterConfig()
@@ -19,7 +22,7 @@ class AppRouter extends RootStackRouter {
             AutoRoute(page: ProfileRoute.page, guards: [AuthGuard()]),
           ],
         ),
-        AutoRoute(page: SplashRoute.page, initial: true),
+        AutoRoute(page: SplashRoute.page, initial: true, guards: [InitialGuard()]),
         AutoRoute(page: CheckPhoneNumberRoute.page),
         AutoRoute(page: CartRoute.page),
         AutoRoute(page: SearchMenuRoute.page),
@@ -72,6 +75,57 @@ class AppRouter extends RootStackRouter {
       ];
 }
 
+class InitialGuard extends AutoRouteGuard {
+  @override
+  void onNavigation(NavigationResolver resolver, StackRouter router) async {
+    final checkAuthUseCase = sl<CheckAuthenticationStatusUseCase>();
+    final refreshTokenUseCase = sl<RefreshTokenIfNeededUseCase>();
+    final addressStorage = sl<AddressStorageService>();
+    final localStorage = sl<LocalStorage>();
+
+    var status = await checkAuthUseCase();
+
+    if (status == AuthenticationStatus.unauthenticated) {
+      final refreshResult = await refreshTokenUseCase();
+      final refreshed = refreshResult.fold((_) => false, (_) => true);
+      if (refreshed) {
+        status = await checkAuthUseCase();
+      }
+      if (status == AuthenticationStatus.unauthenticated) {
+        resolver.next(false);
+        router.replace(const SignInRoute());
+        return;
+      }
+    }
+
+    PageRouteInfo route;
+    switch (status) {
+      case AuthenticationStatus.firstLaunch:
+        route = addressStorage.isAddressSelected()
+            ? const MainHomeRoute()
+            : const AddressSelectionRoute();
+        break;
+      case AuthenticationStatus.unauthenticated:
+        route = const SignInRoute();
+        break;
+      case AuthenticationStatus.authenticated:
+        final role = localStorage.getString(AppConst.userRole);
+        if (role == 'Courier') {
+          route = const CurierRoute();
+        } else if (!addressStorage.isAddressSelected()) {
+          route = const AddressSelectionRoute();
+        } else {
+          route = const MainHomeRoute();
+        }
+        break;
+    }
+
+    resolver.next(false);
+    router.replace(route);
+  }
+}
+
+/// Резервная проверка при навигации на Profile; основной сценарий — проверка в UI (main_home_page) для UX.
 class AuthGuard extends AutoRouteGuard {
   final prefs = sl<LocalStorage>();
   final authDataSource = sl<AuthRemoteDataSource>();

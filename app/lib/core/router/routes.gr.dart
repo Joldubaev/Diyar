@@ -25,7 +25,7 @@ import 'package:diyar/features/about_us/presentation/pages/contact/contact_page.
     as _i9;
 import 'package:diyar/features/active_order/presentation/pages/order_active_page.dart'
     as _i2;
-import 'package:diyar/features/app_init/presentation/pages/splash/splash_page.dart'
+import 'package:diyar/features/app_init/presentation/pages/splash_page.dart'
     as _i47;
 import 'package:diyar/features/auth/domain/domain.dart' as _i61;
 import 'package:diyar/features/auth/presentation/pages/pin_code/pin_code_page.dart'

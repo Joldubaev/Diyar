@@ -10,7 +10,7 @@ final lightTheme = ThemeData(
   primaryColor: AppColors.primary,
   primarySwatch: AppColors.primary,
   fontFamily: "Inter",
-  scaffoldBackgroundColor: AppColors.grey2,
+  scaffoldBackgroundColor: AppColors.backgroundLight,
   colorScheme: const ColorScheme(
     primary: AppColors.primary,
     secondary: AppColors.primary,
@@ -24,10 +24,10 @@ final lightTheme = ThemeData(
   ),
   appBarTheme: const AppBarTheme(
     elevation: 0,
-    backgroundColor: Colors.white,
+    backgroundColor: AppColors.backgroundLight,
     titleTextStyle: TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.w500),
     foregroundColor: Colors.black,
-    surfaceTintColor: Colors.white,
+    surfaceTintColor: AppColors.backgroundLight,
   ),
   textTheme: const TextTheme(
     // Основной текст

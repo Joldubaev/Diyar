@@ -6,7 +6,13 @@ class AppColors {
   static const Color grey1 = Color(0xFFE8E8E8);
   static const Color grey2 = Color(0xFFF5F5F5);
   static const Color grey3 = Color(0xFFD9D9D9);
+  /// Общий светлый фон экранов и AppBar (светлая тема).
+  static const Color backgroundLight = Color(0xFFFFF8F2);
   static const Color white = Color(0xFFFFFFFF);
+
+  // Бонусная карточка: градиент и акцент
+  static const Color bonusGradientStart = Color(0xFFFAB43C);
+  static const Color bonusGradientEnd = Color(0xFFEC663B);
   static const Color black1 = Color.fromARGB(180, 0, 0, 0);
   static const Color black = Color(0xFF000000);
   static const Color transparent = Color(0x00000000);

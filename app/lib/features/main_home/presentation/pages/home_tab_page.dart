@@ -7,6 +7,8 @@ import 'package:diyar/core/core.dart';
 import 'package:diyar/core/di/injectable_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../widgets/home_app_bar.dart';
+import 'profile_navigation_scope.dart';
 
 @RoutePage()
 class HomeTabPage extends StatefulWidget {
@@ -75,18 +77,26 @@ class _HomeTabPageState extends State<HomeTabPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _HomeAppBar(
+      appBar: HomeAppBar(
         savedAddress: _savedAddress,
         onAddressTap: () async {
           await context.router.push(const AddressSelectionRoute());
           if (mounted) _loadSavedAddress();
+        },
+        onProfileTap: () async {
+          final scope = ProfileNavigationScope.maybeOf(context);
+          final tabsRouter = AutoTabsRouter.of(context);
+          final canGoToProfile = await scope?.navigateToProfileOrRequireAuth() ?? false;
+          if (canGoToProfile && mounted) {
+            tabsRouter.setActiveIndex(3);
+          }
         },
       ),
       body: SafeArea(
         child: BlocConsumer<PopularCubit, PopularState>(
           listener: (context, state) {
             if (state is PopularError) {
-              _showErrorSnackbar(context, state.message);
+              context.showSnack(state.message, isError: true);
             } else if (state is PopularLoaded) {
               setState(() {
                 menu = state.products;
@@ -107,14 +117,14 @@ class _HomeTabPageState extends State<HomeTabPage> {
                     const BonusCardWidget(),
                     RowTextWidget(text: context.l10n.popularFood, theme: Theme.of(context)),
                     if (menu.isNotEmpty) PopularFoodSectionWidget(menu: menu),
-                    RowTextWidget(text: 'Анонсы', theme: Theme.of(context)),
-                    NewsWidgets(
-                      subtitle: context.l10n.news,
-                      title: 'Дияр',
-                      image: 'assets/images/news_da.png',
-                      onTap: () => context.router.push(const NewsRoute()),
-                    ),
-                    RowTextWidget(text: 'Инфоцентр', theme: Theme.of(context)),
+                    // RowTextWidget(text: 'Анонсы', theme: Theme.of(context)),
+                    // NewsWidgets(
+                    //   subtitle: context.l10n.news,
+                    //   title: 'Дияр',
+                    //   image: 'assets/images/news_da.png',
+                    //   onTap: () => context.router.push(const NewsRoute()),
+                    // ),
+                    // RowTextWidget(text: 'Инфоцентр', theme: Theme.of(context)),
                   ],
                 ),
               ),
@@ -124,118 +134,4 @@ class _HomeTabPageState extends State<HomeTabPage> {
       ),
     );
   }
-
-  void _showErrorSnackbar(BuildContext context, String message) {
-    final theme = Theme.of(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: theme.colorScheme.primary,
-      ),
-    );
-  }
-}
-
-class _HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final String? savedAddress;
-  final VoidCallback onAddressTap;
-
-  const _HomeAppBar({
-    required this.savedAddress,
-    required this.onAddressTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return AppBar(
-      automaticallyImplyLeading: false,
-      backgroundColor: theme.colorScheme.primary,
-      surfaceTintColor: Colors.transparent,
-      toolbarHeight: 56,
-      titleSpacing: 16,
-      title: GestureDetector(
-        onTap: onAddressTap,
-        behavior: HitTestBehavior.opaque,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.15),
-            borderRadius: BorderRadius.circular(30),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(
-                Icons.location_on,
-                color: Colors.white,
-                size: 20,
-              ),
-              const SizedBox(width: 8),
-              Flexible(
-                child: Text(
-                  savedAddress ?? 'Укажите адрес доставки',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              const SizedBox(width: 4),
-              const Icon(
-                Icons.keyboard_arrow_down_rounded,
-                color: Colors.white,
-                size: 22,
-              ),
-            ],
-          ),
-        ),
-      ),
-      actions: [
-        BlocBuilder<ProfileCubit, ProfileState>(
-          builder: (context, state) {
-            final userName = context.read<ProfileCubit>().user?.userName;
-            if (userName != null) {
-              return Padding(
-                padding: const EdgeInsets.only(right: 16),
-                child: Container(
-                  width: 38,
-                  height: 38,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.1),
-                        blurRadius: 4,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Center(
-                    child: Text(
-                      userName.isNotEmpty ? userName[0].toUpperCase() : '?',
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        color: theme.colorScheme.primary,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            }
-            return const SizedBox.shrink();
-          },
-        ),
-      ],
-    );
-  }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(56);
 }

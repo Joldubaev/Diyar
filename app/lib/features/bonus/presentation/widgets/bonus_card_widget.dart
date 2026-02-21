@@ -1,9 +1,9 @@
+import 'package:diyar/common/common.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-/// Виджет бонусной карты для главной страницы
 class BonusCardWidget extends StatelessWidget {
   const BonusCardWidget({super.key});
 
@@ -21,103 +21,41 @@ class BonusCardWidget extends StatelessWidget {
         }
 
         final user = state.userModel;
-        final balance =
-            (user.balance ?? 0.0).toDouble(); // Сохраняем как double для поддержки десятичных значений (например, 11.5)
+        final balance = (user.balance ?? 0.0).toDouble();
         final discount = user.discount ?? 0;
 
         return BonusCardBackground(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Expanded(
-                child: _CardInfoColumn(
-                  balance: balance,
-                  discount: discount,
+              Text(
+                'Ваш баланс',
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.2,
                 ),
               ),
-              const SizedBox(width: 16),
-              _QrActionButton(
+              const SizedBox(height: 6),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  BonusValueText(balance: balance),
+                  DiscountBadge(discount: discount),
+                ],
+              ),
+              const SizedBox(height: 16),
+              BonusCardButton(
                 onPressed: () => BonusSheetHandler.show(context),
+                icon: Icons.qr_code_2_rounded,
+                label: 'Мой QR',
               ),
             ],
           ),
         );
       },
-    );
-  }
-}
-
-/// Колонка с информацией о балансе и скидке
-class _CardInfoColumn extends StatelessWidget {
-  final double balance; // Изменено с int на double для поддержки десятичных значений (например, 11.5)
-  final int discount;
-
-  const _CardInfoColumn({
-    required this.balance,
-    required this.discount,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          'Ваш баланс',
-          style: TextStyle(
-            fontSize: 13,
-            color: Colors.white.withValues(alpha: 0.85),
-            fontWeight: FontWeight.w500,
-            letterSpacing: 0.2,
-          ),
-        ),
-        const SizedBox(height: 8),
-        BonusValueText(balance: balance),
-        const SizedBox(height: 16),
-        DiscountBadge(discount: discount),
-      ],
-    );
-  }
-}
-
-/// Кнопка для открытия QR кода
-class _QrActionButton extends StatelessWidget {
-  final VoidCallback onPressed;
-
-  const _QrActionButton({required this.onPressed});
-
-  @override
-  Widget build(BuildContext context) {
-    return OutlinedButton.icon(
-      onPressed: onPressed,
-      style: OutlinedButton.styleFrom(
-        backgroundColor: Colors.white,
-        side: BorderSide.none,
-        padding: const EdgeInsets.symmetric(
-          horizontal: 18,
-          vertical: 14,
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        elevation: 0,
-      ),
-      icon: const Icon(
-        Icons.qr_code_2_rounded,
-        color: Color(0xFF1E8449),
-        size: 22,
-      ),
-      label: const Text(
-        'Мой QR',
-        style: TextStyle(
-          color: Color(0xFF1E8449),
-          fontWeight: FontWeight.w600,
-          fontSize: 15,
-          letterSpacing: 0.2,
-        ),
-      ),
     );
   }
 }

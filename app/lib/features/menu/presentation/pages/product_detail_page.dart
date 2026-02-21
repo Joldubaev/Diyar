@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:diyar/common/components/components.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
@@ -7,6 +8,12 @@ import 'package:diyar/features/menu/domain/domain.dart';
 import 'package:diyar/features/menu/presentation/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+List<AllergenEntity> _allergensSorted(List<AllergenEntity> list) {
+  final copy = List<AllergenEntity>.from(list);
+  copy.sort((a, b) => (a.sortOrder ?? 0).compareTo(b.sortOrder ?? 0));
+  return copy;
+}
 
 @RoutePage()
 class ProductDetailPage extends StatelessWidget {
@@ -96,6 +103,90 @@ class ProductDetailPage extends StatelessWidget {
                       ),
                       textAlign: TextAlign.left,
                     ),
+                    if (food.ingredients != null && food.ingredients!.isNotEmpty) ...[
+                      const SizedBox(height: 20),
+                      Text(
+                        'Состав',
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          color: theme.colorScheme.onSurface,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: food.ingredients!
+                            .map(
+                              (e) => Chip(
+                                avatar: (e.urlPhoto != null &&
+                                        e.urlPhoto!.isNotEmpty)
+                                    ? ClipOval(
+                                        child: CachedNetworkImage(
+                                          imageUrl: e.urlPhoto!,
+                                          width: 28,
+                                          height: 28,
+                                          fit: BoxFit.cover,
+                                          placeholder: (_, __) => const SizedBox(
+                                            width: 28,
+                                            height: 28,
+                                            child: Center(
+                                              child: SizedBox(
+                                                width: 16,
+                                                height: 16,
+                                                child: CircularProgressIndicator(
+                                                  strokeWidth: 2,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          errorWidget: (_, __, ___) =>
+                                              const Icon(Icons.fastfood, size: 28),
+                                        ),
+                                      )
+                                    : null,
+                                label: Text(
+                                  e.name ?? '',
+                                  style: theme.textTheme.bodySmall,
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 4,
+                                ),
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ],
+                    if (food.allergens != null && food.allergens!.isNotEmpty) ...[
+                      const SizedBox(height: 20),
+                      Text(
+                        'Аллергены',
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          color: theme.colorScheme.onSurface,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 6,
+                        children: (_allergensSorted(food.allergens!))
+                            .map(
+                              (e) => Chip(
+                                label: Text(
+                                  e.name ?? '',
+                                  style: theme.textTheme.bodySmall,
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 4,
+                                ),
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ],
                     const SizedBox(height: 28),
                     CartControls(food: food, quantity: quantity),
                   ],

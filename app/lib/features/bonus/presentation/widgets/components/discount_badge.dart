@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
-/// Бейдж для отображения скидки
 class DiscountBadge extends StatelessWidget {
   final int discount;
 
@@ -12,28 +12,20 @@ class DiscountBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.25),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.5),
-          width: 1,
-        ),
+        color: const Color(0xFFFFE4D4).withValues(alpha: 0.55),
+        borderRadius: BorderRadius.circular(999),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(
-            Icons.local_offer_rounded,
-            size: 14,
-            color: Colors.white,
-          ),
+          SvgPicture.asset('assets/icons/tag.svg'),
           const SizedBox(width: 6),
           Text(
             'Кэшбэк $discount%',
             style: const TextStyle(
-              fontSize: 14,
+              fontSize: 16,
               fontWeight: FontWeight.w600,
               color: Colors.white,
               letterSpacing: 0.2,
