@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 @RoutePage()
 class OrderHistoryPage extends StatelessWidget {
   const OrderHistoryPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -24,38 +25,45 @@ class OrderHistoryPage extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
           child: Column(
             children: [
-              OrderButton(
-                text: context.l10n.activeOrders,
-                icon: 'assets/icons/del.svg',
-                onPressed: () {
-                  context.router.push(const ActiveOrderRoute());
-                },
+              // Grid with 2 columns
+              GridView.count(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: 2,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+                childAspectRatio: 0.85,
+                children: [
+                  OrderButton(
+                    text: context.l10n.activeOrders,
+                    icon: 'assets/images/active_order.png',
+                    onPressed: () {
+                      context.router.push(const ActiveOrderRoute());
+                    },
+                  ),
+                  OrderButton(
+                    text: context.l10n.pickup,
+                    icon: 'assets/images/pickup.png',
+                    onPressed: () {
+                      context.router.push(const UserPickupHistoryRoute());
+                    },
+                  ),
+                  OrderButton(
+                    text: context.l10n.orderHistory,
+                    icon: 'assets/images/order_history.png',
+                    onPressed: () {
+                      context.router.push(const UserOrderHistoryRoute());
+                    },
+                  ),
+                  OrderButton(
+                    text: "История бонусов",
+                    icon: 'assets/images/bonus_history.png',
+                    onPressed: () {
+                      context.router.push(const BonusTransactionsRoute());
+                    },
+                  ),
+                ],
               ),
-              const SizedBox(height: 16),
-              OrderButton(
-                text: context.l10n.pickup,
-                icon: 'assets/icons/pickup.svg',
-                onPressed: () {
-                  context.router.push(const UserPickupHistoryRoute());
-                },
-              ),
-              const SizedBox(height: 16),
-              OrderButton(
-                text: context.l10n.orderHistory,
-                icon: 'assets/icons/history.svg',
-                onPressed: () {
-                  context.router.push(const UserOrderHistoryRoute());
-                },
-              ),
-              const SizedBox(height: 16),
-              OrderButton(
-                text: "История бонусов",
-                icon: 'assets/icons/bonus.svg',
-                onPressed: () {
-                  context.router.push(const BonusTransactionsRoute());
-                },
-              ),
-              const SizedBox(height: 8),
             ],
           ),
         ),

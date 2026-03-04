@@ -10,7 +10,7 @@ export 'profile/profile.dart';
 export 'active_order/active_order.dart';
 export 'order_detail/order_detail.dart';
 export 'curier/curier.dart';
-export 'payments/payments.dart';
+export 'web_payment/web_payment.dart';
 export 'settings/settings.dart';
 export 'bonus/bonus.dart';
 export 'security/security.dart';

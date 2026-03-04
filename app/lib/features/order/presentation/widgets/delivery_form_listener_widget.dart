@@ -1,4 +1,5 @@
 import 'package:diyar/features/order/order.dart';
+import 'package:diyar/features/order/presentation/enum/delivery_enum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,8 +22,7 @@ class DeliveryFormListenerWidget extends StatelessWidget {
         if (current is! DeliveryFormLoaded) return false;
         if (previous is! DeliveryFormLoaded) return true;
 
-        return current.changeAmount != previous.changeAmount ||
-            current.paymentType != previous.paymentType;
+        return current.changeAmount != previous.changeAmount || current.paymentType != previous.paymentType;
       },
       listener: (context, state) {
         if (state is! DeliveryFormLoaded) return;

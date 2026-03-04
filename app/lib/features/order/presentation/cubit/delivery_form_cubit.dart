@@ -7,6 +7,7 @@ import 'package:diyar/core/shared/shared.dart';
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/order/domain/usecases/order_usecase.dart';
 import 'package:diyar/features/order/order.dart';
+import 'package:diyar/features/order/presentation/enum/delivery_enum.dart';
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 
@@ -204,6 +205,14 @@ class DeliveryFormCubit extends Cubit<DeliveryFormState> {
     emit(currentState.copyWith(changeAmount: amount));
   }
 
+  /// Выбор способа оплаты (cash / online)
+  void setPaymentType(PaymentTypeDelivery type) {
+    final currentState = state;
+    if (currentState is! DeliveryFormLoaded) return;
+
+    emit(currentState.copyWith(paymentType: type));
+  }
+
   /// Подтверждение заказа - собирает CreateOrderEntity из данных state и создает заказ
   Future<void> confirmOrder({
     required List<CartItemEntity> cart,
@@ -270,13 +279,14 @@ class DeliveryFormCubit extends Cubit<DeliveryFormState> {
 
     // Создаем CreateOrderEntity
     // Отправляем полную сумму без вычета бонусов, бонусы передаем отдельно в amountToReduce
-    // Бэкенд сам вычтет бонусы из полной суммы
+    // Бэкенд ожидает: 'cash' | 'card_online' | 'card_courier'
+    final paymentMethodApi = currentState.paymentType == PaymentTypeDelivery.cash ? 'cash' : 'card_online';
     final orderEntity = CreateOrderEntity(
       addressData: addressData,
       contactInfo: contactInfo,
       price: fullOrderPrice, // Полная сумма без вычета бонусов - бэкенд сам вычтет бонусы
       deliveryPrice: currentState.deliveryPrice.toInt(),
-      paymentMethod: currentState.paymentType.name,
+      paymentMethod: paymentMethodApi,
       dishesCount: dishesCount,
       sdacha: sdacha,
       amountToReduce:

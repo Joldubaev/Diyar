@@ -1,4 +1,3 @@
-import 'package:diyar/core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -16,10 +15,13 @@ class ProfileTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
+        color: scheme.surfaceContainerHigh,
         borderRadius: const BorderRadius.all(Radius.circular(12)),
       ),
       child: Row(
@@ -29,8 +31,8 @@ class ProfileTile extends StatelessWidget {
             child: isSvg!
                 ? SvgPicture.asset(
                     imgPath,
-                    colorFilter: const ColorFilter.mode(
-                      AppColors.white,
+                    colorFilter: ColorFilter.mode(
+                      scheme.onSurface,
                       BlendMode.srcIn,
                     ),
                     width: 70,
@@ -38,12 +40,12 @@ class ProfileTile extends StatelessWidget {
                 : Image.asset(imgPath),
           ),
           const SizedBox(width: 10),
-          Expanded(child: Text(text, style: Theme.of(context).textTheme.bodyLarge)),
+          Expanded(child: Text(text, style: textTheme.bodyLarge)),
           const SizedBox(width: 10),
           Icon(
             Icons.arrow_forward_ios,
             size: 20,
-            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+            color: scheme.onSurfaceVariant,
           ),
         ],
       ),

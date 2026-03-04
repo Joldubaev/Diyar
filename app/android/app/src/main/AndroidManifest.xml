@@ -7,7 +7,8 @@
     <application
         android:label="Дияр Экспресс"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:enableOnBackInvokedCallback="true">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -47,9 +48,31 @@
               <action android:name="android.intent.action.VIEW" />
               <data android:scheme="tel" />
         </intent>
-         <!-- If your application checks for inAppBrowserView launch mode support -->
+         <!-- If your application checks for inAppBrowserView launch mode support (Android 11+) -->
         <intent>
             <action android:name="android.support.customtabs.action.CustomTabsService" />
+        </intent>
+        <intent>
+            <action android:name="androidx.browser.customtabs.action.CustomTabsService" />
+        </intent>
+        <!-- Банковские приложения для intent:// с package -->
+        <!-- Киргизия -->
+        <package android:name="kg.bta.mobilebank2" />
+        <package android:name="com.kp.megapay.kg" />
+        <package android:name="namba.wallet.nambaone" />
+        <package android:name="kg.o.nurtelecom" />
+        <package android:name="net.kicb.ibankprod" />
+        <!-- Общий intent для VIEW + https (App Links) -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="https" />
+        </intent>
+        <!-- Для банков с http (o.kg и др.) -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="http" />
         </intent>
       </queries>
 </manifest>

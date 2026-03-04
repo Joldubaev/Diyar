@@ -18,6 +18,9 @@ class ProductImage extends StatelessWidget {
         aspectRatio: 16 / 10,
         child: CachedNetworkImage(
           imageUrl: food.urlPhoto ?? 'https://i.ibb.co/GkL25DB/ALE-1357-7.png',
+          memCacheWidth: 800,
+          memCacheHeight: 500,
+          filterQuality: FilterQuality.medium,
           imageBuilder: (context, imageProvider) => Container(
             decoration: BoxDecoration(
               image: DecorationImage(

@@ -274,11 +274,11 @@ class __$$FoodModelImplCopyWithImpl<$Res>
           : containerPrice // ignore: cast_nullable_to_non_nullable
               as num?,
       ingredients: freezed == ingredients
-          ? _value.ingredients
+          ? _value._ingredients
           : ingredients // ignore: cast_nullable_to_non_nullable
               as List<IngredientModel>?,
       allergens: freezed == allergens
-          ? _value.allergens
+          ? _value._allergens
           : allergens // ignore: cast_nullable_to_non_nullable
               as List<AllergenModel>?,
     ));
@@ -302,8 +302,10 @@ class _$FoodModelImpl implements _FoodModel {
       this.containerCount,
       this.quantity,
       this.containerPrice,
-      this.ingredients,
-      this.allergens});
+      final List<IngredientModel>? ingredients,
+      final List<AllergenModel>? allergens})
+      : _ingredients = ingredients,
+        _allergens = allergens;
 
   factory _$FoodModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$FoodModelImplFromJson(json);
@@ -334,10 +336,25 @@ class _$FoodModelImpl implements _FoodModel {
   final int? quantity;
   @override
   final num? containerPrice;
+  final List<IngredientModel>? _ingredients;
   @override
-  final List<IngredientModel>? ingredients;
+  List<IngredientModel>? get ingredients {
+    final value = _ingredients;
+    if (value == null) return null;
+    if (_ingredients is EqualUnmodifiableListView) return _ingredients;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  final List<AllergenModel>? _allergens;
   @override
-  final List<AllergenModel>? allergens;
+  List<AllergenModel>? get allergens {
+    final value = _allergens;
+    if (value == null) return null;
+    if (_allergens is EqualUnmodifiableListView) return _allergens;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
 
   @override
   String toString() {
@@ -370,10 +387,10 @@ class _$FoodModelImpl implements _FoodModel {
                 other.quantity == quantity) &&
             (identical(other.containerPrice, containerPrice) ||
                 other.containerPrice == containerPrice) &&
-            (identical(other.ingredients, ingredients) ||
-                other.ingredients == ingredients) &&
-            (identical(other.allergens, allergens) ||
-                other.allergens == allergens));
+            const DeepCollectionEquality()
+                .equals(other._ingredients, _ingredients) &&
+            const DeepCollectionEquality()
+                .equals(other._allergens, _allergens));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -393,8 +410,8 @@ class _$FoodModelImpl implements _FoodModel {
       containerCount,
       quantity,
       containerPrice,
-      ingredients,
-      allergens);
+      const DeepCollectionEquality().hash(_ingredients),
+      const DeepCollectionEquality().hash(_allergens));
 
   /// Create a copy of FoodModel
   /// with the given fields replaced by the non-null parameter values.

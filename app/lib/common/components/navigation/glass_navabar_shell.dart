@@ -1,6 +1,6 @@
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 
 class GlassNavbarShell extends StatelessWidget {
   final Widget child;
@@ -10,12 +10,16 @@ class GlassNavbarShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final surface = scheme.surface;
+    final shadow = scheme.shadow;
+
     return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.12),
+            color: shadow.withValues(alpha: 0.25),
             blurRadius: 30,
             spreadRadius: 0,
             offset: const Offset(0, 8),
@@ -27,17 +31,22 @@ class GlassNavbarShell extends StatelessWidget {
           ),
         ],
       ),
-      child: FakeGlass(
-        shape: const LiquidRoundedSuperellipse(borderRadius: 30),
-        settings: const LiquidGlassSettings(
-          blur: 18,
-          thickness: 12,
-          glassColor: Color(0x26FFFFFF),
-          lightIntensity: 0.65,
-          ambientStrength: 0.12,
-          saturation: 1.3,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(30),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+              color: surface.withValues(alpha: 0.7),
+              border: Border.all(
+                color: surface.withValues(alpha: 0.5),
+                width: 1.2,
+              ),
+            ),
+            child: child,
+          ),
         ),
-        child: child,
       ),
     );
   }

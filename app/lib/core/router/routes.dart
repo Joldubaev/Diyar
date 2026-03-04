@@ -56,20 +56,10 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: TerasaRoute.page),
         // AutoRoute(page: SecondOrderRoute.page),
         // AutoRoute(page: OrderHistoryRoute.page),
-
         AutoRoute(page: SecurityRoute.page),
-        AutoRoute(page: PaymentsRoute.page),
-        AutoRoute(page: MegaCheckUserRoute.page),
         AutoRoute(page: BonusQrRoute.page),
         AutoRoute(page: BonusTransactionsRoute.page),
-        AutoRoute(page: MegaOtpRoute.page),
-        AutoRoute(page: MegaPaymentStatusRoute.page),
-        AutoRoute(page: QrCodeRoute.page),
-        AutoRoute(page: QrCheckStatusRoute.page),
-        AutoRoute(page: MbankConfirmRoute.page),
-        AutoRoute(page: MbankCheckStatusRoute.page),
-        AutoRoute(page: MbankInitiateRoute.page),
-        AutoRoute(page: PaymentStatusRoute.page),
+        AutoRoute(page: OpenBankingPaymentRoute.page),
         AutoRoute(page: TemplatesRoute.page),
         AutoRoute(page: OrderDetailRoute.page),
       ];
@@ -101,9 +91,7 @@ class InitialGuard extends AutoRouteGuard {
     PageRouteInfo route;
     switch (status) {
       case AuthenticationStatus.firstLaunch:
-        route = addressStorage.isAddressSelected()
-            ? const MainHomeRoute()
-            : const AddressSelectionRoute();
+        route = addressStorage.isAddressSelected() ? const MainHomeRoute() : const AddressSelectionRoute();
         break;
       case AuthenticationStatus.unauthenticated:
         route = const SignInRoute();

@@ -78,6 +78,11 @@ class ApiConst {
   // DISTRICTS
   static const getDistricts = "$baseUrl/districts/get-all-districts";
 
+  // OpenBanking (платёжная ссылка и статус)
+  static const createPayLink = "$baseUrl/openbanking/create-pay-link";
+  /// URL хаба для SignalR: передавать https (negotiate идёт по HTTP, затем upgrade в WebSocket).
+  static const paymentStatusHubUrl = "https://api.diyar.kg/api/payment-status-hub";
+
   //payment
   static const finipayCallBack = "$baseUrl/payment/finipay-callback";
   static const checkPaymentMega = "$baseUrl/payment/check-payment-mega";

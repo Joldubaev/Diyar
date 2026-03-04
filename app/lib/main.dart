@@ -69,7 +69,6 @@ class App extends StatelessWidget {
         BlocProvider(create: (context) => di.sl<PickUpCubit>()),
         BlocProvider(create: (context) => di.sl<ActiveOrderCubit>()),
         BlocProvider(create: (context) => di.sl<OrderDetailCubit>()),
-        BlocProvider(create: (context) => di.sl<PaymentBloc>()),
         BlocProvider(create: (context) => di.sl<SettingsCubit>()),
         BlocProvider(create: (context) => di.sl<UserMapCubit>()),
         BlocProvider(create: (context) => di.sl<TemplatesListCubit>()),

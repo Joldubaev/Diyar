@@ -63,36 +63,37 @@ class AuthDialogs {
   }
 
   static void showFailedAuth(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     showDialog(
       context: context,
       builder: (context) => CustomDialogWidget(
-        content: const Column(
+        content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               Icons.error,
-              color: AppColors.red,
+              color: scheme.error,
               size: 48,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               "Ошибка аутентификации",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-                color: AppColors.black,
+                color: scheme.onSurface,
               ),
             ),
           ],
         ),
         onOk: () => context.maybePop(),
-        onOkText: const Text(
+        onOkText: Text(
           "Попробовать снова",
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w500,
-            color: AppColors.primary,
+            color: scheme.primary,
           ),
         ),
       ),

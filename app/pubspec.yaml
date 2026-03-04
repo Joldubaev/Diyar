@@ -76,6 +76,10 @@ dependencies:
   qr_flutter: ^4.1.0
   liquid_glass_navbar: ^1.0.3
   liquid_glass_renderer: ^0.2.0-dev.4
+  flutter_instagram_storyboard: ^1.0.1
+  webview_flutter: ^4.13.1
+  webview_flutter_android: ^4.10.1
+  dynamic_color: ^1.7.0
 
 
 

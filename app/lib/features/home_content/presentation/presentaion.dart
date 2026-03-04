@@ -4,6 +4,7 @@ export 'pages/sale/sale_page.dart';
 export 'pages/widgets/custom_widget.dart';
 export 'pages/widgets/image_widget.dart';
 export 'pages/widgets/text_content_widget.dart';
+export 'widgets/mq_story_items_widget.dart';
 export 'widgets/news_widget.dart';
 export 'widgets/sale_widget.dart';
 export 'widgets/sales_section_widget.dart';

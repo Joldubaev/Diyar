@@ -1,4 +1,3 @@
-import 'package:diyar/core/core.dart';
 import 'package:diyar/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,7 +17,8 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final primary = theme.colorScheme.primary;
+    final colorScheme = theme.colorScheme;
+    final primary = colorScheme.primary;
 
     return AppBar(
       automaticallyImplyLeading: false,
@@ -32,7 +32,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
           decoration: BoxDecoration(
-            color: AppColors.grey2,
+            color: colorScheme.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(30),
           ),
           child: Row(
@@ -44,7 +44,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                 child: Text(
                   savedAddress ?? 'Укажите адрес доставки',
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    color: primary,
+                    color: colorScheme.onSurface,
                     fontWeight: FontWeight.w600,
                     fontSize: 14,
                   ),
@@ -72,11 +72,11 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                   width: 38,
                   height: 38,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: colorScheme.surface,
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.1),
+                        color: colorScheme.shadow.withValues(alpha: 0.15),
                         blurRadius: 4,
                         offset: const Offset(0, 2),
                       ),

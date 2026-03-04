@@ -44,6 +44,6 @@ Map<String, dynamic> _$$FoodModelImplToJson(_$FoodModelImpl instance) =>
       'containerCount': instance.containerCount,
       'quantity': instance.quantity,
       'containerPrice': instance.containerPrice,
-      'ingredients': instance.ingredients?.map((e) => e.toJson()).toList(),
-      'allergens': instance.allergens?.map((e) => e.toJson()).toList(),
+      'ingredients': instance.ingredients,
+      'allergens': instance.allergens,
     };

@@ -5,6 +5,7 @@ import 'package:diyar/common/common.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/features.dart';
+import 'package:diyar/features/order/presentation/enum/delivery_enum.dart';
 import 'package:diyar/features/order/presentation/widgets/adress_section_widget.dart';
 import 'package:diyar/features/order/presentation/widgets/bonus_and_total_section.dart';
 import 'package:diyar/features/order/presentation/widgets/change_amoun_section.dart';
@@ -196,60 +197,89 @@ class _DeliveryFormViewState extends State<DeliveryFormView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(title: context.l10n.orderDetails),
-      body: BlocBuilder<DeliveryFormCubit, DeliveryFormState>(
-        builder: (context, state) {
-          if (state is! DeliveryFormLoaded) {
-            return const Center(child: CircularProgressIndicator());
+    return BlocListener<ProfileCubit, ProfileState>(
+      listenWhen: (previous, current) => current is ProfileGetLoaded,
+      listener: (context, profileState) {
+        if (profileState is! ProfileGetLoaded) return;
+        final user = profileState.userModel;
+        final deliveryState = context.read<DeliveryFormCubit>().state;
+        if (deliveryState is! DeliveryFormLoaded) return;
+        final needFillName = deliveryState.userName.isEmpty && (user.userName ?? '').isNotEmpty;
+        final needFillPhone =
+            (deliveryState.userPhone.isEmpty || deliveryState.userPhone == '+996') && (user.phone ?? '').isNotEmpty;
+        if (needFillName || needFillPhone) {
+          if (needFillName && (user.userName ?? '').isNotEmpty) {
+            _controllers.userName.text = user.userName!;
           }
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                AddressSection(controllers: _controllers, formKey: formKey),
-                const SizedBox(height: 10),
-                ChangeAmountSection(controllers: _controllers),
-                const SizedBox(height: 10),
-                BonusAndTotalSection(
-                  controllers: _controllers,
-                  totalPrice: widget.totalPrice,
-                  deliveryPrice: widget.deliveryPrice,
-                ),
-                const SizedBox(height: 10),
-                CustomInputWidget(
-                  titleColor: Theme.of(context).colorScheme.onSurface,
-                  filledColor: Theme.of(context).colorScheme.surface,
-                  controller: _controllers.commentController,
-                  hintText: context.l10n.comment,
-                  validator: (val) => null,
-                  maxLines: 3,
-                  onChanged: (value) {
-                    context.read<DeliveryFormCubit>().updateField(comment: value);
-                  },
-                ),
-                const SizedBox(height: 20),
-                Card(
-                  color: Theme.of(context).colorScheme.primary,
-                  child: ListTile(
-                    title: Text(
-                      'Сумма заказа ${state.totalOrderCost} сом',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Theme.of(context).colorScheme.onTertiaryFixed,
-                            fontWeight: FontWeight.w500,
-                          ),
-                    ),
-                    trailing: Icon(
-                      Icons.arrow_forward_ios,
-                      color: Theme.of(context).colorScheme.onTertiaryFixed,
-                    ),
-                    onTap: () => _showOrderConfirmationBottomSheet(context, state),
+          if (needFillPhone && (user.phone ?? '').isNotEmpty) {
+            _controllers.phoneController.text = user.phone!;
+          }
+          context.read<DeliveryFormCubit>().updateField(
+                userName: user.userName ?? deliveryState.userName,
+                userPhone: user.phone ?? deliveryState.userPhone,
+              );
+        }
+      },
+      child: Scaffold(
+        appBar: CustomAppBar(title: context.l10n.orderDetails),
+        body: BlocBuilder<DeliveryFormCubit, DeliveryFormState>(
+          builder: (context, state) {
+            if (state is! DeliveryFormLoaded) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  AddressSection(
+                    controllers: _controllers,
+                    formKey: formKey,
+                    paymentType: state.paymentType,
+                    onPaymentTypeChanged: (v) => context.read<DeliveryFormCubit>().setPaymentType(v),
                   ),
-                ),
-              ],
-            ),
-          );
-        },
+                  const SizedBox(height: 10),
+                  ChangeAmountSection(controllers: _controllers),
+                  const SizedBox(height: 10),
+                  BonusAndTotalSection(
+                    controllers: _controllers,
+                    totalPrice: widget.totalPrice,
+                    deliveryPrice: widget.deliveryPrice,
+                  ),
+                  const SizedBox(height: 10),
+                  CustomInputWidget(
+                    titleColor: Theme.of(context).colorScheme.onSurface,
+                    filledColor: Theme.of(context).colorScheme.surface,
+                    controller: _controllers.commentController,
+                    hintText: context.l10n.comment,
+                    validator: (val) => null,
+                    maxLines: 3,
+                    onChanged: (value) {
+                      context.read<DeliveryFormCubit>().updateField(comment: value);
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  Card(
+                    color: Theme.of(context).colorScheme.primary,
+                    child: ListTile(
+                      title: Text(
+                        'Сумма заказа ${state.totalOrderCost} сом',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.onTertiaryFixed,
+                              fontWeight: FontWeight.w500,
+                            ),
+                      ),
+                      trailing: Icon(
+                        Icons.arrow_forward_ios,
+                        color: Theme.of(context).colorScheme.onTertiaryFixed,
+                      ),
+                      onTap: () => _showOrderConfirmationBottomSheet(context, state),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

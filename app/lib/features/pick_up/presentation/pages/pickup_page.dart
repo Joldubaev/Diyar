@@ -147,24 +147,23 @@ class _PickupFormPageState extends State<PickupFormPage> {
       listener: (context, state) {
         if (state is CreatePickUpOrderLoaded) {
           context.read<CartBloc>().add(ClearCart());
-          final paymentType = PaymentTypeDelivery.values.firstWhere(
-            (e) => e.name == state.paymentType,
-            orElse: () => PaymentTypeDelivery.cash,
-          );
-
-          if (paymentType == PaymentTypeDelivery.online) {
-            context.router.push(
-              PaymentsRoute(
-                orderNumber: state.message,
-                amount: state.totalOrderCost.toString(), // Используем сумму с учетом бонусов
-              ),
-            );
-            Navigator.of(context).pop();
-          } else {
-            _showSuccessDialog(context, theme, l10n);
-          }
-        } else if (state is CreatePickUpOrderError) {
-          showToast(state.message, isError: true);
+        //   final paymentType = PaymentTypeDelivery.values.firstWhere(
+        //     (e) => e.name == state.paymentType,
+        //     orElse: () => PaymentTypeDelivery.cash,
+        //   );
+        //   if (paymentType == PaymentTypeDelivery.online) {
+        //     context.router.push(
+        //       PaymentsRoute(
+        //         orderNumber: state.message,
+        //         amount: state.totalOrderCost.toString(), // Используем сумму с учетом бонусов
+        //       ),
+        //     );
+        //     Navigator.of(context).pop();
+        //   } else {
+        //     _showSuccessDialog(context, theme, l10n);
+        //   }
+        // } else if (state is CreatePickUpOrderError) {
+        //   showToast(state.message, isError: true);
         }
       },
       builder: (context, state) {
@@ -272,57 +271,6 @@ class _PickupFormPageState extends State<PickupFormPage> {
                 );
               }
             },
-          ),
-        );
-      },
-    );
-  }
-
-  void _showSuccessDialog(
-    BuildContext context,
-    ThemeData theme,
-    AppLocalizations l10n,
-  ) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) {
-        return PopScope(
-          canPop: false,
-          child: AlertDialog(
-            title: Text(
-              l10n.yourOrdersConfirm,
-              style: theme.textTheme.bodyLarge!.copyWith(
-                fontSize: 16,
-              ),
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  l10n.operatorContact,
-                  style: theme.textTheme.bodyMedium!.copyWith(
-                    color: theme.colorScheme.onSurface,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                SubmitButtonWidget(
-                  textStyle: theme.textTheme.bodyMedium!.copyWith(
-                    color: theme.colorScheme.surface,
-                  ),
-                  title: l10n.ok,
-                  bgColor: AppColors.green,
-                  onTap: () {
-                    Navigator.of(dialogContext).pop();
-                    context.router.pushAndPopUntil(
-                      const MainHomeRoute(),
-                      predicate: (_) => false,
-                    );
-                  },
-                ),
-              ],
-            ),
           ),
         );
       },

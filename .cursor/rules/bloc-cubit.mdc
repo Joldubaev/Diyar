@@ -1,0 +1,56 @@
+# Bloc и Cubit в Diyar
+
+## Когда применять
+- Добавление или рефакторинг state management (Bloc/Cubit).
+- Создание нового feature с загрузкой данных или формами.
+- Фразы: «по правилу bloc», «как в my_quran по кубитам», «добавь bloc/cubit».
+
+## Структура проекта (Diyar)
+
+- **Bloc:** `app/lib/features/<feature>/presentation/bloc/`
+  - `*_bloc.dart` — класс блока, регистрация `on<Event>`.
+  - `*_event.dart` — события (`part of '*_bloc.dart'`).
+  - `*_state.dart` — состояния (`part of '*_bloc.dart'`).
+
+- **Cubit:** `app/lib/features/<feature>/presentation/cubit/`
+  - `*_cubit.dart` — класс кубита и методы.
+  - `*_state.dart` — состояние (`part of '*_cubit.dart'`).
+
+- Общие (core): `app/lib/core/shared/presentation/bloc/` для глобальных (например InternetBloc).
+
+## Когда Bloc, когда Cubit
+
+- **Bloc** — много типов событий, сложная диспетчеризация: корзина (add/remove/increment/…), оплата, меню, подписки.
+- **Cubit** — один поток действий, загрузка/обновление экрана: популярные блюда, профиль, бонусы, история, форма доставки, настройки.
+
+## События (Bloc)
+
+- Базовый тип: `sealed class XxxEvent extends Equatable` (или с `@immutable` final классами).
+- Конкретные события — отдельные классы с полями, `props` для Equatable.
+- Файл: `part of 'xxx_bloc.dart';`.
+
+## Состояния
+
+- **Один класс + copyWith** — простой экран (несколько полей, статус загрузки).
+- **sealed + подклассы** — много веток UI: Initial, Loading, Loaded(data), Error(error). В UI — `switch (state)` или проверка типа в BlocBuilder.
+- State в Bloc: `part of 'xxx_bloc.dart'`. В Cubit: `part of 'xxx_cubit.dart'`.
+
+## Регистрация (провайдеры)
+
+- **Глобальные** — в корне приложения (где поднимается MaterialApp / роутер): CartBloc, глобальные Cubit'ы, репозитории. Через `get_it`/injectable или MultiBlocProvider/RepositoryProvider.
+- **Локальные (экран)** — BlocProvider/Cubit в build экрана, если блок нужен только на этом экране. Зависимости из `context.read<>()` или `get_it`.
+
+## Именование (Diyar)
+
+- **Bloc:** `<Feature>Bloc` (CartBloc, MenuBloc, PaymentBloc). События: глагол + Event (LoadCart, AddItemToCart). Состояния: CartInitial, CartLoading, CartLoaded, CartError.
+- **Cubit:** `<Feature><Context?>Cubit` (PopularCubit, ProfileCubit, DeliveryFormCubit). Состояния: PopularInitial, PopularLoading, PopularLoaded(foods), PopularError(message).
+
+## Обработка
+
+- Зависимости (репозитории, сервисы) — в конструктор, не из context. В Diyar часто `@injectable` и внедрение через get_it.
+- Bloc: один приватный метод на событие, внутри emit(Loading) → репозиторий → emit(Success|Error).
+- Cubit: публичные методы без событий (getPopularProducts(), updateProfile()), внутри emit(Loading) → репозиторий → emit(Success|Error).
+
+## Итог
+
+Bloc — для сложных сценариев с множеством событий (корзина, оплата). Cubit — для загрузки данных и простых форм. Хранить в `presentation/bloc/` и `presentation/cubit/` внутри фичи, состояния и события — через `part` файлы.

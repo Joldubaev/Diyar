@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:diyar/core/core.dart';
+import 'package:flutter/material.dart';
 
-enum PaymentTypeDelivery { cash, online }
+import '../enum/delivery_enum.dart';
 
 class PaymentTypeSelector extends StatelessWidget {
   final PaymentTypeDelivery currentPaymentType;

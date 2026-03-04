@@ -74,6 +74,8 @@ class CartTimerSection extends StatelessWidget {
         final deliveryPrice = addressStorage.getDeliveryPrice();
 
         void goToDeliveryForm() {
+          final profileCubit = context.read<ProfileCubit>();
+          final user = profileCubit.user;
           context.router.push(
             DeliveryFormRoute(
               cart: cartItems,
@@ -81,6 +83,8 @@ class CartTimerSection extends StatelessWidget {
               dishCount: cutleryCount,
               address: address,
               deliveryPrice: deliveryPrice ?? 0.0,
+              initialUserName: user?.userName,
+              initialUserPhone: user?.phone,
             ),
           );
         }

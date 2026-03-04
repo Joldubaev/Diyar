@@ -16,20 +16,13 @@ class TextCheckButton extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(text,
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium!
-                .copyWith(color: AppColors.black1)),
+        Text(text, style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: AppColors.black1)),
         TextButton(
           onPressed: onPressed,
           child: FittedBox(
             child: Text(
               route,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyLarge!
-                  .copyWith(color: AppColors.blue),
+              style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: AppColors.blue),
             ),
           ),
         )

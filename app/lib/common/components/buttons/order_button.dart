@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 class OrderButton extends StatelessWidget {
   const OrderButton({
@@ -16,64 +15,53 @@ class OrderButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(30),
-        onTap: onPressed,
-        child: Container(
-          width: double.infinity,
-          height: 90,
-          decoration: BoxDecoration(
-            color: theme.colorScheme.primaryContainer,
-            borderRadius: BorderRadius.circular(30),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.07),
-                blurRadius: 2,
-                offset: const Offset(0, 1),
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              const SizedBox(width: 20),
-              // Круглая иконка
-              Container(
-                width: 54,
-                height: 54,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                ),
+    return InkWell(
+      borderRadius: BorderRadius.circular(24),
+      onTap: onPressed,
+      child: Container(
+        decoration: BoxDecoration(
+          color: theme.colorScheme.primaryContainer,
+          borderRadius: BorderRadius.circular(24),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.all(16),
                 child: Center(
-                  child: SvgPicture.asset(
-                    icon,
-                    height: 32,
-                    width: 32,
+                  child: Container(
+                    height: 180,
+                    width: 180,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Center(
+                      child: Image.asset(
+                        icon,
+                        height: 160,
+                        width: 160,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
                   ),
                 ),
               ),
-              const SizedBox(width: 24),
-              // Текст
-              Expanded(
-                child: Text(
-                  text,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
+            ),
+            Container(
+              width: double.infinity,
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(8),
+              child: Text(
+                text,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
                 ),
               ),
-              // Стрелка
-              Icon(
-                Icons.arrow_forward_ios,
-                color: Colors.white,
-                size: 32,
-              ),
-              const SizedBox(width: 20),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

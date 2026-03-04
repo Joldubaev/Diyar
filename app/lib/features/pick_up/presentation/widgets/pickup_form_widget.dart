@@ -1,7 +1,7 @@
 import 'package:diyar/common/components/components.dart';
 import 'package:flutter/material.dart';
 import 'package:diyar/core/core.dart';
-import 'package:diyar/features/features.dart' hide PaymentTypeDelivery;
+import 'package:diyar/features/features.dart';
 import 'package:diyar/features/order/presentation/enum/delivery_enum.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
