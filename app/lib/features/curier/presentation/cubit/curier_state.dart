@@ -1,6 +1,6 @@
 part of 'curier_cubit.dart';
 
-abstract class CurierState {
+abstract class CurierState extends Equatable {
   final GetUserEntity? user;
   final List<CurierEntity> activeOrders;
   final List<CurierEntity> historyOrders;
@@ -24,6 +24,20 @@ abstract class CurierState {
     this.activeOrdersError,
     this.historyError,
   });
+
+  @override
+  List<Object?> get props => [
+        user,
+        activeOrders,
+        historyOrders,
+        isActiveOrdersLoading,
+        isHistoryLoading,
+        isHistoryLoadingMore,
+        historyHasMore,
+        historyCurrentPage,
+        activeOrdersError,
+        historyError,
+      ];
 
   CurierState copyWith({
     GetUserEntity? user,
@@ -114,6 +128,9 @@ final class UserLoaded extends CurierState {
 final class UserError extends CurierState {
   final String message;
   const UserError(this.message);
+
+  @override
+  List<Object?> get props => [...super.props, message];
 
   @override
   UserError copyWith({
@@ -234,6 +251,9 @@ final class FinishOrderError extends CurierState {
     required this.message,
     required GetUserEntity user,
   }) : super(user: user);
+
+  @override
+  List<Object?> get props => [...super.props, message];
 
   @override
   FinishOrderError copyWith({

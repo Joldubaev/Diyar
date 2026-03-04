@@ -1,19 +1,34 @@
 part of 'order_detail_cubit.dart';
 
-abstract class OrderDetailState {}
+abstract class OrderDetailState extends Equatable {
+  const OrderDetailState();
 
-class OrderDetailInitial extends OrderDetailState {}
+  @override
+  List<Object?> get props => [];
+}
 
-class OrderDetailLoading extends OrderDetailState {}
+class OrderDetailInitial extends OrderDetailState {
+  const OrderDetailInitial();
+}
+
+class OrderDetailLoading extends OrderDetailState {
+  const OrderDetailLoading();
+}
 
 class OrderDetailLoaded extends OrderDetailState {
   final OrderDetailEntity orderDetail;
 
-  OrderDetailLoaded(this.orderDetail);
+  const OrderDetailLoaded(this.orderDetail);
+
+  @override
+  List<Object?> get props => [orderDetail];
 }
 
 class OrderDetailError extends OrderDetailState {
   final String message;
 
-  OrderDetailError(this.message);
+  const OrderDetailError(this.message);
+
+  @override
+  List<Object?> get props => [message];
 }

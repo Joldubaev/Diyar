@@ -1,6 +1,8 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:diyar/core/di/injectable_config.dart' as di;
 import 'package:diyar/features/auth/auth.dart';
 import 'package:flutter/material.dart';
-import 'package:auto_route/auto_route.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 @RoutePage()
 class SignInPage extends StatelessWidget {
@@ -8,7 +10,9 @@ class SignInPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocProvider(
+      create: (_) => di.sl<SignInCubit>(),
+      child: Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Theme.of(context).colorScheme.primary,
@@ -16,6 +20,7 @@ class SignInPage extends StatelessWidget {
       body: const SafeArea(
         child: SignInForm(),
       ),
+    ),
     );
   }
 }

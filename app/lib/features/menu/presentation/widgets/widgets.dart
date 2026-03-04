@@ -8,4 +8,3 @@ export 'product_image_widget.dart';
 export 'product_detail_info_section.dart';
 export 'product_detail_cart_bar.dart';
 export 'counter_button.dart';
-

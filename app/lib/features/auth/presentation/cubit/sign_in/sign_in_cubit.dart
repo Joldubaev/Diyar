@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/auth/domain/domain.dart';
+import 'package:equatable/equatable.dart';
 import 'package:diyar/features/auth/domain/usecases/verify_sms_code_and_handle_first_launch_usecase.dart';
 import 'package:diyar/features/auth/domain/usecases/refresh_token_if_needed_usecase.dart';
 import 'package:diyar/features/auth/domain/usecases/check_biometrics_availability_usecase.dart';

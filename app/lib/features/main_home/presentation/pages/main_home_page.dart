@@ -1,10 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/common/common.dart';
 import 'package:diyar/core/core.dart';
-import 'package:diyar/features/app/cubit/remote_config_cubit.dart';
-import 'package:diyar/features/cart/cart.dart';
+import 'package:diyar/core/di/injectable_config.dart' as di;
+import 'package:diyar/features/active_order/active_order.dart';
+import 'package:diyar/features/home_content/presentation/cubit/home_content_cubit.dart';
+import 'package:diyar/features/menu/presentation/bloc/menu_bloc.dart';
+import 'package:diyar/features/menu/presentation/cubit/popular_cubit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'profile_navigation_scope.dart';
@@ -20,17 +22,15 @@ class MainHomePage extends StatefulWidget {
 
 class _MainHomePageState extends State<MainHomePage> {
   @override
-  void initState() {
-    super.initState();
-    context.read<CartBloc>().add(LoadCart());
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      context.read<RemoteConfigCubit>().init();
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return AutoTabsRouter(
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => di.sl<MenuBloc>()..add(GetFoodsByCategoryEvent())),
+        BlocProvider(create: (_) => di.sl<PopularCubit>()),
+        BlocProvider(create: (_) => di.sl<HomeContentCubit>()),
+        BlocProvider(create: (_) => di.sl<ActiveOrderCubit>()),
+      ],
+      child: AutoTabsRouter(
       routes: const [
         HomeTabRoute(),
         MenuRoute(),
@@ -62,6 +62,7 @@ class _MainHomePageState extends State<MainHomePage> {
           ),
         );
       },
+      ),
     );
   }
 

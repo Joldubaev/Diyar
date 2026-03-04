@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:diyar/features/auth/domain/domain.dart';
+import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
 

@@ -45,17 +45,11 @@ class AppBlocObserver extends BlocObserver {
   @override
   void onChange(BlocBase bloc, Change change) {
     super.onChange(bloc, change);
-
-    _logBlock(
-      title: 'BLoC CHANGE (${bloc.runtimeType})',
-      color: '\x1b[94m', // blue
-      body: [
-        '• Current State:',
-        '   ${_pretty(change.currentState)}',
-        '• Next State:',
-        '   ${_pretty(change.nextState)}',
-      ],
-    );
+    // Временно для теста: логируем только Loading/Error, чтобы не засорять консоль
+    final nextStr = change.nextState.toString();
+    if (nextStr.contains('Loading') || nextStr.contains('Error')) {
+      onLog?.call('CHANGE: ${bloc.runtimeType} | $nextStr', name: 'BLOC');
+    }
   }
 
   @override

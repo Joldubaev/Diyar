@@ -5,6 +5,7 @@ import 'package:meta/meta.dart';
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/order/presentation/enum/delivery_enum.dart';
 import 'package:diyar/features/pick_up/domain/domain.dart';
+import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 
 part 'pick_up_state.dart';

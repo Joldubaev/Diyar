@@ -1,9 +1,16 @@
 part of 'pick_up_cubit.dart';
 
 @immutable
-sealed class PickUpState {}
+sealed class PickUpState extends Equatable {
+  const PickUpState();
 
-final class PickUpInitial extends PickUpState {}
+  @override
+  List<Object?> get props => [];
+}
+
+final class PickUpInitial extends PickUpState {
+  const PickUpInitial();
+}
 
 /// Состояние формы заказа самовывоза
 final class PickUpFormLoaded extends PickUpState {
@@ -15,7 +22,7 @@ final class PickUpFormLoaded extends PickUpState {
   final int totalOrderCost; // Сумма с учетом бонусов (для отображения в UI)
   final double? bonusAmount; // Сумма бонусов для списания
 
-  PickUpFormLoaded({
+  const PickUpFormLoaded({
     this.selectedTime,
     required this.paymentType,
     required this.userName,
@@ -24,6 +31,17 @@ final class PickUpFormLoaded extends PickUpState {
     required this.totalOrderCost,
     this.bonusAmount,
   });
+
+  @override
+  List<Object?> get props => [
+        selectedTime,
+        paymentType,
+        userName,
+        userPhone,
+        totalPrice,
+        totalOrderCost,
+        bonusAmount,
+      ];
 
   PickUpFormLoaded copyWith({
     String? selectedTime,
@@ -47,22 +65,30 @@ final class PickUpFormLoaded extends PickUpState {
   }
 }
 
-final class CreatePickUpOrderLoading extends PickUpState {}
+final class CreatePickUpOrderLoading extends PickUpState {
+  const CreatePickUpOrderLoading();
+}
 
 final class CreatePickUpOrderLoaded extends PickUpState {
   final String message;
   final String paymentType;
   final int totalPrice; // Полная сумма заказа (без вычета бонусов)
   final int totalOrderCost; // Сумма с учетом бонусов (для отображения в UI и оплаты)
-  CreatePickUpOrderLoaded({
+  const CreatePickUpOrderLoaded({
     required this.message,
     required this.paymentType,
     required this.totalPrice,
     required this.totalOrderCost,
   });
+
+  @override
+  List<Object?> get props => [message, paymentType, totalPrice, totalOrderCost];
 }
 
 final class CreatePickUpOrderError extends PickUpState {
   final String message;
-  CreatePickUpOrderError(this.message);
+  const CreatePickUpOrderError(this.message);
+
+  @override
+  List<Object?> get props => [message];
 }

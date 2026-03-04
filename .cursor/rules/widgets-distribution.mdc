@@ -1,3 +1,9 @@
+---
+description: Распределение UI по виджетам — тонкие экраны, структура widgets/
+globs: app/lib/**/*.dart
+alwaysApply: false
+---
+
 # Распределение по виджетам (Widgets distribution)
 
 ## Когда применять

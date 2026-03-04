@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/common/components/components.dart';
 import 'package:diyar/core/core.dart';
+import 'package:diyar/core/di/injectable_config.dart' as di;
 import 'package:diyar/features/active_order/active_order.dart';
 import 'package:diyar/features/curier/curier.dart';
 import 'package:diyar/features/history/history.dart';
@@ -21,14 +22,18 @@ class _UserOrderHistoryPageState extends State<UserOrderHistoryPage> {
 
   @override
   void initState() {
-    context.read<HistoryCubit>().getHistoryOrders();
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => context.read<HistoryCubit>().getHistoryOrders(),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Scaffold(
+    return BlocProvider(
+      create: (_) => di.sl<HistoryCubit>(),
+      child: Scaffold(
       appBar: AppBar(title: Text(context.l10n.orderHistory)),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -93,6 +98,7 @@ class _UserOrderHistoryPageState extends State<UserOrderHistoryPage> {
           },
         ),
       ),
+    ),
     );
   }
 }

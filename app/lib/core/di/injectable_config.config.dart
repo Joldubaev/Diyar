@@ -132,6 +132,8 @@ import '../../features/menu/data/datasources/remote_datasource/menu_remote_data_
     as _i433;
 import '../../features/menu/data/repositories/menu_repository.dart' as _i1024;
 import '../../features/menu/domain/domain.dart' as _i872;
+import '../../features/menu/domain/usecases/get_popular_products_usecase.dart'
+    as _i1045;
 import '../../features/menu/menu.dart' as _i660;
 import '../../features/menu/presentation/bloc/menu_bloc.dart' as _i395;
 import '../../features/menu/presentation/cubit/popular_cubit.dart' as _i739;
@@ -170,6 +172,8 @@ import '../../features/profile/data/datasources/profile_remote_data_source.dart'
 import '../../features/profile/data/repositories/profile_repository.dart'
     as _i361;
 import '../../features/profile/presentation/cubit/profile_cubit.dart' as _i36;
+import '../../features/profile/data/usecases/get_profile_usecase.dart'
+    as _i1046;
 import '../../features/profile/profile.dart' as _i315;
 import '../../features/security/data/datasources/local/security_local_data_source.dart'
     as _i744;
@@ -475,6 +479,10 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i36.ProfileCubit(gh<_i315.ProfileRepository>()));
     gh.factory<_i573.AboutUsCubit>(
         () => _i573.AboutUsCubit(gh<_i168.AboutUsRepository>()));
+    gh.factory<_i661.UserMapCubit>(() => _i661.UserMapCubit(
+          gh<_i659.PriceRepository>(),
+          gh<_i835.AppLocation>(),
+        ));
     gh.lazySingleton<_i1040.BiometricAuthService>(
         () => _i1044.BiometricAuthServiceImpl(
               gh<_i152.LocalAuthentication>(),
@@ -487,14 +495,14 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i31.GetNewsUseCase(gh<_i477.HomeContentRepository>()));
     gh.factory<_i608.GetSalesUseCase>(
         () => _i608.GetSalesUseCase(gh<_i477.HomeContentRepository>()));
+    gh.factory<_i1045.GetPopularProductsUseCase>(
+        () => _i1045.GetPopularProductsUseCase(gh<_i872.MenuRepository>()));
+    gh.factory<_i1046.GetProfileUseCase>(
+        () => _i1046.GetProfileUseCase(gh<_i315.ProfileRepository>()));
     gh.factory<_i792.SettingsCubit>(
         () => _i792.SettingsCubit(gh<_i635.SettingsRepository>()));
     gh.lazySingleton<_i54.PickUpRepositories>(
         () => _i123.PickUpRepository(gh<_i54.RemotePickUpDataSource>()));
-    gh.factory<_i661.UserMapCubit>(() => _i661.UserMapCubit(
-          gh<_i659.PriceRepository>(),
-          gh<_i835.AppLocation>(),
-        ));
     gh.lazySingleton<_i408.HistoryRepository>(
         () => _i178.HistoryRepositoryImpl(gh<_i368.HistoryReDatasource>()));
     gh.factory<_i236.OrderDetailCubit>(
@@ -518,6 +526,11 @@ extension GetItInjectableX on _i174.GetIt {
         ));
     gh.factory<_i232.HistoryCubit>(
         () => _i232.HistoryCubit(gh<_i408.HistoryRepository>()));
+    gh.factory<_i370.PickUpCubit>(() => _i370.PickUpCubit(
+          gh<_i1043.PickUpRepositories>(),
+          gh<_i1043.CreatePickupOrderFromCartUseCase>(),
+          gh<_i1043.CalculateMinimumTimeUseCase>(),
+        ));
     gh.factory<_i789.OpenBankingCubit>(() => _i789.OpenBankingCubit(
           gh<_i429.CreatePayLinkUsecase>(),
           gh<_i848.IPaymentStatusSignalRService>(),
@@ -528,11 +541,6 @@ extension GetItInjectableX on _i174.GetIt {
         ));
     gh.lazySingleton<_i411.TemplateRepository>(() =>
         _i843.TemplateRepositoryImpl(gh<_i251.TemplateRemoteDataSource>()));
-    gh.factory<_i370.PickUpCubit>(() => _i370.PickUpCubit(
-          gh<_i1043.PickUpRepositories>(),
-          gh<_i1043.CreatePickupOrderFromCartUseCase>(),
-          gh<_i1043.CalculateMinimumTimeUseCase>(),
-        ));
     gh.factory<_i110.CurierCubit>(
         () => _i110.CurierCubit(gh<_i566.CurierRepository>()));
     gh.factory<_i302.SignInCubit>(() => _i302.SignInCubit(
@@ -548,6 +556,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i812.HomeContentCubit>(() => _i812.HomeContentCubit(
           getNewsUseCase: gh<_i31.GetNewsUseCase>(),
           getSalesUseCase: gh<_i608.GetSalesUseCase>(),
+          getPopularProductsUseCase: gh<_i1045.GetPopularProductsUseCase>(),
+          getActiveOrdersUseCase: gh<_i31.GetActiveOrdersUseCase>(),
+          getProfileUseCase: gh<_i1046.GetProfileUseCase>(),
         ));
     gh.factory<_i968.UpdateTemplateUseCase>(
         () => _i968.UpdateTemplateUseCase(gh<_i411.TemplateRepository>()));

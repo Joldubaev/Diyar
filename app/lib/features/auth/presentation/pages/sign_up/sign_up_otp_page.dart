@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
+import 'package:diyar/core/di/injectable_config.dart' as di;
 import 'package:diyar/features/auth/domain/domain.dart';
 import 'package:diyar/features/auth/presentation/cubit/sign_up/sign_up_cubit.dart';
 import 'package:flutter/material.dart';
@@ -76,7 +77,9 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> with TimerMixin<SignUpOtp
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SignUpCubit, SignUpState>(
+    return BlocProvider(
+      create: (_) => di.sl<SignUpCubit>()..sendVerificationCode(widget.user.phone),
+      child: BlocListener<SignUpCubit, SignUpState>(
       listener: (context, state) {
         if (state is VerifyCodeSuccess) {
           context.router.push(
@@ -137,6 +140,7 @@ class _SignUpOtpPageState extends State<SignUpOtpPage> with TimerMixin<SignUpOtp
             ),
           ),
         ),
+      ),
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:diyar/features/app_init/domain/usecases/check_authentication_status_usecase.dart';
 import 'package:diyar/features/auth/domain/usecases/refresh_token_if_needed_usecase.dart';
+import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
 

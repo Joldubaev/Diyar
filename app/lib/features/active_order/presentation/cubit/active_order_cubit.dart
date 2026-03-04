@@ -14,10 +14,13 @@ part 'active_order_state.dart';
 
 @injectable
 class ActiveOrderCubit extends Cubit<ActiveOrderState> {
+  static const _statusDebounceMs = 2000;
+
   final GetActiveOrdersUseCase _getActiveOrdersUseCase;
   final CancelOrderUseCase _cancelOrderUseCase;
   final OrderStatusService _statusService;
   StreamSubscription? _statusSubscription;
+  DateTime? _lastStatusEmit;
 
   ActiveOrderCubit(
     this._getActiveOrdersUseCase,
@@ -52,7 +55,13 @@ class ActiveOrderCubit extends Cubit<ActiveOrderState> {
       (newStatuses) {
         if (isClosed) return;
 
-        // Используем локальную переменную для фиксации состояния
+        final now = DateTime.now();
+        if (_lastStatusEmit != null &&
+            now.difference(_lastStatusEmit!).inMilliseconds < _statusDebounceMs) {
+          return;
+        }
+        _lastStatusEmit = now;
+
         final currentState = state;
         if (currentState is ActiveOrdersLoaded) {
           final updatedOrders = currentState.orders.map((order) {

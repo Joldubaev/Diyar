@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/common/common.dart';
 import 'package:diyar/core/core.dart';
+import 'package:diyar/core/di/injectable_config.dart' as di;
 import 'package:diyar/features/auth/domain/domain.dart';
 import 'package:diyar/features/auth/presentation/cubit/sign_up/sign_up_cubit.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,9 @@ class _CheckPhoneNumberPageState extends State<CheckPhoneNumberPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return BlocListener<SignUpCubit, SignUpState>(
+    return BlocProvider(
+      create: (_) => di.sl<SignUpCubit>(),
+      child: BlocListener<SignUpCubit, SignUpState>(
       listener: (context, state) {
         if (state is CheckPhoneFailure) {
           SnackBarMessage().showErrorSnackBar(
@@ -135,6 +138,7 @@ class _CheckPhoneNumberPageState extends State<CheckPhoneNumberPage> {
             ),
           ),
         ),
+      ),
       ),
     );
   }

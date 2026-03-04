@@ -11,21 +11,41 @@ class ProfileCubit extends Cubit<ProfileState> {
   final ProfileRepository _userRepository;
   ProfileCubit(this._userRepository) : super(ProfileInitial());
 
+  static const _cacheDuration = Duration(minutes: 5);
+
+  DateTime? _lastLoaded;
+  bool _isLoading = false;
+
   UserProfileModel? user;
 
-  Future<void> getUser() async {
+  Future<void> getUser({bool force = false}) async {
     final isAuth = UserHelper.isAuth();
     if (!isAuth) return;
 
+    if (_isLoading) return;
+
+    if (!force &&
+        _lastLoaded != null &&
+        DateTime.now().difference(_lastLoaded!) < _cacheDuration) {
+      return;
+    }
+
+    _isLoading = true;
     emit(ProfileGetLoading());
-    final result = await _userRepository.getUser();
-    result.fold(
-      (failure) => emit(ProfileGetError()),
-      (loadedUser) {
-        user = loadedUser;
-        emit(ProfileGetLoaded(loadedUser));
-      },
-    );
+
+    try {
+      final result = await _userRepository.getUser();
+      result.fold(
+        (failure) => emit(ProfileGetError()),
+        (loadedUser) {
+          user = loadedUser;
+          emit(ProfileGetLoaded(loadedUser));
+          _lastLoaded = DateTime.now();
+        },
+      );
+    } finally {
+      _isLoading = false;
+    }
   }
 
   Future<void> deleteUser() async {

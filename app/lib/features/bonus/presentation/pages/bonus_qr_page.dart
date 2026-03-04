@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:diyar/core/di/injectable_config.dart' as di;
 import 'package:diyar/features/bonus/bonus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,7 +10,9 @@ class BonusQrPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocProvider(
+      create: (_) => di.sl<BonusCubit>()..generateQr(),
+      child: Scaffold(
       appBar: AppBar(title: const Text('Мой QR')),
       body: SafeArea(
         child: BlocBuilder<BonusCubit, BonusState>(
@@ -28,6 +31,7 @@ class BonusQrPage extends StatelessWidget {
           },
         ),
       ),
+    ),
     );
   }
 

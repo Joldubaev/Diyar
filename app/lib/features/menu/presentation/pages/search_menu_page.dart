@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/common/components/components.dart';
 import 'package:diyar/core/core.dart';
+import 'package:diyar/core/di/injectable_config.dart' as di;
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/menu/menu.dart';
 import 'package:easy_debounce/easy_debounce.dart';
@@ -14,7 +15,9 @@ class SearchMenuPage extends StatelessWidget {
   const SearchMenuPage({super.key});
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocProvider(
+      create: (_) => di.sl<MenuBloc>(),
+      child: Scaffold(
       appBar: AppBar(
         title: Text(
           context.l10n.searchMeal,
@@ -116,6 +119,7 @@ class SearchMenuPage extends StatelessWidget {
           ),
         ),
       ),
+    ),
     );
   }
 }

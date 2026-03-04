@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/common/components/components.dart';
 import 'package:diyar/core/core.dart';
+import 'package:diyar/core/di/injectable_config.dart' as di;
 import 'package:diyar/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,10 +14,9 @@ class ActiveOrderPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    // Запускаем загрузку только при создании страницы
-    context.read<ActiveOrderCubit>().getActiveOrders();
-
-    return Scaffold(
+    return BlocProvider(
+      create: (_) => di.sl<ActiveOrderCubit>()..getActiveOrders(),
+      child: Scaffold(
       appBar: AppBar(title: Text(context.l10n.activeOrders)),
       body: BlocBuilder<ActiveOrderCubit, ActiveOrderState>(
         builder: (context, state) {
@@ -40,6 +40,7 @@ class ActiveOrderPage extends StatelessWidget {
           };
         },
       ),
+    ),
     );
   }
 }

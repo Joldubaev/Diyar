@@ -4,9 +4,10 @@ import 'package:auto_route/auto_route.dart';
 import 'package:diyar/common/common.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/auth/auth.dart';
+import 'package:diyar/features/auth/presentation/cubit/sign_in/sign_in_cubit.dart';
 import 'package:diyar/features/curier/curier.dart';
 import 'package:diyar/features/curier/presentation/widgets/drawer/custom_drawer.dart';
-import 'package:diyar/core/di/injectable_config.dart';
+import 'package:diyar/core/di/injectable_config.dart' as di;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -22,13 +23,13 @@ class CurierPage extends StatefulWidget {
 }
 
 class _CurierPageState extends State<CurierPage> {
-  final _mapService = sl<MapService>();
+  final _mapService = di.sl<MapService>();
 
   @override
   void initState() {
     super.initState();
     log('[CurierPage] initState: Инициализация страницы');
-    _initializeData();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _initializeData());
   }
 
   void _initializeData() {
@@ -54,7 +55,12 @@ class _CurierPageState extends State<CurierPage> {
     final theme = Theme.of(context);
     final l10n = context.l10n;
 
-    return Scaffold(
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => di.sl<CurierCubit>()),
+        BlocProvider(create: (_) => di.sl<SignInCubit>()),
+      ],
+      child: Scaffold(
       appBar: AppBar(
         backgroundColor: theme.colorScheme.primary,
         title: Text(l10n.activeOrders, style: const TextStyle(color: Colors.white)),
@@ -202,6 +208,7 @@ class _CurierPageState extends State<CurierPage> {
         ),
       ),
       bottomSheet: _buildRefreshButton(theme),
+    ),
     );
   }
 

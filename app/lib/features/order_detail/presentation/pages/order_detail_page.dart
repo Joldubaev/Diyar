@@ -2,9 +2,10 @@ import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:diyar/common/common.dart';
 import 'package:diyar/core/core.dart';
+import 'package:diyar/core/di/injectable_config.dart' as di;
 import 'package:diyar/features/active_order/active_order.dart';
-import 'package:diyar/features/history/history.dart';
 import 'package:diyar/features/curier/curier.dart';
+import 'package:diyar/features/history/history.dart';
 import 'package:diyar/features/order_detail/order_detail.dart';
 import 'package:diyar/features/order_detail/presentation/widget/adress_grid_widget.dart';
 import 'package:flutter/material.dart';
@@ -25,17 +26,25 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   @override
   void initState() {
     super.initState();
-    // Загружаем детали заказа через API
-    final orderNumber = int.tryParse(widget.orderNumber);
-    if (orderNumber != null) {
-      _hasTriedApi = true;
-      context.read<OrderDetailCubit>().getOrderDetail(orderNumber: orderNumber);
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final orderNumber = int.tryParse(widget.orderNumber);
+      if (orderNumber != null && mounted) {
+        setState(() => _hasTriedApi = true);
+        context.read<OrderDetailCubit>().getOrderDetail(orderNumber: orderNumber);
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => di.sl<OrderDetailCubit>()),
+        BlocProvider(create: (_) => di.sl<ActiveOrderCubit>()),
+        BlocProvider(create: (_) => di.sl<HistoryCubit>()),
+        BlocProvider(create: (_) => di.sl<CurierCubit>()),
+      ],
+      child: Scaffold(
       appBar: AppBar(title: Text(context.l10n.orderDetails)),
       body: BlocBuilder<OrderDetailCubit, OrderDetailState>(
         builder: (context, state) {
@@ -61,6 +70,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           return _buildFallbackSearch();
         },
       ),
+    ),
     );
   }
 

@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
+import 'package:diyar/core/di/injectable_config.dart' as di;
 import 'package:diyar/features/about_us/domain/domain.dart';
 import 'package:diyar/features/features.dart';
 import 'package:flutter/material.dart';
@@ -19,14 +20,18 @@ class TerasaPageState extends State<TerasaPage> {
 
   @override
   void initState() {
-    context.read<AboutUsCubit>().getAboutUs(type: 'ТЕРАССА');
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => context.read<AboutUsCubit>().getAboutUs(type: 'ТЕРАССА'),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Scaffold(
+    return BlocProvider(
+      create: (_) => di.sl<AboutUsCubit>(),
+      child: Scaffold(
       appBar: AppBar(
         backgroundColor: theme.colorScheme.primary,
         title: Text('Терасса', style: Theme.of(context).textTheme.titleMedium!.copyWith(color: AppColors.white)),
@@ -58,6 +63,7 @@ class TerasaPageState extends State<TerasaPage> {
           return CustomAboutWidget(model: model!);
         },
       ),
+    ),
     );
   }
 }

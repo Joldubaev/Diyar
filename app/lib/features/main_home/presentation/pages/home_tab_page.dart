@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:diyar/common/components/components.dart' show showAddressConfirmBottomSheet;
 import 'package:diyar/common/components/text/row_text_widget.dart';
 import 'package:diyar/core/utils/storage/address_storage_service.dart';
+import 'package:diyar/features/active_order/presentation/widgets/banner_content_widget.dart';
 import 'package:diyar/features/features.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/core/di/injectable_config.dart';
@@ -24,20 +25,19 @@ class _HomeTabPageState extends State<HomeTabPage> {
   @override
   void initState() {
     super.initState();
-    _initializeData();
     _loadSavedAddress();
     _checkAddressConfirmation();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _loadHome());
   }
 
-  // --- Логика инициализации ---
-  Future<void> _initializeData() async {
-    context.read<PopularCubit>().getPopularProducts();
-    context.read<ProfileCubit>().getUser();
-    context.read<HomeContentCubit>().getSales();
-    context.read<HomeContentCubit>().getNews();
-    if (UserHelper.isAuth()) {
-      context.read<ActiveOrderCubit>().getActiveOrders();
-    }
+  /// Единственная точка загрузки данных главной — через HomeContentCubit и UseCase.
+  Future<void> _loadHome() async {
+    if (!mounted) return;
+    final isAuth = UserHelper.isAuth();
+    await context.read<HomeContentCubit>().loadHome(
+          loadActiveOrders: isAuth,
+          loadProfile: isAuth,
+        );
   }
 
   void _loadSavedAddress() {
@@ -86,7 +86,7 @@ class _HomeTabPageState extends State<HomeTabPage> {
       ),
       body: SafeArea(
         child: RefreshIndicator(
-          onRefresh: _initializeData,
+          onRefresh: _loadHome,
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -95,7 +95,7 @@ class _HomeTabPageState extends State<HomeTabPage> {
               children: [
                 const _StoriesSection(),
                 const _ActiveOrdersSection(),
-                const BonusCardWidget(),
+                const _BonusCardSection(),
                 const SizedBox(height: 20),
                 _PopularFoodSection(),
               ],
@@ -115,28 +115,51 @@ class _StoriesSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeContentCubit, HomeContentState>(
-      buildWhen: (_, current) => current is GetNewsLoaded || current is GetNewsLoading,
+      buildWhen: (prev, curr) =>
+          curr is HomeContentLoading || curr is HomeContentLoaded || curr is GetNewsLoaded || curr is GetNewsLoading,
       builder: (context, state) {
-        if (state is GetNewsLoading) return const SizedBox(height: 115);
-
-        if (state is GetNewsLoaded && state.news.isNotEmpty) {
-          final items = state.news
-              .where((e) => e.photoLink?.isNotEmpty ?? false)
-              .toList()
-              .asMap()
-              .entries
-              .map((e) => DiyarStoryItem(
-                    id: e.value.id ?? e.key.toString(),
-                    cardImageLink: e.value.photoLink!,
-                    cardLabel: e.value.name ?? '',
-                    storyPagesImages: [e.value.photoLink!],
-                    storyPageDuration: const [Duration(seconds: 5)],
-                  ))
-              .toList();
-
-          return items.isEmpty ? const SizedBox.shrink() : MqStoryItemsWidget(items: items);
+        if (state is HomeContentLoading || state is GetNewsLoading) {
+          return const SizedBox(height: 115);
         }
-        return const SizedBox.shrink();
+
+        final news = state is HomeContentLoaded
+            ? state.news
+            : state is GetNewsLoaded
+                ? state.news
+                : <NewsEntity>[];
+        if (news.isEmpty) return const SizedBox.shrink();
+
+        final items = news
+            .where((e) => e.photoLink?.isNotEmpty ?? false)
+            .toList()
+            .asMap()
+            .entries
+            .map((e) => DiyarStoryItem(
+                  id: e.value.id ?? e.key.toString(),
+                  cardImageLink: e.value.photoLink!,
+                  cardLabel: e.value.name ?? '',
+                  storyPagesImages: [e.value.photoLink!],
+                  storyPageDuration: const [Duration(seconds: 5)],
+                ))
+            .toList();
+
+        return items.isEmpty ? const SizedBox.shrink() : MqStoryItemsWidget(items: items);
+      },
+    );
+  }
+}
+
+class _BonusCardSection extends StatelessWidget {
+  const _BonusCardSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<HomeContentCubit, HomeContentState>(
+      buildWhen: (prev, curr) =>
+          curr is HomeContentLoading || curr is HomeContentLoaded,
+      builder: (context, state) {
+        final profile = state is HomeContentLoaded ? state.profile : null;
+        return BonusCardWidget(profile: profile);
       },
     );
   }
@@ -147,16 +170,19 @@ class _ActiveOrdersSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ActiveOrderCubit, ActiveOrderState>(
-      buildWhen: (_, current) => current is ActiveOrdersLoaded || current is ActiveOrdersLoading,
+    return BlocBuilder<HomeContentCubit, HomeContentState>(
+      buildWhen: (prev, curr) => curr is HomeContentLoading || curr is HomeContentLoaded,
       builder: (context, state) {
-        if (state is ActiveOrdersLoaded && state.orders.isNotEmpty) {
-          return const Padding(
-            padding: EdgeInsets.only(bottom: 10),
-            child: ActiveOrdersBannerWidget(),
-          );
+        if (state is! HomeContentLoaded || state.activeOrders.isEmpty) {
+          return const SizedBox.shrink();
         }
-        return const SizedBox.shrink();
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: BannerContent(
+            ordersCount: state.activeOrders.length,
+            onTap: () => context.router.push(const ActiveOrderRoute()),
+          ),
+        );
       },
     );
   }
@@ -165,13 +191,11 @@ class _ActiveOrdersSection extends StatelessWidget {
 class _PopularFoodSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<PopularCubit, PopularState>(
-      listener: (context, state) {
-        if (state is PopularError) context.showSnack(state.message, isError: true);
-      },
+    return BlocBuilder<HomeContentCubit, HomeContentState>(
+      buildWhen: (prev, curr) => curr is HomeContentLoading || curr is HomeContentLoaded,
       builder: (context, state) {
-        final products = state is PopularLoaded ? state.products : <FoodEntity>[];
-        final isLoading = state is PopularLoading;
+        final isLoading = state is HomeContentLoading;
+        final products = state is HomeContentLoaded ? state.popularProducts : <FoodEntity>[];
 
         final theme = Theme.of(context);
         return Container(

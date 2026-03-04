@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:diyar/features/curier/curier.dart';
 import 'package:diyar/features/curier/domain/domain.dart';
+import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 
 part 'curier_state.dart';
