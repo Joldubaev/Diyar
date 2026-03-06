@@ -103,6 +103,7 @@ class TemplateMapper {
 
   /// Очищает номер телефона от нецифровых символов
   static String _cleanPhoneNumber(String phone) {
+    // ignore: deprecated_member_use - RegExp для удаления нецифровых символов
     return phone.replaceAll(RegExp(r'[^0-9]'), '');
   }
 }

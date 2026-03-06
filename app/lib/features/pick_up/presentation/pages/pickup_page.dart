@@ -26,6 +26,8 @@ class PickupFormPage extends StatefulWidget {
 }
 
 class _PickupFormPageState extends State<PickupFormPage> {
+  late final PickUpCubit _pickUpCubit = di.sl<PickUpCubit>();
+
   final _formKey = GlobalKey<FormState>();
   final _userNameController = TextEditingController();
   final _phoneController = TextEditingController(text: '+996');
@@ -41,24 +43,36 @@ class _PickupFormPageState extends State<PickupFormPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) => _initializeForm());
   }
 
-  void _initializeForm() {
-    context.read<ProfileCubit>().getUser();
-    final profileCubit = context.read<ProfileCubit>();
-    final userName = profileCubit.user?.userName ?? '';
-    final userPhone = profileCubit.user?.phone ?? '+996';
+  Future<void> _initializeForm() async {
+    // Сразу инициализируем форму пикапа (не ждём профиль)
+    _pickUpCubit.initializeForm(
+      userName: '',
+      userPhone: '+996',
+      totalPrice: widget.totalPrice,
+    );
 
-    _userNameController.text = userName;
-    _phoneController.text = userPhone;
-
-    context.read<PickUpCubit>().initializeForm(
-          userName: userName,
-          userPhone: userPhone,
-          totalPrice: widget.totalPrice,
-        );
+    // Профиль — опционально, для подстановки имени/телефона
+    try {
+      final profileCubit = context.read<ProfileCubit>();
+      await profileCubit.getUser();
+      if (!mounted) return;
+      final userName = profileCubit.user?.userName ?? '';
+      final userPhone = profileCubit.user?.phone ?? '+996';
+      if (userName.isNotEmpty || (userPhone != '+996' && userPhone.isNotEmpty)) {
+        setState(() {
+          _userNameController.text = userName;
+          _phoneController.text = userPhone;
+        });
+        _pickUpCubit.updateFormData(userName: userName, userPhone: userPhone);
+      }
+    } catch (_) {
+      // ProfileCubit недоступен или ошибка — форма работает с пустыми полями
+    }
   }
 
   @override
   void dispose() {
+    _pickUpCubit.close();
     _userNameController.dispose();
     _phoneController.dispose();
     _timeController.dispose();
@@ -68,7 +82,7 @@ class _PickupFormPageState extends State<PickupFormPage> {
   }
 
   void _showConfirmBottomSheet(BuildContext context, PaymentTypeDelivery paymentType) {
-    final pickUpCubit = context.read<PickUpCubit>();
+    final pickUpCubit = _pickUpCubit;
     final currentState = pickUpCubit.state;
     if (currentState is! PickUpFormLoaded) return;
 
@@ -89,15 +103,15 @@ class _PickupFormPageState extends State<PickupFormPage> {
           paymentType: paymentType,
           onConfirmTap: () {
             // Отправляем заказ
-            context.read<PickUpCubit>().createPickupOrder(
-                  cart: widget.cart,
-                  userName: _userNameController.text,
-                  phone: _phoneController.text,
-                  time: _timeController.text,
-                  comment: _commentController.text,
-                  paymentMethod: paymentType.name,
-                  dishCount: widget.dishCount,
-                );
+            _pickUpCubit.createPickupOrder(
+              cart: widget.cart,
+              userName: _userNameController.text,
+              phone: _phoneController.text,
+              time: _timeController.text,
+              comment: _commentController.text,
+              paymentMethod: paymentType.name,
+              dishCount: widget.dishCount,
+            );
           },
         ),
       ),
@@ -105,7 +119,7 @@ class _PickupFormPageState extends State<PickupFormPage> {
   }
 
   void _selectTime(BuildContext context) {
-    final cubit = context.read<PickUpCubit>();
+    final cubit = _pickUpCubit;
     final minimumTime = cubit.getMinimumTime();
     DateTime initialTime = minimumTime;
 
@@ -144,139 +158,139 @@ class _PickupFormPageState extends State<PickupFormPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = context.l10n;
-    return BlocProvider(
-      create: (_) => di.sl<PickUpCubit>(),
+    return BlocProvider.value(
+      value: _pickUpCubit,
       child: BlocConsumer<PickUpCubit, PickUpState>(
-      listener: (context, state) {
-        if (state is CreatePickUpOrderLoaded) {
-          context.read<CartBloc>().add(ClearCart());
-        //   final paymentType = PaymentTypeDelivery.values.firstWhere(
-        //     (e) => e.name == state.paymentType,
-        //     orElse: () => PaymentTypeDelivery.cash,
-        //   );
-        //   if (paymentType == PaymentTypeDelivery.online) {
-        //     context.router.push(
-        //       PaymentsRoute(
-        //         orderNumber: state.message,
-        //         amount: state.totalOrderCost.toString(), // Используем сумму с учетом бонусов
-        //       ),
-        //     );
-        //     Navigator.of(context).pop();
-        //   } else {
-        //     _showSuccessDialog(context, theme, l10n);
-        //   }
-        // } else if (state is CreatePickUpOrderError) {
-        //   showToast(state.message, isError: true);
-        }
-      },
-      builder: (context, state) {
-        final paymentType = _getPaymentTypeFromState(state);
-        return Scaffold(
-          appBar: AppBar(
-            backgroundColor: theme.colorScheme.primary,
-            title: Text(
-              l10n.pickup,
-              style: theme.textTheme.titleSmall!.copyWith(
-                color: theme.colorScheme.onTertiaryFixed,
-              ),
-            ),
-            leading: IconButton(
-                icon: Icon(
-                  Icons.arrow_back_ios_sharp,
+        listener: (context, state) {
+          if (state is CreatePickUpOrderLoaded) {
+            context.read<CartBloc>().add(ClearCart());
+            //   final paymentType = PaymentTypeDelivery.values.firstWhere(
+            //     (e) => e.name == state.paymentType,
+            //     orElse: () => PaymentTypeDelivery.cash,
+            //   );
+            //   if (paymentType == PaymentTypeDelivery.online) {
+            //     context.router.push(
+            //       PaymentsRoute(
+            //         orderNumber: state.message,
+            //         amount: state.totalOrderCost.toString(), // Используем сумму с учетом бонусов
+            //       ),
+            //     );
+            //     Navigator.of(context).pop();
+            //   } else {
+            //     _showSuccessDialog(context, theme, l10n);
+            //   }
+            // } else if (state is CreatePickUpOrderError) {
+            //   showToast(state.message, isError: true);
+          }
+        },
+        builder: (context, state) {
+          final paymentType = _getPaymentTypeFromState(state);
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: theme.colorScheme.primary,
+              title: Text(
+                l10n.pickup,
+                style: theme.textTheme.titleSmall!.copyWith(
                   color: theme.colorScheme.onTertiaryFixed,
                 ),
-                onPressed: () => context.router.maybePop()),
-          ),
-          body: PickupFormWidget(
-            formKey: _formKey,
-            userNameController: _userNameController,
-            phoneController: _phoneController,
-            timeController: _timeController,
-            commentController: _commentController,
-            onTimeSelect: _selectTime,
-            currentPaymentType: paymentType,
-            onPaymentTypeChanged: (value) {
-              context.read<PickUpCubit>().changePaymentType(value);
-            },
-            bonusController: _bonusController,
-            useBonus: _useBonus,
-            onBonusToggleChanged: (value) {
-              setState(() {
-                _useBonus = value;
-                if (!_useBonus) {
-                  _bonusController.clear();
-                  _bonusAmount = null;
-                  // Обнуляем бонусы в cubit
-                  context.read<PickUpCubit>().setBonusAmount(null, 0.0);
-                }
-              });
-            },
-            onBonusAmountChanged: (amount) {
-              setState(() {
-                _bonusAmount = amount;
-              });
-              // Обновляем totalOrderCost в cubit
-              final profileState = context.read<ProfileCubit>().state;
-              final userBalance =
-                  (profileState is ProfileGetLoaded) ? (profileState.userModel.balance ?? 0).toDouble() : 0.0;
-              context.read<PickUpCubit>().setBonusAmount(amount, userBalance);
-            },
-            totalPrice: widget.totalPrice,
-            onConfirmTap: () {
-              if (_formKey.currentState!.validate()) {
-                // Валидация бонусов перед созданием заказа
-                double? finalBonusAmount = _bonusAmount;
-
-                // Если бонусы включены, проверяем значение из контроллера
-                if (_useBonus) {
-                  final bonusText = _bonusController.text.trim();
-                  if (bonusText.isNotEmpty) {
-                    final parsedBonus = double.tryParse(bonusText.replaceAll(',', '.'));
-                    if (parsedBonus != null && parsedBonus > 0) {
-                      finalBonusAmount = parsedBonus;
-                    }
+              ),
+              leading: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back_ios_sharp,
+                    color: theme.colorScheme.onTertiaryFixed,
+                  ),
+                  onPressed: () => context.router.maybePop()),
+            ),
+            body: PickupFormWidget(
+              formKey: _formKey,
+              userNameController: _userNameController,
+              phoneController: _phoneController,
+              timeController: _timeController,
+              commentController: _commentController,
+              onTimeSelect: _selectTime,
+              currentPaymentType: paymentType,
+              onPaymentTypeChanged: (value) {
+                context.read<PickUpCubit>().changePaymentType(value);
+              },
+              bonusController: _bonusController,
+              useBonus: _useBonus,
+              onBonusToggleChanged: (value) {
+                setState(() {
+                  _useBonus = value;
+                  if (!_useBonus) {
+                    _bonusController.clear();
+                    _bonusAmount = null;
+                    // Обнуляем бонусы в cubit
+                    context.read<PickUpCubit>().setBonusAmount(null, 0.0);
                   }
-                }
-
-                // Валидация бонусов (если они указаны)
-                if (finalBonusAmount != null && finalBonusAmount > 0) {
-                  // Проверка баланса пользователя
-                  final profileState = context.read<ProfileCubit>().state;
-                  final userBalance =
-                      (profileState is ProfileGetLoaded) ? (profileState.userModel.balance ?? 0).toDouble() : 0.0;
-
-                  if (finalBonusAmount > userBalance) {
-                    showToast('Недостаточно бонусов. Доступно: ${userBalance.toStringAsFixed(2)} сом', isError: true);
-                    return;
-                  }
-
-                  // Проверка суммы заказа - бонусы не могут превышать стоимость заказа
-                  if (finalBonusAmount > widget.totalPrice) {
-                    showToast('Сумма бонусов не может превышать стоимость заказа', isError: true);
-                    return;
-                  }
-                }
-
-                // Обновляем бонусы в cubit перед показом bottom sheet
+                });
+              },
+              onBonusAmountChanged: (amount) {
+                setState(() {
+                  _bonusAmount = amount;
+                });
+                // Обновляем totalOrderCost в cubit
                 final profileState = context.read<ProfileCubit>().state;
                 final userBalance =
                     (profileState is ProfileGetLoaded) ? (profileState.userModel.balance ?? 0).toDouble() : 0.0;
-                context.read<PickUpCubit>().setBonusAmount(finalBonusAmount, userBalance);
+                context.read<PickUpCubit>().setBonusAmount(amount, userBalance);
+              },
+              totalPrice: widget.totalPrice,
+              onConfirmTap: () {
+                if (_formKey.currentState!.validate()) {
+                  // Валидация бонусов перед созданием заказа
+                  double? finalBonusAmount = _bonusAmount;
 
-                // Получаем текущий paymentType из state
-                final currentState = context.read<PickUpCubit>().state;
-                final currentPaymentType = _getPaymentTypeFromState(currentState);
+                  // Если бонусы включены, проверяем значение из контроллера
+                  if (_useBonus) {
+                    final bonusText = _bonusController.text.trim();
+                    if (bonusText.isNotEmpty) {
+                      final parsedBonus = double.tryParse(bonusText.replaceAll(',', '.'));
+                      if (parsedBonus != null && parsedBonus > 0) {
+                        finalBonusAmount = parsedBonus;
+                      }
+                    }
+                  }
 
-                // Показываем bottom sheet с данными заказа
-                _showConfirmBottomSheet(
-                  context,
-                  currentPaymentType,
-                );
-              }
-            },
-          ),
-        );
-      },
+                  // Валидация бонусов (если они указаны)
+                  if (finalBonusAmount != null && finalBonusAmount > 0) {
+                    // Проверка баланса пользователя
+                    final profileState = context.read<ProfileCubit>().state;
+                    final userBalance =
+                        (profileState is ProfileGetLoaded) ? (profileState.userModel.balance ?? 0).toDouble() : 0.0;
+
+                    if (finalBonusAmount > userBalance) {
+                      showToast('Недостаточно бонусов. Доступно: ${userBalance.toStringAsFixed(2)} сом', isError: true);
+                      return;
+                    }
+
+                    // Проверка суммы заказа - бонусы не могут превышать стоимость заказа
+                    if (finalBonusAmount > widget.totalPrice) {
+                      showToast('Сумма бонусов не может превышать стоимость заказа', isError: true);
+                      return;
+                    }
+                  }
+
+                  // Обновляем бонусы в cubit перед показом bottom sheet
+                  final profileState = context.read<ProfileCubit>().state;
+                  final userBalance =
+                      (profileState is ProfileGetLoaded) ? (profileState.userModel.balance ?? 0).toDouble() : 0.0;
+                  context.read<PickUpCubit>().setBonusAmount(finalBonusAmount, userBalance);
+
+                  // Получаем текущий paymentType из state
+                  final currentState = context.read<PickUpCubit>().state;
+                  final currentPaymentType = _getPaymentTypeFromState(currentState);
+
+                  // Показываем bottom sheet с данными заказа
+                  _showConfirmBottomSheet(
+                    context,
+                    currentPaymentType,
+                  );
+                }
+              },
+            ),
+          );
+        },
       ),
     );
   }

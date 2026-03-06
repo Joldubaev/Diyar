@@ -9,10 +9,6 @@ enum NavigationRouteType {
   courier,
   /// Экран входа
   signIn,
-  /// Экран PIN кода
-  pinCode,
-  /// Экран установки PIN кода
-  pinCodeSetup,
 }
 
 /// Use case для определения маршрута навигации на основе роли пользователя

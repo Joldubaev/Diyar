@@ -34,7 +34,12 @@ final class BonusQrFailure extends BonusState {
 }
 
 final class BonusTransactionsLoading extends BonusState {
-  const BonusTransactionsLoading();
+  final BonusTransactionResponseEntity? previousResponse;
+
+  const BonusTransactionsLoading({this.previousResponse});
+
+  @override
+  List<Object?> get props => [previousResponse];
 }
 
 final class BonusTransactionsLoaded extends BonusState {

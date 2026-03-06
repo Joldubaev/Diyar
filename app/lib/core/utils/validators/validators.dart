@@ -1,3 +1,6 @@
+// ignore_for_file: deprecated_member_use
+// RegExp нужен для hasMatch при валидации, альтернативы нет
+
 bool isEmailValid(String email) {
   const pattern = r'^[\w-]+(\.[\w-]+)*@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,7}$';
   final regex = RegExp(pattern);

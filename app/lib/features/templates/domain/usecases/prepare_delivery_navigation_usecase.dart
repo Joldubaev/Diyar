@@ -20,7 +20,7 @@ class DeliveryNavigationData {
   });
 }
 
-/// Данные для навигации на OrderMapRoute
+/// Данные для навигации при выборе адреса (без шаблона)
 class OrderMapNavigationData {
   final List<CartItemEntity> cart;
   final int totalPrice;
@@ -67,7 +67,7 @@ class PrepareDeliveryNavigationUseCase {
     );
   }
 
-  /// Подготавливает данные для навигации на OrderMapRoute
+  /// Подготавливает данные для навигации при выборе адреса (skip шаблона)
   OrderMapNavigationData prepareOrderMap({
     required CartLoaded cartState,
   }) {

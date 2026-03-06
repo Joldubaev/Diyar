@@ -142,6 +142,7 @@ class _BonusAndTotalSectionState extends State<BonusAndTotalSection> {
                     focusNode: _bonusFocusNode,
                     keyboardType: const TextInputType.numberWithOptions(decimal: true),
                     inputFormatters: [
+                      // ignore: deprecated_member_use - FilteringTextInputFormatter.allow требует RegExp
                       FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                     ],
                     onSubmitted: _onBonusAmountSubmitted,

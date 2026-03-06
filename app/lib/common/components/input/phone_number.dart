@@ -96,10 +96,11 @@ class SpecialMaskTextInputFormatter extends MaskTextInputFormatter {
   static String maskA = "S.####";
   static String maskB = "S.######";
 
+  // ignore: deprecated_member_use - mask_text_input_formatter требует Map<String, RegExp>
+  static final _filter = {"#": RegExp('[0-9]'), "S": RegExp('[AB]')};
+
   SpecialMaskTextInputFormatter({super.initialText})
-      : super(
-            mask: maskA,
-            filter: {"#": RegExp('[0-9]'), "S": RegExp('[AB]')});
+      : super(mask: maskA, filter: _filter);
 
   @override
   TextEditingValue formatEditUpdate(

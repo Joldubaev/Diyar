@@ -44,7 +44,8 @@ class BonusCubit extends Cubit<BonusState> {
       return;
     }
 
-    emit(BonusTransactionsLoading());
+    final previousResponse = state is BonusTransactionsLoaded ? (state as BonusTransactionsLoaded).response : null;
+    emit(BonusTransactionsLoading(previousResponse: previousResponse));
     final result = await _bonusRepository.getBonusTransactions(
       page: page,
       pageSize: pageSize,

@@ -16,7 +16,6 @@ class BonusTransactionsPage extends StatefulWidget {
 }
 
 class _BonusTransactionsPageState extends State<BonusTransactionsPage> {
-  BonusTransactionResponseEntity? response;
   int currentPage = 1;
   final int pageSize = 50;
 
@@ -82,11 +81,7 @@ class _BonusTransactionsPageState extends State<BonusTransactionsPage> {
         ),
         body: BlocConsumer<BonusCubit, BonusState>(
           listener: (context, state) {
-            if (state is BonusTransactionsLoaded) {
-              setState(() {
-                response = state.response;
-              });
-            } else if (state is BonusTransactionsError) {
+            if (state is BonusTransactionsError) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(state.message),
@@ -96,7 +91,13 @@ class _BonusTransactionsPageState extends State<BonusTransactionsPage> {
             }
           },
           builder: (context, state) {
-            if (state is BonusTransactionsLoading && response == null) {
+            final response = state is BonusTransactionsLoaded
+                ? state.response
+                : state is BonusTransactionsLoading
+                    ? state.previousResponse
+                    : null;
+
+            if (response == null && state is BonusTransactionsLoading) {
               return const Center(child: CircularProgressIndicator());
             }
 

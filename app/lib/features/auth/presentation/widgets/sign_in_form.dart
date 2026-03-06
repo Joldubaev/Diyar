@@ -64,26 +64,26 @@ class _SignInFormState extends State<SignInForm> {
                     return null;
                   },
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        AppBottomSheet.showBottomSheet(
-                          initialChildSize: 0.7,
-                          context,
-                          AuthBottomSheet(resetPasswordPhone: resedPasswordCode),
-                        );
-                      },
-                      child: Text(
-                        context.l10n.forgotPassword,
-                        style: theme.textTheme.bodyMedium!.copyWith(
-                          color: AppColors.blue,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.end,
+                //   children: [
+                //     TextButton(
+                //       onPressed: () {
+                //         AppBottomSheet.showBottomSheet(
+                //           initialChildSize: 0.7,
+                //           context,
+                //           AuthBottomSheet(resetPasswordPhone: resedPasswordCode),
+                //         );
+                //       },
+                //       child: Text(
+                //         context.l10n.forgotPassword,
+                //         style: theme.textTheme.bodyMedium!.copyWith(
+                //           color: AppColors.blue,
+                //         ),
+                //       ),
+                //     ),
+                //   ],
+                // ),
               ],
             ),
             const SizedBox(height: 40),
@@ -110,6 +110,7 @@ class _SignInFormState extends State<SignInForm> {
                       title: context.l10n.authorize,
                       onTap: () {
                         if (_formKey.currentState!.validate()) {
+                          // ignore: deprecated_member_use - RegExp для удаления нецифровых символов
                           final phone = _phoneController.text.replaceAll(RegExp(r'[^0-9]'), '');
                           final formattedPhone = phone.startsWith('996') ? phone : '996$phone';
                           context.read<SignInCubit>().sendSmsCodeForLogin(formattedPhone);
@@ -118,6 +119,7 @@ class _SignInFormState extends State<SignInForm> {
                     );
                   },
                 ),
+                const SizedBox(height: 10),
                 TextCheckButton(
                   text: context.l10n.notHaveAccount,
                   route: context.l10n.register,

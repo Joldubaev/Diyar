@@ -7,6 +7,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
+// ignore_for_file: deprecated_member_use
+// RegExp нужен для replaceAll, FilteringTextInputFormatter.allow при валидации
+
 class PickupFormWidget extends StatefulWidget {
   final GlobalKey<FormState> formKey;
   final TextEditingController phoneController;

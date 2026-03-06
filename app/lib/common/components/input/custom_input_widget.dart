@@ -7,15 +7,18 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 enum PhoneFormatType { withPlus, withoutPlus }
 
 // Добавляем форматтеры для телефона
+// ignore: deprecated_member_use - mask_text_input_formatter требует Map<String, RegExp>
+final _digitFilter = {"#": RegExp(r'[0-9]')};
+
 final phoneFormatterWithPlus = MaskTextInputFormatter(
   mask: "996#########",
-  filter: {"#": RegExp(r'[0-9]')},
+  filter: _digitFilter,
   type: MaskAutoCompletionType.lazy,
 );
 
 final phoneFormatterWithoutPlus = MaskTextInputFormatter(
   mask: "996#########",
-  filter: {"#": RegExp(r'^[a-zA-Zа-яА-ЯёЁ0-9_]+$')},
+  filter: _digitFilter,
   type: MaskAutoCompletionType.lazy,
 );
 

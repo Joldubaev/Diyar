@@ -16,6 +16,7 @@ class BaseHelper {
 
   /// Check string is email
   static bool isEmail(String email) {
+    // ignore: deprecated_member_use - RegExp нужен для hasMatch, альтернативы нет
     return RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
         .hasMatch(email);
   }

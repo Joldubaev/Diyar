@@ -54,11 +54,6 @@ class AppConst {
   static const String kCachedFoods = 'cached_foods';
   static const String kCachedPopularFoods = 'cached_popular_foods';
 
-  // pin code
-  static const pinCode = 'PIN_CODE';
-  static const setPinCode = 'SET_PIN_CODE';
-  static const biometricEnabled = 'BIOMETRIC_ENABLED';
-
   // first launch
   static const firstLaunch = 'FIRST_LAUNCH';
 
@@ -72,9 +67,6 @@ class AppConst {
 
   // yandex map key
   static const yandexMapKey = '1d3a039d-6ce6-44a2-9ad1-209ee24e3eb1';
-
-  //
- static  const  biometricPrefKey = 'biometric_enabled';
 }
 
 String generateOtpCode() {

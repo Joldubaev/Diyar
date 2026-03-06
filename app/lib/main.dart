@@ -71,6 +71,7 @@ class App extends StatelessWidget {
               routerConfig: appRoute.config(),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               locale: const Locale('ru'),
+              supportedLocales: AppLocalizations.supportedLocales,
               builder: (context, router) {
                 return KeyboardDismisser(
                   gestures: const [

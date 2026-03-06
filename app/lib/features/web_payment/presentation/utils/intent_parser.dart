@@ -2,6 +2,9 @@ import 'dart:developer' as developer;
 
 import 'package:url_launcher/url_launcher.dart';
 
+// ignore_for_file: deprecated_member_use
+// RegExp нужен для replaceFirst при парсинге intent fragment
+
 /// Парсит intent:// URL и открывает банковское приложение или fallback.
 class IntentParser {
   /// Парсит intent:// URL и возвращает true, если запуск выполнен

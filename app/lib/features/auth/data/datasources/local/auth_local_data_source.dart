@@ -5,8 +5,6 @@ import 'package:injectable/injectable.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 abstract class AuthLocalDataSource {
-  Future<String?> getPinCode();
-  Future<void> setPinCode(String pinCode);
   Future<String?> getLangFromCache();
   Future<void> logout();
   Future<void> setLangToCache(String langCode);
@@ -101,24 +99,6 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
         return TokenModel.fromJson(jsonDecode(jsonUser)).role;
       }
       return null;
-    } catch (e) {
-      throw CacheException();
-    }
-  }
-
-  @override
-  Future<String?> getPinCode() async {
-    try {
-      return prefs.getString(AppConst.pinCode);
-    } catch (e) {
-      throw CacheException();
-    }
-  }
-
-  @override
-  Future<void> setPinCode(String pinCode) async {
-    try {
-      await prefs.setString(AppConst.pinCode, pinCode);
     } catch (e) {
       throw CacheException();
     }

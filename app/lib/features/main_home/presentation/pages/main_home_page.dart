@@ -3,6 +3,7 @@ import 'package:diyar/common/common.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/core/di/injectable_config.dart' as di;
 import 'package:diyar/features/active_order/active_order.dart';
+import 'package:diyar/features/auth/presentation/cubit/sign_in/sign_in_cubit.dart';
 import 'package:diyar/features/home_content/presentation/cubit/home_content_cubit.dart';
 import 'package:diyar/features/menu/presentation/bloc/menu_bloc.dart';
 import 'package:diyar/features/menu/presentation/cubit/popular_cubit.dart';
@@ -29,6 +30,7 @@ class _MainHomePageState extends State<MainHomePage> {
         BlocProvider(create: (_) => di.sl<PopularCubit>()),
         BlocProvider(create: (_) => di.sl<HomeContentCubit>()),
         BlocProvider(create: (_) => di.sl<ActiveOrderCubit>()),
+        BlocProvider(create: (_) => di.sl<SignInCubit>()),
       ],
       child: AutoTabsRouter(
       routes: const [

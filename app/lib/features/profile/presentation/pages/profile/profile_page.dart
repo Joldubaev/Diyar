@@ -34,6 +34,18 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
+  void _showDeleteConfirmation(BuildContext context) {
+    AppAlert.showConfirmDialog(
+      context: context,
+      title: 'Удалить',
+      content: const Text('Вы уверены что хотите удалить аккаунт?'),
+      cancelText: context.l10n.no,
+      confirmText: context.l10n.yes,
+      cancelPressed: () => Navigator.pop(context),
+      confirmPressed: () => context.read<ProfileCubit>().deleteUser(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -131,12 +143,6 @@ class _ProfilePageState extends State<ProfilePage> {
                         text: context.l10n.policy,
                         onPressed: () => AppLaunch.launchURL(AppConst.terms),
                       ),
-                      Divider(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2), height: 1),
-                      SettingsTile(
-                        leading: SvgPicture.asset('assets/icons/sec.svg', height: 40),
-                        text: 'Безопасность',
-                        onPressed: () => context.pushRoute(const SecurityRoute()),
-                      ),
                     ],
                   ),
                 ),
@@ -147,29 +153,40 @@ class _ProfilePageState extends State<ProfilePage> {
                     color: Theme.of(context).colorScheme.surface,
                     borderRadius: const BorderRadius.all(Radius.circular(12)),
                   ),
-                  child: SettingsTile(
-                    leading: SvgPicture.asset('assets/icons/logout.svg', height: 40),
-                    text: context.l10n.exit,
-                    onPressed: () {
-                      AppAlert.showConfirmDialog(
-                        context: context,
-                        title: context.l10n.exit,
-                        content: Text(context.l10n.areYouSure),
-                        cancelText: context.l10n.no,
-                        confirmText: context.l10n.yes,
-                        cancelPressed: () => Navigator.pop(context),
-                        confirmPressed: () {
-                          context.read<SignInCubit>().logout().then((value) {
-                            if (context.mounted) {
-                              context.router.pushAndPopUntil(
-                                const SignInRoute(),
-                                predicate: (_) => false,
-                              );
-                            }
-                          });
+                  child: Column(
+                    children: [
+                      SettingsTile(
+                        leading: SvgPicture.asset('assets/icons/sec.svg', height: 40),
+                        text: 'Удалить аккаунт',
+                        color: Theme.of(context).colorScheme.error,
+                        onPressed: () => _showDeleteConfirmation(context),
+                      ),
+                      Divider(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2), height: 1),
+                      SettingsTile(
+                        leading: SvgPicture.asset('assets/icons/logout.svg', height: 40),
+                        text: context.l10n.exit,
+                        onPressed: () {
+                          AppAlert.showConfirmDialog(
+                            context: context,
+                            title: context.l10n.exit,
+                            content: Text(context.l10n.areYouSure),
+                            cancelText: context.l10n.no,
+                            confirmText: context.l10n.yes,
+                            cancelPressed: () => Navigator.pop(context),
+                            confirmPressed: () {
+                              context.read<SignInCubit>().logout().then((value) {
+                                if (context.mounted) {
+                                  context.router.pushAndPopUntil(
+                                    const SignInRoute(),
+                                    predicate: (_) => false,
+                                  );
+                                }
+                              });
+                            },
+                          );
                         },
-                      );
-                    },
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 30),

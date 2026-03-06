@@ -5,12 +5,14 @@ class MapWidget extends StatefulWidget {
   final List<MapObject> mapObjects;
   final Function(CameraPosition, CameraUpdateReason, bool) onCameraPositionChanged;
   final Function(YandexMapController) onMapCreated;
+  final CameraBounds? cameraBounds;
 
   const MapWidget({
     super.key,
     required this.mapObjects,
     required this.onCameraPositionChanged,
     required this.onMapCreated,
+    this.cameraBounds,
   });
 
   @override
@@ -33,6 +35,7 @@ class _MapWidgetState extends State<MapWidget> {
       mapObjects: widget.mapObjects,
       onCameraPositionChanged: widget.onCameraPositionChanged,
       onMapCreated: widget.onMapCreated,
+      cameraBounds: widget.cameraBounds ?? const CameraBounds(),
     );
   }
 }

@@ -6,7 +6,6 @@ import 'package:diyar/core/di/injectable_config.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:injectable/injectable.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
-import 'package:local_auth/local_auth.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:rest_client/rest_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -45,9 +44,6 @@ abstract class RegisterModule {
     final prefs = await SharedPreferences.getInstance();
     return await LocalStorage.getInstance(prefs);
   }
-
-  @lazySingleton
-  LocalAuthentication get localAuth => LocalAuthentication();
 
   @lazySingleton
   InternetConnection get internetConnection => InternetConnection();

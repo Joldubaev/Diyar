@@ -40,6 +40,29 @@ class _CartProviders extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final homeCubit = context.maybeRead<HomeContentCubit>();
+    final listeners = <BlocListener>[
+      BlocListener<CartBloc, CartState>(
+        listener: (context, state) {
+          if (state is CartLoaded) {
+            context.read<CartPriceCubit>().updateCartItems(state.items);
+          }
+        },
+      ),
+    ];
+    if (homeCubit != null) {
+      listeners.add(
+        BlocListener<HomeContentCubit, HomeContentState>(
+          bloc: homeCubit,
+          listener: (context, state) {
+            if (state is GetSalesLoaded) {
+              context.read<CartPriceCubit>().updateDiscountFromSales(state.sales);
+            }
+          },
+        ),
+      );
+    }
+
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -59,22 +82,7 @@ class _CartProviders extends StatelessWidget {
         ),
       ],
       child: MultiBlocListener(
-        listeners: [
-          BlocListener<HomeContentCubit, HomeContentState>(
-            listener: (context, state) {
-              if (state is GetSalesLoaded) {
-                context.read<CartPriceCubit>().updateDiscountFromSales(state.sales);
-              }
-            },
-          ),
-          BlocListener<CartBloc, CartState>(
-            listener: (context, state) {
-              if (state is CartLoaded) {
-                context.read<CartPriceCubit>().updateCartItems(state.items);
-              }
-            },
-          ),
-        ],
+        listeners: listeners,
         child: child,
       ),
     );

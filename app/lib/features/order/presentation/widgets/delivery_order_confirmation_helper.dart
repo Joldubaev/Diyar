@@ -1,5 +1,7 @@
+import 'package:diyar/core/di/injectable_config.dart' as di;
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/order/order.dart';
+import 'package:diyar/features/templates/presentation/cubit/templates_list_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,8 +23,11 @@ class DeliveryOrderConfirmationHelper {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (bottomSheetContext) => BlocProvider.value(
-        value: deliveryFormCubit,
+      builder: (bottomSheetContext) => MultiBlocProvider(
+        providers: [
+          BlocProvider.value(value: deliveryFormCubit),
+          BlocProvider(create: (_) => di.sl<TemplatesListCubit>()),
+        ],
         child: CustomBottomSheet(
           cart: cart,
         ),

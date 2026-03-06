@@ -13,6 +13,9 @@ import 'package:diyar/core/di/injectable_config.dart' as di;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+// ignore_for_file: deprecated_member_use
+// RegExp нужен для firstMatch и групп захвата при извлечении номера дома
+
 @RoutePage()
 class DeliveryFormPage extends StatelessWidget {
   final List<CartItemEntity> cart;
@@ -186,8 +189,11 @@ class _DeliveryFormViewState extends State<DeliveryFormView> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (bottomSheetContext) => BlocProvider.value(
-        value: deliveryFormCubit,
+      builder: (bottomSheetContext) => MultiBlocProvider(
+        providers: [
+          BlocProvider.value(value: deliveryFormCubit),
+          BlocProvider(create: (_) => di.sl<TemplatesListCubit>()),
+        ],
         child: CustomBottomSheet(
           cart: widget.cart,
         ),
