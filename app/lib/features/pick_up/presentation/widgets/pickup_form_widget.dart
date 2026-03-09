@@ -170,10 +170,10 @@ class _PickupFormWidgetState extends State<PickupFormWidget> {
             },
           ),
           const SizedBox(height: 16),
-          // PaymentTypeSelector(
-          //   currentPaymentType: currentPaymentType,
-          //   onChanged: onPaymentTypeChanged,
-          // ),
+          PaymentTypeSelector(
+            currentPaymentType: widget.currentPaymentType,
+            onChanged: widget.onPaymentTypeChanged,
+          ),
           const SizedBox(height: 16),
           // Секция с бонусами
           BlocBuilder<ProfileCubit, ProfileState>(

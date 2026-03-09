@@ -22,17 +22,15 @@ class OrderDetailPage extends StatefulWidget {
 
 class _OrderDetailPageState extends State<OrderDetailPage> {
   bool _hasTriedApi = false;
+  bool _initScheduled = false;
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final orderNumber = int.tryParse(widget.orderNumber);
-      if (orderNumber != null && mounted) {
-        setState(() => _hasTriedApi = true);
-        context.read<OrderDetailCubit>().getOrderDetail(orderNumber: orderNumber);
-      }
-    });
+  void _initializeOrderDetail(BuildContext context) {
+    if (!mounted) return;
+    final orderNumber = int.tryParse(widget.orderNumber);
+    if (orderNumber != null) {
+      setState(() => _hasTriedApi = true);
+      context.read<OrderDetailCubit>().getOrderDetail(orderNumber: orderNumber);
+    }
   }
 
   @override
@@ -44,7 +42,13 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
         BlocProvider(create: (_) => di.sl<HistoryCubit>()),
         BlocProvider(create: (_) => di.sl<CurierCubit>()),
       ],
-      child: Scaffold(
+      child: Builder(
+        builder: (context) {
+          if (!_initScheduled) {
+            _initScheduled = true;
+            WidgetsBinding.instance.addPostFrameCallback((_) => _initializeOrderDetail(context));
+          }
+          return Scaffold(
       appBar: AppBar(title: Text(context.l10n.orderDetails)),
       body: BlocBuilder<OrderDetailCubit, OrderDetailState>(
         builder: (context, state) {
@@ -70,7 +74,9 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           return _buildFallbackSearch();
         },
       ),
-    ),
+    );
+        },
+      ),
     );
   }
 

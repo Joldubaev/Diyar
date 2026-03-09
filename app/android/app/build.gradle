@@ -33,6 +33,8 @@ if (keystorePropertiesFile.exists()) {
     }
 }
 
+def yandexMapkitApiKey = localProperties.getProperty('yandex.mapkit.api_key', '')
+
 android {
     namespace "kg.cdt.diyar_guest"
     compileSdkVersion 36
@@ -51,6 +53,10 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
+    buildFeatures {
+        buildConfig true
+    }
+
     defaultConfig {
         applicationId "kg.cdt.diyar_guest"
         minSdk = 26
@@ -58,9 +64,21 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
-        
-        // Используем split-per-abi при сборке: flutter build apk --split-per-abi
-        // Это создаст отдельные APK для каждой архитектуры, уменьшив размер каждого файла
+        buildConfigField 'String', 'YANDEX_MAPKIT_API_KEY', "\"${yandexMapkitApiKey}\""
+        ndk {
+            abiFilters 'armeabi-v7a', 'arm64-v8a'
+        }
+    }
+
+    // Split APKs by ABI only for release (avoids conflict with Flutter plugin's ndk.abiFilters in debug)
+    def isRelease = gradle.startParameter.taskNames.any { it.toLowerCase().contains("release") }
+    splits {
+        abi {
+            enable isRelease
+            reset()
+            include 'armeabi-v7a', 'arm64-v8a'
+            universalApk false
+        }
     }
 
     signingConfigs {

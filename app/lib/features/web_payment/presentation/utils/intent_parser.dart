@@ -18,21 +18,30 @@ class IntentParser {
 
       final params = _parseIntentFragment(fragment);
 
+      // Логируем технические данные, чтобы собрать список поддержанных банков
+      final packageName = params['package'];
+      if (packageName != null && packageName.isNotEmpty) {
+        developer.log('[WebPayment][Intent] detected package: $packageName');
+      }
+
       final fallbackUrlRaw = params['S.browser_fallback_url'];
       final fallbackUrl = fallbackUrlRaw != null
           ? Uri.tryParse(
               Uri.decodeComponent(fallbackUrlRaw.split(',').first.trim()),
             )
           : null;
+      if (fallbackUrl != null) {
+        developer.log('[WebPayment][Intent] fallback host: ${fallbackUrl.host}');
+      }
+
       final scheme = params['scheme'] ?? 'https';
+      developer.log('[WebPayment][Intent] scheme: $scheme');
 
       final deepLink = Uri(
         scheme: scheme,
         host: parsedUri.host,
         path: parsedUri.path,
-        queryParameters: parsedUri.queryParameters.isNotEmpty
-            ? parsedUri.queryParameters
-            : null,
+        queryParameters: parsedUri.queryParameters.isNotEmpty ? parsedUri.queryParameters : null,
       );
 
       // Пробуем открыть deep link (не полагаемся на canLaunchUrl —
@@ -75,9 +84,7 @@ class IntentParser {
 
   static Map<String, String> _parseIntentFragment(String fragment) {
     final params = <String, String>{};
-    final clean = fragment
-        .replaceFirst(RegExp(r'^#?Intent;?'), '')
-        .replaceFirst(RegExp(r';end$'), '');
+    final clean = fragment.replaceFirst(RegExp(r'^#?Intent;?'), '').replaceFirst(RegExp(r';end$'), '');
 
     for (final part in clean.split(';')) {
       if (part.contains('=')) {
@@ -91,5 +98,4 @@ class IntentParser {
     }
     return params;
   }
-
 }

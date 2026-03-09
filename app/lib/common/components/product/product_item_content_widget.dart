@@ -152,46 +152,74 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> wit
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    // Адаптивные размеры
-    final cardWidth = widget.width ?? (widget.isCompact ? 140.0 : 170.0);
-    final cardHeight = widget.height ?? (widget.isCompact ? 180.0 : 220.0);
+    // Адаптивные размеры; в GridView (width/height == null) подстраиваемся под ограничения родителя
     final imageHeight = widget.isCompact ? 80.0 : ProductItemContentWidget._imageHeight;
     final imageWidth = widget.isCompact ? 120.0 : ProductItemContentWidget._imageWidth;
 
-    return SizedBox(
-      width: cardWidth,
-      height: cardHeight,
-      child: DecoratedBox(
-        decoration: _buildCardDecoration(context, theme),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            _ProductImageSection(
-              food: widget.food,
-              onTap: widget.onTap,
-              overlayOpacityAnimation: _overlayOpacityAnimation,
+    final content = DecoratedBox(
+      decoration: _buildCardDecoration(context, theme),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          _ProductImageSection(
+            food: widget.food,
+            onTap: widget.onTap,
+            overlayOpacityAnimation: _overlayOpacityAnimation,
+            quantity: widget.quantity,
+            imageWidth: imageWidth,
+            imageHeight: imageHeight,
+            isCompact: widget.isCompact,
+          ),
+          _ProductInfoSection(
+            food: widget.food,
+            isCompact: widget.isCompact,
+          ),
+          const Spacer(),
+          if (widget.isCounter)
+            _ProductCounterSection(
               quantity: widget.quantity,
-              imageWidth: imageWidth,
-              imageHeight: imageHeight,
+              onDecrement: () => _handleCartAction(isIncrement: false),
+              onIncrement: () => _handleCartAction(isIncrement: true),
+              onQuantityChanged: _handleQuantityChanged,
               isCompact: widget.isCompact,
             ),
-            _ProductInfoSection(
-              food: widget.food,
-              isCompact: widget.isCompact,
-            ),
-            const Spacer(),
-            if (widget.isCounter)
-              _ProductCounterSection(
-                quantity: widget.quantity,
-                onDecrement: () => _handleCartAction(isIncrement: false),
-                onIncrement: () => _handleCartAction(isIncrement: true),
-                onQuantityChanged: _handleQuantityChanged,
-                isCompact: widget.isCompact,
-              ),
-            SizedBox(height: widget.isCompact ? 4 : 8),
-          ],
-        ),
+          SizedBox(height: widget.isCompact ? 4 : 8),
+        ],
       ),
+    );
+
+    if (widget.width != null && widget.height != null) {
+      return SizedBox(
+        width: widget.width,
+        height: widget.height,
+        child: content,
+      );
+    }
+
+    // В GridView/списках — подстраиваем размеры под доступные ограничения, избегая бесконечных значений
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Базовая ширина/высота по умолчанию
+        final defaultWidth = widget.width ?? (widget.isCompact ? 140.0 : 170.0);
+        final defaultHeight = widget.height ?? (widget.isCompact ? 180.0 : 220.0);
+
+        // Если ограничение по ширине конечно — используем его, иначе fallback на дефолт
+        final cardWidth = constraints.maxWidth.isFinite ? constraints.maxWidth : defaultWidth;
+
+        // Высоту ограничиваем сверху maxHeight, если он конечен, чтобы избежать overflow
+        double cardHeight = defaultHeight;
+        if (constraints.maxHeight.isFinite) {
+          if (defaultHeight > constraints.maxHeight) {
+            cardHeight = constraints.maxHeight;
+          }
+        }
+
+        return SizedBox(
+          width: cardWidth,
+          height: cardHeight,
+          child: content,
+        );
+      },
     );
   }
 

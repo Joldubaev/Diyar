@@ -33,7 +33,13 @@ class OpenBankingRemoteDatasource {
       if (response.statusCode == 200 || response.statusCode == 201) {
         final url = response.data;
         if (url is String && url.isNotEmpty) {
-          return Right(url);
+          // Валидируем, что это действительно HTTP(S) URL, а не текст ошибки
+          final uri = Uri.tryParse(url);
+          if (uri != null && uri.hasScheme && (uri.scheme == 'http' || uri.scheme == 'https')) {
+            return Right(url);
+          }
+          // Бэкенд вернул строку, но не URL (например, текст ошибки) — трактуем как ошибку
+          return Left(ServerFailure(url, response.statusCode));
         }
         return const Left(ServerFailure('Неверный формат ответа', 200));
       }

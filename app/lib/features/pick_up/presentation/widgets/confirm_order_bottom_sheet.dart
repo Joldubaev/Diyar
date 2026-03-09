@@ -40,15 +40,16 @@ class ConfirmOrderBottomSheet extends StatelessWidget {
     return BlocListener<PickUpCubit, PickUpState>(
       listener: (context, state) {
         if (state is CreatePickUpOrderLoaded) {
-          context.read<CartBloc>().add(ClearCart());
           if (paymentType == PaymentTypeDelivery.online) {
-            // context.router.push(
-            //   PaymentsRoute(
-            //     orderNumber: state.message,
-            //     amount: totalOrderCost.toString(), // Используем сумму с учетом бонусов
-            //   ),
-            // );
-            // Navigator.of(context).pop();
+            // Онлайн-оплата: переходим на экран OpenBanking и закрываем bottom sheet
+            context.router.push(
+              OpenBankingPaymentRoute(
+                orderNumber: state.message,
+                amount: state.totalOrderCost,
+              ),
+            );
+            Navigator.of(context).pop();
+            context.read<CartBloc>().add(ClearCart());
           } else {
             context.read<CartBloc>().add(ClearCart());
             showDialog(

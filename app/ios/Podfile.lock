@@ -85,9 +85,9 @@ PODS:
   - permission_handler_apple (9.3.0):
     - Flutter
   - PromisesObjC (2.4.0)
-  - SDWebImage (5.21.5):
-    - SDWebImage/Core (= 5.21.5)
-  - SDWebImage/Core (5.21.5)
+  - SDWebImage (5.21.7):
+    - SDWebImage/Core (= 5.21.7)
+  - SDWebImage/Core (5.21.7)
   - SDWebImageWebPCoder (0.15.0):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.17)
@@ -197,7 +197,7 @@ SPEC CHECKSUMS:
   FirebaseRemoteConfig: c5dfe22828a7ae7673d16224ea92743687e993df
   FirebaseRemoteConfigInterop: 3443b8cb8fffd76bb3e03b2a84bfd3db952fcda4
   FirebaseSharedSwift: 79f27fff0addd15c3de19b87fba426f3cc2c964f
-  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   flutter_image_compress_common: ec1d45c362c9d30a3f6a0426c297f47c52007e3e
   flutter_native_splash: df59bb2e1421aa0282cb2e95618af4dcb0c56c29
   flutter_secure_storage: d33dac7ae2ea08509be337e775f6b59f1ff45f12
@@ -210,7 +210,7 @@ SPEC CHECKSUMS:
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
-  SDWebImage: e9c98383c7572d713c1a0d7dd2783b10599b9838
+  SDWebImage: e9fc87c1aab89a8ab1bbd74eba378c6f53be8abf
   SDWebImageWebPCoder: 0e06e365080397465cc73a7a9b472d8a3bd0f377
   share_plus: 8b6f8b3447e494cca5317c8c3073de39b3600d1f
   shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
