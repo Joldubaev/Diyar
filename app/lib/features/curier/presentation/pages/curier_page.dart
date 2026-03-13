@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/common/common.dart';
 import 'package:diyar/core/core.dart';
@@ -29,7 +27,6 @@ class _CurierPageState extends State<CurierPage> {
   @override
   void initState() {
     super.initState();
-    log('[CurierPage] initState: Инициализация страницы');
     _courierLocationHub.start();
   }
 
@@ -41,20 +38,13 @@ class _CurierPageState extends State<CurierPage> {
 
   void _initializeDataCallback(BuildContext context) {
     if (!mounted) return;
-    log('[CurierPage] _initializeDataCallback: Начало инициализации данных');
     final cubit = context.read<CurierCubit>();
     final currentState = cubit.state;
-    log('[CurierPage] _initializeDataCallback: Текущее состояние - ${currentState.runtimeType}');
-    log('[CurierPage] _initializeDataCallback: user = ${currentState.user?.userName ?? 'null'}, activeOrders = ${currentState.activeOrders.length}');
 
     if (currentState.user == null) {
-      log('[CurierPage] _initializeDataCallback: Пользователь не загружен, вызываем getUser()');
       cubit.getUser();
     } else if (currentState.activeOrders.isEmpty) {
-      log('[CurierPage] _initializeDataCallback: Пользователь загружен, но заказов нет, вызываем getCurierOrders()');
       cubit.getCurierOrders();
-    } else {
-      log('[CurierPage] _initializeDataCallback: Данные уже загружены, инициализация не требуется');
     }
   }
 
@@ -66,7 +56,6 @@ class _CurierPageState extends State<CurierPage> {
           BlocProvider(create: (_) => di.sl<SignInCubit>()),
         ],
         child: Builder(builder: (context) {
-          // Инициализируем данные после построения providers (context из Builder — внутри MultiBlocProvider)
           WidgetsBinding.instance.addPostFrameCallback((_) => _initializeDataCallback(context));
 
           final theme = Theme.of(context);
@@ -89,129 +78,62 @@ class _CurierPageState extends State<CurierPage> {
                 BlocListener<CurierCubit, CurierState>(
                   listenWhen: (p, c) => c is UserError || c is FinishOrderSuccess || c is FinishOrderError,
                   listener: (context, state) {
-                    log('[CurierPage] Listener 1: Сработал listener для UserError/FinishOrder');
-                    log('[CurierPage] Listener 1: Новое состояние - ${state.runtimeType}');
-
-                    if (state is UserError) {
-                      log('[CurierPage] Listener 1: Обнаружена ошибка пользователя, выполняем logout');
-                      _handleLogout(context);
-                    }
+                    if (state is UserError) _handleLogout(context);
                     if (state is FinishOrderSuccess) {
-                      log('[CurierPage] Listener 1: Заказ успешно завершен');
                       SnackBarMessage().showSuccessSnackBar(message: l10n.orderCompleted, context: context);
                     }
                     if (state is FinishOrderError) {
-                      log('[CurierPage] Listener 1: Ошибка при завершении заказа: ${state.message}');
                       SnackBarMessage().showErrorSnackBar(message: state.message, context: context);
                     }
                   },
                 ),
-                // Автоматическая загрузка заказов при переходе в CurierMainState
                 BlocListener<CurierCubit, CurierState>(
-                  listenWhen: (p, c) {
-                    // Слушаем переход в CurierMainState, когда пользователь загружен, но заказов нет и они не загружаются
-                    final shouldListen = p is! CurierMainState &&
-                        c is CurierMainState &&
-                        c.user != null &&
-                        c.activeOrders.isEmpty &&
-                        !c.isActiveOrdersLoading;
-                    if (shouldListen) {
-                      log('[CurierPage] Listener 2: Переход в CurierMainState, пользователь загружен, но заказов нет');
-                      log('[CurierPage] Listener 2: Автоматически загружаем заказы');
-                    }
-                    return shouldListen;
-                  },
-                  listener: (context, state) {
-                    context.read<CurierCubit>().getCurierOrders();
-                  },
+                  listenWhen: (p, c) =>
+                      p is! CurierMainState &&
+                      c is CurierMainState &&
+                      c.user != null &&
+                      c.activeOrders.isEmpty &&
+                      !c.isActiveOrdersLoading,
+                  listener: (context, state) => context.read<CurierCubit>().getCurierOrders(),
                 ),
-                // Отдельный листер для ошибок внутри MainState
                 BlocListener<CurierCubit, CurierState>(
-                  listenWhen: (p, c) {
-                    final shouldListen = p.activeOrdersError != c.activeOrdersError && c.activeOrdersError != null;
-                    if (shouldListen) {
-                      log('[CurierPage] Listener 3: Обнаружена ошибка активных заказов: ${c.activeOrdersError}');
-                    }
-                    return shouldListen;
-                  },
-                  listener: (context, state) {
-                    log('[CurierPage] Listener 3: Показываем ошибку активных заказов');
-                    SnackBarMessage().showErrorSnackBar(
-                      message: state.activeOrdersError!,
-                      context: context,
-                    );
-                  },
+                  listenWhen: (p, c) => p.activeOrdersError != c.activeOrdersError && c.activeOrdersError != null,
+                  listener: (context, state) => SnackBarMessage().showErrorSnackBar(
+                    message: state.activeOrdersError!,
+                    context: context,
+                  ),
                 ),
               ],
               child: BlocBuilder<CurierCubit, CurierState>(
-                // ПЕРЕРИСОВЫВАЕМ только если изменились данные активных заказов
-                buildWhen: (p, c) {
-                  final shouldBuild = p.isActiveOrdersLoading != c.isActiveOrdersLoading ||
-                      p.activeOrders != c.activeOrders ||
-                      (p is UserLoading) != (c is UserLoading);
-
-                  if (shouldBuild) {
-                    log('[CurierPage] buildWhen: Перерисовка разрешена');
-                    log('[CurierPage] buildWhen: Предыдущее состояние - ${p.runtimeType}, isActiveOrdersLoading=${p.isActiveOrdersLoading}, activeOrders=${p.activeOrders.length}');
-                    log('[CurierPage] buildWhen: Новое состояние - ${c.runtimeType}, isActiveOrdersLoading=${c.isActiveOrdersLoading}, activeOrders=${c.activeOrders.length}');
-                  }
-
-                  return shouldBuild;
-                },
+                buildWhen: (p, c) =>
+                    p.isActiveOrdersLoading != c.isActiveOrdersLoading ||
+                    p.activeOrders != c.activeOrders ||
+                    (p is UserLoading) != (c is UserLoading),
                 builder: (context, state) {
-                  log('[CurierPage] Builder: Построение UI для состояния ${state.runtimeType}');
-                  log('[CurierPage] Builder: isActiveOrdersLoading=${state.isActiveOrdersLoading}, activeOrders=${state.activeOrders.length}');
+                  if (state is UserLoading || state is UserInitial) return context.loadingIndicator;
+                  if (state.isActiveOrdersLoading && state.activeOrders.isEmpty) return context.loadingIndicator;
 
-                  // 1. Состояние первичной загрузки пользователя
-                  if (state is UserLoading || state is UserInitial) {
-                    log('[CurierPage] Builder: Показываем индикатор загрузки (UserLoading/UserInitial)');
-                    return context.loadingIndicator;
-                  }
-
-                  // 2. Если заказы загружаются и список пока пуст
-                  if (state.isActiveOrdersLoading && state.activeOrders.isEmpty) {
-                    log('[CurierPage] Builder: Показываем индикатор загрузки (заказы загружаются, список пуст)');
-                    return context.loadingIndicator;
-                  }
-
-                  // 3. Список заказов
                   if (state.activeOrders.isNotEmpty) {
-                    log('[CurierPage] Builder: Показываем список заказов (${state.activeOrders.length} шт.)');
                     return RefreshIndicator(
-                      onRefresh: () async {
-                        log('[CurierPage] Builder: Pull-to-refresh: Обновление заказов');
-                        context.read<CurierCubit>().getCurierOrders();
-                      },
+                      onRefresh: () async => context.read<CurierCubit>().getCurierOrders(),
                       child: ListView.separated(
                         padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
                         itemCount: state.activeOrders.length,
                         separatorBuilder: (_, __) => const SizedBox(height: 10),
                         itemBuilder: (context, index) {
                           final order = state.activeOrders[index];
-                          log('[CurierPage] Builder: Построение карточки заказа #${order.orderNumber} (индекс $index)');
                           return CurierOrderCard(
                             order: order,
-                            onFinish: () => _handleFinishOrder(context, order),
-                            onOpenMap: () {
-                              log('[CurierPage] Builder: Открытие карты для заказа #${order.orderNumber}');
-                              _mapService.open2GIS(context, '${order.address} ${order.houseNumber}');
-                            },
-                            onDetails: () {
-                              log('[CurierPage] Builder: Показ деталей заказа #${order.orderNumber}');
-                              context.router.push(OrderDetailRoute(orderNumber: "${order.orderNumber}"));
-                            },
-                            onCall: () {
-                              log('[CurierPage] Builder: Звонок клиенту заказа #${order.orderNumber}, телефон: ${order.userPhone}');
-                              _makeCall(order.userPhone);
-                            },
+                            onFinish: () => _showFinishDialog(context, order),
+                            onOpenMap: () => _mapService.open2GIS(context, '${order.address} ${order.houseNumber}'),
+                            onDetails: () => context.router.push(OrderDetailRoute(orderNumber: "${order.orderNumber}")),
+                            onCall: () => _makeCall(order.userPhone),
                           );
                         },
                       ),
                     );
                   }
 
-                  // 4. Пустое состояние
-                  log('[CurierPage] Builder: Показываем пустое состояние (заказов нет)');
                   return const EmptyCurierOrder();
                 },
               ),
@@ -221,49 +143,35 @@ class _CurierPageState extends State<CurierPage> {
         }));
   }
 
-  void _handleFinishOrder(BuildContext context, CurierEntity order) {
-    log('[CurierPage] _handleFinishOrder: Попытка завершить заказ #${order.orderNumber}, paymentStatus=${order.paymentStatus}, paymentMethod=${order.paymentMethod}');
+  void _showFinishDialog(BuildContext context, CurierEntity order) {
+    final status = PaymentStatus.fromString(order.paymentStatus);
+    final method = PaymentMethod.fromString(order.paymentMethod);
 
-    final status = (order.paymentStatus ?? '').trim();
-    final isPaid = status == 'Successful' || status == 'Charge';
-    final method = (order.paymentMethod ?? '').toLowerCase();
-    final isCash = method.contains('cash') || method.contains('налич');
-
-    final statusText = isPaid
+    final statusText = (status?.isPaid ?? false)
         ? 'Оплата по заказу уже отмечена как полученная.'
         : 'Оплата по заказу ещё не отмечена как полученная.';
 
     showDialog(
       context: context,
-      builder: (dialogContext) {
-        return AlertDialog(
-          title: Text('Завершить заказ #${order.orderNumber}?'),
-          content: Text(
-            '$statusText\n\n'
-            'Клиент оплатил заказ${isCash ? ' НАЛИЧНЫМИ' : ''}? Подтвердить завершение?',
+      builder: (dialogContext) => AlertDialog(
+        title: Text('Завершить заказ #${order.orderNumber}?'),
+        content: Text(
+          '$statusText\n\nКлиент оплатил заказ${method.isCash ? ' НАЛИЧНЫМИ' : ''}? Подтвердить завершение?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text('Отмена'),
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(),
-              child: const Text('Отмена'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(dialogContext).pop();
-                log('[CurierPage] _handleFinishOrder: Курьер подтвердил завершение заказа');
-                if (isCash) {
-                  log('[CurierPage] _handleFinishOrder: Наличный заказ — PUT set-payment-status (Successful), затем завершение');
-                  context.read<CurierCubit>().confirmCashPaymentAndFinish(order);
-                } else {
-                  log('[CurierPage] _handleFinishOrder: Безналичный заказ — сразу завершение');
-                  context.read<CurierCubit>().getFinishOrder(order.orderNumber ?? 0);
-                }
-              },
-              child: const Text('Да, завершить'),
-            ),
-          ],
-        );
-      },
+          TextButton(
+            onPressed: () {
+              Navigator.of(dialogContext).pop();
+              context.read<CurierCubit>().finishOrder(order);
+            },
+            child: const Text('Да, завершить'),
+          ),
+        ],
+      ),
     );
   }
 
@@ -271,10 +179,7 @@ class _CurierPageState extends State<CurierPage> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 0, 20, 40),
       child: SubmitButtonWidget(
-        onTap: () {
-          log('[CurierPage] _buildRefreshButton: Нажата кнопка обновления');
-          context.read<CurierCubit>().getCurierOrders();
-        },
+        onTap: () => context.read<CurierCubit>().getCurierOrders(),
         title: 'Обновить',
         bgColor: AppColors.primary,
         textStyle: theme.textTheme.bodyLarge?.copyWith(color: Colors.white),
@@ -283,26 +188,13 @@ class _CurierPageState extends State<CurierPage> {
   }
 
   Future<void> _makeCall(String? phone) async {
-    log('[CurierPage] _makeCall: Начало звонка, телефон: $phone');
-    if (phone == null || phone.isEmpty) {
-      log('[CurierPage] _makeCall: Телефон пустой, выход');
-      return;
-    }
+    if (phone == null || phone.isEmpty) return;
     final uri = Uri(scheme: 'tel', path: '+$phone');
-    log('[CurierPage] _makeCall: URI создан: $uri');
-    if (await canLaunchUrl(uri)) {
-      log('[CurierPage] _makeCall: Запуск звонка');
-      await launchUrl(uri);
-      log('[CurierPage] _makeCall: Звонок запущен');
-    } else {
-      log('[CurierPage] _makeCall: Не удалось запустить звонок (canLaunchUrl вернул false)');
-    }
+    if (await canLaunchUrl(uri)) await launchUrl(uri);
   }
 
   void _handleLogout(BuildContext context) {
-    log('[CurierPage] _handleLogout: Начало выхода из системы');
     context.read<SignInCubit>().logout().then((_) {
-      log('[CurierPage] _handleLogout: Выход выполнен, переход на главную');
       if (context.mounted) {
         context.router.pushAndPopUntil(const MainHomeRoute(), predicate: (_) => false);
       }
@@ -310,20 +202,15 @@ class _CurierPageState extends State<CurierPage> {
   }
 
   void _showLogoutDialog(BuildContext context) {
-    log('[CurierPage] _showLogoutDialog: Показ диалога подтверждения выхода');
     AppAlert.showConfirmDialog(
       context: context,
       title: context.l10n.exit,
       content: Text(context.l10n.areYouSure),
       confirmPressed: () {
-        log('[CurierPage] _showLogoutDialog: Пользователь подтвердил выход');
         Navigator.pop(context);
         _handleLogout(context);
       },
-      cancelPressed: () {
-        log('[CurierPage] _showLogoutDialog: Пользователь отменил выход');
-        Navigator.pop(context);
-      },
+      cancelPressed: () => Navigator.pop(context),
       confirmText: context.l10n.yes,
       cancelText: context.l10n.no,
     );

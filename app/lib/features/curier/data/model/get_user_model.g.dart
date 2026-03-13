@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'get_user_moderl.dart';
+part of 'get_user_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator

@@ -1,8 +1,8 @@
 import 'package:diyar/features/curier/domain/domain.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'get_user_moderl.freezed.dart';
-part 'get_user_moderl.g.dart';
+part 'get_user_model.freezed.dart';
+part 'get_user_model.g.dart';
 
 @freezed
 class GetUserModel with _$GetUserModel {

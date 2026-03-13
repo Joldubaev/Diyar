@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:diyar/core/core.dart';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'response_validator_mixin.dart';
 
 /// Отдельный дата-сорс для операций оплаты заказов курьера.
 abstract class CurierPaymentDataSource {
@@ -13,21 +14,11 @@ abstract class CurierPaymentDataSource {
 }
 
 @LazySingleton(as: CurierPaymentDataSource)
-class CurierPaymentDataSourceImpl implements CurierPaymentDataSource {
+class CurierPaymentDataSourceImpl with ResponseValidatorMixin implements CurierPaymentDataSource {
   CurierPaymentDataSourceImpl(this._dio, this._prefs);
 
   final Dio _dio;
   final SharedPreferences _prefs;
-
-  void _validateResponse(Response res) {
-    final code = res.data['code'];
-    if (![200, 201].contains(code)) {
-      throw ServerException(
-        res.data['message']?.toString() ?? 'Error from server',
-        code is int ? code : null,
-      );
-    }
-  }
 
   @override
   Future<void> setOrderPaymentStatus({
@@ -46,7 +37,6 @@ class CurierPaymentDataSourceImpl implements CurierPaymentDataSource {
       ),
     );
 
-    _validateResponse(res);
+    validateResponse(res);
   }
 }
-

@@ -21,21 +21,11 @@ abstract class CurierDataSource {
 }
 
 @LazySingleton(as: CurierDataSource)
-class CurierDataSourceImpl implements CurierDataSource {
+class CurierDataSourceImpl with ResponseValidatorMixin implements CurierDataSource {
   final Dio dio;
   final SharedPreferences prefs;
 
   CurierDataSourceImpl(this.dio, this.prefs);
-
-  void _validateResponse(Response res) {
-    final code = res.data['code'];
-    if (![200, 201].contains(code)) {
-      throw ServerException(
-        res.data['message']?.toString() ?? 'Error from server',
-        code is int ? code : null,
-      );
-    }
-  }
 
   @override
   Future<GetUserModel> getUser() async {
@@ -47,7 +37,7 @@ class CurierDataSourceImpl implements CurierDataSource {
       ),
     );
 
-    _validateResponse(res);
+    validateResponse(res);
 
     return GetUserModel.fromJson(res.data['message']);
   }
@@ -60,7 +50,7 @@ class CurierDataSourceImpl implements CurierDataSource {
       options: Options(headers: ApiConst.authMap(token)),
     );
 
-    _validateResponse(res);
+    validateResponse(res);
 
     final List list = res.data['message'] ?? [];
     return list.map((x) => CurierOrderModel.fromJson(x as Map<String, dynamic>)).toList();
@@ -77,7 +67,7 @@ class CurierDataSourceImpl implements CurierDataSource {
       queryParameters: {'orderNumber': orderId},
     );
 
-    _validateResponse(res);
+    validateResponse(res);
   }
 
   @override
@@ -88,7 +78,7 @@ class CurierDataSourceImpl implements CurierDataSource {
       data: {'onShift': onShift},
       options: Options(headers: ApiConst.authMap(token)),
     );
-    _validateResponse(res);
+    validateResponse(res);
   }
 
   @override
@@ -99,7 +89,7 @@ class CurierDataSourceImpl implements CurierDataSource {
       options: Options(headers: ApiConst.authMap(token)),
     );
     if (res.data is Map && (res.data as Map).containsKey('code')) {
-      _validateResponse(res);
+      validateResponse(res);
     }
     final data = res.data;
     if (data is Map<String, dynamic>) {
@@ -141,7 +131,7 @@ class CurierDataSourceImpl implements CurierDataSource {
       queryParameters: queryParams,
     );
 
-    _validateResponse(res);
+    validateResponse(res);
 
     final message = res.data['message'];
     List<dynamic> ordersList = [];
