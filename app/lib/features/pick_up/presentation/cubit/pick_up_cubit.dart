@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:diyar/features/cart/cart.dart';
@@ -10,31 +8,37 @@ import 'package:injectable/injectable.dart';
 
 part 'pick_up_state.dart';
 
+/// Cubit для управления состоянием формы PickUp заказа
 @injectable
 class PickUpCubit extends Cubit<PickUpState> {
-  final PickUpRepositories _pickUpRepository;
+  final PickUpRepository _pickUpRepository;
   final CreatePickupOrderFromCartUseCase _createPickupOrderFromCartUseCase;
   final CalculateMinimumTimeUseCase _calculateMinimumTimeUseCase;
+  final ValidateBonusUseCase _validateBonusUseCase;
 
   PickUpCubit(
     this._pickUpRepository,
     this._createPickupOrderFromCartUseCase,
     this._calculateMinimumTimeUseCase,
+    this._validateBonusUseCase,
   ) : super(PickUpInitial());
 
   /// Инициализация формы с данными пользователя
   void initializeForm({
+    required PaymentTypeDelivery paymentType,
     required String userName,
     required String userPhone,
     required int totalPrice,
   }) {
-    emit(PickUpFormLoaded(
-      userName: userName,
-      userPhone: userPhone,
-      paymentType: PaymentTypeDelivery.cash.name,
-      totalPrice: totalPrice,
-      totalOrderCost: totalPrice, // Изначально totalOrderCost = totalPrice (без бонусов)
-    ));
+    emit(
+      PickUpFormLoaded(
+        userName: userName,
+        userPhone: userPhone,
+        paymentType: paymentType,
+        totalPrice: totalPrice,
+        totalOrderCost: totalPrice,
+      ),
+    );
   }
 
   /// Обновление данных формы
@@ -55,53 +59,14 @@ class PickUpCubit extends Cubit<PickUpState> {
   void setBonusAmount(double? amount, double userBalance) {
     final currentState = state;
     if (currentState is! PickUpFormLoaded) return;
-
-    log('[PickUpCubit] setBonusAmount: Начало установки суммы бонусов');
-    log('[PickUpCubit] setBonusAmount: amount=$amount, userBalance=$userBalance');
-    log('[PickUpCubit] setBonusAmount: totalPrice=${currentState.totalPrice}');
-
-    // Если amount null или 0, просто обнуляем бонусы и пересчитываем totalOrderCost
-    if (amount == null || amount == 0) {
-      log('[PickUpCubit] setBonusAmount: amount null или 0, обнуляем бонусы');
-      emit(currentState.copyWith(
-        totalOrderCost: currentState.totalPrice,
-        clearBonusAmount: true,
-      ));
-      log('[PickUpCubit] setBonusAmount: totalOrderCost без бонусов=${currentState.totalPrice}');
-      return;
-    }
-
-    // Проверка: бонусы не могут превышать баланс пользователя
-    if (amount > userBalance) {
-      log('[PickUpCubit] setBonusAmount: ОШИБКА - Недостаточно бонусов (amount=$amount > userBalance=$userBalance)');
-      // Можно добавить обработку ошибки, если нужно
-      return;
-    }
-
-    // Проверка: бонусы не могут превышать полную стоимость заказа
-    if (amount > currentState.totalPrice) {
-      log('[PickUpCubit] setBonusAmount: ОШИБКА - Сумма бонусов превышает стоимость заказа (amount=$amount > totalPrice=${currentState.totalPrice})');
-      // Можно добавить обработку ошибки, если нужно
-      return;
-    }
-
-    // Пересчитываем totalOrderCost с учетом бонусов
-    final totalOrderCost = (currentState.totalPrice - amount).toInt();
-    log('[PickUpCubit] setBonusAmount: totalOrderCost с учетом бонусов=$totalOrderCost (totalPrice=${currentState.totalPrice} - amount=$amount)');
-
-    // Сохраняем сумму бонусов и обновляем totalOrderCost
-    emit(currentState.copyWith(
-      bonusAmount: amount,
-      totalOrderCost: totalOrderCost,
-    ));
-    log('[PickUpCubit] setBonusAmount: Бонусы успешно установлены: bonusAmount=$amount, totalOrderCost=$totalOrderCost');
+    _validateAndApplyBonus(currentState, amount, userBalance);
   }
 
   /// Изменение типа оплаты
   void changePaymentType(PaymentTypeDelivery paymentType) {
     final currentState = state;
     if (currentState is PickUpFormLoaded) {
-      emit(currentState.copyWith(paymentType: paymentType.name));
+      emit(currentState.copyWith(paymentType: paymentType));
     }
   }
 
@@ -123,7 +88,7 @@ class PickUpCubit extends Cubit<PickUpState> {
     return _calculateMinimumTimeUseCase.formatTime(dateTime);
   }
 
-  /// Парсинг строки времени
+  /// Парсинг строки времени в DateTime
   DateTime? parseTimeString(String timeString) {
     return _calculateMinimumTimeUseCase.parseTimeString(
       timeString,
@@ -141,7 +106,7 @@ class PickUpCubit extends Cubit<PickUpState> {
     setSelectedTime(formatTime(validatedTime));
   }
 
-  /// Создание заказа из корзины и данных формы (с поддержкой бонусов)
+  /// Создание заказа из корзины и данных формы
   Future<void> createPickupOrder({
     required List<CartItemEntity> cart,
     required String userName,
@@ -149,77 +114,111 @@ class PickUpCubit extends Cubit<PickUpState> {
     required String time,
     required String comment,
     required String paymentMethod,
-    required int? dishCount,
   }) async {
     final currentState = state;
     if (currentState is! PickUpFormLoaded) return;
 
-    emit(CreatePickUpOrderLoading());
+    // Всегда вычисляем количество блюд из корзины
+    final calculatedDishesCount =
+        cart.fold<int>(0, (sum, item) => sum + (item.quantity ?? 0));
 
-    try {
-      // Вычисляем dishesCount из cart
-      final calculatedDishesCount = dishCount ?? cart.fold<int>(0, (sum, item) => sum + (item.quantity ?? 0));
+    // Создаем заказ через use case
+    final order = _createPickupOrderFromCartUseCase(
+      cartItems: cart,
+      userName: userName,
+      userPhone: phone,
+      prepareFor: time,
+      comment: comment.isEmpty ? null : comment,
+      paymentMethod: paymentMethod,
+      totalPrice: currentState.totalPrice,
+      dishCount: calculatedDishesCount,
+      bonusAmount: currentState.bonusAmount,
+    );
 
-      // Получаем полную сумму заказа БЕЗ вычета бонусов (для отправки на сервер)
-      final fullOrderPrice = currentState.totalPrice;
+    // Переходим в состояние загрузки и отправляем заказ
+    emit(
+      CreatePickUpOrderLoading(
+        totalPrice: currentState.totalPrice,
+        totalOrderCost: currentState.totalOrderCost,
+      ),
+    );
 
-      log('[PickUpCubit] createPickupOrder: Подготовка данных для отправки на бэкенд');
-      log('[PickUpCubit] createPickupOrder: totalPrice (полная сумма БЕЗ бонусов, для бэкенда)=$fullOrderPrice');
-      log('[PickUpCubit] createPickupOrder: bonusAmount (amountToReduce)=${currentState.bonusAmount}');
-      log('[PickUpCubit] createPickupOrder: totalOrderCost (для UI, С УЧЕТОМ бонусов)=${currentState.totalOrderCost}');
-      log('[PickUpCubit] createPickupOrder: Бэкенд сам вычтет бонусы: finalPrice = $fullOrderPrice - ${currentState.bonusAmount ?? 0} = ${fullOrderPrice - (currentState.bonusAmount ?? 0)}');
-
-      // Используем usecase для создания заказа (с поддержкой бонусов)
-      // Отправляем полную сумму без вычета бонусов, бонусы передаем отдельно в amountToReduce
-      // Бэкенд сам вычтет бонусы из полной суммы
-      final order = _createPickupOrderFromCartUseCase(
-        cartItems: cart,
-        userName: userName.trim(),
-        userPhone: phone.trim(),
-        prepareFor: time.trim(),
-        comment: comment.trim().isEmpty ? null : comment.trim(),
-        paymentMethod: paymentMethod,
-        totalPrice: fullOrderPrice, // Полная сумма без вычета бонусов - бэкенд сам вычтет бонусы
-        dishCount: calculatedDishesCount,
-        bonusAmount: currentState.bonusAmount, // Бонусы передаем отдельно
-      );
-
-      log('[PickUpCubit] createPickupOrder: Отправка заказа на бэкенд: totalPrice=$fullOrderPrice, bonusAmount=${currentState.bonusAmount}');
-
-      await submitPickupOrderEntity(order, paymentMethod, fullOrderPrice);
-    } catch (e) {
-      emit(CreatePickUpOrderError(e.toString()));
-    }
+    await _submitOrder(order, paymentMethod);
   }
 
-  /// Отправка заказа (приватный метод)
-  Future<void> submitPickupOrderEntity(
+  /// Валидация и применение бонусов к текущему состоянию формы.
+  void _validateAndApplyBonus(
+    PickUpFormLoaded currentState,
+    double? amount,
+    double userBalance,
+  ) {
+    // Валидация бонусов через UseCase
+    final validationResult = _validateBonusUseCase.validate(
+      amount: amount,
+      userBalance: userBalance,
+      orderTotal: currentState.totalPrice,
+    );
+
+    if (!_validateBonusUseCase.isValid(validationResult)) {
+      final errorMessage = _validateBonusUseCase.getErrorMessage(
+        validationResult,
+        userBalance: userBalance,
+        orderTotal: currentState.totalPrice,
+      );
+      // Сохраняем ошибку как часть состояния формы
+      emit(
+        currentState.copyWith(
+          bonusError: errorMessage,
+          clearBonusError: false,
+        ),
+      );
+      return;
+    }
+
+    // Если бонусы null или 0 - обнуляем и очищаем ошибку
+    if (amount == null || amount == 0) {
+      emit(
+        currentState.copyWith(
+          totalOrderCost: currentState.totalPrice,
+          clearBonusAmount: true,
+          clearBonusError: true,
+        ),
+      );
+      return;
+    }
+
+    // Пересчитываем totalOrderCost с учетом бонусов и очищаем ошибку
+    final totalOrderCost = (currentState.totalPrice - amount).toInt();
+
+    emit(
+      currentState.copyWith(
+        bonusAmount: amount,
+        totalOrderCost: totalOrderCost,
+        clearBonusError: true,
+      ),
+    );
+  }
+
+  /// Отправка заказа в репозиторий
+  Future<void> _submitOrder(
     PickupOrderEntity order,
     String paymentType,
-    int totalPrice,
   ) async {
-    emit(CreatePickUpOrderLoading());
     try {
       final result = await _pickUpRepository.getPickupOrder(order);
       result.fold(
         (failure) => emit(CreatePickUpOrderError(failure.message)),
         (entity) {
-          final currentState = state;
-          if (currentState is PickUpFormLoaded) {
-            emit(CreatePickUpOrderLoaded(
-              message: entity,
-              paymentType: paymentType,
-              totalPrice: totalPrice,
-              totalOrderCost: currentState.totalOrderCost,
-            ));
-          } else {
-            // Fallback, если state не PickUpFormLoaded
-            emit(CreatePickUpOrderLoaded(
-              message: entity,
-              paymentType: paymentType,
-              totalPrice: totalPrice,
-              totalOrderCost: totalPrice,
-            ));
+          final loadingState = state;
+          if (loadingState is CreatePickUpOrderLoading) {
+            emit(
+              CreatePickUpOrderLoaded(
+                message: entity,
+                paymentType: paymentType,
+                totalPrice: loadingState.totalPrice,
+                totalOrderCost: loadingState.totalOrderCost,
+              ),
+            );
           }
         },
       );

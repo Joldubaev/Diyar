@@ -20,11 +20,10 @@ class BonusCardButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final color = accentColor ?? AppColors.bonusGradientEnd;
 
     return Material(
-      color: theme.colorScheme.surface,
+      color: context.colorScheme.surface.withValues(alpha: 0.9),
       borderRadius: BorderRadius.circular(999),
       child: InkWell(
         onTap: onPressed,

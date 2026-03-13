@@ -1,64 +1,59 @@
+import 'package:diyar/core/core.dart';
 import 'package:flutter/material.dart';
 
-class OrderButton extends StatelessWidget {
-  const OrderButton({
+/// Базовая карточка меню истории/бонусов (PNG-иконки).
+class OrderMenuCard extends StatelessWidget {
+  const OrderMenuCard({
     super.key,
-    required this.text,
-    required this.icon,
-    required this.onPressed,
+    required this.title,
+    required this.image,
+    required this.onTap,
   });
 
-  final String text;
-  final String icon;
-  final void Function() onPressed;
+  final String title;
+  final String image;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return InkWell(
-      borderRadius: BorderRadius.circular(24),
-      onTap: onPressed,
+      borderRadius: BorderRadius.circular(26),
+      onTap: onTap,
       child: Container(
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: theme.colorScheme.primaryContainer,
-          borderRadius: BorderRadius.circular(24),
+          // Белая карточка на сером фоне (история заказов)
+          color: context.colorScheme.surface,
+          borderRadius: BorderRadius.circular(26),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.black.withValues(alpha: 0.06),
+              blurRadius: 18,
+              offset: const Offset(0, 6),
+            ),
+          ],
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            /// IMAGE CONTAINER (PNG)
             Expanded(
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                child: Center(
-                  child: Container(
-                    height: 180,
-                    width: 180,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Center(
-                      child: Image.asset(
-                        icon,
-                        height: 160,
-                        width: 160,
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
+              child: SizedBox(
+                width: double.infinity,
+                child: Image.asset(
+                  image,
+                  fit: BoxFit.contain,
                 ),
               ),
             ),
-            Container(
-              width: double.infinity,
-              alignment: Alignment.center,
-              padding: const EdgeInsets.all(8),
-              child: Text(
-                text,
-                textAlign: TextAlign.center,
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
+            const SizedBox(height: 12),
+
+            /// TITLE
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: context.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: context.colorScheme.onSurface,
               ),
             ),
           ],

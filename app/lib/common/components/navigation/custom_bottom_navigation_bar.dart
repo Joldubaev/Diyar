@@ -64,12 +64,12 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> w
 
   @override
   Widget build(BuildContext context) {
-    final scheme = context.colorScheme;
-    final primary = scheme.primary;
-    final unselected = scheme.onSurfaceVariant;
+    final primary = AppColors.primary;
+    // Тёплый серый в тон бренду — гармония с оранжевым
+    const unselected = Color(0xFF6B6360);
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(34, 0, 24, 34),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: GlassNavbarShell(
         primary: primary,
         child: LayoutBuilder(
@@ -138,18 +138,20 @@ class _NavIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const horizontalMargin = 6.0;
+    final indicatorWidth = itemWidth - horizontalMargin * 2;
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOutCubic,
-      margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+      margin: const EdgeInsets.symmetric(horizontal: horizontalMargin, vertical: 8),
       transform: Matrix4.translationValues(
-        currentIndex * itemWidth - 4,
+        currentIndex * itemWidth + horizontalMargin,
         0,
         0,
       ),
-      width: itemWidth - 8,
+      width: indicatorWidth,
       decoration: BoxDecoration(
-        color: primary.withValues(alpha: 0.18),
+        color: primary.withValues(alpha: 0.22),
         borderRadius: BorderRadius.circular(20),
       ),
     );

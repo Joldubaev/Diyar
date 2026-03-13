@@ -1,28 +1,54 @@
 import 'package:bloc/bloc.dart';
+import 'package:diyar/core/constants/app_const/app_const.dart';
 import 'package:diyar/features/curier/curier.dart';
 import 'package:diyar/features/curier/domain/domain.dart';
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'curier_state.dart';
 
 @injectable
 class CurierCubit extends Cubit<CurierState> {
-  CurierCubit(this._repository) : super(const UserInitial());
+  CurierCubit(
+    this._repository,
+    this._confirmCashPaymentAndFinishUseCase,
+    this._prefs,
+  ) : super(const UserInitial());
 
   final CurierRepository _repository;
+  final ConfirmCashPaymentAndFinishUseCase _confirmCashPaymentAndFinishUseCase;
+  final SharedPreferences _prefs;
 
   Future<void> getUser() async {
     emit(const UserLoading());
 
-    final result = await _repository.getUser();
-    result.fold(
-      (failure) => emit(UserError(failure.message)),
-      (user) {
-        // После загрузки пользователя создаем CurierMainState
-        emit(CurierMainState(user: user));
-      },
+    final userResult = await _repository.getUser();
+    if (userResult.isLeft()) {
+      userResult.fold((f) => emit(UserError(f.message)), (_) {});
+      return;
+    }
+    final user = userResult.getOrElse(() => throw StateError('user'));
+
+    final shiftResult = await _repository.getShiftStatus();
+    final isOnShift = shiftResult.fold(
+      (_) => _prefs.getBool(AppConst.courierOnShift) ?? true,
+      (v) => v,
     );
+    await _prefs.setBool(AppConst.courierOnShift, isOnShift);
+    emit(CurierMainState(user: user, isOnShift: isOnShift));
+  }
+
+  /// Выход на смену (true) / уход со смены (false). REST: POST /courier/shift. Сохраняет выбор в prefs, при обновлении не сбрасывается.
+  Future<bool> setOnShift(bool onShift) async {
+    final result = await _repository.setShift(onShift);
+    if (result.isLeft()) return false;
+    await _prefs.setBool(AppConst.courierOnShift, onShift);
+    final current = state;
+    if (current is CurierMainState) {
+      emit(current.copyWith(isOnShift: onShift));
+    }
+    return true;
   }
 
   /// Загружает активные заказы (не перетирает историю)
@@ -127,6 +153,19 @@ class CurierCubit extends Cubit<CurierState> {
           emit(FinishOrderSuccess(user: user));
         }
       },
+    );
+  }
+
+  Future<void> confirmCashPaymentAndFinish(CurierEntity order) async {
+    final user = state.user;
+    if (user == null) return;
+
+    emit(FinishOrderLoading(user: user));
+
+    final result = await _confirmCashPaymentAndFinishUseCase(order);
+    result.fold(
+      (failure) => emit(FinishOrderError(message: failure.message, user: user)),
+      (_) => getCurierOrders(),
     );
   }
 

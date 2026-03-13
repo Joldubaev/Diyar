@@ -17,30 +17,30 @@ class ActiveOrderPage extends StatelessWidget {
     return BlocProvider(
       create: (_) => di.sl<ActiveOrderCubit>()..getActiveOrders(),
       child: Scaffold(
-      appBar: AppBar(title: Text(context.l10n.activeOrders)),
-      body: BlocBuilder<ActiveOrderCubit, ActiveOrderState>(
-        builder: (context, state) {
-          // Senior-подход: использование паттерн-матчинга
-          return switch (state) {
-            ActiveOrdersLoading() || ActiveOrderInitial() => const Center(child: CircularProgressIndicator()),
-            ActiveOrdersError(message: final msg) => EmptyActiveOrders(text: msg),
-            ActiveOrdersLoaded(orders: final orders) => orders.isEmpty
-                ? EmptyActiveOrders(text: context.l10n.noActiveOrders)
-                : ListView.separated(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    itemCount: orders.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 10),
-                    itemBuilder: (context, index) {
-                      final order = orders[index];
-                      return _OrderCard(order: order, theme: theme);
-                    },
-                  ),
-            // Игнорируем состояния деталей заказа для этой страницы
-            _ => const SizedBox.shrink(),
-          };
-        },
+        appBar: AppBar(title: Text(context.l10n.activeOrders)),
+        body: BlocBuilder<ActiveOrderCubit, ActiveOrderState>(
+          builder: (context, state) {
+            // Senior-подход: использование паттерн-матчинга
+            return switch (state) {
+              ActiveOrdersLoading() || ActiveOrderInitial() => const Center(child: CircularProgressIndicator()),
+              ActiveOrdersError(message: final msg) => EmptyActiveOrders(text: msg),
+              ActiveOrdersLoaded(orders: final orders) => orders.isEmpty
+                  ? EmptyActiveOrders(text: context.l10n.noActiveOrders)
+                  : ListView.separated(
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      itemCount: orders.length,
+                      separatorBuilder: (_, __) => const SizedBox(height: 10),
+                      itemBuilder: (context, index) {
+                        final order = orders[index];
+                        return _OrderCard(order: order, theme: theme);
+                      },
+                    ),
+              // Игнорируем состояния деталей заказа для этой страницы
+              _ => const SizedBox.shrink(),
+            };
+          },
+        ),
       ),
-    ),
     );
   }
 }
@@ -69,6 +69,24 @@ class _OrderCard extends StatelessWidget {
                 color: AppColors.primary,
                 fontWeight: FontWeight.w600,
               ),
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Icon(
+                  order.paymentDisplayState == PaymentDisplayState.paid ? Icons.check_circle : Icons.access_time,
+                  size: 16,
+                  color: order.paymentDisplayState.color,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  order.paymentDisplayState.label,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: order.paymentDisplayState.color,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 16),
             // Степпер статуса заказа

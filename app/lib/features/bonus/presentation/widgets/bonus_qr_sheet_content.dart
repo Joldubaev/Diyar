@@ -1,3 +1,4 @@
+import 'package:diyar/core/theme/theme_extension.dart';
 import 'package:diyar/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,7 +37,6 @@ class _QrContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final token = qrData.token;
 
     if (token == null || token.isEmpty) {
@@ -50,17 +50,17 @@ class _QrContent extends StatelessWidget {
         children: [
           Text(
             'Мой QR код',
-            style: theme.textTheme.titleLarge?.copyWith(
+            style: context.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
               fontSize: 24,
-              color: Colors.black87,
+              color: context.colorScheme.onSurface,
             ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),
           Text(
             'Покажите QR код официанту для получения бонусов',
-            style: theme.textTheme.bodyMedium?.copyWith(
+            style: context.textTheme.bodyMedium?.copyWith(
               color: Colors.grey.shade600,
               fontSize: 14,
             ),
@@ -71,7 +71,7 @@ class _QrContent extends StatelessWidget {
           const SizedBox(height: 32),
           Text(
             'Скопируйте код ниже:',
-            style: theme.textTheme.bodyMedium?.copyWith(
+            style: context.textTheme.bodyMedium?.copyWith(
               color: Colors.grey.shade700,
               fontSize: 14,
             ),

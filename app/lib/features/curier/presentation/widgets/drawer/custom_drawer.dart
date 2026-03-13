@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'drawer_header.dart';
 import 'drawer_navigation.dart';
+import 'end_shift_section.dart';
 import 'logout_section.dart';
 
 class CustomDrawer extends StatelessWidget {
@@ -39,6 +40,7 @@ class CustomDrawer extends StatelessWidget {
                 const Expanded(
                   child: DrawerNavigation(),
                 ),
+                const EndShiftSection(),
                 const LogoutSection(),
               ],
             ),

@@ -1,4 +1,5 @@
 import 'package:diyar/common/components/components.dart';
+import 'package:diyar/core/core.dart';
 import 'package:diyar/features/order/order.dart';
 import 'package:diyar/features/order/presentation/enum/delivery_enum.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,8 @@ class ChangeAmountSection extends StatelessWidget {
         return Column(
           children: [
             CustomInputWidget(
+              titleColor: context.colorScheme.onSurface,
+              filledColor: context.colorScheme.surface,
               controller: controllers.sdachaController,
               hintText: 'С какой суммы понадобится сдача?',
               isReadOnly: true, // Только через диалог

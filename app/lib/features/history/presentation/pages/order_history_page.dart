@@ -11,12 +11,19 @@ class OrderHistoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: theme.colorScheme.primary,
+        backgroundColor: theme.scaffoldBackgroundColor,
+        foregroundColor: theme.colorScheme.onSurface,
+        elevation: 0,
+        scrolledUnderElevation: 0,
         automaticallyImplyLeading: false,
         title: Text(
           context.l10n.orderHistory,
-          style: theme.textTheme.bodyLarge?.copyWith(color: AppColors.white),
+          style: theme.textTheme.titleMedium?.copyWith(
+            color: theme.colorScheme.onSurface,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
       body: SafeArea(
@@ -25,40 +32,39 @@ class OrderHistoryPage extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
           child: Column(
             children: [
-              // Grid with 2 columns
               GridView.count(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 crossAxisCount: 2,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
-                childAspectRatio: 0.85,
+                childAspectRatio: 0.92,
                 children: [
-                  OrderButton(
-                    text: context.l10n.activeOrders,
-                    icon: 'assets/images/active_order.png',
-                    onPressed: () {
+                  OrderMenuCard(
+                    title: context.l10n.activeOrders,
+                    image: 'assets/images/active_order.png',
+                    onTap: () {
                       context.router.push(const ActiveOrderRoute());
                     },
                   ),
-                  OrderButton(
-                    text: context.l10n.pickup,
-                    icon: 'assets/images/pickup.png',
-                    onPressed: () {
+                  OrderMenuCard(
+                    title: context.l10n.pickup,
+                    image: 'assets/images/pickup.png',
+                    onTap: () {
                       context.router.push(const UserPickupHistoryRoute());
                     },
                   ),
-                  OrderButton(
-                    text: context.l10n.orderHistory,
-                    icon: 'assets/images/order_history.png',
-                    onPressed: () {
+                  OrderMenuCard(
+                    title: context.l10n.orderHistory,
+                    image: 'assets/images/order_history.png',
+                    onTap: () {
                       context.router.push(const UserOrderHistoryRoute());
                     },
                   ),
-                  OrderButton(
-                    text: "История бонусов",
-                    icon: 'assets/images/bonus_history.png',
-                    onPressed: () {
+                  OrderMenuCard(
+                    title: "История бонусов",
+                    image: 'assets/images/bonus_history.png',
+                    onTap: () {
                       context.router.push(const BonusTransactionsRoute());
                     },
                   ),

@@ -22,6 +22,7 @@ class OrderDetailEntity extends Equatable {
   final String? timeRequest;
   final String? courierId;
   final String? status;
+  final String? paymentStatus;
   final int? deliveryPrice;
   final int? sdacha;
   final double? amountToReduce;
@@ -46,13 +47,14 @@ class OrderDetailEntity extends Equatable {
     this.timeRequest,
     this.courierId,
     this.status,
+    this.paymentStatus,
     this.deliveryPrice,
     this.sdacha,
     this.amountToReduce,
   });
 
   String get fullAddress => '${address ?? ''}, д. ${houseNumber ?? ''}'.trim();
-  
+
   double get totalPrice => (price ?? 0) + (deliveryPrice ?? 0) - (amountToReduce ?? 0);
 
   @override
@@ -76,6 +78,7 @@ class OrderDetailEntity extends Equatable {
         timeRequest,
         courierId,
         status,
+        paymentStatus,
         deliveryPrice,
         sdacha,
         amountToReduce,

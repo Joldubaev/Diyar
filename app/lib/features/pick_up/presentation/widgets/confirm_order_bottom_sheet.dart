@@ -3,14 +3,13 @@ import 'package:diyar/common/common.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/order/presentation/enum/delivery_enum.dart';
-import 'package:diyar/features/order/presentation/widgets/info_dialog_widget.dart';
 import 'package:diyar/features/pick_up/pick_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConfirmOrderBottomSheet extends StatelessWidget {
-  final int totalPrice; // Полная сумма заказа (без вычета бонусов)
-  final int totalOrderCost; // Сумма с учетом бонусов (для отображения в UI)
+  final int totalPrice;
+  final int totalOrderCost;
   final double? bonusAmount;
   final String userName;
   final String userPhone;
@@ -39,195 +38,116 @@ class ConfirmOrderBottomSheet extends StatelessWidget {
 
     return BlocListener<PickUpCubit, PickUpState>(
       listener: (context, state) {
-        if (state is CreatePickUpOrderLoaded) {
-          if (paymentType == PaymentTypeDelivery.online) {
-            // Онлайн-оплата: переходим на экран OpenBanking и закрываем bottom sheet
-            context.router.push(
-              OpenBankingPaymentRoute(
-                orderNumber: state.message,
-                amount: state.totalOrderCost,
-              ),
-            );
+        _handleStateChange(context, state);
+      },
+      child: ConfirmOrderBottomSheetContent(
+        theme: theme,
+        l10n: l10n,
+        header: ConfirmOrderSheetHeader(l10n: l10n),
+        details: _buildDetails(theme, l10n),
+        isSubmitting: false,
+        onConfirmTap: onConfirmTap,
+      ),
+    );
+  }
+
+  void _handleStateChange(BuildContext context, PickUpState state) {
+    final theme = Theme.of(context);
+    final l10n = context.l10n;
+
+    if (state is CreatePickUpOrderLoaded) {
+      if (paymentType == PaymentTypeDelivery.online) {
+        _navigateToOnlinePayment(context, state);
+      } else {
+        _showSuccessDialog(context, theme, l10n);
+      }
+    } else if (state is CreatePickUpOrderError) {
+      showToast(state.message, isError: true);
+    }
+  }
+
+  void _navigateToOnlinePayment(BuildContext context, CreatePickUpOrderLoaded state) {
+    context.router.push(
+      OpenBankingPaymentRoute(
+        orderNumber: state.message,
+        amount: state.totalOrderCost,
+      ),
+    );
+    context.read<CartBloc>().add(ClearCart());
+    if (context.mounted) {
+      Navigator.of(context).pop();
+    }
+  }
+
+  void _showSuccessDialog(BuildContext context, ThemeData theme, AppLocalizations l10n) {
+    context.read<CartBloc>().add(ClearCart());
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) => ConfirmOrderSuccessDialog(
+        theme: theme,
+        l10n: l10n,
+        onConfirm: () {
+          Navigator.of(dialogContext).pop();
+          if (context.mounted) {
             Navigator.of(context).pop();
-            context.read<CartBloc>().add(ClearCart());
-          } else {
-            context.read<CartBloc>().add(ClearCart());
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (dialogContext) {
-                return PopScope(
-                  canPop: false,
-                  child: AlertDialog(
-                    title: Text(
-                      l10n.yourOrdersConfirm,
-                      style: theme.textTheme.bodyLarge!.copyWith(
-                        color: theme.colorScheme.onSurface,
-                      ),
-                    ),
-                    content: Text(
-                      l10n.operatorContact,
-                      style: theme.textTheme.bodyMedium!.copyWith(
-                        color: theme.colorScheme.onSurface,
-                      ),
-                      maxLines: 2,
-                    ),
-                    actions: [
-                      SubmitButtonWidget(
-                        textStyle: theme.textTheme.bodyMedium!.copyWith(
-                          color: theme.colorScheme.onPrimary,
-                        ),
-                        title: l10n.ok,
-                        bgColor: AppColors.green,
-                        onTap: () {
-                          Navigator.of(dialogContext).pop();
-                          Navigator.of(context).pop();
-                          context.router.pushAndPopUntil(
-                            const MainHomeRoute(),
-                            predicate: (route) => false,
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                );
-              },
+            context.router.pushAndPopUntil(
+              const MainHomeRoute(),
+              predicate: (route) => false,
             );
           }
-        } else if (state is CreatePickUpOrderError) {
-          showToast(state.message, isError: true);
-        }
-      },
-      child: DraggableScrollableSheet(
-        initialChildSize: 0.5,
-        minChildSize: 0.4,
-        maxChildSize: 0.8,
-        expand: false,
-        builder: (context, scrollController) {
-          return Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surface,
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(16),
-              ),
-            ),
-            child: SingleChildScrollView(
-              controller: scrollController,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _buildHeader(context),
-                  const SizedBox(height: 15),
-                  _buildDetails(context),
-                  const Divider(),
-                  const SizedBox(height: 12),
-                  BlocBuilder<PickUpCubit, PickUpState>(
-                    builder: (context, currentState) {
-                      final isSubmitting = currentState is CreatePickUpOrderLoading;
-                      return SubmitButtonWidget(
-                        textStyle: theme.textTheme.bodyMedium!.copyWith(
-                          color: theme.colorScheme.onPrimary,
-                        ),
-                        title: l10n.confirm,
-                        bgColor: AppColors.green,
-                        isLoading: isSubmitting,
-                        onTap: onConfirmTap,
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
-          );
         },
       ),
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
-    final theme = Theme.of(context);
-    final l10n = context.l10n;
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          l10n.orderConfirmation,
-          style: theme.textTheme.bodyLarge!.copyWith(
-            color: theme.colorScheme.onSurface,
-          ),
-        ),
-        IconButton(
-          icon: const Icon(Icons.close),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDetails(BuildContext context) {
-    final theme = Theme.of(context);
-    final l10n = context.l10n;
-
-    // Определяем название способа оплаты
+  Widget _buildDetails(ThemeData theme, AppLocalizations l10n) {
     final paymentMethodName = paymentType == PaymentTypeDelivery.cash ? l10n.payWithCash : l10n.payOnline;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        InfoDialogWidget(
-          title: 'Имя',
-          description: userName.isNotEmpty ? userName : 'Не указано',
+        ConfirmOrderInfoRow(
+          title: l10n.name,
+          description: userName.isNotEmpty ? userName : l10n.notSpecified,
         ),
-        InfoDialogWidget(
-          title: 'Телефон',
+        ConfirmOrderInfoRow(
+          title: l10n.phone,
           description: userPhone,
         ),
         if (time.isNotEmpty)
-          InfoDialogWidget(
-            title: 'Время готовности',
+          ConfirmOrderInfoRow(
+            title: l10n.readyTime,
             description: time,
           ),
-        InfoDialogWidget(
-          title: 'Способ оплаты',
+        ConfirmOrderInfoRow(
+          title: l10n.paymentMethod,
           description: paymentMethodName,
         ),
-        InfoDialogWidget(
+        ConfirmOrderInfoRow(
           title: l10n.orderAmount,
           description: '$totalPrice сом',
         ),
-        InfoDialogWidget(
-          title: 'Итого без учета бонусов',
+        ConfirmOrderInfoRow(
+          title: l10n.totalWithoutBonus,
           description: '$totalPrice сом',
         ),
         if (bonusAmount != null && bonusAmount! > 0) ...[
-          InfoDialogWidget(
-            title: 'Будет списано бонусов',
+          ConfirmOrderInfoRow(
+            title: l10n.bonusDeduction,
             description: '${bonusAmount!.toStringAsFixed(0)} сом',
           ),
-          InfoDialogWidget(
-            title: 'Итого c учетом бонусов',
+          ConfirmOrderInfoRow(
+            title: l10n.totalWithBonus,
             description: '$totalOrderCost сом',
           ),
         ],
         if (comment.isNotEmpty)
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 8),
-              Text(
-                'Комментарий',
-                style: theme.textTheme.bodyMedium,
-              ),
-              const SizedBox(height: 4),
-              Text(
-                comment,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-                ),
-              ),
-            ],
+          ConfirmOrderCommentSection(
+            comment: comment,
+            theme: theme,
+            l10n: l10n,
           ),
       ],
     );

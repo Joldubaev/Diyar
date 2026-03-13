@@ -18,6 +18,8 @@ class CurierEntity extends Equatable {
   final String? entrance;
   final String? comment;
   final String? paymentMethod;
+  /// Статус оплаты с бэка: New, Await, Successful, Charge, Reject.
+  final String? paymentStatus;
   final int? price;
   final String? timeRequest;
   final String? courierId;
@@ -42,6 +44,7 @@ class CurierEntity extends Equatable {
     this.entrance,
     this.comment,
     this.paymentMethod,
+    this.paymentStatus,
     this.price,
     this.timeRequest,
     this.courierId,
@@ -68,6 +71,7 @@ class CurierEntity extends Equatable {
         entrance,
         comment,
         paymentMethod,
+        paymentStatus,
         price,
         timeRequest,
         courierId,

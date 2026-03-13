@@ -39,6 +39,7 @@ mixin _$OrderActiveItemModel {
   String? get timeRequest => throw _privateConstructorUsedError;
   String? get courierId => throw _privateConstructorUsedError;
   String? get status => throw _privateConstructorUsedError;
+  String? get paymentStatus => throw _privateConstructorUsedError;
   int? get deliveryPrice => throw _privateConstructorUsedError;
   int? get sdacha => throw _privateConstructorUsedError;
   int? get amountToReduce => throw _privateConstructorUsedError;
@@ -79,6 +80,7 @@ abstract class $OrderActiveItemModelCopyWith<$Res> {
       String? timeRequest,
       String? courierId,
       String? status,
+      String? paymentStatus,
       int? deliveryPrice,
       int? sdacha,
       int? amountToReduce});
@@ -119,6 +121,7 @@ class _$OrderActiveItemModelCopyWithImpl<$Res,
     Object? timeRequest = freezed,
     Object? courierId = freezed,
     Object? status = freezed,
+    Object? paymentStatus = freezed,
     Object? deliveryPrice = freezed,
     Object? sdacha = freezed,
     Object? amountToReduce = freezed,
@@ -200,6 +203,10 @@ class _$OrderActiveItemModelCopyWithImpl<$Res,
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as String?,
+      paymentStatus: freezed == paymentStatus
+          ? _value.paymentStatus
+          : paymentStatus // ignore: cast_nullable_to_non_nullable
+              as String?,
       deliveryPrice: freezed == deliveryPrice
           ? _value.deliveryPrice
           : deliveryPrice // ignore: cast_nullable_to_non_nullable
@@ -244,6 +251,7 @@ abstract class _$$OrderActiveItemModelImplCopyWith<$Res>
       String? timeRequest,
       String? courierId,
       String? status,
+      String? paymentStatus,
       int? deliveryPrice,
       int? sdacha,
       int? amountToReduce});
@@ -281,6 +289,7 @@ class __$$OrderActiveItemModelImplCopyWithImpl<$Res>
     Object? timeRequest = freezed,
     Object? courierId = freezed,
     Object? status = freezed,
+    Object? paymentStatus = freezed,
     Object? deliveryPrice = freezed,
     Object? sdacha = freezed,
     Object? amountToReduce = freezed,
@@ -362,6 +371,10 @@ class __$$OrderActiveItemModelImplCopyWithImpl<$Res>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as String?,
+      paymentStatus: freezed == paymentStatus
+          ? _value.paymentStatus
+          : paymentStatus // ignore: cast_nullable_to_non_nullable
+              as String?,
       deliveryPrice: freezed == deliveryPrice
           ? _value.deliveryPrice
           : deliveryPrice // ignore: cast_nullable_to_non_nullable
@@ -401,6 +414,7 @@ class _$OrderActiveItemModelImpl implements _OrderActiveItemModel {
       this.timeRequest,
       this.courierId,
       this.status,
+      this.paymentStatus,
       this.deliveryPrice,
       this.sdacha,
       this.amountToReduce})
@@ -456,6 +470,8 @@ class _$OrderActiveItemModelImpl implements _OrderActiveItemModel {
   @override
   final String? status;
   @override
+  final String? paymentStatus;
+  @override
   final int? deliveryPrice;
   @override
   final int? sdacha;
@@ -464,7 +480,7 @@ class _$OrderActiveItemModelImpl implements _OrderActiveItemModel {
 
   @override
   String toString() {
-    return 'OrderActiveItemModel(id: $id, userId: $userId, userName: $userName, userPhone: $userPhone, orderNumber: $orderNumber, dishesCount: $dishesCount, foods: $foods, address: $address, houseNumber: $houseNumber, kvOffice: $kvOffice, intercom: $intercom, floor: $floor, entrance: $entrance, comment: $comment, paymentMethod: $paymentMethod, price: $price, timeRequest: $timeRequest, courierId: $courierId, status: $status, deliveryPrice: $deliveryPrice, sdacha: $sdacha, amountToReduce: $amountToReduce)';
+    return 'OrderActiveItemModel(id: $id, userId: $userId, userName: $userName, userPhone: $userPhone, orderNumber: $orderNumber, dishesCount: $dishesCount, foods: $foods, address: $address, houseNumber: $houseNumber, kvOffice: $kvOffice, intercom: $intercom, floor: $floor, entrance: $entrance, comment: $comment, paymentMethod: $paymentMethod, price: $price, timeRequest: $timeRequest, courierId: $courierId, status: $status, paymentStatus: $paymentStatus, deliveryPrice: $deliveryPrice, sdacha: $sdacha, amountToReduce: $amountToReduce)';
   }
 
   @override
@@ -502,6 +518,8 @@ class _$OrderActiveItemModelImpl implements _OrderActiveItemModel {
             (identical(other.courierId, courierId) ||
                 other.courierId == courierId) &&
             (identical(other.status, status) || other.status == status) &&
+            (identical(other.paymentStatus, paymentStatus) ||
+                other.paymentStatus == paymentStatus) &&
             (identical(other.deliveryPrice, deliveryPrice) ||
                 other.deliveryPrice == deliveryPrice) &&
             (identical(other.sdacha, sdacha) || other.sdacha == sdacha) &&
@@ -532,6 +550,7 @@ class _$OrderActiveItemModelImpl implements _OrderActiveItemModel {
         timeRequest,
         courierId,
         status,
+        paymentStatus,
         deliveryPrice,
         sdacha,
         amountToReduce
@@ -576,6 +595,7 @@ abstract class _OrderActiveItemModel implements OrderActiveItemModel {
       final String? timeRequest,
       final String? courierId,
       final String? status,
+      final String? paymentStatus,
       final int? deliveryPrice,
       final int? sdacha,
       final int? amountToReduce}) = _$OrderActiveItemModelImpl;
@@ -621,6 +641,8 @@ abstract class _OrderActiveItemModel implements OrderActiveItemModel {
   String? get courierId;
   @override
   String? get status;
+  @override
+  String? get paymentStatus;
   @override
   int? get deliveryPrice;
   @override

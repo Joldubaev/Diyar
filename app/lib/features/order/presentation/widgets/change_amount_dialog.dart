@@ -1,3 +1,4 @@
+import 'package:diyar/core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -51,8 +52,12 @@ class _ChangeAmountDialogState extends State<ChangeAmountDialog> {
           // Иконка доллара из макета
           CircleAvatar(
             radius: 30,
-            backgroundColor: Colors.green.withValues(alpha: 0.1),
-            child: const Icon(Icons.attach_money, color: Colors.green, size: 30),
+            backgroundColor: AppColors.success.withValues(alpha: 0.1),
+            child: const Icon(
+              Icons.attach_money,
+              color: AppColors.success,
+              size: 30,
+            ),
           ),
           const SizedBox(height: 16),
           Text(
@@ -61,7 +66,12 @@ class _ChangeAmountDialogState extends State<ChangeAmountDialog> {
             style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
-          const Text('Курьер принесет вам сдачу.', style: TextStyle(color: Colors.grey)),
+          Text(
+            'Курьер принесет вам сдачу.',
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: context.colorScheme.onSurfaceVariant,
+            ),
+          ),
           const SizedBox(height: 20),
 
           // Поле ввода суммы
@@ -85,7 +95,7 @@ class _ChangeAmountDialogState extends State<ChangeAmountDialog> {
                 Checkbox(
                   value: _isExactAmount,
                   onChanged: (val) => setState(() => _isExactAmount = val ?? false),
-                  activeColor: Colors.green,
+                  activeColor: AppColors.success,
                 ),
                 Expanded(
                   child: Text('У меня ровно ${widget.totalOrderCost}.00 KGS'),
@@ -110,16 +120,27 @@ class _ChangeAmountDialogState extends State<ChangeAmountDialog> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
+                backgroundColor: AppColors.success,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 padding: const EdgeInsets.symmetric(vertical: 14),
               ),
-              child: const Text('Подтвердить', style: TextStyle(color: Colors.white)),
+              child: Text(
+                'Подтвердить',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: context.colorScheme.onPrimary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Отменить', style: TextStyle(color: Colors.grey)),
+            child: Text(
+              'Отменить',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: context.colorScheme.onSurfaceVariant,
+              ),
+            ),
           ),
         ],
       ),

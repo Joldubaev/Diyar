@@ -158,10 +158,33 @@ class _OrderDetailContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final paymentState = PaymentDisplayState.fromRaw(order.paymentStatus);
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Column(
         children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Row(
+              children: [
+                Icon(
+                  paymentState == PaymentDisplayState.paid
+                      ? Icons.check_circle
+                      : Icons.access_time,
+                  size: 20,
+                  color: paymentState.color,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  'Оплата: ${paymentState.label}',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: paymentState.color,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
           DetailCardWidget(children: [
             DetailItem(icon: 'about', title: context.l10n.name, value: order.userName ?? ""),
             DetailItem(icon: 'location', title: context.l10n.yourAddress, value: order.fullAddress),

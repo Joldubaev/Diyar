@@ -62,7 +62,7 @@ class _SaveTemplateDialogState extends State<SaveTemplateDialog> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: Colors.red,
+        backgroundColor: widget.theme.colorScheme.error,
         duration: const Duration(seconds: 2),
       ),
     );

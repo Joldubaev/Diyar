@@ -1,3 +1,4 @@
+import 'package:diyar/core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -15,11 +16,11 @@ class QrCodeDisplay extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colorScheme.onPrimary,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
+            color: AppColors.black.withValues(alpha: 0.08),
             blurRadius: 16,
             offset: const Offset(0, 4),
             spreadRadius: 2,
@@ -30,7 +31,7 @@ class QrCodeDisplay extends StatelessWidget {
         data: data,
         version: QrVersions.auto,
         size: 280,
-        backgroundColor: Colors.white,
+        backgroundColor: context.colorScheme.onPrimary,
         errorCorrectionLevel: QrErrorCorrectLevel.H,
         padding: const EdgeInsets.all(16),
       ),

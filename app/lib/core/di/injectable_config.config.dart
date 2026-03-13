@@ -100,8 +100,19 @@ import '../../features/cart/presentation/cubit/cart_cutlery_cubit.dart'
 import '../../features/cart/presentation/cubit/cart_price_cubit.dart' as _i132;
 import '../../features/curier/curier.dart' as _i566;
 import '../../features/curier/data/datasource/curier_data_source.dart' as _i614;
+import '../../features/curier/data/datasource/curier_payment_data_source.dart'
+    as _i485;
+import '../../features/curier/data/repositories/curier_payment_repository.dart'
+    as _i225;
 import '../../features/curier/data/repositories/curier_repository.dart'
     as _i537;
+import '../../features/curier/data/services/courier_location_hub_service.dart'
+    as _i689;
+import '../../features/curier/domain/domain.dart' as _i949;
+import '../../features/curier/domain/repository/curier_payment_repository.dart'
+    as _i533;
+import '../../features/curier/domain/usecases/confirm_cash_payment_and_finish_usecase.dart'
+    as _i340;
 import '../../features/curier/presentation/cubit/curier_cubit.dart' as _i110;
 import '../../features/history/data/data.dart' as _i368;
 import '../../features/history/data/data_source/history_re_datasource.dart'
@@ -163,6 +174,8 @@ import '../../features/pick_up/domain/usecases/calculate_minimum_time_usecase.da
     as _i952;
 import '../../features/pick_up/domain/usecases/create_pickup_order_from_cart_usecase.dart'
     as _i490;
+import '../../features/pick_up/domain/usecases/validate_bonus_usecase.dart'
+    as _i455;
 import '../../features/pick_up/pick_up.dart' as _i54;
 import '../../features/pick_up/presentation/cubit/pick_up_cubit.dart' as _i370;
 import '../../features/profile/data/datasources/profile_remote_data_source.dart'
@@ -258,6 +271,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i512.CartCutleryCubit>(() => _i512.CartCutleryCubit());
     gh.factory<_i952.CalculateMinimumTimeUseCase>(
         () => _i952.CalculateMinimumTimeUseCase());
+    gh.factory<_i455.ValidateBonusUseCase>(() => _i455.ValidateBonusUseCase());
     gh.factory<_i490.CreatePickupOrderFromCartUseCase>(
         () => _i490.CreatePickupOrderFromCartUseCase());
     gh.singleton<_i231.InternetBloc>(() => _i231.InternetBloc());
@@ -272,6 +286,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i706.CartHiveDataSource());
     gh.factory<_i489.ThemeCubit>(
         () => _i489.ThemeCubit(gh<_i460.SharedPreferences>()));
+    gh.lazySingleton<_i689.CourierLocationHubService>(
+        () => _i689.CourierLocationHubService(gh<_i460.SharedPreferences>()));
     gh.lazySingleton<_i697.OrderStatusService>(
         () => _i697.OrderStatusService(gh<_i460.SharedPreferences>()));
     gh.factory<_i132.CartPriceCubit>(() => _i132.CartPriceCubit(
@@ -351,6 +367,19 @@ extension GetItInjectableX on _i174.GetIt {
       () => registerModule.diyarRemoteConfig(gh<_i655.PackageInfo>()),
       preResolve: true,
     );
+    gh.lazySingleton<_i485.CurierPaymentDataSource>(
+        () => _i485.CurierPaymentDataSourceImpl(
+              gh<_i361.Dio>(),
+              gh<_i460.SharedPreferences>(),
+            ));
+    gh.lazySingleton<_i533.CurierPaymentRepository>(() =>
+        _i225.CurierPaymentRepositoryImpl(gh<_i485.CurierPaymentDataSource>()));
+    gh.factory<_i370.PickUpCubit>(() => _i370.PickUpCubit(
+          gh<_i1043.PickUpRepository>(),
+          gh<_i1043.CreatePickupOrderFromCartUseCase>(),
+          gh<_i1043.CalculateMinimumTimeUseCase>(),
+          gh<_i1043.ValidateBonusUseCase>(),
+        ));
     gh.lazySingleton<_i659.PriceRepository>(
         () => _i659.PriceRepositoryImpl(gh<_i337.RemoteDataSource>()));
     gh.lazySingleton<_i614.CurierDataSource>(() => _i614.CurierDataSourceImpl(
@@ -460,10 +489,10 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i31.GetNewsUseCase(gh<_i477.HomeContentRepository>()));
     gh.factory<_i608.GetSalesUseCase>(
         () => _i608.GetSalesUseCase(gh<_i477.HomeContentRepository>()));
+    gh.lazySingleton<_i1043.PickUpRepositories>(
+        () => _i123.PickUpRepository(gh<_i54.RemotePickUpDataSource>()));
     gh.factory<_i792.SettingsCubit>(
         () => _i792.SettingsCubit(gh<_i635.SettingsRepository>()));
-    gh.lazySingleton<_i54.PickUpRepositories>(
-        () => _i123.PickUpRepository(gh<_i54.RemotePickUpDataSource>()));
     gh.lazySingleton<_i408.HistoryRepository>(
         () => _i178.HistoryRepositoryImpl(gh<_i368.HistoryReDatasource>()));
     gh.factory<_i236.OrderDetailCubit>(
@@ -483,11 +512,6 @@ extension GetItInjectableX on _i174.GetIt {
         ));
     gh.factory<_i232.HistoryCubit>(
         () => _i232.HistoryCubit(gh<_i408.HistoryRepository>()));
-    gh.factory<_i370.PickUpCubit>(() => _i370.PickUpCubit(
-          gh<_i1043.PickUpRepositories>(),
-          gh<_i1043.CreatePickupOrderFromCartUseCase>(),
-          gh<_i1043.CalculateMinimumTimeUseCase>(),
-        ));
     gh.factory<_i931.GetUserRoleUseCase>(
         () => _i931.GetUserRoleUseCase(gh<_i825.SecureStorageService>()));
     gh.factory<_i449.HandleFirstLaunchUseCase>(
@@ -497,6 +521,11 @@ extension GetItInjectableX on _i174.GetIt {
             gh<_i825.SecureStorageService>()));
     gh.factory<_i212.GetNavigationRouteUseCase>(() =>
         _i212.GetNavigationRouteUseCase(gh<_i825.SecureStorageService>()));
+    gh.factory<_i340.ConfirmCashPaymentAndFinishUseCase>(
+        () => _i340.ConfirmCashPaymentAndFinishUseCase(
+              gh<_i949.CurierPaymentRepository>(),
+              gh<_i949.CurierRepository>(),
+            ));
     gh.factory<_i789.OpenBankingCubit>(() => _i789.OpenBankingCubit(
           gh<_i429.CreatePayLinkUsecase>(),
           gh<_i848.IPaymentStatusSignalRService>(),
@@ -514,14 +543,17 @@ extension GetItInjectableX on _i174.GetIt {
         ));
     gh.lazySingleton<_i411.TemplateRepository>(() =>
         _i843.TemplateRepositoryImpl(gh<_i251.TemplateRemoteDataSource>()));
-    gh.factory<_i110.CurierCubit>(
-        () => _i110.CurierCubit(gh<_i566.CurierRepository>()));
     gh.factory<_i812.HomeContentCubit>(() => _i812.HomeContentCubit(
           getNewsUseCase: gh<_i31.GetNewsUseCase>(),
           getSalesUseCase: gh<_i608.GetSalesUseCase>(),
           getPopularProductsUseCase: gh<_i205.GetPopularProductsUseCase>(),
           getActiveOrdersUseCase: gh<_i31.GetActiveOrdersUseCase>(),
           getProfileUseCase: gh<_i247.GetProfileUseCase>(),
+        ));
+    gh.factory<_i110.CurierCubit>(() => _i110.CurierCubit(
+          gh<_i566.CurierRepository>(),
+          gh<_i566.ConfirmCashPaymentAndFinishUseCase>(),
+          gh<_i460.SharedPreferences>(),
         ));
     gh.factory<_i858.SplashCubit>(() => _i858.SplashCubit(
           gh<_i141.CheckAuthenticationStatusUseCase>(),

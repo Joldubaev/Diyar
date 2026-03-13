@@ -29,6 +29,8 @@ class AppConst {
   static const userId = 'USER_ID';
   static const userRole = 'USER_ROLE';
   static const prefs = 'PREFS';
+  /// Сохранённое состояние переключателя «На смене» (курьер).
+  static const courierOnShift = 'COURIER_ON_SHIFT';
 
   // Map
   static const getLocations = "6d9fa3b5-2a2b-46fa-838b-ce4e9fc4e4f8";

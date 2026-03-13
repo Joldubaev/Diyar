@@ -25,11 +25,11 @@ class CopyableTokenField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    // final theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       decoration: BoxDecoration(
-        color: AppColors.grey2,
+        color: context.colorScheme.onPrimary,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
@@ -38,7 +38,7 @@ class CopyableTokenField extends StatelessWidget {
           Expanded(
             child: Text(
               token,
-              style: theme.textTheme.titleLarge?.copyWith(
+              style: context.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
                 letterSpacing: 2,
                 color: Colors.black87,

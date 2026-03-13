@@ -7,6 +7,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 abstract class CurierDataSource {
   Future<List<CurierOrderModel>> getCurierOrders();
   Future<void> getFinishOrder(int orderId);
+  Future<void> setShift(bool onShift);
+
+  /// GET /courier/shift — текущий статус смены. Ответ: { "onShift": true } или { "onShift": false }.
+  Future<bool> getShiftStatus();
   Future<List<CurierOrderModel>> getCurierHistory({
     String? startDate,
     String? endDate,
@@ -74,6 +78,39 @@ class CurierDataSourceImpl implements CurierDataSource {
     );
 
     _validateResponse(res);
+  }
+
+  @override
+  Future<void> setShift(bool onShift) async {
+    final token = prefs.getString(AppConst.accessToken) ?? '';
+    final res = await dio.post(
+      ApiConst.courierShift,
+      data: {'onShift': onShift},
+      options: Options(headers: ApiConst.authMap(token)),
+    );
+    _validateResponse(res);
+  }
+
+  @override
+  Future<bool> getShiftStatus() async {
+    final token = prefs.getString(AppConst.accessToken) ?? '';
+    final res = await dio.get(
+      ApiConst.courierShift,
+      options: Options(headers: ApiConst.authMap(token)),
+    );
+    if (res.data is Map && (res.data as Map).containsKey('code')) {
+      _validateResponse(res);
+    }
+    final data = res.data;
+    if (data is Map<String, dynamic>) {
+      final onShift = data['onShift'];
+      if (onShift is bool) return onShift;
+      final message = data['message'];
+      if (message is Map && message['onShift'] is bool) {
+        return message['onShift'] as bool;
+      }
+    }
+    return true;
   }
 
   @override

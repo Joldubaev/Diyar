@@ -640,4 +640,27 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get yourOrdersConfirm => 'Сиздин тапшырууларыңызды тастыктаңыз';
+
+  @override
+  String get readyTime => 'Даяр болуу убактысы';
+
+  @override
+  String get totalWithoutBonus => 'Бонуссуз жалпы сумма';
+
+  @override
+  String get bonusDeduction => 'Бонус чегерилет';
+
+  @override
+  String get totalWithBonus => 'Бонус менен жалпы сумма';
+
+  @override
+  String get notSpecified => 'Көрсөтүлгөн эмес';
+
+  @override
+  String availableBonus(String count) {
+    return '$count бонус бар';
+  }
+
+  @override
+  String get bonusLabel => 'бонус';
 }

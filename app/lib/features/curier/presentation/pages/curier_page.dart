@@ -24,12 +24,19 @@ class CurierPage extends StatefulWidget {
 
 class _CurierPageState extends State<CurierPage> {
   final _mapService = di.sl<MapService>();
+  final _courierLocationHub = di.sl<CourierLocationHubService>();
 
   @override
   void initState() {
     super.initState();
     log('[CurierPage] initState: Инициализация страницы');
-    // Инициализация будет выполнена в _initializeDataCallback после построения providers
+    _courierLocationHub.start();
+  }
+
+  @override
+  void dispose() {
+    _courierLocationHub.stop();
+    super.dispose();
   }
 
   void _initializeDataCallback(BuildContext context) {
@@ -184,10 +191,7 @@ class _CurierPageState extends State<CurierPage> {
                           log('[CurierPage] Builder: Построение карточки заказа #${order.orderNumber} (индекс $index)');
                           return CurierOrderCard(
                             order: order,
-                            onFinish: () {
-                              log('[CurierPage] Builder: Завершение заказа #${order.orderNumber}');
-                              context.read<CurierCubit>().getFinishOrder(order.orderNumber ?? 0);
-                            },
+                            onFinish: () => _handleFinishOrder(context, order),
                             onOpenMap: () {
                               log('[CurierPage] Builder: Открытие карты для заказа #${order.orderNumber}');
                               _mapService.open2GIS(context, '${order.address} ${order.houseNumber}');
@@ -215,6 +219,52 @@ class _CurierPageState extends State<CurierPage> {
             bottomSheet: _buildRefreshButton(context, theme),
           );
         }));
+  }
+
+  void _handleFinishOrder(BuildContext context, CurierEntity order) {
+    log('[CurierPage] _handleFinishOrder: Попытка завершить заказ #${order.orderNumber}, paymentStatus=${order.paymentStatus}, paymentMethod=${order.paymentMethod}');
+
+    final status = (order.paymentStatus ?? '').trim();
+    final isPaid = status == 'Successful' || status == 'Charge';
+    final method = (order.paymentMethod ?? '').toLowerCase();
+    final isCash = method.contains('cash') || method.contains('налич');
+
+    final statusText = isPaid
+        ? 'Оплата по заказу уже отмечена как полученная.'
+        : 'Оплата по заказу ещё не отмечена как полученная.';
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: Text('Завершить заказ #${order.orderNumber}?'),
+          content: Text(
+            '$statusText\n\n'
+            'Клиент оплатил заказ${isCash ? ' НАЛИЧНЫМИ' : ''}? Подтвердить завершение?',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: const Text('Отмена'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+                log('[CurierPage] _handleFinishOrder: Курьер подтвердил завершение заказа');
+                if (isCash) {
+                  log('[CurierPage] _handleFinishOrder: Наличный заказ — PUT set-payment-status (Successful), затем завершение');
+                  context.read<CurierCubit>().confirmCashPaymentAndFinish(order);
+                } else {
+                  log('[CurierPage] _handleFinishOrder: Безналичный заказ — сразу завершение');
+                  context.read<CurierCubit>().getFinishOrder(order.orderNumber ?? 0);
+                }
+              },
+              child: const Text('Да, завершить'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Widget _buildRefreshButton(BuildContext context, ThemeData theme) {

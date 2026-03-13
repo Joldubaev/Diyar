@@ -51,11 +51,11 @@ class BonusCardWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
+          Text(
             'Ваш баланс',
             style: TextStyle(
               fontSize: 14,
-              color: Colors.white,
+              color: context.colorScheme.onSurface,
               fontWeight: FontWeight.w700,
               letterSpacing: 0.2,
             ),

@@ -50,9 +50,9 @@ class _BonusTransactionsPageState extends State<BonusTransactionsPage> {
   Color _getTransactionTypeColor(String type) {
     switch (type) {
       case 'Earned':
-        return AppColors.green;
+        return AppColors.success;
       case 'Spent':
-        return AppColors.red;
+        return AppColors.error;
       case 'Adjusted':
         return AppColors.orange;
       default:
@@ -63,6 +63,7 @@ class _BonusTransactionsPageState extends State<BonusTransactionsPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
     return BlocProvider(
       create: (_) => di.sl<BonusCubit>(),
       child: Scaffold(
@@ -71,13 +72,13 @@ class _BonusTransactionsPageState extends State<BonusTransactionsPage> {
             onPressed: () {
               context.router.maybePop();
             },
-            icon: const Icon(Icons.arrow_back_ios, color: AppColors.black1),
+            icon: Icon(Icons.arrow_back_ios, color: scheme.onSurface),
           ),
           title: Text(
             'Бонусные транзакции',
-            style: theme.textTheme.bodyLarge!.copyWith(color: AppColors.black1),
+            style: theme.textTheme.bodyLarge!.copyWith(color: scheme.onSurface),
           ),
-          backgroundColor: AppColors.backgroundLight,
+          backgroundColor: theme.scaffoldBackgroundColor,
         ),
         body: BlocConsumer<BonusCubit, BonusState>(
           listener: (context, state) {
@@ -85,7 +86,7 @@ class _BonusTransactionsPageState extends State<BonusTransactionsPage> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(state.message),
-                  backgroundColor: AppColors.red,
+                  backgroundColor: scheme.error,
                 ),
               );
             }
@@ -194,7 +195,7 @@ class _BonusTransactionsPageState extends State<BonusTransactionsPage> {
                                             Text(
                                               '${transaction.amount > 0 ? '+' : ''}${transaction.amount.toStringAsFixed(2)} сом',
                                               style: theme.textTheme.titleMedium?.copyWith(
-                                                color: transaction.amount > 0 ? AppColors.green : AppColors.red,
+                                                color: transaction.amount > 0 ? AppColors.success : AppColors.error,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),

@@ -35,6 +35,7 @@ mixin _$CurierOrderModel {
   String? get entrance => throw _privateConstructorUsedError;
   String? get comment => throw _privateConstructorUsedError;
   String? get paymentMethod => throw _privateConstructorUsedError;
+  String? get paymentStatus => throw _privateConstructorUsedError;
   int? get price => throw _privateConstructorUsedError;
   String? get timeRequest => throw _privateConstructorUsedError;
   String? get courierId => throw _privateConstructorUsedError;
@@ -75,6 +76,7 @@ abstract class $CurierOrderModelCopyWith<$Res> {
       String? entrance,
       String? comment,
       String? paymentMethod,
+      String? paymentStatus,
       int? price,
       String? timeRequest,
       String? courierId,
@@ -114,6 +116,7 @@ class _$CurierOrderModelCopyWithImpl<$Res, $Val extends CurierOrderModel>
     Object? entrance = freezed,
     Object? comment = freezed,
     Object? paymentMethod = freezed,
+    Object? paymentStatus = freezed,
     Object? price = freezed,
     Object? timeRequest = freezed,
     Object? courierId = freezed,
@@ -183,6 +186,10 @@ class _$CurierOrderModelCopyWithImpl<$Res, $Val extends CurierOrderModel>
           ? _value.paymentMethod
           : paymentMethod // ignore: cast_nullable_to_non_nullable
               as String?,
+      paymentStatus: freezed == paymentStatus
+          ? _value.paymentStatus
+          : paymentStatus // ignore: cast_nullable_to_non_nullable
+              as String?,
       price: freezed == price
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
@@ -239,6 +246,7 @@ abstract class _$$CurierOrderModelImplCopyWith<$Res>
       String? entrance,
       String? comment,
       String? paymentMethod,
+      String? paymentStatus,
       int? price,
       String? timeRequest,
       String? courierId,
@@ -276,6 +284,7 @@ class __$$CurierOrderModelImplCopyWithImpl<$Res>
     Object? entrance = freezed,
     Object? comment = freezed,
     Object? paymentMethod = freezed,
+    Object? paymentStatus = freezed,
     Object? price = freezed,
     Object? timeRequest = freezed,
     Object? courierId = freezed,
@@ -345,6 +354,10 @@ class __$$CurierOrderModelImplCopyWithImpl<$Res>
           ? _value.paymentMethod
           : paymentMethod // ignore: cast_nullable_to_non_nullable
               as String?,
+      paymentStatus: freezed == paymentStatus
+          ? _value.paymentStatus
+          : paymentStatus // ignore: cast_nullable_to_non_nullable
+              as String?,
       price: freezed == price
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
@@ -396,6 +409,7 @@ class _$CurierOrderModelImpl implements _CurierOrderModel {
       this.entrance,
       this.comment,
       this.paymentMethod,
+      this.paymentStatus,
       this.price,
       this.timeRequest,
       this.courierId,
@@ -447,6 +461,8 @@ class _$CurierOrderModelImpl implements _CurierOrderModel {
   @override
   final String? paymentMethod;
   @override
+  final String? paymentStatus;
+  @override
   final int? price;
   @override
   final String? timeRequest;
@@ -463,7 +479,7 @@ class _$CurierOrderModelImpl implements _CurierOrderModel {
 
   @override
   String toString() {
-    return 'CurierOrderModel(id: $id, userId: $userId, userName: $userName, userPhone: $userPhone, orderNumber: $orderNumber, dishesCount: $dishesCount, foods: $foods, address: $address, houseNumber: $houseNumber, kvOffice: $kvOffice, intercom: $intercom, floor: $floor, entrance: $entrance, comment: $comment, paymentMethod: $paymentMethod, price: $price, timeRequest: $timeRequest, courierId: $courierId, status: $status, deliveryPrice: $deliveryPrice, sdacha: $sdacha, amountToReduce: $amountToReduce)';
+    return 'CurierOrderModel(id: $id, userId: $userId, userName: $userName, userPhone: $userPhone, orderNumber: $orderNumber, dishesCount: $dishesCount, foods: $foods, address: $address, houseNumber: $houseNumber, kvOffice: $kvOffice, intercom: $intercom, floor: $floor, entrance: $entrance, comment: $comment, paymentMethod: $paymentMethod, paymentStatus: $paymentStatus, price: $price, timeRequest: $timeRequest, courierId: $courierId, status: $status, deliveryPrice: $deliveryPrice, sdacha: $sdacha, amountToReduce: $amountToReduce)';
   }
 
   @override
@@ -495,6 +511,8 @@ class _$CurierOrderModelImpl implements _CurierOrderModel {
             (identical(other.comment, comment) || other.comment == comment) &&
             (identical(other.paymentMethod, paymentMethod) ||
                 other.paymentMethod == paymentMethod) &&
+            (identical(other.paymentStatus, paymentStatus) ||
+                other.paymentStatus == paymentStatus) &&
             (identical(other.price, price) || other.price == price) &&
             (identical(other.timeRequest, timeRequest) ||
                 other.timeRequest == timeRequest) &&
@@ -527,6 +545,7 @@ class _$CurierOrderModelImpl implements _CurierOrderModel {
         entrance,
         comment,
         paymentMethod,
+        paymentStatus,
         price,
         timeRequest,
         courierId,
@@ -570,6 +589,7 @@ abstract class _CurierOrderModel implements CurierOrderModel {
       final String? entrance,
       final String? comment,
       final String? paymentMethod,
+      final String? paymentStatus,
       final int? price,
       final String? timeRequest,
       final String? courierId,
@@ -611,6 +631,8 @@ abstract class _CurierOrderModel implements CurierOrderModel {
   String? get comment;
   @override
   String? get paymentMethod;
+  @override
+  String? get paymentStatus;
   @override
   int? get price;
   @override

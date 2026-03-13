@@ -5,7 +5,7 @@ class _BonusCardOverlayPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.08)
+      ..color = AppColors.white.withValues(alpha: 0.08)
       ..style = PaintingStyle.fill;
     final path = Path();
     path.moveTo(size.width * 0.5, 0);
@@ -15,7 +15,7 @@ class _BonusCardOverlayPainter extends CustomPainter {
     path.close();
     canvas.drawPath(path, paint);
     final paint2 = Paint()
-      ..color = Colors.white.withValues(alpha: 0.06)
+      ..color = AppColors.white.withValues(alpha: 0.06)
       ..style = PaintingStyle.fill;
     final path2 = Path();
     path2.moveTo(0, size.height * 0.6);

@@ -11,16 +11,16 @@ final lightTheme = ThemeData(
   primarySwatch: AppColors.primary,
   fontFamily: "Inter",
   scaffoldBackgroundColor: AppColors.backgroundLight,
-  colorScheme: const ColorScheme(
+  colorScheme: ColorScheme.light(
     primary: AppColors.primary,
-    secondary: AppColors.primary,
-    surface: Colors.white,
-    error: AppColors.error,
     onPrimary: Colors.white,
+    secondary: AppColors.primary,
     onSecondary: Colors.white,
+    surface: Colors.white,
     onSurface: Colors.black,
+    error: AppColors.error,
     onError: Colors.white,
-    brightness: Brightness.light,
+    onSurfaceVariant: AppColors.grey,
   ),
   appBarTheme: const AppBarTheme(
     elevation: 0,
@@ -80,7 +80,7 @@ final lightTheme = ThemeData(
     ),
   ),
   // Стили для карточек
-  cardTheme:  CardThemeData(
+  cardTheme: CardThemeData(
     color: Colors.white,
     elevation: 0,
     shape: RoundedRectangleBorder(

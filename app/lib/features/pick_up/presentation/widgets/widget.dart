@@ -1,4 +1,15 @@
 export 'pickup_form_widget.dart';
+export 'pickup_user_name_field.dart';
+export 'pickup_phone_field.dart';
+export 'pickup_comment_field.dart';
+export 'pickup_time_field.dart';
+export 'pickup_bonus_section.dart';
+export 'pickup_address_info.dart';
+export 'pickup_confirm_button.dart';
 export 'confirm_order_bottom_sheet.dart';
-export 'payment_method_bottom_sheet.dart';
+export 'confirm_order_bottom_sheet_content.dart';
+export 'confirm_order_success_dialog.dart';
+export 'confirm_order_info_row.dart';
+export 'confirm_order_comment_section.dart';
+export 'confirm_order_sheet_header.dart';
 export 'time_picker_dialog.dart';
