@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/common/common.dart';
 import 'package:diyar/core/core.dart';
@@ -104,23 +102,10 @@ class _DeliveryFormViewState extends State<DeliveryFormView> {
   late final DeliveryFormControllers _controllers;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  /// Извлекает номер дома из адреса вида "проспект Чуй, д. 1"
-  String? _extractHouseNumber(String? address) {
-    if (address == null || address.isEmpty) return null;
-
-    // Паттерны для поиска номера дома: ", д. 1", ", д.1", ",д. 1", ",д.1"
-    final regex = RegExp(r',\s*д\.\s*(\d+)', caseSensitive: false);
-    final match = regex.firstMatch(address);
-    if (match != null && match.groupCount >= 1) {
-      return match.group(1);
-    }
-    return null;
-  }
-
   @override
   void initState() {
     super.initState();
-    final extractedHouseNumber = _extractHouseNumber(widget.address);
+    final extractedHouseNumber = DeliveryFormPage._extractHouseNumber(widget.address);
     _controllers = DeliveryFormControllers(
       initialPhone: widget.initialUserPhone,
       initialUserName: widget.initialUserName,
@@ -147,42 +132,16 @@ class _DeliveryFormViewState extends State<DeliveryFormView> {
   }
 
   void _showOrderConfirmationBottomSheet(BuildContext context, DeliveryFormLoaded state) {
-    log('[DeliveryPage] _showOrderConfirmationBottomSheet: Начало проверки перед показом bottom sheet');
-    log('[DeliveryPage] _showOrderConfirmationBottomSheet: paymentType=${state.paymentType}');
-    log('[DeliveryPage] _showOrderConfirmationBottomSheet: changeAmount=${state.changeAmount}');
-    log('[DeliveryPage] _showOrderConfirmationBottomSheet: subtotalPrice=${state.subtotalPrice}');
-    log('[DeliveryPage] _showOrderConfirmationBottomSheet: deliveryPrice=${state.deliveryPrice.toInt()}');
-    log('[DeliveryPage] _showOrderConfirmationBottomSheet: bonusAmount=${state.bonusAmount}');
-    log('[DeliveryPage] _showOrderConfirmationBottomSheet: useBonus=${state.useBonus}');
-
-    // Проверяем сдачу при наличной оплате
     if (state.paymentType == PaymentTypeDelivery.cash) {
       if (state.changeAmount == null) {
-        log('[DeliveryPage] _showOrderConfirmationBottomSheet: ОШИБКА - changeAmount is null');
         showToast('Пожалуйста, введите сумму с которой нужна сдача', isError: true);
         return;
       }
-      // Вычисляем полную сумму БЕЗ вычета бонусов (для отправки на бэкенд)
-      final fullOrderPrice = state.subtotalPrice + state.deliveryPrice.toInt();
-
-      // Используем state.totalOrderCost для валидации, так как он уже учитывает бонусы
-      // state.totalOrderCost обновляется в DeliveryFormCubit.setBonusAmount при применении бонусов
-      log('[DeliveryPage] _showOrderConfirmationBottomSheet: fullOrderPrice (без бонусов, для бэкенда)=$fullOrderPrice');
-      log('[DeliveryPage] _showOrderConfirmationBottomSheet: bonusAmount=${state.bonusAmount}');
-      log('[DeliveryPage] _showOrderConfirmationBottomSheet: state.totalOrderCost (с учетом бонусов, для валидации)=${state.totalOrderCost}');
-      log('[DeliveryPage] _showOrderConfirmationBottomSheet: Сравнение: changeAmount=${state.changeAmount} < totalOrderCost=${state.totalOrderCost} = ${state.changeAmount! < state.totalOrderCost}');
-
-      // Валидация сравнивает с state.totalOrderCost (то, что видит пользователь в UI)
-      // На бэкенд отправим fullOrderPrice (без бонусов), бэкенд сам вычтет бонусы
       if (state.changeAmount! < state.totalOrderCost) {
-        log('[DeliveryPage] _showOrderConfirmationBottomSheet: ОШИБКА - Сумма сдачи меньше итоговой стоимости заказа (с учетом бонусов)');
         showToast('Сумма должна быть не меньше ${state.totalOrderCost} сом', isError: true);
         return;
       }
-      log('[DeliveryPage] _showOrderConfirmationBottomSheet: Валидация сдачи пройдена успешно');
     }
-
-    log('[DeliveryPage] _showOrderConfirmationBottomSheet: Показываем bottom sheet для подтверждения заказа');
 
     final deliveryFormCubit = context.read<DeliveryFormCubit>();
     showModalBottomSheet(

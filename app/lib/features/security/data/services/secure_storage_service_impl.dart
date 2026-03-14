@@ -2,15 +2,18 @@ import 'package:diyar/core/core.dart';
 import 'package:diyar/features/auth/data/datasources/local/auth_local_data_source.dart';
 import 'package:diyar/features/security/domain/services/secure_storage_service.dart';
 import 'package:injectable/injectable.dart';
+import 'package:storage/storage.dart';
 
 @LazySingleton(as: SecureStorageService)
 class SecureStorageServiceImpl implements SecureStorageService {
   final AuthLocalDataSource _authLocalDataSource;
   final LocalStorage _localStorage;
+  final SecureStorage _secureStorage;
 
   SecureStorageServiceImpl(
     this._authLocalDataSource,
     this._localStorage,
+    this._secureStorage,
   );
 
   @override
@@ -25,12 +28,12 @@ class SecureStorageServiceImpl implements SecureStorageService {
 
   @override
   Future<String?> getAccessToken() async {
-    return _localStorage.getString(AppConst.accessToken);
+    return _secureStorage.read(AppConst.accessToken);
   }
 
   @override
   Future<String?> getRefreshToken() async {
-    return _localStorage.getString(AppConst.refreshToken);
+    return _secureStorage.read(AppConst.refreshToken);
   }
 
   @override

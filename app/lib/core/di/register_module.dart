@@ -14,6 +14,9 @@ import 'package:storage/storage.dart';
 @module
 abstract class RegisterModule {
   @lazySingleton
+  SecureStorage get secureStorage => SecureStorageImpl();
+
+  @lazySingleton
   Dio get dio {
     final dio = Dio(BaseOptions(
       baseUrl: ApiConst.baseUrl,
@@ -25,7 +28,7 @@ abstract class RegisterModule {
     dio.interceptors.add(
       QueuedInterceptorsWrapper(
         onRequest: (options, handler) async {
-          final token = sl<SharedPreferences>().getString(AppConst.accessToken);
+          final token = await sl<SecureStorage>().read(AppConst.accessToken);
           if (token != null && token.isNotEmpty) {
             options.headers['Authorization'] = 'Bearer $token';
           }

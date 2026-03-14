@@ -604,11 +604,10 @@ class ProductDetailRoute extends _i41.PageRouteInfo<ProductDetailRouteArgs> {
   ProductDetailRoute({
     _i42.Key? key,
     required _i44.FoodEntity food,
-    int? quantity,
     List<_i41.PageRouteInfo>? children,
   }) : super(
          ProductDetailRoute.name,
-         args: ProductDetailRouteArgs(key: key, food: food, quantity: quantity),
+         args: ProductDetailRouteArgs(key: key, food: food),
          initialChildren: children,
        );
 
@@ -618,27 +617,21 @@ class ProductDetailRoute extends _i41.PageRouteInfo<ProductDetailRouteArgs> {
     name,
     builder: (data) {
       final args = data.argsAs<ProductDetailRouteArgs>();
-      return _i22.ProductDetailPage(
-        key: args.key,
-        food: args.food,
-        quantity: args.quantity,
-      );
+      return _i22.ProductDetailPage(key: args.key, food: args.food);
     },
   );
 }
 
 class ProductDetailRouteArgs {
-  const ProductDetailRouteArgs({this.key, required this.food, this.quantity});
+  const ProductDetailRouteArgs({this.key, required this.food});
 
   final _i42.Key? key;
 
   final _i44.FoodEntity food;
 
-  final int? quantity;
-
   @override
   String toString() {
-    return 'ProductDetailRouteArgs{key: $key, food: $food, quantity: $quantity}';
+    return 'ProductDetailRouteArgs{key: $key, food: $food}';
   }
 }
 

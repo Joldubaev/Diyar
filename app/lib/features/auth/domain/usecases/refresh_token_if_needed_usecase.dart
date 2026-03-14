@@ -3,22 +3,24 @@ import 'package:diyar/core/core.dart';
 import 'package:diyar/features/auth/domain/domain.dart';
 import 'package:injectable/injectable.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:storage/storage.dart';
 
 /// Use case для обновления токена, если он истек
 @injectable
 class RefreshTokenIfNeededUseCase {
   final AuthRepository _repository;
-  final LocalStorage _localStorage;
+  final SecureStorage _secureStorage;
 
-  RefreshTokenIfNeededUseCase(this._repository, this._localStorage);
+  RefreshTokenIfNeededUseCase(this._repository, this._secureStorage);
 
   Future<Either<Failure, void>> call() async {
-    final token = _localStorage.getString(AppConst.accessToken);
+    final token = await _secureStorage.read(AppConst.accessToken);
 
-    if (token == null || !JwtDecoder.isExpired(token)) {
-      return const Right(null);
+    // Обновляем токен если он null или истёк
+    if (token == null || JwtDecoder.isExpired(token)) {
+      return await _repository.refreshToken();
     }
 
-    return await _repository.refreshToken();
+    return const Right(null);
   }
 }

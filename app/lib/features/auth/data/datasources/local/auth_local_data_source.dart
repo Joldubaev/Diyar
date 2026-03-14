@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:diyar/core/core.dart';
 import 'package:injectable/injectable.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:storage/storage.dart';
 
 abstract class AuthLocalDataSource {
   Future<String?> getLangFromCache();
@@ -18,8 +18,9 @@ abstract class AuthLocalDataSource {
 @LazySingleton(as: AuthLocalDataSource)
 class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   final LocalStorage prefs;
+  final SecureStorage secureStorage;
 
-  AuthLocalDataSourceImpl(this.prefs);
+  AuthLocalDataSourceImpl(this.prefs, this.secureStorage);
 
   @override
   Future<String?> getLangFromCache() async {
@@ -29,7 +30,10 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   @override
   Future<void> logout() async {
     try {
-      await prefs.clear();
+      await Future.wait([
+        prefs.clear(),
+        secureStorage.clear(),
+      ]);
     } catch (e) {
       throw CacheException();
     }
@@ -51,32 +55,28 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
     String? phone,
   }) async {
     try {
-      log("[CACHE SAVE] Attempting to save tokens.");
-      log("[CACHE SAVE] Access Token to be saved: $access");
+      // Primary: зашифрованное хранилище (flutter_secure_storage)
+      await secureStorage.save(AppConst.accessToken, access);
+      // Backward-compat: оставляем копию в SharedPreferences для datasource,
+      // которые ещё читают токен через prefs.getString / _localStorage.getString.
+      await prefs.setString(AppConst.accessToken, access);
+
       if (refresh != null) {
-        log("[CACHE SAVE] Refresh Token to be saved: $refresh");
+        await secureStorage.save(AppConst.refreshToken, refresh);
         await prefs.setString(AppConst.refreshToken, refresh);
       }
-      await prefs.setString(AppConst.accessToken, access);
-      log("[CACHE SAVE] Access Token WRITTEN to prefs with key ${AppConst.accessToken}");
 
       if (phone != null) {
         await prefs.setString(AppConst.phone, phone);
-        log('[CACHE SAVE] Phone saved: $phone');
       }
 
       final payload = JwtDecoder.decode(access);
       final userId = payload['nameid'];
       final role = payload['role'];
 
-      log('[CACHE SAVE] UserID from token: $userId');
-      log('[CACHE SAVE] Role from token: $role');
-
-      await prefs.setString(AppConst.userId, userId);
-      await prefs.setString(AppConst.userRole, role);
-      log("[CACHE SAVE] Tokens and user info saved successfully.");
+      await prefs.setString(AppConst.userId, userId?.toString() ?? '');
+      await prefs.setString(AppConst.userRole, role?.toString() ?? '');
     } catch (e) {
-      log('[CACHE ERROR] Failed to save tokens: $e');
       throw CacheException();
     }
   }

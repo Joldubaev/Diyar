@@ -19,7 +19,6 @@ class CustomBottomNavigationBar extends StatefulWidget {
 
 class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> with TickerProviderStateMixin {
   late AnimationController _animationController;
-  late Animation<double> _animation;
 
   final ValueNotifier<int> _selectedIndex = ValueNotifier<int>(0);
 
@@ -39,10 +38,6 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> w
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
-    );
-    _animation = CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOutCubic,
     );
   }
 
@@ -108,7 +103,6 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> w
                               unselected: unselected,
                               icon: _icons[index],
                               label: _labels[index],
-                              animation: _animation,
                             ),
                           ),
                         ),
@@ -145,7 +139,7 @@ class _NavIndicator extends StatelessWidget {
       curve: Curves.easeInOutCubic,
       margin: const EdgeInsets.symmetric(horizontal: horizontalMargin, vertical: 8),
       transform: Matrix4.translationValues(
-        currentIndex * itemWidth + horizontalMargin,
+        currentIndex * itemWidth,
         0,
         0,
       ),
@@ -165,7 +159,6 @@ class _NavItem extends StatelessWidget {
   final Color unselected;
   final String icon;
   final String label;
-  final Animation<double> animation;
 
   const _NavItem({
     required this.index,
@@ -174,7 +167,6 @@ class _NavItem extends StatelessWidget {
     required this.unselected,
     required this.icon,
     required this.label,
-    required this.animation,
   });
 
   @override
@@ -182,31 +174,26 @@ class _NavItem extends StatelessWidget {
     final isSelected = index == selectedIndex;
     final color = isSelected ? primary : unselected;
 
-    return AnimatedScale(
-      scale: isSelected ? 1.14 : 1.0,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOutCubic,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SvgPicture.asset(
-            icon,
-            height: 27,
-            colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SvgPicture.asset(
+          icon,
+          height: 27,
+          colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+        ),
+        const SizedBox(height: 4),
+        AnimatedDefaultTextStyle(
+          duration: const Duration(milliseconds: 300),
+          style: TextStyle(
+            color: color,
+            fontSize: 11,
+            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+            fontFamily: 'Inter',
           ),
-          const SizedBox(height: 4),
-          AnimatedDefaultTextStyle(
-            duration: const Duration(milliseconds: 300),
-            style: TextStyle(
-              color: color,
-              fontSize: 11,
-              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-              fontFamily: 'Inter',
-            ),
-            child: Text(label),
-          ),
-        ],
-      ),
+          child: Text(label),
+        ),
+      ],
     );
   }
 }

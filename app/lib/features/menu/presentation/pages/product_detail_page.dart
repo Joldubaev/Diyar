@@ -9,11 +9,9 @@ class ProductDetailPage extends StatelessWidget {
   const ProductDetailPage({
     super.key,
     required this.food,
-    this.quantity,
   });
 
   final FoodEntity food;
-  final int? quantity;
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +27,7 @@ class ProductDetailPage extends StatelessWidget {
         ),
         title: Text(
           food.name ?? 'Описание блюда',
-          style: context.textTheme.bodyLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: context.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
@@ -46,7 +42,7 @@ class ProductDetailPage extends StatelessWidget {
                 child: ProductImage(food: food),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
                 child: ProductDetailInfoSection(food: food),
               ),
             ],

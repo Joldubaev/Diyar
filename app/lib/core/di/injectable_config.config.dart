@@ -275,6 +275,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i490.CreatePickupOrderFromCartUseCase>(
         () => _i490.CreatePickupOrderFromCartUseCase());
     gh.singleton<_i231.InternetBloc>(() => _i231.InternetBloc());
+    gh.lazySingleton<_i431.SecureStorage>(() => registerModule.secureStorage);
     gh.lazySingleton<_i361.Dio>(() => registerModule.dio);
     gh.lazySingleton<_i161.InternetConnection>(
         () => registerModule.internetConnection);
@@ -301,8 +302,6 @@ extension GetItInjectableX on _i174.GetIt {
               gh<_i361.Dio>(),
               gh<_i351.LocalStorage>(),
             ));
-    gh.lazySingleton<_i835.AuthLocalDataSource>(
-        () => _i835.AuthLocalDataSourceImpl(gh<_i351.LocalStorage>()));
     gh.lazySingleton<_i337.RemoteDataSource>(
         () => _i337.RemoteDataSourceImpl(gh<_i361.Dio>()));
     gh.lazySingleton<_i1030.RestClient>(
@@ -328,16 +327,6 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i300.RemoteSettingsDataSourceImpl(gh<_i361.Dio>()));
     gh.lazySingleton<_i478.AddressStorageService>(
         () => registerModule.addressStorageService(gh<_i351.LocalStorage>()));
-    gh.lazySingleton<_i520.AuthRemoteDataSource>(
-        () => _i415.AuthRemoteDataSourceImpl(
-              gh<_i1030.RestClient>(instanceName: 'unauthRestClient'),
-              gh<_i835.AuthLocalDataSource>(),
-              gh<_i351.LocalStorage>(),
-            ));
-    gh.lazySingleton<_i140.AuthRepository>(() => _i573.AuthRepositoryImpl(
-          gh<_i520.AuthRemoteDataSource>(),
-          gh<_i835.AuthLocalDataSource>(),
-        ));
     gh.lazySingleton<_i805.BonusRemoteDataSource>(
         () => _i805.BonusRemoteDataSourceImpl(gh<_i361.Dio>()));
     gh.lazySingleton<_i879.SettingsRepository>(() =>
@@ -349,18 +338,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i354.IOpenBankingRepository>(() =>
         _i889.OpenBankingRepositoryImpl(
             gh<_i456.OpenBankingRemoteDatasource>()));
-    gh.factory<_i739.VerifyCodeForRegistrationUseCase>(() =>
-        _i739.VerifyCodeForRegistrationUseCase(gh<_i140.AuthRepository>()));
-    gh.factory<_i894.CheckPhoneNumberUseCase>(
-        () => _i894.CheckPhoneNumberUseCase(gh<_i140.AuthRepository>()));
-    gh.factory<_i48.LogoutUseCase>(
-        () => _i48.LogoutUseCase(gh<_i140.AuthRepository>()));
-    gh.factory<_i241.RegisterUserUseCase>(
-        () => _i241.RegisterUserUseCase(gh<_i140.AuthRepository>()));
-    gh.factory<_i480.SendVerificationCodeUseCase>(
-        () => _i480.SendVerificationCodeUseCase(gh<_i140.AuthRepository>()));
-    gh.factory<_i312.VerifySmsCodeUseCase>(
-        () => _i312.VerifySmsCodeUseCase(gh<_i140.AuthRepository>()));
     gh.lazySingleton<_i758.OrderRepository>(
         () => _i576.OrderRepositoryImpl(gh<_i773.OrderRemoteDataSource>()));
     await gh.factoryAsync<_i351.DiyarRemoteConfig>(
@@ -371,6 +348,11 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i485.CurierPaymentDataSourceImpl(
               gh<_i361.Dio>(),
               gh<_i460.SharedPreferences>(),
+            ));
+    gh.lazySingleton<_i835.AuthLocalDataSource>(
+        () => _i835.AuthLocalDataSourceImpl(
+              gh<_i351.LocalStorage>(),
+              gh<_i431.SecureStorage>(),
             ));
     gh.lazySingleton<_i533.CurierPaymentRepository>(() =>
         _i225.CurierPaymentRepositoryImpl(gh<_i485.CurierPaymentDataSource>()));
@@ -386,17 +368,10 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i361.Dio>(),
           gh<_i460.SharedPreferences>(),
         ));
-    gh.factory<_i781.SignUpCubit>(
-        () => _i781.SignUpCubit(gh<_i140.AuthRepository>()));
     gh.lazySingleton<_i39.RemotePickUpDataSource>(
         () => _i39.RemotePickUpDataSourceImpl(
               gh<_i361.Dio>(),
               gh<_i460.SharedPreferences>(),
-            ));
-    gh.factory<_i952.VerifySmsCodeAndHandleFirstLaunchUseCase>(
-        () => _i952.VerifySmsCodeAndHandleFirstLaunchUseCase(
-              gh<_i140.AuthRepository>(),
-              gh<_i835.AuthLocalDataSource>(),
             ));
     gh.lazySingleton<_i477.HomeContentRepository>(() =>
         _i347.HomeContentRepositoryImpl(
@@ -444,21 +419,17 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i478.AddressStorageService>(),
           gh<_i835.AppLocation>(),
         ));
+    gh.lazySingleton<_i825.SecureStorageService>(
+        () => _i50.SecureStorageServiceImpl(
+              gh<_i835.AuthLocalDataSource>(),
+              gh<_i351.LocalStorage>(),
+              gh<_i431.SecureStorage>(),
+            ));
     gh.factory<_i247.GetProfileUseCase>(
         () => _i247.GetProfileUseCase(gh<_i315.ProfileRepository>()));
     gh.lazySingleton<_i900.OrderDetailRepository>(() =>
         _i703.OrderDetailRepositoryImpl(
             gh<_i294.OrderDetailRemoteDataSource>()));
-    gh.factory<_i550.RefreshTokenIfNeededUseCase>(
-        () => _i550.RefreshTokenIfNeededUseCase(
-              gh<_i140.AuthRepository>(),
-              gh<_i351.LocalStorage>(),
-            ));
-    gh.lazySingleton<_i825.SecureStorageService>(
-        () => _i50.SecureStorageServiceImpl(
-              gh<_i835.AuthLocalDataSource>(),
-              gh<_i351.LocalStorage>(),
-            ));
     gh.factory<_i431.DeliveryFormCubit>(() => _i431.DeliveryFormCubit(
           gh<_i912.OrderCalculationService>(),
           gh<_i752.CreateOrderUseCase>(),
@@ -485,6 +456,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i517.CartBloc>(() => _i517.CartBloc(gh<_i26.CartRepository>()));
     gh.lazySingleton<_i429.CreatePayLinkUsecase>(
         () => _i429.CreatePayLinkUsecase(gh<_i354.IOpenBankingRepository>()));
+    gh.lazySingleton<_i520.AuthRemoteDataSource>(
+        () => _i415.AuthRemoteDataSourceImpl(
+              gh<_i1030.RestClient>(instanceName: 'unauthRestClient'),
+              gh<_i835.AuthLocalDataSource>(),
+              gh<_i351.LocalStorage>(),
+            ));
     gh.factory<_i31.GetNewsUseCase>(
         () => _i31.GetNewsUseCase(gh<_i477.HomeContentRepository>()));
     gh.factory<_i608.GetSalesUseCase>(
@@ -493,8 +470,24 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i123.PickUpRepository(gh<_i54.RemotePickUpDataSource>()));
     gh.factory<_i792.SettingsCubit>(
         () => _i792.SettingsCubit(gh<_i635.SettingsRepository>()));
+    gh.lazySingleton<_i140.AuthRepository>(() => _i573.AuthRepositoryImpl(
+          gh<_i520.AuthRemoteDataSource>(),
+          gh<_i835.AuthLocalDataSource>(),
+        ));
     gh.lazySingleton<_i408.HistoryRepository>(
         () => _i178.HistoryRepositoryImpl(gh<_i368.HistoryReDatasource>()));
+    gh.factory<_i739.VerifyCodeForRegistrationUseCase>(() =>
+        _i739.VerifyCodeForRegistrationUseCase(gh<_i140.AuthRepository>()));
+    gh.factory<_i894.CheckPhoneNumberUseCase>(
+        () => _i894.CheckPhoneNumberUseCase(gh<_i140.AuthRepository>()));
+    gh.factory<_i48.LogoutUseCase>(
+        () => _i48.LogoutUseCase(gh<_i140.AuthRepository>()));
+    gh.factory<_i241.RegisterUserUseCase>(
+        () => _i241.RegisterUserUseCase(gh<_i140.AuthRepository>()));
+    gh.factory<_i480.SendVerificationCodeUseCase>(
+        () => _i480.SendVerificationCodeUseCase(gh<_i140.AuthRepository>()));
+    gh.factory<_i312.VerifySmsCodeUseCase>(
+        () => _i312.VerifySmsCodeUseCase(gh<_i140.AuthRepository>()));
     gh.factory<_i236.OrderDetailCubit>(
         () => _i236.OrderDetailCubit(gh<_i900.GetOrderDetailUseCase>()));
     gh.factory<_i739.PopularCubit>(
@@ -512,6 +505,13 @@ extension GetItInjectableX on _i174.GetIt {
         ));
     gh.factory<_i232.HistoryCubit>(
         () => _i232.HistoryCubit(gh<_i408.HistoryRepository>()));
+    gh.factory<_i781.SignUpCubit>(
+        () => _i781.SignUpCubit(gh<_i140.AuthRepository>()));
+    gh.factory<_i952.VerifySmsCodeAndHandleFirstLaunchUseCase>(
+        () => _i952.VerifySmsCodeAndHandleFirstLaunchUseCase(
+              gh<_i140.AuthRepository>(),
+              gh<_i835.AuthLocalDataSource>(),
+            ));
     gh.factory<_i931.GetUserRoleUseCase>(
         () => _i931.GetUserRoleUseCase(gh<_i825.SecureStorageService>()));
     gh.factory<_i449.HandleFirstLaunchUseCase>(
@@ -521,6 +521,11 @@ extension GetItInjectableX on _i174.GetIt {
             gh<_i825.SecureStorageService>()));
     gh.factory<_i212.GetNavigationRouteUseCase>(() =>
         _i212.GetNavigationRouteUseCase(gh<_i825.SecureStorageService>()));
+    gh.factory<_i550.RefreshTokenIfNeededUseCase>(
+        () => _i550.RefreshTokenIfNeededUseCase(
+              gh<_i140.AuthRepository>(),
+              gh<_i431.SecureStorage>(),
+            ));
     gh.factory<_i340.ConfirmCashPaymentAndFinishUseCase>(
         () => _i340.ConfirmCashPaymentAndFinishUseCase(
               gh<_i949.CurierPaymentRepository>(),

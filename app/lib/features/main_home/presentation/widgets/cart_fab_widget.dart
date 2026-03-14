@@ -73,8 +73,8 @@ class CartFabWidget extends StatelessWidget {
                       child: SvgPicture.asset(
                         'assets/icons/cart_icon.svg',
                         height: 33,
-                        colorFilter: const ColorFilter.mode(
-                          Color(0xFF1A1A1A),
+                        colorFilter: ColorFilter.mode(
+                          theme.colorScheme.onSurface,
                           BlendMode.srcIn,
                         ),
                       ),

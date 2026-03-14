@@ -16,30 +16,27 @@ class ProductDetailInfoSection extends StatelessWidget {
       children: [
         Text(
           food.name ?? 'Название продукта',
-          style: context.textTheme.headlineMedium?.copyWith(
+          style: context.textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.bold,
             color: context.colorScheme.onSurface,
           ),
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 6),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             if (food.weight != null && food.weight!.isNotEmpty)
               Text(
                 food.weight!,
-                style: context.textTheme.bodyLarge?.copyWith(
+                style: context.textTheme.bodyMedium?.copyWith(
                   color: context.colorScheme.onSurface.withValues(alpha: 0.5),
                 ),
-              )
-            else
-              const SizedBox.shrink(),
+              ),
             Text(
               '${food.price ?? '0'} сом',
-              style: context.textTheme.headlineSmall?.copyWith(
+              style: context.textTheme.titleMedium?.copyWith(
                 color: context.colorScheme.primary,
                 fontWeight: FontWeight.bold,
               ),
@@ -47,7 +44,7 @@ class ProductDetailInfoSection extends StatelessWidget {
           ],
         ),
         if (food.description != null && food.description!.isNotEmpty) ...[
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
           Text(
             food.description!,
             style: context.textTheme.bodyMedium?.copyWith(
@@ -57,14 +54,12 @@ class ProductDetailInfoSection extends StatelessWidget {
           ),
         ],
         if (food.ingredients != null && food.ingredients!.isNotEmpty) ...[
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
           Text(
             'Состав',
-            style: context.textTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+            style: context.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 8),
           Wrap(
             spacing: 8,
             runSpacing: 8,
@@ -72,14 +67,12 @@ class ProductDetailInfoSection extends StatelessWidget {
           ),
         ],
         if (food.allergens != null && food.allergens!.isNotEmpty) ...[
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
           Text(
             'Аллергены',
-            style: context.textTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+            style: context.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 8),
           Wrap(
             spacing: 8,
             runSpacing: 8,
@@ -121,22 +114,13 @@ class _IngredientChip extends StatelessWidget {
                 placeholder: (_, __) => const SizedBox(
                   width: 24,
                   height: 24,
-                  child: Center(
-                    child: SizedBox(
-                      width: 14,
-                      height: 14,
-                      child: CircularProgressIndicator(strokeWidth: 1.5),
-                    ),
-                  ),
+                  child: Center(child: CircularProgressIndicator(strokeWidth: 1.5)),
                 ),
                 errorWidget: (_, __, ___) => const Icon(Icons.fastfood, size: 20),
               ),
             )
           : null,
-      label: Text(
-        ingredient.name ?? '',
-        style: context.textTheme.bodySmall,
-      ),
+      label: Text(ingredient.name ?? '', style: context.textTheme.bodySmall),
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
     );
   }
@@ -155,9 +139,7 @@ class _AllergenChip extends StatelessWidget {
       side: BorderSide.none,
       label: Text(
         allergen.name ?? '',
-        style: context.textTheme.bodySmall?.copyWith(
-          color: context.colorScheme.error,
-        ),
+        style: context.textTheme.bodySmall?.copyWith(color: context.colorScheme.error),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
     );

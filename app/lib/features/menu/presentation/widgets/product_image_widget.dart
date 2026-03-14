@@ -15,7 +15,7 @@ class ProductImage extends StatelessWidget {
     return ClipRRect(
       borderRadius: const BorderRadius.all(Radius.circular(16.0)),
       child: AspectRatio(
-        aspectRatio: 16 / 10,
+        aspectRatio: 16 / 9,
         child: CachedNetworkImage(
           imageUrl: food.urlPhoto ?? 'https://i.ibb.co/GkL25DB/ALE-1357-7.png',
           memCacheWidth: 800,

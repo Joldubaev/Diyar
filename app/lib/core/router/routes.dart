@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/core/utils/storage/address_storage_service.dart';
@@ -121,32 +119,18 @@ class AuthGuard extends AutoRouteGuard {
     final token = prefs.getString(AppConst.accessToken);
     final role = prefs.getString(AppConst.userRole);
 
-    log('AuthGuard: Checking token and role');
-    log('AuthGuard: Token - $token');
-    log('AuthGuard: Role - $role');
-
-    // Проверка на наличие токена и его срок действия
     if (token == null || JwtDecoder.isExpired(token)) {
-      log('AuthGuard: Token отсутствует или истек. Навигация на SignInRoute.');
-      resolver.next(false); // Не разрешаем текущую навигацию
-      router.pushAndPopUntil(const SignInRoute(),
-          predicate: (route) => false); // Очищаем стек и переходим на SignInRoute
+      resolver.next(false);
+      router.pushAndPopUntil(const SignInRoute(), predicate: (route) => false);
       return;
     }
 
-    // Перенаправление в зависимости от роли
     if (role == 'Courier') {
-      log('AuthGuard: Роль Courier. Перенаправление на CurierRoute.');
       resolver.next(false);
-      router.replace(const CurierRoute()); // Заменяем стек, чтобы нельзя было вернуться назад
-    } else if (role == 'admin') {
-      log('AuthGuard: Роль Admin. Перенаправление на MainRoute.');
-      resolver.next(false);
-      router.replace(const MainHomeRoute()); // Заменяем стек
+      router.replace(const CurierRoute());
     } else {
-      log('AuthGuard: Роль User или другая (не Courier/Admin, роль: ${role ?? "null"}). Перенаправление на MainRoute.');
       resolver.next(false);
-      router.replace(const MainHomeRoute()); // Заменяем стек
+      router.replace(const MainHomeRoute());
     }
   }
 }

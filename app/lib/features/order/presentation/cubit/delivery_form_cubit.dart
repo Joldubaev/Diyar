@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
 import 'package:diyar/common/calculator/order_calculation_service.dart';
 import 'package:diyar/common/components/components.dart';
@@ -53,11 +51,7 @@ class DeliveryFormCubit extends Cubit<DeliveryFormState> {
     final currentState = state;
     if (currentState is! DeliveryFormLoaded) return;
 
-    log('[DeliveryFormCubit] toggleBonus: use=$use');
-    log('[DeliveryFormCubit] toggleBonus: Текущее состояние - bonusAmount=${currentState.bonusAmount}, totalOrderCost=${currentState.totalOrderCost}');
-
     if (!use) {
-      // Пересчитываем totalOrderCost без бонусов
       final totalOrderCost = _calculationService
           .calculateFinalTotalPrice(
             subtotalPrice: currentState.subtotalPrice.toDouble(),
@@ -65,17 +59,13 @@ class DeliveryFormCubit extends Cubit<DeliveryFormState> {
           )
           .toInt();
 
-      log('[DeliveryFormCubit] toggleBonus: Выключаем бонусы, totalOrderCost без бонусов=$totalOrderCost');
       emit(currentState.copyWith(
         useBonus: false,
         totalOrderCost: totalOrderCost,
         clearBonusAmount: true,
       ));
-      log('[DeliveryFormCubit] toggleBonus: Состояние обновлено - useBonus=false, totalOrderCost=$totalOrderCost');
     } else {
-      log('[DeliveryFormCubit] toggleBonus: Включаем бонусы, useBonus=true');
       emit(currentState.copyWith(useBonus: true));
-      log('[DeliveryFormCubit] toggleBonus: Состояние обновлено - useBonus=true, totalOrderCost остался=${currentState.totalOrderCost}');
     }
   }
 
@@ -84,13 +74,7 @@ class DeliveryFormCubit extends Cubit<DeliveryFormState> {
     final currentState = state;
     if (currentState is! DeliveryFormLoaded) return;
 
-    log('[DeliveryFormCubit] setBonusAmount: Начало установки суммы бонусов');
-    log('[DeliveryFormCubit] setBonusAmount: amount=$amount, userBalance=$userBalance');
-    log('[DeliveryFormCubit] setBonusAmount: subtotalPrice=${currentState.subtotalPrice}, deliveryPrice=${currentState.deliveryPrice}');
-
-    // Если amount null или 0, просто обнуляем бонусы и пересчитываем totalOrderCost
     if (amount == null || amount == 0) {
-      log('[DeliveryFormCubit] setBonusAmount: amount null или 0, обнуляем бонусы');
       final totalOrderCost = _calculationService
           .calculateFinalTotalPrice(
             subtotalPrice: currentState.subtotalPrice.toDouble(),
@@ -98,7 +82,6 @@ class DeliveryFormCubit extends Cubit<DeliveryFormState> {
           )
           .toInt();
 
-      log('[DeliveryFormCubit] setBonusAmount: totalOrderCost без бонусов=$totalOrderCost');
       emit(currentState.copyWith(
         totalOrderCost: totalOrderCost,
         clearBonusAmount: true,
@@ -107,35 +90,25 @@ class DeliveryFormCubit extends Cubit<DeliveryFormState> {
       return;
     }
 
-    // Проверка: бонусы не могут превышать баланс пользователя
     if (amount > userBalance) {
-      log('[DeliveryFormCubit] setBonusAmount: ОШИБКА - Недостаточно бонусов (amount=$amount > userBalance=$userBalance)');
       emit(currentState.copyWith(validationError: 'Недостаточно бонусов'));
       return;
     }
 
-    // Проверка: бонусы не могут превышать полную стоимость заказа
     final baseTotalOrderCost = currentState.subtotalPrice + currentState.deliveryPrice.toInt();
-    log('[DeliveryFormCubit] setBonusAmount: baseTotalOrderCost=$baseTotalOrderCost (subtotalPrice=${currentState.subtotalPrice} + deliveryPrice=${currentState.deliveryPrice.toInt()})');
-    log('[DeliveryFormCubit] setBonusAmount: Сравнение: amount=$amount > baseTotalOrderCost=$baseTotalOrderCost = ${amount > baseTotalOrderCost}');
 
     if (amount > baseTotalOrderCost) {
-      log('[DeliveryFormCubit] setBonusAmount: ОШИБКА - Сумма бонусов превышает стоимость заказа');
       emit(currentState.copyWith(validationError: 'Сумма бонусов не может превышать стоимость заказа'));
       return;
     }
 
-    // Пересчитываем totalOrderCost с учетом бонусов
     final totalOrderCost = (baseTotalOrderCost - amount).toInt();
-    log('[DeliveryFormCubit] setBonusAmount: totalOrderCost с учетом бонусов=$totalOrderCost (baseTotalOrderCost=$baseTotalOrderCost - amount=$amount)');
 
-    // Сохраняем сумму бонусов и обновляем totalOrderCost
     emit(currentState.copyWith(
       bonusAmount: amount,
       totalOrderCost: totalOrderCost,
       clearValidationError: true,
     ));
-    log('[DeliveryFormCubit] setBonusAmount: Бонусы успешно установлены: bonusAmount=$amount, totalOrderCost=$totalOrderCost');
   }
 
   // --- ФИНАЛЬНЫЙ ШАГ: Создание заказа ---
@@ -269,14 +242,6 @@ class DeliveryFormCubit extends Cubit<DeliveryFormState> {
     // Вычисляем полную стоимость заказа БЕЗ вычета бонусов (для отправки на сервер)
     final fullOrderPrice = currentState.subtotalPrice + currentState.deliveryPrice.toInt();
 
-    log('[DeliveryFormCubit] confirmOrder: Подготовка данных для отправки на бэкенд');
-    log('[DeliveryFormCubit] confirmOrder: subtotalPrice=${currentState.subtotalPrice}');
-    log('[DeliveryFormCubit] confirmOrder: deliveryPrice=${currentState.deliveryPrice.toInt()}');
-    log('[DeliveryFormCubit] confirmOrder: fullOrderPrice (для бэкенда)=$fullOrderPrice');
-    log('[DeliveryFormCubit] confirmOrder: bonusAmount (amountToReduce)=${currentState.bonusAmount}');
-    log('[DeliveryFormCubit] confirmOrder: totalOrderCost (для UI, с учетом бонусов)=${currentState.totalOrderCost}');
-    log('[DeliveryFormCubit] confirmOrder: Бэкенд сам вычтет бонусы: finalPrice = $fullOrderPrice - ${currentState.bonusAmount ?? 0} = ${fullOrderPrice - (currentState.bonusAmount ?? 0)}');
-
     // Создаем CreateOrderEntity
     // Отправляем полную сумму без вычета бонусов, бонусы передаем отдельно в amountToReduce
     // Бэкенд ожидает: 'cash' | 'card_online' | 'card_courier'
@@ -294,9 +259,6 @@ class DeliveryFormCubit extends Cubit<DeliveryFormState> {
       foods: foods,
     );
 
-    log('[DeliveryFormCubit] confirmOrder: Отправка заказа на бэкенд: price=$fullOrderPrice, amountToReduce=${orderEntity.amountToReduce}');
-
-    // Вызываем submitOrder
     await submitOrder(orderEntity);
   }
 }

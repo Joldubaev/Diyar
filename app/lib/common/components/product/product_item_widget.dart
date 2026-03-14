@@ -29,10 +29,7 @@ class ProductItemWidget extends StatelessWidget {
       height: height,
       isCompact: isCompact,
       onTap: () => context.pushRoute(
-        ProductDetailRoute(
-          food: food,
-          quantity: quantity,
-        ),
+        ProductDetailRoute(food: food),
       ),
     );
   }
