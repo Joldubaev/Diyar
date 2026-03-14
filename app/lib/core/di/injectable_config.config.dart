@@ -498,7 +498,7 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i360.GenerateQrUseCase(gh<_i361.BonusRepository>()));
     gh.lazySingleton<_i566.CurierRepository>(
         () => _i537.CurierRepositoryImpl(gh<_i566.CurierDataSource>()));
-    gh.factory<_i60.ActiveOrderCubit>(() => _i60.ActiveOrderCubit(
+    gh.lazySingleton<_i60.ActiveOrderCubit>(() => _i60.ActiveOrderCubit(
           gh<_i31.GetActiveOrdersUseCase>(),
           gh<_i777.CancelOrderUseCase>(),
           gh<_i697.OrderStatusService>(),

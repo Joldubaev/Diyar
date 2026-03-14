@@ -169,18 +169,32 @@ class _ActiveOrdersSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeContentCubit, HomeContentState>(
-      buildWhen: (prev, curr) => curr is HomeContentLoading || curr is HomeContentLoaded,
-      builder: (context, state) {
-        if (state is! HomeContentLoaded || state.activeOrders.isEmpty) {
-          return const SizedBox.shrink();
-        }
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 10),
-          child: BannerContent(
-            ordersCount: state.activeOrders.length,
-            onTap: () => context.router.push(const ActiveOrderRoute()),
-          ),
+    return BlocBuilder<ActiveOrderCubit, ActiveOrderState>(
+      builder: (context, activeState) {
+        return BlocBuilder<HomeContentCubit, HomeContentState>(
+          buildWhen: (prev, curr) => curr is HomeContentLoading || curr is HomeContentLoaded,
+          builder: (context, homeState) {
+            // ActiveOrderCubit — приоритетный источник (есть реал-тайм SignalR обновления).
+            // HomeContentCubit — fallback при первичной загрузке.
+            final int count;
+            if (activeState is ActiveOrdersLoaded) {
+              count = activeState.orders.length;
+            } else if (homeState is HomeContentLoaded) {
+              count = homeState.activeOrders.length;
+            } else {
+              count = 0;
+            }
+
+            if (count == 0) return const SizedBox.shrink();
+
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: BannerContent(
+                ordersCount: count,
+                onTap: () => context.router.push(const ActiveOrderRoute()),
+              ),
+            );
+          },
         );
       },
     );

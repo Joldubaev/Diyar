@@ -29,7 +29,7 @@ class _MainHomePageState extends State<MainHomePage> {
         BlocProvider(create: (_) => di.sl<MenuBloc>()..add(GetFoodsByCategoryEvent())),
         BlocProvider(create: (_) => di.sl<PopularCubit>()),
         BlocProvider(create: (_) => di.sl<HomeContentCubit>()),
-        BlocProvider(create: (_) => di.sl<ActiveOrderCubit>()),
+        BlocProvider.value(value: di.sl<ActiveOrderCubit>()),
         BlocProvider(create: (_) => di.sl<SignInCubit>()),
       ],
       child: AutoTabsRouter(

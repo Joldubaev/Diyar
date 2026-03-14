@@ -12,9 +12,12 @@ import 'package:injectable/injectable.dart';
 
 part 'active_order_state.dart';
 
-@injectable
+@LazySingleton()
 class ActiveOrderCubit extends Cubit<ActiveOrderState> {
   static const _statusDebounceMs = 2000;
+
+  // Статусы, при которых заказ считается активным (всё остальное — терминальное)
+  static const _activeStatuses = {'Awaits', 'Processing', 'OnTheWay'};
 
   final GetActiveOrdersUseCase _getActiveOrdersUseCase;
   final CancelOrderUseCase _cancelOrderUseCase;
@@ -56,26 +59,26 @@ class ActiveOrderCubit extends Cubit<ActiveOrderState> {
         if (isClosed) return;
 
         final now = DateTime.now();
-        if (_lastStatusEmit != null &&
-            now.difference(_lastStatusEmit!).inMilliseconds < _statusDebounceMs) {
+        if (_lastStatusEmit != null && now.difference(_lastStatusEmit!).inMilliseconds < _statusDebounceMs) {
           return;
         }
         _lastStatusEmit = now;
 
         final currentState = state;
         if (currentState is ActiveOrdersLoaded) {
-          final updatedOrders = currentState.orders.map((order) {
-            // Ищем обновление статуса для конкретного заказа
-            final statusUpdate = newStatuses.firstWhereOrNull(
-              (s) => s.orderNumber == order.orderNumber,
-            );
-
-            if (statusUpdate != null && statusUpdate.status != null) {
-              // Используем наш Senior copyWith с ValueGetter
-              return order.copyWith(status: () => statusUpdate.status);
-            }
-            return order;
-          }).toList();
+          final updatedOrders = currentState.orders
+              .map((order) {
+                final statusUpdate = newStatuses.firstWhereOrNull(
+                  (s) => s.orderNumber == order.orderNumber,
+                );
+                if (statusUpdate != null && statusUpdate.status != null) {
+                  return order.copyWith(status: () => statusUpdate.status);
+                }
+                return order;
+              })
+              // Убираем заказы с терминальным статусом (доставлен, отменён и т.д.)
+              .where((o) => o.status == null || _activeStatuses.contains(o.status))
+              .toList();
 
           emit(ActiveOrdersLoaded(updatedOrders));
         }

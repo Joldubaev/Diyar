@@ -14,13 +14,14 @@ class ActiveOrderPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return BlocProvider(
-      create: (_) => di.sl<ActiveOrderCubit>()..getActiveOrders(),
+    // BlocProvider.value — используем синглтон, не закрываем его при pop.
+    // Тот же экземпляр, что и в MainHomePage → баннер реагирует на изменения.
+    return BlocProvider.value(
+      value: di.sl<ActiveOrderCubit>()..getActiveOrders(),
       child: Scaffold(
         appBar: AppBar(title: Text(context.l10n.activeOrders)),
         body: BlocBuilder<ActiveOrderCubit, ActiveOrderState>(
           builder: (context, state) {
-            // Senior-подход: использование паттерн-матчинга
             return switch (state) {
               ActiveOrdersLoading() || ActiveOrderInitial() => const Center(child: CircularProgressIndicator()),
               ActiveOrdersError(message: final msg) => EmptyActiveOrders(text: msg),
@@ -35,7 +36,6 @@ class ActiveOrderPage extends StatelessWidget {
                         return _OrderCard(order: order, theme: theme);
                       },
                     ),
-              // Игнорируем состояния деталей заказа для этой страницы
               _ => const SizedBox.shrink(),
             };
           },
@@ -45,7 +45,6 @@ class ActiveOrderPage extends StatelessWidget {
   }
 }
 
-// Выносим карточку в отдельный приватный виджет
 class _OrderCard extends StatelessWidget {
   final OrderActiveItemEntity order;
   final ThemeData theme;
@@ -62,7 +61,6 @@ class _OrderCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Номер заказа
             Text(
               '${context.l10n.orderNumber} ${order.orderNumber}',
               style: theme.textTheme.bodyLarge?.copyWith(
@@ -89,7 +87,6 @@ class _OrderCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
-            // Степпер статуса заказа
             OrderStepper(
               orderStatus: OrderStatusEntity(
                 orderNumber: order.orderNumber,
@@ -97,7 +94,6 @@ class _OrderCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            // Кнопки действий
             _buildActionButtons(context),
           ],
         ),
