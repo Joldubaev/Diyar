@@ -1,5 +1,3 @@
-import 'dart:developer' as developer;
-
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/core/di/injectable_config.dart';
@@ -22,7 +20,6 @@ class OpenBankingPaymentPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    developer.log('[OpenBanking] Page build: orderNumber=$orderNumber, amount=$amount');
     return BlocProvider(
       create: (_) => sl<OpenBankingCubit>()..initialize(orderNumber: orderNumber, amount: amount),
       child: _WebPaymentView(orderNumber: orderNumber, amount: amount),
@@ -30,21 +27,50 @@ class OpenBankingPaymentPage extends StatelessWidget {
   }
 }
 
-class _WebPaymentView extends StatelessWidget {
+class _WebPaymentView extends StatefulWidget {
   final String orderNumber;
   final int amount;
 
-  const _WebPaymentView({
-    required this.orderNumber,
-    required this.amount,
-  });
+  const _WebPaymentView({required this.orderNumber, required this.amount});
+
+  @override
+  State<_WebPaymentView> createState() => _WebPaymentViewState();
+}
+
+class _WebPaymentViewState extends State<_WebPaymentView> {
+  // Флаг разрешения pop после подтверждения выхода.
+  // Без него context.router.maybePop() снова перехватывается PopScope → бесконечный диалог.
+  bool _allowPop = false;
+
+  void _showExitDialog() {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text(WebPaymentStrings.confirmExitTitle),
+        content: const Text(WebPaymentStrings.confirmExitMessage),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(WebPaymentStrings.confirmExitCancel),
+          ),
+          FilledButton(
+            onPressed: () {
+              Navigator.pop(context); // закрываем диалог
+              setState(() => _allowPop = true); // разрешаем pop
+              context.router.maybePop(); // теперь PopScope пропустит
+            },
+            child: const Text(WebPaymentStrings.confirmExitConfirm),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<OpenBankingCubit, OpenBankingState>(
       listener: (context, state) {
         if (state is OpenBankingPaymentConfirmed) {
-          developer.log('[OpenBanking] PaymentConfirmed → navigate to MainHome');
           context.router.pushAndPopUntil(
             const MainHomeRoute(),
             predicate: (_) => false,
@@ -52,35 +78,15 @@ class _WebPaymentView extends StatelessWidget {
         }
       },
       child: PopScope(
-        canPop: false,
+        canPop: _allowPop,
         onPopInvokedWithResult: (didPop, result) {
           if (didPop) return;
-          showDialog(
-            context: context,
-            builder: (_) => AlertDialog(
-              title: const Text(WebPaymentStrings.confirmExitTitle),
-              content: const Text(WebPaymentStrings.confirmExitMessage),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text(WebPaymentStrings.confirmExitCancel),
-                ),
-                FilledButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    context.router.maybePop();
-                  },
-                  child: const Text(WebPaymentStrings.confirmExitConfirm),
-                ),
-              ],
-            ),
-          );
+          _showExitDialog();
         },
         child: Scaffold(
-          appBar: const WebPaymentAppBar(),
+          appBar: WebPaymentAppBar(onBackPressed: _showExitDialog),
           body: BlocBuilder<OpenBankingCubit, OpenBankingState>(
             builder: (context, state) {
-              developer.log('[OpenBanking] State: ${state.runtimeType}');
               return switch (state) {
                 OpenBankingInitializing() => const WebPaymentLoadingView(),
                 OpenBankingError(:final message) => WebPaymentErrorView(message: message),

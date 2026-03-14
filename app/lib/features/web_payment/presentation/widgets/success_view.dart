@@ -1,4 +1,3 @@
-import 'package:diyar/features/web_payment/domain/enum/payment_status_type.dart';
 import 'package:diyar/features/web_payment/presentation/constants/web_payment_strings.dart';
 import 'package:diyar/features/web_payment/presentation/cubit/open_banking_cubit.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +11,6 @@ class WebPaymentSuccessView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final status = PaymentStatusType.success;
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -36,7 +34,7 @@ class WebPaymentSuccessView extends StatelessWidget {
             ),
             const SizedBox(height: 18),
             Text(
-              status.title,
+              'Платеж осуществлен',
               style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
               textAlign: TextAlign.center,
             ),

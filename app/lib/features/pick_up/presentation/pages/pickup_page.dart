@@ -288,8 +288,7 @@ class _PickupFormPageState extends State<PickupFormPage> {
               useBonus: _useBonus,
               onBonusToggleChanged: _onBonusToggleChanged,
               onBonusAmountChanged: _onBonusAmountChanged,
-              // totalPrice: widget.totalPrice,
-              totalPrice: 1,
+              totalPrice: widget.totalPrice,
               onConfirmTap: _onConfirmTap,
             ),
           );
