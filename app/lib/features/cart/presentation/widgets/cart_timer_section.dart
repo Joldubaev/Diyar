@@ -61,11 +61,11 @@ class CartTimerSection extends StatelessWidget {
       context: context,
       cartItems: cartItems,
       totalPrice: totalPrice,
-      // startWorkTimeString: timer!.startTime.toString(),
-      startWorkTimeString: '00:00',
-      // endWorkTimeString: timer.endTime.toString(),
-      endWorkTimeString: '00:00',
-      serverTimeString: timer!.serverTime!.toString(),
+      startWorkTimeString: timer!.startTime.toString(),
+      // startWorkTimeString: '00:00',
+      endWorkTimeString: timer.endTime.toString(),
+      // endWorkTimeString: '00:00',
+      serverTimeString: timer.serverTime!.toString(),
       onDeliveryTap: () async {
         await AddressPickerBottomSheet.show(
           context,

@@ -29,8 +29,8 @@ class CustomBottomSheet extends StatelessWidget {
             context.router.push(
               OpenBankingPaymentRoute(
                 orderNumber: currentState.successMessage!,
-                amount: 1
-                // amount: currentState.totalOrderCost.round(),
+                // amount: 1
+                amount: currentState.totalOrderCost.round(),
               ),
             );
             Navigator.of(context).pop();

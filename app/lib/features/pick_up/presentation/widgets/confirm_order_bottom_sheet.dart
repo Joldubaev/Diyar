@@ -70,8 +70,8 @@ class ConfirmOrderBottomSheet extends StatelessWidget {
     context.router.push(
       OpenBankingPaymentRoute(
         orderNumber: state.message,
-        // amount: state.totalOrderCost,
-        amount: 1,
+        amount: state.totalOrderCost,
+        // amount: 1,
       ),
     );
     context.read<CartBloc>().add(ClearCart());
