@@ -1,14 +1,16 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:diyar/common/components/components.dart' show showAddressConfirmBottomSheet;
-import 'package:diyar/common/components/text/row_text_widget.dart';
 import 'package:diyar/core/utils/storage/address_storage_service.dart';
-import 'package:diyar/features/active_order/presentation/widgets/banner_content_widget.dart';
 import 'package:diyar/features/features.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/core/di/injectable_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../widgets/home_about_us_banner.dart';
+import '../widgets/home_active_orders_section.dart';
 import '../widgets/home_app_bar.dart';
+import '../widgets/home_bonus_card_section.dart';
+import '../widgets/home_popular_food_section.dart';
+import '../widgets/home_stories_section.dart';
 import 'profile_navigation_scope.dart';
 
 @RoutePage()
@@ -19,21 +21,40 @@ class HomeTabPage extends StatefulWidget {
   State<HomeTabPage> createState() => _HomeTabPageState();
 }
 
-class _HomeTabPageState extends State<HomeTabPage> {
+class _HomeTabPageState extends State<HomeTabPage> with WidgetsBindingObserver {
   String? _savedAddress;
+  bool _addressDialogShowing = false;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _loadSavedAddress();
-    _checkAddressConfirmation();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _loadHome());
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _checkAddressConfirmation();
+      _loadHome();
+    });
   }
 
-  /// Единственная точка загрузки данных главной — через HomeContentCubit и UseCase.
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _checkAddressConfirmation();
+    }
+  }
+
   Future<void> _loadHome() async {
     if (!mounted) return;
     final isAuth = UserHelper.isAuth();
+    if (isAuth) {
+      context.read<ProfileCubit>().getUser();
+    }
     await context.read<HomeContentCubit>().loadHome(
           loadActiveOrders: isAuth,
           loadProfile: isAuth,
@@ -47,23 +68,13 @@ class _HomeTabPageState extends State<HomeTabPage> {
   }
 
   Future<void> _checkAddressConfirmation() async {
-    final addressStorage = sl<AddressStorageService>();
-    if (!addressStorage.shouldShowAddressConfirmation()) return;
-
-    final address = addressStorage.getAddress();
-    if (address == null) return;
-
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (!mounted) return;
-      final result = await showAddressConfirmBottomSheet(context, address: address);
-
-      if (!mounted) return;
-      if (result == true) {
-        await addressStorage.confirmAddress();
-      } else if (result == false) {
-        context.router.push(const AddressSelectionRoute());
-      }
-    });
+    if (_addressDialogShowing || !mounted) return;
+    _addressDialogShowing = true;
+    await AddressConfirmationHandler.checkAndShow(
+      context,
+      onAddressChanged: _loadSavedAddress,
+    );
+    _addressDialogShowing = false;
   }
 
   @override
@@ -93,144 +104,18 @@ class _HomeTabPageState extends State<HomeTabPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const _StoriesSection(),
-                const _ActiveOrdersSection(),
-                const _BonusCardSection(),
+                const HomeStoriesSection(),
+                const HomeActiveOrdersSection(),
+                const HomeBonusCardSection(),
                 const SizedBox(height: 20),
-                _PopularFoodSection(),
+                const HomeAboutUsBanner(),
+                const SizedBox(height: 20),
+                const HomePopularFoodSection(),
               ],
             ),
           ),
         ),
       ),
-    );
-  }
-}
-
-// --- ОТДЕЛЬНЫЕ ВИДЖЕТЫ ЭКРАНА ---
-
-class _StoriesSection extends StatelessWidget {
-  const _StoriesSection();
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<HomeContentCubit, HomeContentState>(
-      buildWhen: (prev, curr) =>
-          curr is HomeContentLoading || curr is HomeContentLoaded || curr is GetNewsLoaded || curr is GetNewsLoading,
-      builder: (context, state) {
-        if (state is HomeContentLoading || state is GetNewsLoading) {
-          return const SizedBox(height: 115);
-        }
-
-        final news = state is HomeContentLoaded
-            ? state.news
-            : state is GetNewsLoaded
-                ? state.news
-                : <NewsEntity>[];
-        if (news.isEmpty) return const SizedBox.shrink();
-
-        final items = news
-            .where((e) => e.photoLink?.isNotEmpty ?? false)
-            .toList()
-            .asMap()
-            .entries
-            .map((e) => DiyarStoryItem(
-                  id: e.value.id ?? e.key.toString(),
-                  cardImageLink: e.value.photoLink!,
-                  cardLabel: e.value.name ?? '',
-                  storyPagesImages: [e.value.photoLink!],
-                  storyPageDuration: const [Duration(seconds: 5)],
-                ))
-            .toList();
-
-        return items.isEmpty ? const SizedBox.shrink() : MqStoryItemsWidget(items: items);
-      },
-    );
-  }
-}
-
-class _BonusCardSection extends StatelessWidget {
-  const _BonusCardSection();
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<HomeContentCubit, HomeContentState>(
-      buildWhen: (prev, curr) => curr is HomeContentLoading || curr is HomeContentLoaded,
-      builder: (context, state) {
-        final profile = state is HomeContentLoaded ? state.profile : null;
-        return BonusCardWidget(profile: profile);
-      },
-    );
-  }
-}
-
-class _ActiveOrdersSection extends StatelessWidget {
-  const _ActiveOrdersSection();
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<ActiveOrderCubit, ActiveOrderState>(
-      builder: (context, activeState) {
-        return BlocBuilder<HomeContentCubit, HomeContentState>(
-          buildWhen: (prev, curr) => curr is HomeContentLoading || curr is HomeContentLoaded,
-          builder: (context, homeState) {
-            // ActiveOrderCubit — приоритетный источник (есть реал-тайм SignalR обновления).
-            // HomeContentCubit — fallback при первичной загрузке.
-            final int count;
-            if (activeState is ActiveOrdersLoaded) {
-              count = activeState.orders.length;
-            } else if (homeState is HomeContentLoaded) {
-              count = homeState.activeOrders.length;
-            } else {
-              count = 0;
-            }
-
-            if (count == 0) return const SizedBox.shrink();
-
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: BannerContent(
-                ordersCount: count,
-                onTap: () => context.router.push(const ActiveOrderRoute()),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-}
-
-class _PopularFoodSection extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<HomeContentCubit, HomeContentState>(
-      buildWhen: (prev, curr) => curr is HomeContentLoading || curr is HomeContentLoaded,
-      builder: (context, state) {
-        final isLoading = state is HomeContentLoading;
-        final products = state is HomeContentLoaded ? state.popularProducts : <FoodEntity>[];
-
-        final theme = Theme.of(context);
-        return Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceContainerHighest,
-            borderRadius: const BorderRadius.all(Radius.circular(12)),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              RowTextWidget(text: context.l10n.popularFood, theme: context.theme),
-              if (isLoading)
-                const SizedBox(
-                  height: 220,
-                  child: Center(child: CircularProgressIndicator.adaptive()),
-                ),
-              if (!isLoading && products.isNotEmpty) PopularFoodSectionWidget(menu: products),
-            ],
-          ),
-        );
-      },
     );
   }
 }

@@ -37,9 +37,12 @@ class _AddressSelectionPageState extends State<AddressSelectionPage> {
       child: BlocConsumer<AddressSelectionCubit, AddressSelectionState>(
         listenWhen: (prev, curr) =>
             curr is AddressSelectionConfirmed || curr is AddressSelectionMoveTo || curr is AddressSelectionSearchError,
-        listener: (context, state) {
+        listener: (context, state) async {
           if (state is AddressSelectionConfirmed) {
-            context.router.replace(const MainHomeRoute());
+            final didPop = await context.router.maybePop();
+            if (!didPop && context.mounted) {
+              context.router.replace(const MainHomeRoute());
+            }
             return;
           }
           if (state is AddressSelectionMoveTo) {

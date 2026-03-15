@@ -106,6 +106,14 @@ class ActiveOrderCubit extends Cubit<ActiveOrderState> {
     );
   }
 
+  /// Сброс состояния при логауте (отменяет подписку SignalR и очищает данные)
+  void reset() {
+    _statusSubscription?.cancel();
+    _statusSubscription = null;
+    _lastStatusEmit = null;
+    emit(ActiveOrderInitial());
+  }
+
   @override
   Future<void> close() {
     _statusSubscription?.cancel();

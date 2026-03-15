@@ -56,7 +56,7 @@ class _MqStoryItemsWidgetState extends State<MqStoryItemsWidget> {
       listHeight: widget.listHeight,
       buttonWidth: widget.buttonWidth,
       buttonSpacing: widget.buttonSpacing,
-      paddingLeft: 24,
+      paddingLeft: 4,
       pageTransform: const StoryPage3DTransform(),
       buttonDatas: _items
           .map(

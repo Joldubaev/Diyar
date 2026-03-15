@@ -29,7 +29,7 @@ class CopyableTokenField extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       decoration: BoxDecoration(
-        color: context.colorScheme.onPrimary,
+        color: context.colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
@@ -41,7 +41,7 @@ class CopyableTokenField extends StatelessWidget {
               style: context.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
                 letterSpacing: 2,
-                color: Colors.black87,
+                color: context.colorScheme.onSurface,
                 fontSize: 18,
               ),
             ),

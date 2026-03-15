@@ -33,15 +33,7 @@ class AddressStorageService {
       _localStorage.getBool(AppConst.addressSelected) ?? false;
 
   bool shouldShowAddressConfirmation() {
-    if (!isAddressSelected()) return false;
-
-    final dateStr = _localStorage.getString(AppConst.addressConfirmDate);
-    if (dateStr == null) return true;
-
-    final lastConfirm = DateTime.tryParse(dateStr);
-    if (lastConfirm == null) return true;
-
-    return DateTime.now().difference(lastConfirm).inHours >= 24;
+    return isAddressSelected();
   }
 
   Future<void> confirmAddress() async => _confirmAddress();

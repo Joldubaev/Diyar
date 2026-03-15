@@ -16,7 +16,7 @@ class QrCodeDisplay extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: context.colorScheme.onPrimary,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -31,7 +31,9 @@ class QrCodeDisplay extends StatelessWidget {
         data: data,
         version: QrVersions.auto,
         size: 280,
-        backgroundColor: context.colorScheme.onPrimary,
+        backgroundColor: Colors.white,
+        eyeStyle: const QrEyeStyle(eyeShape: QrEyeShape.square, color: Colors.black),
+        dataModuleStyle: const QrDataModuleStyle(dataModuleShape: QrDataModuleShape.square, color: Colors.black),
         errorCorrectionLevel: QrErrorCorrectLevel.H,
         padding: const EdgeInsets.all(16),
       ),

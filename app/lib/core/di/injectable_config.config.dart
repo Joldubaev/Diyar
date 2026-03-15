@@ -414,11 +414,6 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i471.AboutUsRepositoryImpl(gh<_i798.AboutUsRemoteDataSource>()));
     gh.factory<_i205.GetPopularProductsUseCase>(
         () => _i205.GetPopularProductsUseCase(gh<_i872.MenuRepository>()));
-    gh.factory<_i159.AddressSelectionCubit>(() => _i159.AddressSelectionCubit(
-          gh<_i659.PriceRepository>(),
-          gh<_i478.AddressStorageService>(),
-          gh<_i835.AppLocation>(),
-        ));
     gh.lazySingleton<_i825.SecureStorageService>(
         () => _i50.SecureStorageServiceImpl(
               gh<_i835.AuthLocalDataSource>(),
@@ -449,10 +444,6 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i36.ProfileCubit(gh<_i315.ProfileRepository>()));
     gh.factory<_i573.AboutUsCubit>(
         () => _i573.AboutUsCubit(gh<_i168.AboutUsRepository>()));
-    gh.factory<_i661.UserMapCubit>(() => _i661.UserMapCubit(
-          gh<_i659.PriceRepository>(),
-          gh<_i835.AppLocation>(),
-        ));
     gh.factory<_i517.CartBloc>(() => _i517.CartBloc(gh<_i26.CartRepository>()));
     gh.lazySingleton<_i429.CreatePayLinkUsecase>(
         () => _i429.CreatePayLinkUsecase(gh<_i354.IOpenBankingRepository>()));
@@ -490,6 +481,11 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i312.VerifySmsCodeUseCase(gh<_i140.AuthRepository>()));
     gh.factory<_i236.OrderDetailCubit>(
         () => _i236.OrderDetailCubit(gh<_i900.GetOrderDetailUseCase>()));
+    gh.factory<_i159.AddressSelectionCubit>(() => _i159.AddressSelectionCubit(
+          gh<_i659.PriceRepository>(),
+          gh<_i478.AddressStorageService>(),
+          gh<_i835.AppLocation>(),
+        ));
     gh.factory<_i739.PopularCubit>(
         () => _i739.PopularCubit(gh<_i872.MenuRepository>()));
     gh.factory<_i395.MenuBloc>(
@@ -512,6 +508,10 @@ extension GetItInjectableX on _i174.GetIt {
               gh<_i140.AuthRepository>(),
               gh<_i835.AuthLocalDataSource>(),
             ));
+    gh.factory<_i661.UserMapCubit>(() => _i661.UserMapCubit(
+          gh<_i659.PriceRepository>(),
+          gh<_i835.AppLocation>(),
+        ));
     gh.factory<_i931.GetUserRoleUseCase>(
         () => _i931.GetUserRoleUseCase(gh<_i825.SecureStorageService>()));
     gh.factory<_i449.HandleFirstLaunchUseCase>(

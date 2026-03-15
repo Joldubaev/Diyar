@@ -23,12 +23,22 @@ class DeliveryFormPage extends StatelessWidget {
   final double deliveryPrice;
   final String? initialUserName;
   final String? initialUserPhone;
+  final String? initialEntrance;
+  final String? initialFloor;
+  final String? initialApartment;
+  final String? initialIntercom;
+  final String? initialComment;
 
   const DeliveryFormPage({
     super.key,
     this.address,
     this.initialUserName,
     this.initialUserPhone,
+    this.initialEntrance,
+    this.initialFloor,
+    this.initialApartment,
+    this.initialIntercom,
+    this.initialComment,
     required this.cart,
     required this.dishCount,
     required this.totalPrice,
@@ -60,6 +70,11 @@ class DeliveryFormPage extends StatelessWidget {
           initialUserName: initialUserName,
           initialUserPhone: initialUserPhone,
           initialHouseNumber: extractedHouseNumber,
+          initialEntrance: initialEntrance,
+          initialFloor: initialFloor,
+          initialApartment: initialApartment,
+          initialIntercom: initialIntercom,
+          initialComment: initialComment,
         ),
       child: DeliveryFormView(
         cart: cart,
@@ -69,6 +84,11 @@ class DeliveryFormPage extends StatelessWidget {
         address: address,
         initialUserName: initialUserName,
         initialUserPhone: initialUserPhone,
+        initialEntrance: initialEntrance,
+        initialFloor: initialFloor,
+        initialApartment: initialApartment,
+        initialIntercom: initialIntercom,
+        initialComment: initialComment,
       ),
     );
   }
@@ -82,6 +102,11 @@ class DeliveryFormView extends StatefulWidget {
   final String? address;
   final String? initialUserName;
   final String? initialUserPhone;
+  final String? initialEntrance;
+  final String? initialFloor;
+  final String? initialApartment;
+  final String? initialIntercom;
+  final String? initialComment;
 
   const DeliveryFormView({
     super.key,
@@ -92,6 +117,11 @@ class DeliveryFormView extends StatefulWidget {
     this.address,
     this.initialUserName,
     this.initialUserPhone,
+    this.initialEntrance,
+    this.initialFloor,
+    this.initialApartment,
+    this.initialIntercom,
+    this.initialComment,
   });
 
   @override
@@ -111,6 +141,11 @@ class _DeliveryFormViewState extends State<DeliveryFormView> {
       initialUserName: widget.initialUserName,
       initialAddress: widget.address,
       initialHouseNumber: extractedHouseNumber,
+      initialEntrance: widget.initialEntrance,
+      initialFloor: widget.initialFloor,
+      initialApartment: widget.initialApartment,
+      initialIntercom: widget.initialIntercom,
+      initialComment: widget.initialComment,
     );
 
     // Синхронизируем извлеченный номер дома с state кубита

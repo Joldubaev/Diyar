@@ -5,9 +5,8 @@ import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/cart/presentation/cubit/cart_cutlery_cubit.dart';
 import 'package:diyar/features/cart/presentation/cubit/cart_price_cubit.dart';
 import 'package:diyar/features/features.dart';
+import 'package:diyar/features/templates/presentation/widgets/address_picker_bottom_sheet.dart';
 import 'package:diyar/features/settings/domain/entities/timer_entites.dart';
-import 'package:diyar/core/di/injectable_config.dart';
-import 'package:diyar/core/utils/storage/address_storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -68,53 +67,11 @@ class CartTimerSection extends StatelessWidget {
       endWorkTimeString: '00:00',
       serverTimeString: timer!.serverTime!.toString(),
       onDeliveryTap: () async {
-        final addressStorage = sl<AddressStorageService>();
-        final hasAddress = addressStorage.isAddressSelected();
-        final address = addressStorage.getAddress();
-        final deliveryPrice = addressStorage.getDeliveryPrice();
-
-        void goToDeliveryForm() {
-          final profileCubit = context.read<ProfileCubit>();
-          final user = profileCubit.user;
-          context.router.push(
-            DeliveryFormRoute(
-              cart: cartItems,
-              totalPrice: totalPrice,
-              dishCount: cutleryCount,
-              address: address,
-              deliveryPrice: deliveryPrice ?? 0.0,
-              initialUserName: user?.userName,
-              initialUserPhone: user?.phone,
-            ),
-          );
-        }
-
-        if (hasAddress && address != null) {
-          goToDeliveryForm();
-          return;
-        }
-
-        // Сначала получаем шаблоны: если есть — показываем выбор шаблонов
-        final getTemplatesUseCase = sl<GetTemplatesUseCase>();
-        final templatesResult = await getTemplatesUseCase();
-
-        templatesResult.fold(
-          (_) {
-            if (hasAddress && address != null) {
-              goToDeliveryForm();
-            } else {
-              context.router.push(const AddressSelectionRoute());
-            }
-          },
-          (templates) {
-            if (templates.isNotEmpty) {
-              context.router.push(TemplatesRoute());
-            } else if (hasAddress && address != null) {
-              goToDeliveryForm();
-            } else {
-              context.router.push(const AddressSelectionRoute());
-            }
-          },
+        await AddressPickerBottomSheet.show(
+          context,
+          cartItems: cartItems,
+          totalPrice: totalPrice,
+          dishCount: cutleryCount,
         );
       },
       onPickupTap: () {

@@ -28,6 +28,11 @@ class DeliveryFormCubit extends Cubit<DeliveryFormState> {
     String? initialUserName,
     String? initialUserPhone,
     String? initialHouseNumber,
+    String? initialEntrance,
+    String? initialFloor,
+    String? initialApartment,
+    String? initialIntercom,
+    String? initialComment,
   }) {
     final totalOrderCost = _calculationService
         .calculateFinalTotalPrice(
@@ -44,6 +49,11 @@ class DeliveryFormCubit extends Cubit<DeliveryFormState> {
       userName: initialUserName ?? '',
       userPhone: initialUserPhone ?? '+996',
       houseNumber: initialHouseNumber ?? '',
+      entrance: initialEntrance ?? '',
+      floor: initialFloor ?? '',
+      apartment: initialApartment ?? '',
+      intercom: initialIntercom ?? '',
+      comment: initialComment ?? '',
     ));
   }
 

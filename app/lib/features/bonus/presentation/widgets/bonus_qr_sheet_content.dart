@@ -11,19 +11,16 @@ class BonusQrSheetContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<BonusCubit, BonusState>(
       builder: (context, state) {
-        if (state is BonusQrLoading) {
-          return const _LoadingState();
+        if (state is BonusQrLoaded) {
+          return _QrContent(qrData: state.qrData);
         }
 
         if (state is BonusQrFailure) {
           return const _QrNotAvailableWidget();
         }
 
-        if (state is BonusQrLoaded) {
-          return _QrContent(qrData: state.qrData);
-        }
-
-        return const SizedBox.shrink();
+        // BonusInitial, BonusQrLoading и любые другие состояния
+        return const _LoadingState();
       },
     );
   }

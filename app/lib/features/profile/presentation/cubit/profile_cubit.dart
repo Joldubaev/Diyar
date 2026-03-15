@@ -69,4 +69,11 @@ class ProfileCubit extends Cubit<ProfileState> {
       },
     );
   }
+
+  /// Сброс всех данных пользователя (вызывать при логауте)
+  void reset() {
+    _lastLoaded = null;
+    user = null;
+    emit(ProfileInitial());
+  }
 }

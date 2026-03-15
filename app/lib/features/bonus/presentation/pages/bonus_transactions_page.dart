@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
-import 'package:diyar/core/di/injectable_config.dart' as di;
 import 'package:diyar/core/theme/app_colors.dart';
 import 'package:diyar/features/bonus/bonus.dart';
 import 'package:flutter/material.dart';
@@ -64,9 +63,7 @@ class _BonusTransactionsPageState extends State<BonusTransactionsPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    return BlocProvider(
-      create: (_) => di.sl<BonusCubit>(),
-      child: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           leading: IconButton(
             onPressed: () {
@@ -269,7 +266,6 @@ class _BonusTransactionsPageState extends State<BonusTransactionsPage> {
             );
           },
         ),
-      ),
     );
   }
 }

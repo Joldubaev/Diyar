@@ -1,7 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/common/common.dart';
 import 'package:diyar/core/core.dart';
+import 'package:diyar/core/di/injectable_config.dart' as di;
 import 'package:diyar/features/auth/auth.dart';
+import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,6 +34,15 @@ class _ProfilePageState extends State<ProfilePage> {
     setState(() {
       version = '${info.version} (${info.buildNumber})';
     });
+  }
+
+  /// Сбрасывает все данные текущего пользователя при выходе/удалении аккаунта.
+  /// Должен вызываться ДО навигации на SignInRoute.
+  void _clearUserData(BuildContext context) {
+    context.read<ProfileCubit>().reset();
+    context.read<BonusCubit>().reset();
+    context.read<CartBloc>().add(ClearCart());
+    di.sl<ActiveOrderCubit>().reset();
   }
 
   void _showDeleteConfirmation(BuildContext context) {
@@ -80,6 +91,7 @@ class _ProfilePageState extends State<ProfilePage> {
       body: BlocConsumer<ProfileCubit, ProfileState>(
         listener: (context, state) {
           if (state is ProfileGetError || state is ProfileDeleteLoaded) {
+            _clearUserData(context);
             context.read<SignInCubit>().logout().then((value) {
               if (context.mounted) {
                 context.router.pushAndPopUntil(
@@ -174,6 +186,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             confirmText: context.l10n.yes,
                             cancelPressed: () => Navigator.pop(context),
                             confirmPressed: () {
+                              _clearUserData(context);
                               context.read<SignInCubit>().logout().then((value) {
                                 if (context.mounted) {
                                   context.router.pushAndPopUntil(

@@ -1,3 +1,4 @@
+export 'handlers/address_confirmation_handler.dart';
 export 'user_map/order_map.dart';
 export 'pages/address_selection_page.dart';
 export 'widgets/widgets.dart';

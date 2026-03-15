@@ -14,3 +14,4 @@ export 'web_payment/web_payment.dart';
 export 'settings/settings.dart';
 export 'bonus/bonus.dart';
 export 'security/security.dart';
+export 'map/map.dart';

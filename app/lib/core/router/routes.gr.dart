@@ -264,6 +264,11 @@ class DeliveryFormRoute extends _i41.PageRouteInfo<DeliveryFormRouteArgs> {
     String? address,
     String? initialUserName,
     String? initialUserPhone,
+    String? initialEntrance,
+    String? initialFloor,
+    String? initialApartment,
+    String? initialIntercom,
+    String? initialComment,
     required List<_i43.CartItemEntity> cart,
     required int dishCount,
     required int totalPrice,
@@ -276,6 +281,11 @@ class DeliveryFormRoute extends _i41.PageRouteInfo<DeliveryFormRouteArgs> {
            address: address,
            initialUserName: initialUserName,
            initialUserPhone: initialUserPhone,
+           initialEntrance: initialEntrance,
+           initialFloor: initialFloor,
+           initialApartment: initialApartment,
+           initialIntercom: initialIntercom,
+           initialComment: initialComment,
            cart: cart,
            dishCount: dishCount,
            totalPrice: totalPrice,
@@ -295,6 +305,11 @@ class DeliveryFormRoute extends _i41.PageRouteInfo<DeliveryFormRouteArgs> {
         address: args.address,
         initialUserName: args.initialUserName,
         initialUserPhone: args.initialUserPhone,
+        initialEntrance: args.initialEntrance,
+        initialFloor: args.initialFloor,
+        initialApartment: args.initialApartment,
+        initialIntercom: args.initialIntercom,
+        initialComment: args.initialComment,
         cart: args.cart,
         dishCount: args.dishCount,
         totalPrice: args.totalPrice,
@@ -310,6 +325,11 @@ class DeliveryFormRouteArgs {
     this.address,
     this.initialUserName,
     this.initialUserPhone,
+    this.initialEntrance,
+    this.initialFloor,
+    this.initialApartment,
+    this.initialIntercom,
+    this.initialComment,
     required this.cart,
     required this.dishCount,
     required this.totalPrice,
@@ -324,6 +344,16 @@ class DeliveryFormRouteArgs {
 
   final String? initialUserPhone;
 
+  final String? initialEntrance;
+
+  final String? initialFloor;
+
+  final String? initialApartment;
+
+  final String? initialIntercom;
+
+  final String? initialComment;
+
   final List<_i43.CartItemEntity> cart;
 
   final int dishCount;
@@ -334,7 +364,7 @@ class DeliveryFormRouteArgs {
 
   @override
   String toString() {
-    return 'DeliveryFormRouteArgs{key: $key, address: $address, initialUserName: $initialUserName, initialUserPhone: $initialUserPhone, cart: $cart, dishCount: $dishCount, totalPrice: $totalPrice, deliveryPrice: $deliveryPrice}';
+    return 'DeliveryFormRouteArgs{key: $key, address: $address, initialUserName: $initialUserName, initialUserPhone: $initialUserPhone, initialEntrance: $initialEntrance, initialFloor: $initialFloor, initialApartment: $initialApartment, initialIntercom: $initialIntercom, initialComment: $initialComment, cart: $cart, dishCount: $dishCount, totalPrice: $totalPrice, deliveryPrice: $deliveryPrice}';
   }
 }
 
