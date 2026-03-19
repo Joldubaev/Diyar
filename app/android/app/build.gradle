@@ -33,7 +33,15 @@ if (keystorePropertiesFile.exists()) {
     }
 }
 
-def yandexMapkitApiKey = localProperties.getProperty('yandex.mapkit.api_key', '')
+def yandexMapkitApiKey =
+        localProperties.getProperty('yandex.mapkit.api_key') ?: System.getenv('YANDEX_MAPKIT_API_KEY')
+
+if (yandexMapkitApiKey == null || yandexMapkitApiKey.trim().isEmpty()) {
+    throw new GradleException(
+            "Yandex MapKit API key is missing. Add 'yandex.mapkit.api_key=YOUR_KEY' to local.properties (project root) " +
+                    "or set environment variable 'YANDEX_MAPKIT_API_KEY'."
+    )
+}
 
 android {
     namespace "kg.cdt.diyar_guest"
