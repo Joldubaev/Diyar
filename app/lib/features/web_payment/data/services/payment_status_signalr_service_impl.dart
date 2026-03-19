@@ -33,7 +33,12 @@ class PaymentStatusSignalRServiceImpl implements IPaymentStatusSignalRService {
   Future<void> connect(String orderNumber) async {
     if (_hubConnection != null) return;
 
-    _currentOrderNum = int.tryParse(orderNumber) ?? 0;
+    final parsed = int.tryParse(orderNumber);
+    if (parsed == null) {
+      dev.log('[PaymentStatusSignalR] Invalid orderNumber: "$orderNumber" is not a valid integer');
+      throw ArgumentError('orderNumber must be a valid integer, got: "$orderNumber"');
+    }
+    _currentOrderNum = parsed;
 
     try {
       final logger = Logger('PaymentStatusSignalR')..level = Level.ALL;
@@ -68,7 +73,8 @@ class PaymentStatusSignalRServiceImpl implements IPaymentStatusSignalRService {
       final raw = data.isNotEmpty ? data.first : data;
       final map = raw is Map ? Map<String, dynamic>.from(raw) : null;
       if (map == null) return;
-      dev.log('[PaymentStatusSignalR] ReceiveStatus parsed: orderNumber=${map['orderNumber']}, status=${map['status']}');
+      dev.log(
+          '[PaymentStatusSignalR] ReceiveStatus parsed: orderNumber=${map['orderNumber']}, status=${map['status']}');
       final status = map['status']?.toString() ?? '';
       if (status.isNotEmpty) {
         _statusController.add(PaymentStatusTypeMapper.fromCode(status));

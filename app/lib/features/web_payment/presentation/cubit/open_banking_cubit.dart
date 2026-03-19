@@ -50,7 +50,13 @@ final class OpenBankingCubit extends Cubit<OpenBankingState> {
   Future<void> _connectToSignalR(String orderNumber) async {
     _statusSubscription = _signalRService.statusStream.listen(
       _onStatusReceived,
-      onError: (Object e, StackTrace st) {},
+      onError: (Object e, StackTrace st) {
+        if (isClosed) return;
+        final current = state;
+        if (current is OpenBankingReady) {
+          emit(current.copyWith(signalRStatus: PaymentStatusType.error));
+        }
+      },
     );
     await _signalRService.connect(orderNumber);
   }
@@ -78,7 +84,7 @@ final class OpenBankingCubit extends Cubit<OpenBankingState> {
     emit(const OpenBankingPaymentConfirmed());
   }
 
-  void onUserManuallyConfirmed() async {
+  Future<void> onUserManuallyConfirmed() async {
     if (isClosed) return;
     await _statusSubscription?.cancel();
     _statusSubscription = null;

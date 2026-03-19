@@ -12,6 +12,7 @@ class AddressSelectionMapContent extends StatelessWidget {
   final VoidCallback onZoomIn;
   final VoidCallback onZoomOut;
   final VoidCallback onLocate;
+  final void Function(Point point)? onMapTap;
 
   const AddressSelectionMapContent({
     super.key,
@@ -20,11 +21,12 @@ class AddressSelectionMapContent extends StatelessWidget {
     required this.onZoomIn,
     required this.onZoomOut,
     required this.onLocate,
+    this.onMapTap,
   });
 
   static const _serviceZoneCameraBounds = CameraBounds(
     minZoom: 10,
-    maxZoom: 18,
+    maxZoom: 21,
     latLngBounds: BoundingBox(
       northEast: Point(latitude: 42.957, longitude: 74.924),
       southWest: Point(latitude: 42.71, longitude: 74.285),
@@ -59,6 +61,7 @@ class AddressSelectionMapContent extends StatelessWidget {
           onCameraPositionChanged: onCameraPositionChanged,
           onMapCreated: onMapCreated,
           cameraBounds: _serviceZoneCameraBounds,
+          onMapTap: onMapTap,
         ),
         const Positioned.fill(
           child: Center(

@@ -156,4 +156,14 @@ class OrderActiveItemEntity extends Equatable {
   /// Определяет, является ли заказ самовывозом (pickup)
   /// Обычно pickup заказы не имеют адреса доставки
   bool get isPickup => address == null || address!.isEmpty;
+
+  /// Итоговая сумма к оплате: цена + доставка - бонусы
+  int get totalPrice => (price ?? 0) + (deliveryPrice ?? 0) - (amountToReduce ?? 0);
+
+  /// Можно ли продолжить онлайн-оплату:
+  /// заказ ожидает, выбрана онлайн-оплата, платёж ещё не проведён
+  bool get canResumePayment =>
+      paymentMethod == 'card_online' &&
+      (paymentStatus == 'New' || paymentStatus == 'Await') &&
+      status == 'Awaits';
 }

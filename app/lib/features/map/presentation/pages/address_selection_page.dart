@@ -20,7 +20,11 @@ class AddressSelectionPage extends StatefulWidget {
 
 class _AddressSelectionPageState extends State<AddressSelectionPage> {
   final _mapControllerCompleter = Completer<YandexMapController>();
-  double _currentZoom = 14.0;
+  static const double _defaultZoom = 20.0;
+  static const double _minZoom = 12.0;
+  static const double _maxZoom = 21.0;
+
+  double _currentZoom = _defaultZoom;
 
   @override
   void initState() {
@@ -83,6 +87,7 @@ class _AddressSelectionPageState extends State<AddressSelectionPage> {
                       );
                 }
               },
+              onMapTap: _onMapTap,
               onZoomIn: () => _zoomIn(latitude, longitude),
               onZoomOut: () => _zoomOut(latitude, longitude),
               onLocate: () => context.read<AddressSelectionCubit>().fetchCurrentLocation(),
@@ -116,21 +121,22 @@ class _AddressSelectionPageState extends State<AddressSelectionPage> {
 
   Future<void> _moveToLocation(double latitude, double longitude) async {
     await _withMapController((controller) {
-      _currentZoom = 16.0;
+      _currentZoom = _defaultZoom;
       controller.moveCamera(
         CameraUpdate.newCameraPosition(
           CameraPosition(
             target: Point(latitude: latitude, longitude: longitude),
-            zoom: 16.0,
+            zoom: _currentZoom,
           ),
         ),
+        animation: const MapAnimation(duration: 0.7),
       );
     });
   }
 
   Future<void> _zoomIn(double latitude, double longitude) async {
     await _withMapController((controller) {
-      _currentZoom += 1;
+      _currentZoom = (_currentZoom + 1).clamp(_minZoom, _maxZoom);
       controller.moveCamera(
         CameraUpdate.newCameraPosition(
           CameraPosition(
@@ -138,13 +144,14 @@ class _AddressSelectionPageState extends State<AddressSelectionPage> {
             zoom: _currentZoom,
           ),
         ),
+        animation: const MapAnimation(duration: 0.35),
       );
     });
   }
 
   Future<void> _zoomOut(double latitude, double longitude) async {
     await _withMapController((controller) {
-      _currentZoom -= 1;
+      _currentZoom = (_currentZoom - 1).clamp(_minZoom, _maxZoom);
       controller.moveCamera(
         CameraUpdate.newCameraPosition(
           CameraPosition(
@@ -152,8 +159,19 @@ class _AddressSelectionPageState extends State<AddressSelectionPage> {
             zoom: _currentZoom,
           ),
         ),
+        animation: const MapAnimation(duration: 0.35),
       );
     });
+  }
+
+  void _onMapTap(Point point) {
+    // При тапе по карте сразу переносим “цель” на точку дома
+    // и затем сделаем reverse-geocode после завершения движения камеры.
+    context.read<AddressSelectionCubit>().setLocationFromSearch(
+          null,
+          point.latitude,
+          point.longitude,
+        );
   }
 
   Future<void> _initPermission() async {

@@ -94,25 +94,51 @@ class _OrderCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            _buildActionButtons(context),
+            _OrderCardActions(order: order),
           ],
         ),
       ),
     );
   }
+}
 
-  Widget _buildActionButtons(BuildContext context) {
-    return Row(
+class _OrderCardActions extends StatelessWidget {
+  final OrderActiveItemEntity order;
+
+  const _OrderCardActions({required this.order});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Expanded(
-          child: CancelOrderButton(order: order),
-        ),
-        const SizedBox(width: 8),
-        CustomTextButton(
-          onPressed: () => context.pushRoute(
-            OrderDetailRoute(orderNumber: "${order.orderNumber}"),
+        if (order.canResumePayment)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: FilledButton.icon(
+              onPressed: () => context.pushRoute(
+                OpenBankingPaymentRoute(
+                  orderNumber: '${order.orderNumber}',
+                  amount: order.totalPrice,
+                ),
+              ),
+              icon: const Icon(Icons.payment),
+              label: const Text('Продолжить оплату'),
+            ),
           ),
-          textButton: context.l10n.orderDetails,
+        Row(
+          children: [
+            Expanded(
+              child: CancelOrderButton(order: order),
+            ),
+            const SizedBox(width: 8),
+            CustomTextButton(
+              onPressed: () => context.pushRoute(
+                OrderDetailRoute(orderNumber: '${order.orderNumber}'),
+              ),
+              textButton: context.l10n.orderDetails,
+            ),
+          ],
         ),
       ],
     );

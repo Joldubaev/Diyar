@@ -138,12 +138,12 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   child: Column(
                     children: [
-                      SettingsTile(
-                        leading: SvgPicture.asset('assets/icons/about.svg', height: 40),
-                        text: context.l10n.aboutUs,
-                        onPressed: () => context.pushRoute(const AboutUsRoute()),
-                      ),
-                      Divider(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2), height: 1),
+                      // SettingsTile(
+                      //   leading: SvgPicture.asset('assets/icons/about.svg', height: 40),
+                      //   text: context.l10n.aboutUs,
+                      //   onPressed: () => context.pushRoute(const AboutUsRoute()),
+                      // ),
+                      // Divider(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2), height: 1),
                       SettingsTile(
                         leading: SvgPicture.asset('assets/icons/phone.svg', height: 40),
                         text: context.l10n.contact,
