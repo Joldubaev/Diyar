@@ -39,10 +39,11 @@ class ChangeAmountSection extends StatelessWidget {
   }
 
   void _showChangeDialog(BuildContext context, DeliveryFormLoaded state) async {
-    // Вызываем диалог для выбора суммы сдачи
+    // Минимум как у CreateOrderUseCase (сдача ≥ полной суммы заказа, без вычета бонусов).
+    final fullOrderPrice = state.subtotalPrice + state.deliveryPrice.toInt();
     final result = await ChangeAmountDialog.show(
       context: context,
-      totalOrderCost: state.totalOrderCost,
+      totalOrderCost: fullOrderPrice,
     );
     if (result != null && context.mounted) {
       controllers.sdachaController.text = result.toString();
