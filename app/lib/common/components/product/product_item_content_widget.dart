@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:diyar/common/components/components.dart';
@@ -14,7 +15,9 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 class ProductItemContentWidget extends StatefulWidget {
   // --- Constants ---
   static const double _cardBorderRadius = 10.0;
-  static const double _imageHeight = 110.0;
+
+  /// Запас под текст, счётчик и отступы карточки — высота фото не должна его превышать.
+  static const double _reservedBelowImage = 95.0;
   static const double _imageWidth = 170.0;
   static const int _memCacheWidth = 400;
   static const int _memCacheHeight = 400;
@@ -148,15 +151,32 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> wit
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+  /// Область фото по ширине карточки и доступной высоте ячейки (не фиксированные 170×110),
+  /// чтобы при [BoxFit.contain] квадратные фото не оставались «крошечными» по центру.
+  ({double width, double height}) _imageSizeForCard({
+    required double cardWidth,
+    required double cardHeight,
+    required bool isCompact,
+  }) {
+    if (isCompact) {
+      return (width: 120.0, height: 80.0);
+    }
+    final w = (cardWidth - ProductItemContentWidget._cardPadding.horizontal).clamp(48.0, 400.0);
+    final effectiveH = cardHeight.isFinite ? cardHeight : 220.0;
+    final hAvail = (effectiveH - ProductItemContentWidget._reservedBelowImage).clamp(0.0, 400.0);
+    if (hAvail <= 0) {
+      return (width: w, height: 100.0);
+    }
+    final h = math.min(w, hAvail).clamp(96.0, w * 1.15);
+    return (width: w, height: h);
+  }
 
-    // Адаптивные размеры; в GridView (width/height == null) подстраиваемся под ограничения родителя
-    final imageHeight = widget.isCompact ? 80.0 : ProductItemContentWidget._imageHeight;
-    final imageWidth = widget.isCompact ? 120.0 : ProductItemContentWidget._imageWidth;
-
-    final content = DecoratedBox(
+  Widget _buildCardBody(
+    ThemeData theme, {
+    required double imageWidth,
+    required double imageHeight,
+  }) {
+    return DecoratedBox(
       decoration: _buildCardDecoration(context, theme),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -187,26 +207,33 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> wit
         ],
       ),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
 
     if (widget.width != null && widget.height != null) {
+      final dims = _imageSizeForCard(
+        cardWidth: widget.width!,
+        cardHeight: widget.height!,
+        isCompact: widget.isCompact,
+      );
       return SizedBox(
         width: widget.width,
         height: widget.height,
-        child: content,
+        child: _buildCardBody(theme, imageWidth: dims.width, imageHeight: dims.height),
       );
     }
 
     // В GridView/списках — подстраиваем размеры под доступные ограничения, избегая бесконечных значений
     return LayoutBuilder(
       builder: (context, constraints) {
-        // Базовая ширина/высота по умолчанию
-        final defaultWidth = widget.width ?? (widget.isCompact ? 140.0 : 170.0);
+        final defaultWidth = widget.width ?? (widget.isCompact ? 140.0 : ProductItemContentWidget._imageWidth);
         final defaultHeight = widget.height ?? (widget.isCompact ? 180.0 : 220.0);
 
-        // Если ограничение по ширине конечно — используем его, иначе fallback на дефолт
         final cardWidth = constraints.maxWidth.isFinite ? constraints.maxWidth : defaultWidth;
 
-        // Высоту ограничиваем сверху maxHeight, если он конечен, чтобы избежать overflow
         double cardHeight = defaultHeight;
         if (constraints.maxHeight.isFinite) {
           if (defaultHeight > constraints.maxHeight) {
@@ -214,10 +241,16 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget> wit
           }
         }
 
+        final dims = _imageSizeForCard(
+          cardWidth: cardWidth,
+          cardHeight: cardHeight,
+          isCompact: widget.isCompact,
+        );
+
         return SizedBox(
           width: cardWidth,
           height: cardHeight,
-          child: content,
+          child: _buildCardBody(theme, imageWidth: dims.width, imageHeight: dims.height),
         );
       },
     );
@@ -275,16 +308,23 @@ class _ProductImageSection extends StatelessWidget {
           child: Stack(
             alignment: Alignment.center,
             children: [
-              CachedNetworkImage(
-                imageUrl: food.urlPhoto ?? 'https://via.placeholder.com/150',
-                placeholder: (context, url) => _buildImagePlaceholder(theme),
-                errorWidget: (context, url, error) => _buildImageError(theme),
+              Container(
                 width: imageWidth,
                 height: imageHeight,
-                memCacheWidth: ProductItemContentWidget._memCacheWidth,
-                memCacheHeight: ProductItemContentWidget._memCacheHeight,
-                cacheManager: DefaultCacheManager(),
-                fit: BoxFit.fill,
+                color: theme.colorScheme.surface,
+                alignment: Alignment.center,
+                child: CachedNetworkImage(
+                  imageUrl: food.urlPhoto ?? 'https://via.placeholder.com/150',
+                  placeholder: (context, url) => _buildImagePlaceholder(theme),
+                  errorWidget: (context, url, error) => _buildImageError(theme),
+                  width: imageWidth,
+                  height: imageHeight,
+                  memCacheWidth: ProductItemContentWidget._memCacheWidth,
+                  memCacheHeight: ProductItemContentWidget._memCacheHeight,
+                  cacheManager: DefaultCacheManager(),
+                  // Вся картинка в кадре без обрезки; поля по краям совпадают с фоном карточки.
+                  fit: BoxFit.contain,
+                ),
               ),
               _buildQuantityOverlay(theme),
             ],
@@ -320,8 +360,8 @@ class _ProductImageSection extends StatelessWidget {
 
   Widget _buildImagePlaceholder(ThemeData theme) {
     return Container(
-      width: ProductItemContentWidget._imageWidth,
-      height: ProductItemContentWidget._imageHeight,
+      width: imageWidth,
+      height: imageHeight,
       color: theme.colorScheme.surface.withValues(alpha: 0.5),
       child: Center(
         child: CircularProgressIndicator(
@@ -334,8 +374,8 @@ class _ProductImageSection extends StatelessWidget {
 
   Widget _buildImageError(ThemeData theme) {
     return Container(
-      width: ProductItemContentWidget._imageWidth,
-      height: ProductItemContentWidget._imageHeight,
+      width: imageWidth,
+      height: imageHeight,
       color: theme.colorScheme.surface.withValues(alpha: 0.5),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

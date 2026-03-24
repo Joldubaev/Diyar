@@ -11,26 +11,26 @@ class ProductImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
+    final surface = Theme.of(context).colorScheme.surface;
+
     return ClipRRect(
       borderRadius: const BorderRadius.all(Radius.circular(16.0)),
       child: AspectRatio(
         aspectRatio: 16 / 9,
-        child: CachedNetworkImage(
-          imageUrl: food.urlPhoto ?? 'https://i.ibb.co/GkL25DB/ALE-1357-7.png',
-          memCacheWidth: 800,
-          memCacheHeight: 500,
-          filterQuality: FilterQuality.medium,
-          imageBuilder: (context, imageProvider) => Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: imageProvider,
-                fit: BoxFit.cover,
-              ),
-            ),
+        child: ColoredBox(
+          color: surface,
+          child: CachedNetworkImage(
+            imageUrl: food.urlPhoto ?? 'https://i.ibb.co/GkL25DB/ALE-1357-7.png',
+            memCacheWidth: 800,
+            memCacheHeight: 600,
+            filterQuality: FilterQuality.medium,
+            fit: BoxFit.contain,
+            alignment: Alignment.center,
+            width: double.infinity,
+            height: double.infinity,
+            errorWidget: (context, url, error) => _buildErrorWidget(context),
+            placeholder: (context, url) => _buildLoadingWidget(surface),
           ),
-          errorWidget: (context, url, error) => _buildErrorWidget(context),
-          placeholder: (context, url) => _buildLoadingWidget(),
         ),
       ),
     );
@@ -61,13 +61,11 @@ class ProductImage extends StatelessWidget {
     );
   }
 
-  Widget _buildLoadingWidget() {
+  Widget _buildLoadingWidget(Color background) {
     return Shimmer.fromColors(
       baseColor: Colors.grey[300]!,
       highlightColor: Colors.grey[100]!,
-      child: Container(
-        color: Colors.white,
-      ),
+      child: ColoredBox(color: background),
     );
   }
 }
