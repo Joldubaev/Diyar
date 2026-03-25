@@ -33,6 +33,11 @@ migrate_working_dir/
 .pub/
 **/build/
 
+# Cursor / Claude / Dart skills (local tooling)
+.cursor/
+.claude/
+.dart_skills/
+
 # Symbolication related
 app.*.symbols
 
