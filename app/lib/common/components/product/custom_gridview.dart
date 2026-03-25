@@ -10,6 +10,7 @@ class PaginatedMasonryGridView<T> extends StatelessWidget {
   final double mainAxisSpacing;
   final double crossAxisSpacing;
   final EdgeInsets? padding;
+  final bool shrinkWrap;
 
   const PaginatedMasonryGridView({
     required this.items,
@@ -20,6 +21,7 @@ class PaginatedMasonryGridView<T> extends StatelessWidget {
     this.mainAxisSpacing = 10,
     this.crossAxisSpacing = 10,
     this.padding,
+    this.shrinkWrap = false,
     super.key,
   });
 
@@ -37,8 +39,10 @@ class PaginatedMasonryGridView<T> extends StatelessWidget {
         mainAxisSpacing: mainAxisSpacing,
         crossAxisSpacing: crossAxisSpacing,
         padding: padding,
+        shrinkWrap: shrinkWrap,
         itemCount: items.length + (isLoadingMore ? 1 : 0),
-        controller: PrimaryScrollController.of(context),
+        controller: shrinkWrap ? null : PrimaryScrollController.maybeOf(context),
+        physics: shrinkWrap ? const NeverScrollableScrollPhysics() : null,
         itemBuilder: (context, index) {
           if (index == items.length) {
             return isLoadingMore

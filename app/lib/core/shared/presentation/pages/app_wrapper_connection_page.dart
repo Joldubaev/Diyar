@@ -22,8 +22,11 @@ class _AppWrapperConnectionPageState extends State<AppWrapperConnectionPage> {
         if (state is InternetFailure) {
           setState(() => isInternet = false);
 
+          final navContext = appRoute.navigatorKey.currentContext;
+          if (navContext == null) return;
+
           showModalBottomSheet(
-            context: appRoute.navigatorKey.currentContext!,
+            context: navContext,
             isScrollControlled: true,
             isDismissible: true,
             backgroundColor: AppColors.transparent,
@@ -58,8 +61,9 @@ class _AppWrapperConnectionPageState extends State<AppWrapperConnectionPage> {
           );
         } else {
           setState(() => isInternet = true);
-          if (isInternet && Navigator.canPop(appRoute.navigatorKey.currentContext!)) {
-            Navigator.pop(appRoute.navigatorKey.currentContext!);
+          final navContext = appRoute.navigatorKey.currentContext;
+          if (navContext != null && isInternet && Navigator.canPop(navContext)) {
+            Navigator.pop(navContext);
           }
         }
       },

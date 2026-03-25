@@ -1,3 +1,5 @@
+import 'allergen_model.dart';
+import 'ingredient_model.dart';
 import 'package:diyar/features/menu/domain/domain.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -20,9 +22,12 @@ class FoodModel with _$FoodModel {
     int? containerCount,
     int? quantity,
     num? containerPrice,
+    List<IngredientModel>? ingredients,
+    List<AllergenModel>? allergens,
   }) = _FoodModel;
 
-  factory FoodModel.fromJson(Map<String, dynamic> json) => _$FoodModelFromJson(json);
+  factory FoodModel.fromJson(Map<String, dynamic> json) =>
+      _$FoodModelFromJson(json);
 
   factory FoodModel.fromEntity(FoodEntity entity) => FoodModel(
         id: entity.id,
@@ -38,6 +43,10 @@ class FoodModel with _$FoodModel {
         containerCount: entity.containerCount,
         quantity: entity.quantity,
         containerPrice: entity.containerPrice,
+        ingredients: entity.ingredients
+            ?.map((e) => IngredientModel.fromEntity(e))
+            .toList(),
+        allergens: entity.allergens?.map((e) => AllergenModel.fromEntity(e)).toList(),
       );
 }
 
@@ -56,5 +65,7 @@ extension FoodModelX on FoodModel {
         containerCount: containerCount,
         quantity: quantity,
         containerPrice: containerPrice?.toInt(),
+        ingredients: ingredients?.map((e) => e.toEntity()).toList(),
+        allergens: allergens?.map((e) => e.toEntity()).toList(),
       );
 }

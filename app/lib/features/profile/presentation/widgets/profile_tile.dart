@@ -19,31 +19,44 @@ class ProfileTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
+        color: context.colorScheme.surface,
         borderRadius: const BorderRadius.all(Radius.circular(12)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Row(
         children: [
-          CircleAvatar(
-            radius: 30,
-            child: isSvg!
-                ? SvgPicture.asset(
-                    imgPath,
-                    colorFilter: const ColorFilter.mode(
-                      AppColors.white,
-                      BlendMode.srcIn,
-                    ),
-                    width: 70,
-                  )
-                : Image.asset(imgPath),
+          Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+            ),
+            child: CircleAvatar(
+              radius: 26,
+              backgroundColor: AppColors.orange,
+              child: isSvg!
+                  ? SvgPicture.asset(
+                      imgPath,
+                      colorFilter: ColorFilter.mode(
+                        context.colorScheme.onPrimary,
+                        BlendMode.srcIn,
+                      ),
+                      width: 32,
+                    )
+                  : Image.asset(imgPath),
+            ),
           ),
           const SizedBox(width: 10),
-          Expanded(child: Text(text, style: Theme.of(context).textTheme.bodyLarge)),
+          Expanded(child: Text(text, style: context.textTheme.bodyLarge)),
           const SizedBox(width: 10),
           Icon(
             Icons.arrow_forward_ios,
             size: 20,
-            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+            color: context.colorScheme.onSurfaceVariant,
           ),
         ],
       ),

@@ -208,5 +208,19 @@
   "yes": "Да",
   "yourAddress": "Ваш адрес",
   "yourName": "Ваше имя",
-  "yourOrdersConfirm": "Ваш заказ принят!"
+  "yourOrdersConfirm": "Ваш заказ принят!",
+  "readyTime": "Время готовности",
+  "totalWithoutBonus": "Итого без учета бонусов",
+  "bonusDeduction": "Будет списано бонусов",
+  "totalWithBonus": "Итого с учетом бонусов",
+  "notSpecified": "Не указано",
+  "@availableBonus": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "availableBonus": "{count} бонусов",
+  "bonusLabel": "бонус"
 }

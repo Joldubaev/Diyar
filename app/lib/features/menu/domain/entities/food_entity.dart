@@ -1,3 +1,6 @@
+import 'allergen_entity.dart';
+import 'ingredient_entity.dart';
+
 class FoodEntity {
   final String? id;
   final String? name;
@@ -12,6 +15,8 @@ class FoodEntity {
   final int? containerCount;
   final int? quantity;
   final int? containerPrice;
+  final List<IngredientEntity>? ingredients;
+  final List<AllergenEntity>? allergens;
 
   FoodEntity({
     this.id,
@@ -27,7 +32,10 @@ class FoodEntity {
     this.containerCount,
     this.quantity,
     this.containerPrice,
+    this.ingredients,
+    this.allergens,
   });
+
   FoodEntity copyWith({
     String? id,
     String? name,
@@ -42,6 +50,8 @@ class FoodEntity {
     int? containerCount,
     int? quantity,
     int? containerPrice,
+    List<IngredientEntity>? ingredients,
+    List<AllergenEntity>? allergens,
   }) =>
       FoodEntity(
         id: id ?? this.id,
@@ -57,5 +67,7 @@ class FoodEntity {
         containerCount: containerCount ?? this.containerCount,
         quantity: quantity ?? this.quantity,
         containerPrice: containerPrice ?? this.containerPrice,
+        ingredients: ingredients ?? this.ingredients,
+        allergens: allergens ?? this.allergens,
       );
 }

@@ -57,7 +57,7 @@ extension CreateOrderApiExtension on CreateOrderModel {
       'paymentMethod': paymentMethod,
       'price': price,
       'deliveryPrice': deliveryPrice,
-      'sdacha': sdacha,
+      if (sdacha != null) 'sdacha': sdacha,
       if (amountToReduce != null && amountToReduce! > 0) 'amountToReduce': amountToReduce,
     };
   }

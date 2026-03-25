@@ -1,79 +1,62 @@
+import 'package:diyar/core/core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
-class OrderButton extends StatelessWidget {
-  const OrderButton({
+/// Базовая карточка меню истории/бонусов (PNG-иконки).
+class OrderMenuCard extends StatelessWidget {
+  const OrderMenuCard({
     super.key,
-    required this.text,
-    required this.icon,
-    required this.onPressed,
+    required this.title,
+    required this.image,
+    required this.onTap,
   });
 
-  final String text;
-  final String icon;
-  final void Function() onPressed;
+  final String title;
+  final String image;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(30),
-        onTap: onPressed,
-        child: Container(
-          width: double.infinity,
-          height: 90,
-          decoration: BoxDecoration(
-            color: theme.colorScheme.primaryContainer,
-            borderRadius: BorderRadius.circular(30),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.07),
-                blurRadius: 2,
-                offset: const Offset(0, 1),
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              const SizedBox(width: 20),
-              // Круглая иконка
-              Container(
-                width: 54,
-                height: 54,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                ),
-                child: Center(
-                  child: SvgPicture.asset(
-                    icon,
-                    height: 32,
-                    width: 32,
-                  ),
+    return InkWell(
+      borderRadius: BorderRadius.circular(26),
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          // Белая карточка на сером фоне (история заказов)
+          color: context.colorScheme.surface,
+          borderRadius: BorderRadius.circular(26),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.black.withValues(alpha: 0.06),
+              blurRadius: 18,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            /// IMAGE CONTAINER (PNG)
+            Expanded(
+              child: SizedBox(
+                width: double.infinity,
+                child: Image.asset(
+                  image,
+                  fit: BoxFit.contain,
                 ),
               ),
-              const SizedBox(width: 24),
-              // Текст
-              Expanded(
-                child: Text(
-                  text,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+            ),
+            const SizedBox(height: 12),
+
+            /// TITLE
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: context.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: context.colorScheme.onSurface,
               ),
-              // Стрелка
-              Icon(
-                Icons.arrow_forward_ios,
-                color: Colors.white,
-                size: 32,
-              ),
-              const SizedBox(width: 20),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

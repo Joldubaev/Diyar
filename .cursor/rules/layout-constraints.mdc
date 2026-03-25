@@ -1,0 +1,37 @@
+---
+description: Layout constraints — constraints go down, sizes go up, examples
+globs: app/lib/**/*.dart
+alwaysApply: false
+---
+
+# Layout Constraints in Flutter
+
+## Core Rule
+
+**Constraints go down. Sizes go up. Parent sets position.**
+
+- Widget gets **constraints** from **parent** (min/max width, min/max height).
+- Widget tells children their constraints, asks each for size.
+- Widget positions children, then reports own size to parent.
+
+## Limitations
+
+- Widget can only size within parent's constraints.
+- Widget doesn't decide its own position — parent does.
+- Be specific when defining alignment.
+
+## Widget Types
+
+- As big as possible: Center, ListView
+- Same as children: Transform, Opacity
+- Particular size: Image, Text
+- Container varies by constructor args
+
+## Key Examples
+
+- **Container fills screen**: Screen gives tight constraints → Container fills.
+- **Container 100×100**: Needs `Center` (or similar) as parent to get loose constraints — screen alone gives tight.
+- **ConstrainedBox**: Imposes *additional* constraints; needs loose parent (e.g. Center) to take effect.
+- **Row/Column**: Don't constrain children → use `Expanded`/`Flexible` to avoid overflow.
+- **FittedBox**: Only scales bounded children; infinite width/height causes error.
+- **Scaffold body**: Gives loose constraints; use `SizedBox.expand` for tight (fill screen).

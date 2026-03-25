@@ -1,3 +1,4 @@
+import 'package:diyar/core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:diyar/features/bonus/domain/entities/qr_generate_entity.dart';
@@ -21,11 +22,11 @@ class QrCodeWidget extends StatelessWidget {
       return Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
+              color: AppColors.black.withValues(alpha: 0.1),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -47,11 +48,11 @@ class QrCodeWidget extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.white,
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
+                color: AppColors.black.withValues(alpha: 0.1),
                 blurRadius: 20,
                 offset: const Offset(0, 4),
                 spreadRadius: 2,
@@ -62,14 +63,14 @@ class QrCodeWidget extends StatelessWidget {
             data: token,
             version: QrVersions.auto,
             size: size,
-            backgroundColor: Colors.white,
+            backgroundColor: AppColors.white,
             eyeStyle: const QrEyeStyle(
               eyeShape: QrEyeShape.square,
-              color: Colors.black,
+              color: AppColors.black,
             ),
             dataModuleStyle: const QrDataModuleStyle(
               dataModuleShape: QrDataModuleShape.square,
-              color: Colors.black,
+              color: AppColors.black,
             ),
             errorCorrectionLevel: QrErrorCorrectLevel.H,
             padding: const EdgeInsets.all(16),
@@ -80,7 +81,7 @@ class QrCodeWidget extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           decoration: BoxDecoration(
-            color: Colors.grey.shade100,
+            color: AppColors.grey1,
             borderRadius: BorderRadius.circular(16),
           ),
           child: Text(
@@ -88,7 +89,7 @@ class QrCodeWidget extends StatelessWidget {
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   letterSpacing: 3,
-                  color: Colors.black87,
+              color: AppColors.black,
                 ),
           ),
         ),
@@ -97,7 +98,7 @@ class QrCodeWidget extends StatelessWidget {
           Text(
             'QR код действителен до ${qrData.expiresAt}',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Colors.grey.shade600,
+                  color: AppColors.grey,
                 ),
             textAlign: TextAlign.center,
           ),

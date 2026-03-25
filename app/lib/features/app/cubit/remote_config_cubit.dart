@@ -18,7 +18,13 @@ class RemoteConfigCubit extends Cubit<RemoteConfigState> {
   final PackageInfo packageInfo;
   final DiyarRemoteConfig remoteConfig;
 
+  bool _initialized = false;
+
+  /// Инициализация только в main.dart. Защита от повторного запуска.
   Future<void> init() async {
+    if (_initialized) return;
+    _initialized = true;
+
     _emitNewState();
 
     remoteConfig.remoteConfig.onConfigUpdated.listen((event) async {

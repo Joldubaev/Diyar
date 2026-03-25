@@ -1,10 +1,8 @@
 import 'package:bloc/bloc.dart';
-import 'package:diyar/core/core.dart';
 import 'package:diyar/features/auth/domain/domain.dart';
+import 'package:equatable/equatable.dart';
 import 'package:diyar/features/auth/domain/usecases/verify_sms_code_and_handle_first_launch_usecase.dart';
 import 'package:diyar/features/auth/domain/usecases/refresh_token_if_needed_usecase.dart';
-import 'package:diyar/features/auth/domain/usecases/check_biometrics_availability_usecase.dart';
-import 'package:diyar/features/auth/domain/usecases/authenticate_with_biometrics_usecase.dart';
 import 'package:diyar/features/auth/domain/usecases/send_verification_code_usecase.dart';
 import 'package:diyar/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:injectable/injectable.dart';
@@ -16,21 +14,15 @@ part 'sign_in_state.dart';
 class SignInCubit extends Cubit<SignInState> {
   SignInCubit(
     this._authRepository,
-    this._localStorage,
     this._verifySmsCodeUseCase,
     this._refreshTokenUseCase,
-    this._checkBiometricsUseCase,
-    this._authenticateBiometricsUseCase,
     this._sendVerificationCodeUseCase,
     this._logoutUseCase,
   ) : super(SignInInitial());
 
   final AuthRepository _authRepository;
-  final LocalStorage _localStorage;
   final VerifySmsCodeAndHandleFirstLaunchUseCase _verifySmsCodeUseCase;
   final RefreshTokenIfNeededUseCase _refreshTokenUseCase;
-  final CheckBiometricsAvailabilityUseCase _checkBiometricsUseCase;
-  final AuthenticateWithBiometricsUseCase _authenticateBiometricsUseCase;
   final SendVerificationCodeUseCase _sendVerificationCodeUseCase;
   final LogoutUseCase _logoutUseCase;
 
@@ -99,72 +91,6 @@ class SignInCubit extends Cubit<SignInState> {
   /// Обновление токена (алиас для обратной совместимости)
   Future<void> refreshToken() => refreshTokenIfNeeded();
 
-  /// Установка PIN кода
-  Future<void> setPinCode(String code) async {
-    emit(SignInLoading());
-
-    try {
-      await _authRepository.setPinCode(code);
-      emit(PinCodeSetSuccess());
-    } catch (e) {
-      emit(PinCodeSetFailure('Не удалось сохранить PIN-код: ${e.toString()}'));
-    }
-  }
-
-  /// Получение PIN кода
-  Future<void> getPinCode() async {
-    emit(SignInLoading());
-
-    try {
-      final pinCode = await _authRepository.getPinCode();
-      if (pinCode == null) {
-        emit(PinCodeGetFailure('PIN-код не установлен'));
-      } else {
-        emit(PinCodeGetSuccess(pinCode));
-      }
-    } catch (e) {
-      emit(PinCodeGetFailure('Не удалось получить PIN-код: ${e.toString()}'));
-    }
-  }
-
-  /// Проверка доступности биометрии
-  Future<void> checkBiometricsAvailability() async {
-    final result = await _checkBiometricsUseCase();
-    if (result.isAvailable) {
-      emit(BiometricAvailable(result.isEnabled));
-    } else {
-      emit(BiometricNotAvailable());
-    }
-  }
-
-  /// Аутентификация по биометрии
-  Future<void> authenticateWithBiometrics() async {
-    emit(BiometricAuthenticating());
-
-    final result = await _authenticateBiometricsUseCase();
-    if (result.isSuccess) {
-      emit(BiometricAuthenticationSuccess());
-    } else {
-      emit(BiometricAuthenticationFailure(result.errorMessage ?? 'Ошибка аутентификации'));
-    }
-  }
-
-  /// Сохранение настройки биометрии
-  Future<void> saveBiometricPreference(bool isEnabled) async {
-    try {
-      await _localStorage.setBool(AppConst.biometricPrefKey, isEnabled);
-      emit(BiometricPreferenceSaved(isEnabled));
-      await checkBiometricsAvailability();
-    } catch (e) {
-      emit(BiometricPreferenceFailure('Не удалось сохранить настройку биометрии'));
-    }
-  }
-
-  /// Получение настройки биометрии
-  bool getBiometricPreference() {
-    return _localStorage.getBool(AppConst.biometricPrefKey) ?? false;
-  }
-
   /// Выход
   Future<void> logout() async {
     try {
@@ -177,6 +103,7 @@ class SignInCubit extends Cubit<SignInState> {
 
   /// Форматирование номера телефона
   String unformatPhoneNumber(String formattedPhoneNumber) {
+    // ignore: deprecated_member_use - RegExp(r'\D') для удаления нецифровых символов
     return formattedPhoneNumber.replaceAll(RegExp(r'\D'), '');
   }
 }

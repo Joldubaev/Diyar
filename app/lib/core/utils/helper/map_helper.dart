@@ -5,6 +5,15 @@ import 'dart:developer';
 import 'package:diyar/features/map/presentation/widgets/coordinats_backup.dart';
 
 class MapHelper {
+  /// Проверяет, находится ли точка внутри зоны обслуживания (границы доставки).
+  static bool isPointInServiceZone(double latitude, double longitude) {
+    return isPointInPolygon(
+      latitude,
+      longitude,
+      ServiceZone.getCoordinates(),
+    );
+  }
+
   // Check if a coordinate is within Bishkek bounds
   static bool isInBishkekBounds(double latitude, double longitude) {
     double minLatitude = 42.8000;

@@ -1,6 +1,6 @@
 
 import 'package:diyar/core/constants/constant.dart';
-import 'package:diyar/injection_container.dart';
+import 'package:diyar/core/di/injectable_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BaseHelper {
@@ -16,6 +16,7 @@ class BaseHelper {
 
   /// Check string is email
   static bool isEmail(String email) {
+    // ignore: deprecated_member_use - RegExp нужен для hasMatch, альтернативы нет
     return RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
         .hasMatch(email);
   }

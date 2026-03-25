@@ -645,4 +645,27 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get yourOrdersConfirm => 'Ваш заказ принят!';
+
+  @override
+  String get readyTime => 'Время готовности';
+
+  @override
+  String get totalWithoutBonus => 'Итого без учета бонусов';
+
+  @override
+  String get bonusDeduction => 'Будет списано бонусов';
+
+  @override
+  String get totalWithBonus => 'Итого с учетом бонусов';
+
+  @override
+  String get notSpecified => 'Не указано';
+
+  @override
+  String availableBonus(String count) {
+    return '$count бонусов';
+  }
+
+  @override
+  String get bonusLabel => 'бонус';
 }

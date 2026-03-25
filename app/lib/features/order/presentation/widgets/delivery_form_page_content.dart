@@ -1,9 +1,10 @@
-import 'package:diyar/common/components/components.dart';
+import 'package:diyar/common/common.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/features.dart';
 import 'package:diyar/features/order/presentation/widgets/adress_section_widget.dart';
 import 'package:diyar/features/order/presentation/widgets/bonus_and_total_section.dart';
+import 'package:diyar/features/order/presentation/enum/delivery_enum.dart';
 import 'package:diyar/features/order/presentation/widgets/change_amoun_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -116,7 +117,12 @@ class _DeliveryFormPageContentState extends State<DeliveryFormPageContent> {
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
-                  AddressSection(controllers: _controllers, formKey: _formKey),
+                  AddressSection(
+                    controllers: _controllers,
+                    formKey: _formKey,
+                    paymentType: state.paymentType,
+                    onPaymentTypeChanged: (v) => context.read<DeliveryFormCubit>().setPaymentType(v),
+                  ),
                   const SizedBox(height: 10),
                   ChangeAmountSection(controllers: _controllers),
                   const SizedBox(height: 10),

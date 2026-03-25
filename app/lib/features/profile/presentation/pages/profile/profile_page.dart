@@ -1,6 +1,9 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:diyar/common/common.dart';
 import 'package:diyar/core/core.dart';
+import 'package:diyar/core/di/injectable_config.dart' as di;
 import 'package:diyar/features/auth/auth.dart';
+import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,6 +34,27 @@ class _ProfilePageState extends State<ProfilePage> {
     setState(() {
       version = '${info.version} (${info.buildNumber})';
     });
+  }
+
+  /// Сбрасывает все данные текущего пользователя при выходе/удалении аккаунта.
+  /// Должен вызываться ДО навигации на SignInRoute.
+  void _clearUserData(BuildContext context) {
+    context.read<ProfileCubit>().reset();
+    context.read<BonusCubit>().reset();
+    context.read<CartBloc>().add(ClearCart());
+    di.sl<ActiveOrderCubit>().reset();
+  }
+
+  void _showDeleteConfirmation(BuildContext context) {
+    AppAlert.showConfirmDialog(
+      context: context,
+      title: 'Удалить',
+      content: const Text('Вы уверены что хотите удалить аккаунт?'),
+      cancelText: context.l10n.no,
+      confirmText: context.l10n.yes,
+      cancelPressed: () => Navigator.pop(context),
+      confirmPressed: () => context.read<ProfileCubit>().deleteUser(),
+    );
   }
 
   @override
@@ -67,6 +91,7 @@ class _ProfilePageState extends State<ProfilePage> {
       body: BlocConsumer<ProfileCubit, ProfileState>(
         listener: (context, state) {
           if (state is ProfileGetError || state is ProfileDeleteLoaded) {
+            _clearUserData(context);
             context.read<SignInCubit>().logout().then((value) {
               if (context.mounted) {
                 context.router.pushAndPopUntil(
@@ -113,12 +138,12 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   child: Column(
                     children: [
-                      SettingsTile(
-                        leading: SvgPicture.asset('assets/icons/about.svg', height: 40),
-                        text: context.l10n.aboutUs,
-                        onPressed: () => context.pushRoute(const AboutUsRoute()),
-                      ),
-                      Divider(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2), height: 1),
+                      // SettingsTile(
+                      //   leading: SvgPicture.asset('assets/icons/about.svg', height: 40),
+                      //   text: context.l10n.aboutUs,
+                      //   onPressed: () => context.pushRoute(const AboutUsRoute()),
+                      // ),
+                      // Divider(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2), height: 1),
                       SettingsTile(
                         leading: SvgPicture.asset('assets/icons/phone.svg', height: 40),
                         text: context.l10n.contact,
@@ -130,12 +155,6 @@ class _ProfilePageState extends State<ProfilePage> {
                         text: context.l10n.policy,
                         onPressed: () => AppLaunch.launchURL(AppConst.terms),
                       ),
-                      Divider(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2), height: 1),
-                      SettingsTile(
-                        leading: SvgPicture.asset('assets/icons/sec.svg', height: 40),
-                        text: 'Безопасность',
-                        onPressed: () => context.pushRoute(const SecurityRoute()),
-                      ),
                     ],
                   ),
                 ),
@@ -146,29 +165,41 @@ class _ProfilePageState extends State<ProfilePage> {
                     color: Theme.of(context).colorScheme.surface,
                     borderRadius: const BorderRadius.all(Radius.circular(12)),
                   ),
-                  child: SettingsTile(
-                    leading: SvgPicture.asset('assets/icons/logout.svg', height: 40),
-                    text: context.l10n.exit,
-                    onPressed: () {
-                      AppAlert.showConfirmDialog(
-                        context: context,
-                        title: context.l10n.exit,
-                        content: Text(context.l10n.areYouSure),
-                        cancelText: context.l10n.no,
-                        confirmText: context.l10n.yes,
-                        cancelPressed: () => Navigator.pop(context),
-                        confirmPressed: () {
-                          context.read<SignInCubit>().logout().then((value) {
-                            if (context.mounted) {
-                              context.router.pushAndPopUntil(
-                                const SignInRoute(),
-                                predicate: (_) => false,
-                              );
-                            }
-                          });
+                  child: Column(
+                    children: [
+                      SettingsTile(
+                        leading: SvgPicture.asset('assets/icons/sec.svg', height: 40),
+                        text: 'Удалить аккаунт',
+                        color: Theme.of(context).colorScheme.error,
+                        onPressed: () => _showDeleteConfirmation(context),
+                      ),
+                      Divider(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2), height: 1),
+                      SettingsTile(
+                        leading: SvgPicture.asset('assets/icons/logout.svg', height: 40),
+                        text: context.l10n.exit,
+                        onPressed: () {
+                          AppAlert.showConfirmDialog(
+                            context: context,
+                            title: context.l10n.exit,
+                            content: Text(context.l10n.areYouSure),
+                            cancelText: context.l10n.no,
+                            confirmText: context.l10n.yes,
+                            cancelPressed: () => Navigator.pop(context),
+                            confirmPressed: () {
+                              _clearUserData(context);
+                              context.read<SignInCubit>().logout().then((value) {
+                                if (context.mounted) {
+                                  context.router.pushAndPopUntil(
+                                    const SignInRoute(),
+                                    predicate: (_) => false,
+                                  );
+                                }
+                              });
+                            },
+                          );
                         },
-                      );
-                    },
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 30),

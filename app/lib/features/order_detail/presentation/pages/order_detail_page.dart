@@ -1,9 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
+import 'package:diyar/common/common.dart';
 import 'package:diyar/core/core.dart';
+import 'package:diyar/core/di/injectable_config.dart' as di;
 import 'package:diyar/features/active_order/active_order.dart';
-import 'package:diyar/features/history/history.dart';
 import 'package:diyar/features/curier/curier.dart';
+import 'package:diyar/features/history/history.dart';
 import 'package:diyar/features/order_detail/order_detail.dart';
 import 'package:diyar/features/order_detail/presentation/widget/adress_grid_widget.dart';
 import 'package:flutter/material.dart';
@@ -20,21 +22,33 @@ class OrderDetailPage extends StatefulWidget {
 
 class _OrderDetailPageState extends State<OrderDetailPage> {
   bool _hasTriedApi = false;
+  bool _initScheduled = false;
 
-  @override
-  void initState() {
-    super.initState();
-    // Загружаем детали заказа через API
+  void _initializeOrderDetail(BuildContext context) {
+    if (!mounted) return;
     final orderNumber = int.tryParse(widget.orderNumber);
     if (orderNumber != null) {
-      _hasTriedApi = true;
+      setState(() => _hasTriedApi = true);
       context.read<OrderDetailCubit>().getOrderDetail(orderNumber: orderNumber);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => di.sl<OrderDetailCubit>()),
+        BlocProvider(create: (_) => di.sl<ActiveOrderCubit>()),
+        BlocProvider(create: (_) => di.sl<HistoryCubit>()),
+        BlocProvider(create: (_) => di.sl<CurierCubit>()),
+      ],
+      child: Builder(
+        builder: (context) {
+          if (!_initScheduled) {
+            _initScheduled = true;
+            WidgetsBinding.instance.addPostFrameCallback((_) => _initializeOrderDetail(context));
+          }
+          return Scaffold(
       appBar: AppBar(title: Text(context.l10n.orderDetails)),
       body: BlocBuilder<OrderDetailCubit, OrderDetailState>(
         builder: (context, state) {
@@ -58,6 +72,9 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
 
           // Fallback на локальный поиск
           return _buildFallbackSearch();
+        },
+      ),
+    );
         },
       ),
     );
@@ -141,10 +158,33 @@ class _OrderDetailContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final paymentState = PaymentDisplayState.fromRaw(order.paymentStatus);
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Column(
         children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Row(
+              children: [
+                Icon(
+                  paymentState == PaymentDisplayState.paid
+                      ? Icons.check_circle
+                      : Icons.access_time,
+                  size: 20,
+                  color: paymentState.color,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  'Оплата: ${paymentState.label}',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: paymentState.color,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
           DetailCardWidget(children: [
             DetailItem(icon: 'about', title: context.l10n.name, value: order.userName ?? ""),
             DetailItem(icon: 'location', title: context.l10n.yourAddress, value: order.fullAddress),

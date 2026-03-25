@@ -206,5 +206,19 @@
   "yes": "Yes",
   "yourAddress": "Your address",
   "yourName": "Your name",
-  "yourOrdersConfirm": "Your orders are confirmed"
+  "yourOrdersConfirm": "Your orders are confirmed",
+  "readyTime": "Ready time",
+  "totalWithoutBonus": "Total without bonus",
+  "bonusDeduction": "Bonus deduction",
+  "totalWithBonus": "Total with bonus",
+  "notSpecified": "Not specified",
+  "@availableBonus": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "availableBonus": "{count} bonuses available",
+  "bonusLabel": "bonus"
 }

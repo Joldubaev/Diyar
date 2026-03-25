@@ -1,4 +1,5 @@
-import 'package:diyar/common/components/components.dart';
+import 'package:diyar/common/components/product/custom_gridview.dart';
+import 'package:diyar/common/components/product/product_item_widget.dart';
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/features.dart';
 import 'package:flutter/material.dart';
@@ -11,41 +12,32 @@ class PopularFoodSectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 180,
-      child: BlocBuilder<CartBloc, CartState>(
-        builder: (context, cartState) {
-          List<CartItemEntity> cartItems = [];
-          if (cartState is CartLoaded) {
-            cartItems = cartState.items;
-          }
+    return BlocBuilder<CartBloc, CartState>(
+      builder: (context, cartState) {
+        final cartItems = cartState is CartLoaded ? cartState.items : <CartItemEntity>[];
 
-          final carouselItems = menu.map((food) {
+        return PaginatedMasonryGridView<FoodEntity>(
+          items: menu,
+          isLoadingMore: false,
+          loadMore: () {},
+          shrinkWrap: true,
+          itemBuilder: (context, food) {
             final cartItem = cartItems.firstWhere(
-              (element) => element.food?.id == food.id,
+              (e) => e.food?.id == food.id,
               orElse: () => CartItemEntity(food: food, quantity: 0),
             );
-
             return ProductItemWidget(
               food: food,
               quantity: cartItem.quantity ?? 0,
-              width: 140,
-              height: 180,
               isCompact: true,
             );
-          }).toList();
-
-          return CarouselWidget(
-            height: 180,
-            viewportFraction: 0.85,
-            autoScrollDuration: const Duration(seconds: 3),
-            animationDuration: const Duration(milliseconds: 500),
-            autoScroll: true,
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            children: carouselItems,
-          );
-        },
-      ),
+          },
+          crossAxisCount: 2,
+          mainAxisSpacing: 10,
+          crossAxisSpacing: 10,
+          padding: const EdgeInsets.only(bottom: 16),
+        );
+      },
     );
   }
 }

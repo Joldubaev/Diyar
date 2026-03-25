@@ -1,0 +1,26 @@
+---
+description: Flutter layout basics — Row, Column, Center, alignment
+globs: app/lib/**/*.dart
+alwaysApply: false
+---
+
+# Layout Basics in Flutter
+
+## Core Concepts
+
+In Flutter, almost everything is a widget—even layout models are widgets. You create a layout by composing widgets to build more complex widgets.
+
+## Lay out a Single Widget
+
+- Choose a layout widget (e.g. `Center`) based on how you want to align or constrain.
+- Add a visible widget as `child` (single) or `children` (list).
+- Layout widgets: `child` — Center, Container; `children` — Row, Column, ListView, Stack.
+
+## Lay Out Multiple Widgets
+
+- `Row` — arrange horizontally.
+- `Column` — arrange vertically.
+- Use `mainAxisAlignment` and `crossAxisAlignment` for alignment.
+- Use `Expanded` when children need to fit within available space.
+- Set `mainAxisSize: MainAxisSize.min` to pack children closely.
+- Nest rows and columns as needed; extract pieces to variables/functions to reduce nesting.

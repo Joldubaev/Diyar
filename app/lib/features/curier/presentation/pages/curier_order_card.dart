@@ -1,13 +1,15 @@
-import 'package:diyar/core/theme/theme_extension.dart';
-import 'package:flutter/material.dart';
-import 'package:diyar/features/curier/curier.dart';
 import 'package:diyar/common/food_card/utils/food_price_formatter.dart';
+import 'package:diyar/core/theme/theme_extension.dart';
+import 'package:diyar/features/active_order/domain/entities/payment_display_state.dart';
+import 'package:diyar/features/curier/curier.dart';
+import 'package:flutter/material.dart';
+
+import '../widgets/order_actions_row_widget.dart';
 import '../widgets/order_icon_widget.dart';
-import '../widgets/order_title_widget.dart';
-import '../widgets/order_subtitle_widget.dart';
 import '../widgets/order_info_section_widget.dart';
 import '../widgets/order_price_section_widget.dart';
-import '../widgets/order_actions_row_widget.dart';
+import '../widgets/order_subtitle_widget.dart';
+import '../widgets/order_title_widget.dart';
 
 /// Виджет карточки заказа для курьера
 class CurierOrderCard extends StatelessWidget {
@@ -106,6 +108,9 @@ class _OrderContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final paymentDisplayState = PaymentDisplayState.fromRaw(order.paymentStatus);
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Column(
@@ -121,6 +126,33 @@ class _OrderContent extends StatelessWidget {
             formattedPrice: formattedPrice,
             bonusAmount: order.amountToReduce?.toDouble(),
             theme: context.theme,
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Icon(
+                Icons.payments_outlined,
+                size: 18,
+                color: paymentDisplayState.color,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                paymentDisplayState.label,
+                style: context.theme.textTheme.bodySmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: paymentDisplayState.color,
+                ),
+              ),
+              if ((order.paymentMethod ?? '').isNotEmpty) ...[
+                const SizedBox(width: 8),
+                Text(
+                  '· ${order.paymentMethod}',
+                  style: context.theme.textTheme.bodySmall?.copyWith(
+                    color: scheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ],
           ),
           const SizedBox(height: 16),
           OrderActionsRowWidget(

@@ -68,13 +68,14 @@ String handleDioError(DioException error) {
       break;
 
     case DioExceptionType.connectionError:
-      // todo: Handle this case.
+      errorDescription = "Нет подключения к интернету. Проверьте соединение.";
       break;
     case DioExceptionType.unknown:
-      // todo: Handle this case.
+      errorDescription = error.message ?? "Неизвестная ошибка. Попробуйте позже.";
       break;
     case DioExceptionType.badCertificate:
-    // todo: Handle this case.
+      errorDescription = "Ошибка безопасного соединения с сервером.";
+      break;
   }
 
   return errorDescription;

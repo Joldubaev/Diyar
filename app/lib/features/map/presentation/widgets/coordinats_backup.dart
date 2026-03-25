@@ -5,6 +5,32 @@ class Coordinate {
   Coordinate({required this.latitude, required this.longitude});
 }
 
+/// Зона обслуживания — единая граница, в пределах которой доступна доставка.
+/// Координаты из Yandex Map Constructor (GeoJSON: [lon, lat] → Coordinate(lat, lon)).
+class ServiceZone {
+  static List<Coordinate> getCoordinates() {
+    return [
+      Coordinate(latitude: 42.92758476845257, longitude: 74.43067533203107),
+      Coordinate(latitude: 42.91345464819077, longitude: 74.3633840722654),
+      Coordinate(latitude: 42.898311611776926, longitude: 74.30845243164045),
+      Coordinate(latitude: 42.85993248491684, longitude: 74.28510648437481),
+      Coordinate(latitude: 42.78714820574554, longitude: 74.30845243164045),
+      Coordinate(latitude: 42.73958968973613, longitude: 74.4828603906248),
+      Coordinate(latitude: 42.710226729495595, longitude: 74.64078885742167),
+      Coordinate(latitude: 42.72339116691813, longitude: 74.78635770507793),
+      Coordinate(latitude: 42.742626438362564, longitude: 74.86738187499982),
+      Coordinate(latitude: 42.775009101761995, longitude: 74.9223135156248),
+      Coordinate(latitude: 42.84881825032479, longitude: 74.92368680664042),
+      Coordinate(latitude: 42.912445228993846, longitude: 74.91132718749981),
+      Coordinate(latitude: 42.9205201163062, longitude: 74.83167630859353),
+      Coordinate(latitude: 42.91648280586834, longitude: 74.78223783203106),
+      Coordinate(latitude: 42.9528090078232, longitude: 74.66413480468731),
+      Coordinate(latitude: 42.95684392023146, longitude: 74.53641874023418),
+      Coordinate(latitude: 42.92758476845257, longitude: 74.43067533203107),
+    ];
+  }
+}
+
 class DeliveryPolygon {
   final List<Coordinate> coordinates;
   final int id;

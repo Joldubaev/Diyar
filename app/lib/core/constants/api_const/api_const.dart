@@ -74,9 +74,24 @@ class ApiConst {
   static const getCuriersFinis = "$baseUrl1_2/courier/finished-orders";
   static const getCuriersAllOrder = "$baseUrl1_2/courier/get-actual-orders-by-courier";
   static const getCuriereOrderHistory = "$baseUrl1_2/courier/get-closed-orders-by-courier";
+  /// SignalR хаб для трекинга локации курьера (JWT в query: ?access_token=...).
+  static const courierLocationHubUrl = "https://api.diyar.kg/api/courier-location-hub";
+  /// Выход на смену / уход со смены. POST, body: { "onShift": true | false }, Header: Authorization.
+  static const courierShift = "$baseUrl/courier/shift";
+  /// Смена статуса оплаты заказа (admin/ctmax/operator).
+  /// PUT, body: { "orderNumber": 8339, "paymentStatus": "Successful" }.
+  static const setOrderPaymentStatusAdmin = "$baseUrl/admin/order/set-payment-status";
+  /// Смена статуса оплаты заказа курьером.
+  /// PUT, body: { "orderNumber": 8339, "paymentStatus": "Successful" }.
+  static const setOrderPaymentStatusCourier = "$baseUrl/courier/order/set-payment-status";
 
   // DISTRICTS
   static const getDistricts = "$baseUrl/districts/get-all-districts";
+
+  // OpenBanking (платёжная ссылка и статус)
+  static const createPayLink = "$baseUrl/openbanking/create-pay-link";
+  /// URL хаба для SignalR: передавать https (negotiate идёт по HTTP, затем upgrade в WebSocket).
+  static const paymentStatusHubUrl = "https://api.diyar.kg/api/payment-status-hub";
 
   //payment
   static const finipayCallBack = "$baseUrl/payment/finipay-callback";

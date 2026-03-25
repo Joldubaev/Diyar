@@ -1,6 +1,7 @@
 import 'package:diyar/common/components/components.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/order/order.dart';
+import 'package:diyar/features/order/presentation/enum/delivery_enum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -8,11 +9,15 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 class AddressSection extends StatelessWidget {
   final DeliveryFormControllers controllers;
   final GlobalKey<FormState> formKey;
+  final PaymentTypeDelivery? paymentType;
+  final ValueChanged<PaymentTypeDelivery>? onPaymentTypeChanged;
 
   const AddressSection({
     super.key,
     required this.controllers,
     required this.formKey,
+    this.paymentType,
+    this.onPaymentTypeChanged,
   });
 
   @override
@@ -79,7 +84,14 @@ class AddressSection extends StatelessWidget {
               return null;
             },
           ),
-          const SizedBox(height: 10),
+          if (paymentType != null && onPaymentTypeChanged != null) ...[
+            const SizedBox(height: 10),
+            PaymentTypeSelector(
+              currentPaymentType: paymentType!,
+              onChanged: onPaymentTypeChanged!,
+            ),
+            const SizedBox(height: 10),
+          ],
           CustomInputWidget(
             titleColor: context.theme.colorScheme.onSurface,
             filledColor: context.theme.colorScheme.surface,

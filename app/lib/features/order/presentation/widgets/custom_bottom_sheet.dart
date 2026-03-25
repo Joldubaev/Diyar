@@ -1,8 +1,9 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:diyar/common/components/components.dart';
+import 'package:diyar/common/common.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/order/order.dart';
+import 'package:diyar/features/order/presentation/enum/delivery_enum.dart';
 import 'package:diyar/features/order/presentation/widgets/save_template_dialog.dart';
 import 'package:diyar/features/templates/presentation/cubit/templates_list_cubit.dart';
 import 'package:flutter/material.dart';
@@ -26,9 +27,10 @@ class CustomBottomSheet extends StatelessWidget {
         if (currentState is DeliveryFormLoaded && currentState.successMessage != null) {
           if (currentState.paymentType == PaymentTypeDelivery.online) {
             context.router.push(
-              PaymentsRoute(
+              OpenBankingPaymentRoute(
                 orderNumber: currentState.successMessage!,
-                amount: currentState.totalOrderCost.toString(),
+                // amount: 1
+                amount: currentState.totalOrderCost.round(),
               ),
             );
             Navigator.of(context).pop();

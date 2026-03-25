@@ -1,23 +1,21 @@
 import 'dart:developer';
-import 'package:diyar/features/auth/auth.dart';
-import 'package:diyar/features/auth/presentation/cubit/sign_up/sign_up_cubit.dart';
-import 'package:diyar/features/map/presentation/presentation.dart';
-import 'core/core.dart';
-import 'features/app/cubit/remote_config_cubit.dart';
-import 'features/pick_up/pick_up.dart';
-import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'injection_container.dart' as di;
-import 'features/cart/cart.dart';
-import 'features/cart/data/models/cart_item_model_hive_adapter.dart';
-import 'features/menu/data/models/food_model_hive_adapter.dart';
-import 'features/features.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:keyboard_dismisser/keyboard_dismisser.dart';
+
+import 'core/core.dart';
+import 'core/di/injectable_config.dart' as di;
 import 'features/app/view/app_listener.dart';
+import 'features/app/cubit/remote_config_cubit.dart';
+import 'features/cart/cart.dart';
+import 'features/cart/data/models/cart_item_model_hive_adapter.dart';
+import 'features/features.dart';
+import 'features/menu/data/models/food_model_hive_adapter.dart';
+
+import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,7 +27,9 @@ Future<void> main() async {
   FlutterError.onError = (details) {
     log(details.exceptionAsString(), stackTrace: details.stack);
   };
-  Bloc.observer = const AppBlocObserver(onLog: log);
+  Bloc.observer = AppBlocObserver(
+    onLog: (message, {required String name}) => log(message, name: name),
+  );
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await di.init();
@@ -51,28 +51,14 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => di.sl<InternetBloc>()..add(NetworkObserve())),
-        BlocProvider(create: (context) => di.sl<SplashCubit>()),
-        BlocProvider(create: (context) => di.sl<SignUpCubit>()),
-        BlocProvider(create: (context) => di.sl<SignInCubit>()),
-        BlocProvider(create: (context) => di.sl<ProfileCubit>()),
-        BlocProvider(create: (context) => di.sl<CartBloc>()),
-        BlocProvider(create: (context) => di.sl<MenuBloc>()),
-        BlocProvider(create: (context) => di.sl<PopularCubit>()),
-        BlocProvider(create: (context) => di.sl<AboutUsCubit>()),
-        BlocProvider(create: (context) => di.sl<HomeContentCubit>()),
-        BlocProvider(create: (context) => di.sl<HistoryCubit>()),
-        BlocProvider(create: (context) => di.sl<CurierCubit>()),
-        BlocProvider(create: (context) => di.sl<RemoteConfigCubit>()),
-        BlocProvider(create: (context) => di.sl<ThemeCubit>()),
-        BlocProvider(create: (context) => di.sl<PickUpCubit>()),
-        BlocProvider(create: (context) => di.sl<ActiveOrderCubit>()),
-        BlocProvider(create: (context) => di.sl<OrderDetailCubit>()),
-        BlocProvider(create: (context) => di.sl<PaymentBloc>()),
-        BlocProvider(create: (context) => di.sl<SettingsCubit>()),
-        BlocProvider(create: (context) => di.sl<UserMapCubit>()),
-        BlocProvider(create: (context) => di.sl<TemplatesListCubit>()),
-        BlocProvider(create: (context) => di.sl<BonusCubit>()),
+        BlocProvider(create: (_) => di.sl<InternetBloc>()..add(NetworkObserve())),
+        BlocProvider(create: (_) => di.sl<RemoteConfigCubit>()..init()),
+        BlocProvider(create: (_) => di.sl<ThemeCubit>()),
+        BlocProvider(create: (_) => di.sl<ProfileCubit>()),
+        BlocProvider(create: (_) => di.sl<SettingsCubit>()),
+        BlocProvider(create: (_) => di.sl<CartBloc>()..add(LoadCart())),
+        BlocProvider(create: (_) => di.sl<BonusCubit>()),
+        BlocProvider(create: (_) => di.sl<AboutUsCubit>()),
       ],
       child: AppListener(
         navigationKey: appRoute.navigatorKey,
@@ -84,8 +70,8 @@ class App extends StatelessWidget {
               themeMode: state.isDark ? ThemeMode.dark : ThemeMode.light,
               routerConfig: appRoute.config(),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
-              supportedLocales: AppLocalizations.supportedLocales,
               locale: const Locale('ru'),
+              supportedLocales: AppLocalizations.supportedLocales,
               builder: (context, router) {
                 return KeyboardDismisser(
                   gestures: const [

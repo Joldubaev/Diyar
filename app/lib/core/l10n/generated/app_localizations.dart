@@ -1341,6 +1341,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your orders are confirmed'**
   String get yourOrdersConfirm;
+
+  /// No description provided for @readyTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready time'**
+  String get readyTime;
+
+  /// No description provided for @totalWithoutBonus.
+  ///
+  /// In en, this message translates to:
+  /// **'Total without bonus'**
+  String get totalWithoutBonus;
+
+  /// No description provided for @bonusDeduction.
+  ///
+  /// In en, this message translates to:
+  /// **'Bonus deduction'**
+  String get bonusDeduction;
+
+  /// No description provided for @totalWithBonus.
+  ///
+  /// In en, this message translates to:
+  /// **'Total with bonus'**
+  String get totalWithBonus;
+
+  /// No description provided for @notSpecified.
+  ///
+  /// In en, this message translates to:
+  /// **'Not specified'**
+  String get notSpecified;
+
+  /// No description provided for @availableBonus.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} bonuses available'**
+  String availableBonus(String count);
+
+  /// No description provided for @bonusLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'bonus'**
+  String get bonusLabel;
 }
 
 class _AppLocalizationsDelegate

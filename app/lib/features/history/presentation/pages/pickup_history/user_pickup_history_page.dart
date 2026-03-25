@@ -1,12 +1,13 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/common/components/components.dart';
 import 'package:diyar/core/core.dart';
+import 'package:diyar/core/di/injectable_config.dart' as di;
 import 'package:diyar/features/curier/curier.dart';
 import 'package:diyar/features/history/domain/domain.dart';
 import 'package:diyar/features/history/history.dart';
+import 'package:diyar/features/history/presentation/cubit/history_cubit.dart';
 import 'package:diyar/features/history/presentation/widgets/error_widget.dart';
 import 'package:diyar/features/history/presentation/widgets/pickup_order_status_badge.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -19,25 +20,42 @@ class UserPickupHistoryPage extends StatefulWidget {
 }
 
 class _UserPickupHistoryPageState extends State<UserPickupHistoryPage> {
+  late final HistoryCubit _historyCubit;
   PickupHistoryResponseEntity? response;
   int currentPage = 1;
   final int pageSize = 10;
 
   @override
   void initState() {
-    context.read<HistoryCubit>().getPickupHistory(pageNumber: currentPage, pageSize: pageSize);
     super.initState();
+    _historyCubit = di.sl<HistoryCubit>();
+    _historyCubit.getPickupHistory(pageNumber: currentPage, pageSize: pageSize);
+  }
+
+  @override
+  void dispose() {
+    _historyCubit.close();
+    super.dispose();
   }
 
   void _loadPage(int page) {
     setState(() {
       currentPage = page;
     });
-    context.read<HistoryCubit>().getPickupHistory(pageNumber: page, pageSize: pageSize);
+    _historyCubit.getPickupHistory(pageNumber: page, pageSize: pageSize);
   }
 
   @override
   Widget build(BuildContext context) {
+    return BlocProvider.value(
+      value: _historyCubit,
+      child: Builder(
+        builder: (context) => _buildContent(context),
+      ),
+    );
+  }
+
+  Widget _buildContent(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(title: Text(context.l10n.pickup)),

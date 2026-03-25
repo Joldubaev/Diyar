@@ -7,9 +7,10 @@ extension ThemeContextExtension on BuildContext {
   TextTheme get textTheme => theme.textTheme;
   ColorScheme get colorScheme => theme.colorScheme;
 
-  // Короткий доступ к основным цветам проекта
+  // Цвета темы: scaffoldBg/bgColor — фон #F5F5F5, primaryColor — бренд #d67c1c
   Color get primaryColor => theme.primaryColor;
   Color get scaffoldBg => theme.scaffoldBackgroundColor;
+  Color get bgColor => theme.scaffoldBackgroundColor;
 
   // Умные уведомления (замена твоему SnackBarMessage)
   void showSnack(String message, {bool isError = false}) {

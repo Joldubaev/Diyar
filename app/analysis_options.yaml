@@ -48,7 +48,8 @@ dart_code_metrics:
     - use-setstate-synchronously
     - avoid-incomplete-copy-with
     - proper-super-calls
-    - add-copy-with
+    - add-copy-with:
+        class-name-pattern: State$
     - dispose-fields
     - avoid-empty-setstate
     - prefer-widget-private-members

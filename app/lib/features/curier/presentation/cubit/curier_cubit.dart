@@ -1,27 +1,54 @@
 import 'package:bloc/bloc.dart';
+import 'package:diyar/core/constants/app_const/app_const.dart';
 import 'package:diyar/features/curier/curier.dart';
 import 'package:diyar/features/curier/domain/domain.dart';
+import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'curier_state.dart';
 
 @injectable
 class CurierCubit extends Cubit<CurierState> {
-  CurierCubit(this._repository) : super(const UserInitial());
+  CurierCubit(
+    this._repository,
+    this._confirmCashPaymentAndFinishUseCase,
+    this._prefs,
+  ) : super(const UserInitial());
 
   final CurierRepository _repository;
+  final ConfirmCashPaymentAndFinishUseCase _confirmCashPaymentAndFinishUseCase;
+  final SharedPreferences _prefs;
 
   Future<void> getUser() async {
     emit(const UserLoading());
 
-    final result = await _repository.getUser();
-    result.fold(
-      (failure) => emit(UserError(failure.message)),
-      (user) {
-        // После загрузки пользователя создаем CurierMainState
-        emit(CurierMainState(user: user));
-      },
+    final userResult = await _repository.getUser();
+    if (userResult.isLeft()) {
+      userResult.fold((f) => emit(UserError(f.message)), (_) {});
+      return;
+    }
+    final user = userResult.getOrElse(() => throw StateError('user'));
+
+    final shiftResult = await _repository.getShiftStatus();
+    final isOnShift = shiftResult.fold(
+      (_) => _prefs.getBool(AppConst.courierOnShift) ?? true,
+      (v) => v,
     );
+    await _prefs.setBool(AppConst.courierOnShift, isOnShift);
+    emit(CurierMainState(user: user, isOnShift: isOnShift));
+  }
+
+  /// Выход на смену (true) / уход со смены (false). REST: POST /courier/shift.
+  Future<bool> setOnShift(bool onShift) async {
+    final result = await _repository.setShift(onShift);
+    if (result.isLeft()) return false;
+    await _prefs.setBool(AppConst.courierOnShift, onShift);
+    final current = state;
+    if (current is CurierMainState) {
+      emit(current.copyWith(isOnShift: onShift));
+    }
+    return true;
   }
 
   /// Загружает активные заказы (не перетирает историю)
@@ -29,7 +56,6 @@ class CurierCubit extends Cubit<CurierState> {
     final user = state.user;
     if (user == null) return;
 
-    // Если состояние не CurierMainState, создаем его
     final currentState = state is CurierMainState ? state as CurierMainState : CurierMainState(user: user);
 
     emit(currentState.copyWith(isActiveOrdersLoading: true, clearActiveOrdersError: true));
@@ -57,7 +83,6 @@ class CurierCubit extends Cubit<CurierState> {
     final user = state.user;
     if (user == null) return;
 
-    // Если состояние не CurierMainState, создаем его
     final currentState = state is CurierMainState ? state as CurierMainState : CurierMainState(user: user);
 
     final currentPage = loadMore ? currentState.historyCurrentPage : 0;
@@ -74,7 +99,7 @@ class CurierCubit extends Cubit<CurierState> {
       startDate: startDate,
       endDate: endDate,
       page: nextPage,
-      pageSize: 10,
+      pageSize: CurierConstants.historyPageSize,
     );
     result.fold(
       (failure) => emit(currentState.copyWith(
@@ -85,7 +110,7 @@ class CurierCubit extends Cubit<CurierState> {
       (newOrders) {
         final allOrders = loadMore ? [...existingOrders, ...newOrders] : newOrders;
         final sortedOrders = _sortOrdersByDate(allOrders);
-        final hasMore = newOrders.length >= 10;
+        final hasMore = newOrders.length >= CurierConstants.historyPageSize;
         emit(currentState.copyWith(
           isHistoryLoading: false,
           isHistoryLoadingMore: false,
@@ -98,11 +123,21 @@ class CurierCubit extends Cubit<CurierState> {
     );
   }
 
+  /// Завершает заказ: для наличных — сначала отмечает оплату, потом завершает.
+  /// Для безналичных — сразу завершает. Логика выбора вынесена сюда из UI.
+  Future<void> finishOrder(CurierEntity order) async {
+    final method = PaymentMethod.fromString(order.paymentMethod);
+    if (method.isCash) {
+      await confirmCashPaymentAndFinish(order);
+    } else {
+      await getFinishOrder(order.orderNumber ?? 0);
+    }
+  }
+
   Future<void> getFinishOrder(int orderId) async {
     final user = state.user;
     if (user == null) return;
 
-    // Сохраняем текущее состояние перед операцией
     final currentMainState = state is CurierMainState ? state as CurierMainState : null;
 
     emit(FinishOrderLoading(user: user));
@@ -110,7 +145,6 @@ class CurierCubit extends Cubit<CurierState> {
     final result = await _repository.getFinishOrder(orderId);
     result.fold(
       (failure) {
-        // Восстанавливаем состояние с ошибкой
         if (currentMainState != null) {
           emit(currentMainState.copyWith(activeOrdersError: failure.message));
         } else {
@@ -118,7 +152,6 @@ class CurierCubit extends Cubit<CurierState> {
         }
       },
       (_) {
-        // Восстанавливаем состояние и перезагружаем активные заказы
         if (currentMainState != null) {
           emit(currentMainState);
           getCurierOrders();
@@ -129,11 +162,24 @@ class CurierCubit extends Cubit<CurierState> {
     );
   }
 
+  Future<void> confirmCashPaymentAndFinish(CurierEntity order) async {
+    final user = state.user;
+    if (user == null) return;
+
+    emit(FinishOrderLoading(user: user));
+
+    final result = await _confirmCashPaymentAndFinishUseCase(order);
+    result.fold(
+      (failure) => emit(FinishOrderError(message: failure.message, user: user)),
+      (_) => getCurierOrders(),
+    );
+  }
+
   List<CurierEntity> _sortOrdersByDate(List<CurierEntity> orders) {
     return List.from(orders)
       ..sort((a, b) {
-        final dateA = _parseDateTime(a.timeRequest);
-        final dateB = _parseDateTime(b.timeRequest);
+        final dateA = a.timeRequest.parseOrderDateTime();
+        final dateB = b.timeRequest.parseOrderDateTime();
 
         if (dateA == null && dateB == null) return 0;
         if (dateA == null) return 1;
@@ -141,59 +187,5 @@ class CurierCubit extends Cubit<CurierState> {
 
         return dateB.compareTo(dateA);
       });
-  }
-
-  DateTime? _parseDateTime(String? dateTimeStr) {
-    if (dateTimeStr == null || dateTimeStr.isEmpty) return null;
-
-    try {
-      final trimmed = dateTimeStr.trim();
-      final parts = trimmed.split(' ');
-      final datePart = parts[0];
-
-      DateTime? date;
-
-      if (datePart.contains('.')) {
-        final dateParts = datePart.split('.');
-        if (dateParts.length == 3) {
-          final day = int.parse(dateParts[0]);
-          final month = int.parse(dateParts[1]);
-          final year = int.parse(dateParts[2]);
-          date = DateTime(year, month, day);
-        }
-      } else if (datePart.contains('/')) {
-        final dateParts = datePart.split('/');
-        if (dateParts.length == 3) {
-          final month = int.parse(dateParts[0]);
-          final day = int.parse(dateParts[1]);
-          final year = int.parse(dateParts[2]);
-          date = DateTime(year, month, day);
-        }
-      } else if (datePart.contains('-')) {
-        final dateParts = datePart.split('-');
-        if (dateParts.length == 3) {
-          final year = int.parse(dateParts[0]);
-          final month = int.parse(dateParts[1]);
-          final day = int.parse(dateParts[2]);
-          date = DateTime(year, month, day);
-        }
-      }
-
-      if (date == null) return null;
-
-      if (parts.length > 1) {
-        final timeParts = parts[1].split(':');
-        if (timeParts.isNotEmpty) {
-          final hour = int.parse(timeParts[0]);
-          final minute = timeParts.length >= 2 ? int.parse(timeParts[1]) : 0;
-          final second = timeParts.length >= 3 ? int.parse(timeParts[2]) : 0;
-          date = DateTime(date.year, date.month, date.day, hour, minute, second);
-        }
-      }
-
-      return date;
-    } catch (e) {
-      return null;
-    }
   }
 }

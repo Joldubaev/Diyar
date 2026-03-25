@@ -1,6 +1,6 @@
 part of 'curier_cubit.dart';
 
-abstract class CurierState {
+abstract class CurierState extends Equatable {
   final GetUserEntity? user;
   final List<CurierEntity> activeOrders;
   final List<CurierEntity> historyOrders;
@@ -11,6 +11,7 @@ abstract class CurierState {
   final int historyCurrentPage;
   final String? activeOrdersError;
   final String? historyError;
+  final bool isOnShift;
 
   const CurierState({
     this.user,
@@ -23,7 +24,23 @@ abstract class CurierState {
     this.historyCurrentPage = 1,
     this.activeOrdersError,
     this.historyError,
+    this.isOnShift = true,
   });
+
+  @override
+  List<Object?> get props => [
+        user,
+        activeOrders,
+        historyOrders,
+        isActiveOrdersLoading,
+        isHistoryLoading,
+        isHistoryLoadingMore,
+        historyHasMore,
+        historyCurrentPage,
+        activeOrdersError,
+        historyError,
+        isOnShift,
+      ];
 
   CurierState copyWith({
     GetUserEntity? user,
@@ -36,6 +53,7 @@ abstract class CurierState {
     int? historyCurrentPage,
     String? activeOrdersError,
     String? historyError,
+    bool? isOnShift,
     bool clearActiveOrdersError = false,
     bool clearHistoryError = false,
   });
@@ -58,6 +76,7 @@ final class UserInitial extends CurierState {
     int? historyCurrentPage,
     String? activeOrdersError,
     String? historyError,
+    bool? isOnShift,
     bool clearActiveOrdersError = false,
     bool clearHistoryError = false,
   }) {
@@ -80,6 +99,7 @@ final class UserLoading extends CurierState {
     int? historyCurrentPage,
     String? activeOrdersError,
     String? historyError,
+    bool? isOnShift,
     bool clearActiveOrdersError = false,
     bool clearHistoryError = false,
   }) {
@@ -102,6 +122,7 @@ final class UserLoaded extends CurierState {
     int? historyCurrentPage,
     String? activeOrdersError,
     String? historyError,
+    bool? isOnShift,
     bool clearActiveOrdersError = false,
     bool clearHistoryError = false,
   }) {
@@ -116,6 +137,9 @@ final class UserError extends CurierState {
   const UserError(this.message);
 
   @override
+  List<Object?> get props => [...super.props, message];
+
+  @override
   UserError copyWith({
     GetUserEntity? user,
     List<CurierEntity>? activeOrders,
@@ -127,6 +151,7 @@ final class UserError extends CurierState {
     int? historyCurrentPage,
     String? activeOrdersError,
     String? historyError,
+    bool? isOnShift,
     bool clearActiveOrdersError = false,
     bool clearHistoryError = false,
   }) {
@@ -149,6 +174,7 @@ final class CurierMainState extends CurierState {
     super.historyCurrentPage,
     super.activeOrdersError,
     super.historyError,
+    super.isOnShift = true,
   });
 
   @override
@@ -163,6 +189,7 @@ final class CurierMainState extends CurierState {
     int? historyCurrentPage,
     String? activeOrdersError,
     String? historyError,
+    bool? isOnShift,
     bool clearActiveOrdersError = false,
     bool clearHistoryError = false,
   }) {
@@ -177,6 +204,7 @@ final class CurierMainState extends CurierState {
       historyCurrentPage: historyCurrentPage ?? this.historyCurrentPage,
       activeOrdersError: clearActiveOrdersError ? null : (activeOrdersError ?? this.activeOrdersError),
       historyError: clearHistoryError ? null : (historyError ?? this.historyError),
+      isOnShift: isOnShift ?? this.isOnShift,
     );
   }
 }
@@ -198,6 +226,7 @@ final class FinishOrderLoading extends CurierState {
     int? historyCurrentPage,
     String? activeOrdersError,
     String? historyError,
+    bool? isOnShift,
     bool clearActiveOrdersError = false,
     bool clearHistoryError = false,
   }) {
@@ -220,6 +249,7 @@ final class FinishOrderSuccess extends CurierState {
     int? historyCurrentPage,
     String? activeOrdersError,
     String? historyError,
+    bool? isOnShift,
     bool clearActiveOrdersError = false,
     bool clearHistoryError = false,
   }) {
@@ -236,6 +266,9 @@ final class FinishOrderError extends CurierState {
   }) : super(user: user);
 
   @override
+  List<Object?> get props => [...super.props, message];
+
+  @override
   FinishOrderError copyWith({
     GetUserEntity? user,
     List<CurierEntity>? activeOrders,
@@ -247,6 +280,7 @@ final class FinishOrderError extends CurierState {
     int? historyCurrentPage,
     String? activeOrdersError,
     String? historyError,
+    bool? isOnShift,
     bool clearActiveOrdersError = false,
     bool clearHistoryError = false,
   }) {

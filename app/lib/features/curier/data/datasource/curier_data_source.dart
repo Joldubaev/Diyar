@@ -7,6 +7,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 abstract class CurierDataSource {
   Future<List<CurierOrderModel>> getCurierOrders();
   Future<void> getFinishOrder(int orderId);
+  Future<void> setShift(bool onShift);
+
+  /// GET /courier/shift — текущий статус смены. Ответ: { "onShift": true } или { "onShift": false }.
+  Future<bool> getShiftStatus();
   Future<List<CurierOrderModel>> getCurierHistory({
     String? startDate,
     String? endDate,
@@ -17,21 +21,11 @@ abstract class CurierDataSource {
 }
 
 @LazySingleton(as: CurierDataSource)
-class CurierDataSourceImpl implements CurierDataSource {
+class CurierDataSourceImpl with ResponseValidatorMixin implements CurierDataSource {
   final Dio dio;
   final SharedPreferences prefs;
 
   CurierDataSourceImpl(this.dio, this.prefs);
-
-  void _validateResponse(Response res) {
-    final code = res.data['code'];
-    if (![200, 201].contains(code)) {
-      throw ServerException(
-        res.data['message']?.toString() ?? 'Error from server',
-        code is int ? code : null,
-      );
-    }
-  }
 
   @override
   Future<GetUserModel> getUser() async {
@@ -43,7 +37,7 @@ class CurierDataSourceImpl implements CurierDataSource {
       ),
     );
 
-    _validateResponse(res);
+    validateResponse(res);
 
     return GetUserModel.fromJson(res.data['message']);
   }
@@ -56,7 +50,7 @@ class CurierDataSourceImpl implements CurierDataSource {
       options: Options(headers: ApiConst.authMap(token)),
     );
 
-    _validateResponse(res);
+    validateResponse(res);
 
     final List list = res.data['message'] ?? [];
     return list.map((x) => CurierOrderModel.fromJson(x as Map<String, dynamic>)).toList();
@@ -73,7 +67,40 @@ class CurierDataSourceImpl implements CurierDataSource {
       queryParameters: {'orderNumber': orderId},
     );
 
-    _validateResponse(res);
+    validateResponse(res);
+  }
+
+  @override
+  Future<void> setShift(bool onShift) async {
+    final token = prefs.getString(AppConst.accessToken) ?? '';
+    final res = await dio.post(
+      ApiConst.courierShift,
+      data: {'onShift': onShift},
+      options: Options(headers: ApiConst.authMap(token)),
+    );
+    validateResponse(res);
+  }
+
+  @override
+  Future<bool> getShiftStatus() async {
+    final token = prefs.getString(AppConst.accessToken) ?? '';
+    final res = await dio.get(
+      ApiConst.courierShift,
+      options: Options(headers: ApiConst.authMap(token)),
+    );
+    if (res.data is Map && (res.data as Map).containsKey('code')) {
+      validateResponse(res);
+    }
+    final data = res.data;
+    if (data is Map<String, dynamic>) {
+      final onShift = data['onShift'];
+      if (onShift is bool) return onShift;
+      final message = data['message'];
+      if (message is Map && message['onShift'] is bool) {
+        return message['onShift'] as bool;
+      }
+    }
+    return true;
   }
 
   @override
@@ -104,7 +131,7 @@ class CurierDataSourceImpl implements CurierDataSource {
       queryParameters: queryParams,
     );
 
-    _validateResponse(res);
+    validateResponse(res);
 
     final message = res.data['message'];
     List<dynamic> ordersList = [];

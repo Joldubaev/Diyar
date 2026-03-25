@@ -1,5 +1,7 @@
+export 'entities/allergen_entity.dart';
 export 'entities/category_entity.dart';
-export 'entities/food_entity.dart'; 
+export 'entities/food_entity.dart';
+export 'entities/ingredient_entity.dart';
 export 'entities/message_entity.dart';
 export 'entities/category_food_entity.dart';
 export 'repository/menu_repository.dart';

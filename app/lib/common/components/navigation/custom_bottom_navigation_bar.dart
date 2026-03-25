@@ -1,5 +1,7 @@
+import 'package:diyar/core/core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'glass_navabar_shell.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
   final int currentIndex;
@@ -12,14 +14,13 @@ class CustomBottomNavigationBar extends StatefulWidget {
   });
 
   @override
-  State<CustomBottomNavigationBar> createState() =>
-      _CustomBottomNavigationBarState();
+  State<CustomBottomNavigationBar> createState() => _CustomBottomNavigationBarState();
 }
 
-class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar>
-    with TickerProviderStateMixin {
-  late List<AnimationController> _scaleControllers;
-  late List<Animation<double>> _scaleAnimations;
+class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> with TickerProviderStateMixin {
+  late AnimationController _animationController;
+
+  final ValueNotifier<int> _selectedIndex = ValueNotifier<int>(0);
 
   static const _icons = [
     "assets/icons/home_icon.svg",
@@ -33,158 +34,166 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar>
   @override
   void initState() {
     super.initState();
-    _scaleControllers = List.generate(
-      _icons.length,
-      (_) => AnimationController(
-        vsync: this,
-        duration: const Duration(milliseconds: 200),
-      ),
+    _selectedIndex.value = widget.currentIndex;
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
     );
-    _scaleAnimations = _scaleControllers.map((controller) {
-      return Tween<double>(begin: 1.0, end: 0.75).animate(
-        CurvedAnimation(parent: controller, curve: Curves.easeInOut),
-      );
-    }).toList();
+  }
+
+  @override
+  void didUpdateWidget(covariant CustomBottomNavigationBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.currentIndex != widget.currentIndex) {
+      _selectedIndex.value = widget.currentIndex;
+      _animationController.forward(from: 0);
+    }
   }
 
   @override
   void dispose() {
-    for (final controller in _scaleControllers) {
-      controller.dispose();
-    }
+    _animationController.dispose();
+    _selectedIndex.dispose();
     super.dispose();
-  }
-
-  void _onTapDown(int index) {
-    _scaleControllers[index].forward();
-  }
-
-  void _onTapUp(int index) {
-    _scaleControllers[index].reverse();
-  }
-
-  void _onTapCancel(int index) {
-    _scaleControllers[index].reverse();
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final primary = AppColors.primary;
+    // Тёплый серый в тон бренду — гармония с оранжевым
+    const unselected = Color(0xFF6B6360);
 
-    return Container(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 28),
-      color: Colors.transparent,
-      child: Container(
-        height: 64,
-        decoration: BoxDecoration(
-          color: theme.colorScheme.primary,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: theme.colorScheme.primary.withValues(alpha: 0.35),
-              blurRadius: 20,
-              offset: const Offset(0, 8),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: List.generate(_icons.length, (index) {
-            final isSelected = widget.currentIndex == index;
-            return _NavItem(
-              iconPath: _icons[index],
-              label: _labels[index],
-              isSelected: isSelected,
-              scaleAnimation: _scaleAnimations[index],
-              onTapDown: () => _onTapDown(index),
-              onTapUp: () => _onTapUp(index),
-              onTapCancel: () => _onTapCancel(index),
-              onTap: () => widget.onTap(index),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: GlassNavbarShell(
+        primary: primary,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final itemWidth = constraints.maxWidth / _icons.length;
+
+            return SizedBox(
+              height: 72,
+              child: Stack(
+                children: [
+                  ValueListenableBuilder<int>(
+                    valueListenable: _selectedIndex,
+                    builder: (context, index, _) {
+                      return _NavIndicator(
+                        itemWidth: itemWidth,
+                        currentIndex: index,
+                        primary: primary,
+                      );
+                    },
+                  ),
+                  Row(
+                    children: List.generate(_icons.length, (index) {
+                      return Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            if (index != widget.currentIndex) {
+                              widget.onTap(index);
+                            }
+                          },
+                          behavior: HitTestBehavior.opaque,
+                          child: RepaintBoundary(
+                            child: _NavItem(
+                              index: index,
+                              selectedIndex: _selectedIndex.value,
+                              primary: primary,
+                              unselected: unselected,
+                              icon: _icons[index],
+                              label: _labels[index],
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
+                  ),
+                ],
+              ),
             );
-          }),
+          },
         ),
       ),
     );
   }
 }
 
-class _NavItem extends StatelessWidget {
-  final String iconPath;
-  final String label;
-  final bool isSelected;
-  final Animation<double> scaleAnimation;
-  final VoidCallback onTapDown;
-  final VoidCallback onTapUp;
-  final VoidCallback onTapCancel;
-  final VoidCallback onTap;
+class _NavIndicator extends StatelessWidget {
+  final double itemWidth;
+  final int currentIndex;
+  final Color primary;
 
-  const _NavItem({
-    required this.iconPath,
-    required this.label,
-    required this.isSelected,
-    required this.scaleAnimation,
-    required this.onTapDown,
-    required this.onTapUp,
-    required this.onTapCancel,
-    required this.onTap,
+  const _NavIndicator({
+    required this.itemWidth,
+    required this.currentIndex,
+    required this.primary,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: (_) => onTapDown(),
-      onTapUp: (_) {
-        onTapUp();
-        onTap();
-      },
-      onTapCancel: onTapCancel,
-      behavior: HitTestBehavior.opaque,
-      child: ScaleTransition(
-        scale: scaleAnimation,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOutCubic,
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-          decoration: BoxDecoration(
-            color: isSelected
-                ? Colors.white.withValues(alpha: 0.2)
-                : Colors.transparent,
-            borderRadius: BorderRadius.circular(14),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              AnimatedScale(
-                scale: isSelected ? 1.15 : 1.0,
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeOutCubic,
-                child: SvgPicture.asset(
-                  iconPath,
-                  height: 24,
-                  colorFilter: ColorFilter.mode(
-                    isSelected
-                        ? Colors.white
-                        : Colors.white.withValues(alpha: 0.55),
-                    BlendMode.srcIn,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 2),
-              AnimatedDefaultTextStyle(
-                duration: const Duration(milliseconds: 300),
-                style: TextStyle(
-                  color: isSelected
-                      ? Colors.white
-                      : Colors.white.withValues(alpha: 0.55),
-                  fontSize: isSelected ? 11 : 10,
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                ),
-                child: Text(label),
-              ),
-            ],
-          ),
-        ),
+    const horizontalMargin = 6.0;
+    final indicatorWidth = itemWidth - horizontalMargin * 2;
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOutCubic,
+      margin: const EdgeInsets.symmetric(horizontal: horizontalMargin, vertical: 8),
+      transform: Matrix4.translationValues(
+        currentIndex * itemWidth,
+        0,
+        0,
       ),
+      width: indicatorWidth,
+      decoration: BoxDecoration(
+        color: primary.withValues(alpha: 0.22),
+        borderRadius: BorderRadius.circular(20),
+      ),
+    );
+  }
+}
+
+class _NavItem extends StatelessWidget {
+  final int index;
+  final int selectedIndex;
+  final Color primary;
+  final Color unselected;
+  final String icon;
+  final String label;
+
+  const _NavItem({
+    required this.index,
+    required this.selectedIndex,
+    required this.primary,
+    required this.unselected,
+    required this.icon,
+    required this.label,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isSelected = index == selectedIndex;
+    final color = isSelected ? primary : unselected;
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SvgPicture.asset(
+          icon,
+          height: 27,
+          colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+        ),
+        const SizedBox(height: 4),
+        AnimatedDefaultTextStyle(
+          duration: const Duration(milliseconds: 300),
+          style: TextStyle(
+            color: color,
+            fontSize: 11,
+            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+            fontFamily: 'Inter',
+          ),
+          child: Text(label),
+        ),
+      ],
     );
   }
 }

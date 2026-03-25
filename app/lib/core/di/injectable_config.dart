@@ -1,3 +1,4 @@
+import 'package:diyar/core/network/app_logger.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 
@@ -11,3 +12,9 @@ final sl = GetIt.instance;
   asExtension: true,
 )
 Future<void> configureDependencies() async => sl.init();
+
+/// Точка входа инициализации DI (вызывать из main).
+Future<void> init() async {
+  initRootLogger();
+  await configureDependencies();
+}

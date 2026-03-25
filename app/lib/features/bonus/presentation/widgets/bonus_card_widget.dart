@@ -1,16 +1,28 @@
+import 'package:diyar/common/common.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-/// Виджет бонусной карты для главной страницы
 class BonusCardWidget extends StatelessWidget {
-  const BonusCardWidget({super.key});
+  /// Если передан — карточка рисуется из этих данных (главная через HomeContentCubit).
+  /// Иначе — из ProfileCubit.
+  final UserProfileModel? profile;
+
+  const BonusCardWidget({super.key, this.profile});
 
   @override
   Widget build(BuildContext context) {
     if (!UserHelper.isAuth()) {
-      return const SizedBox.shrink();
+      return _buildGuestContent(context);
+    }
+
+    if (profile != null) {
+      return _buildContent(
+        context,
+        balance: (profile!.balance ?? 0.0).toDouble(),
+        discount: profile!.discount ?? 0,
+      );
     }
 
     return BlocBuilder<ProfileCubit, ProfileState>(
@@ -19,103 +31,124 @@ class BonusCardWidget extends StatelessWidget {
         if (state is! ProfileGetLoaded) {
           return const SizedBox.shrink();
         }
-
         final user = state.userModel;
-        final balance =
-            (user.balance ?? 0.0).toDouble(); // Сохраняем как double для поддержки десятичных значений (например, 11.5)
-        final discount = user.discount ?? 0;
-
-        return BonusCardBackground(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: _CardInfoColumn(
-                  balance: balance,
-                  discount: discount,
-                ),
-              ),
-              const SizedBox(width: 16),
-              _QrActionButton(
-                onPressed: () => BonusSheetHandler.show(context),
-              ),
-            ],
-          ),
+        return _buildContent(
+          context,
+          balance: (user.balance ?? 0.0).toDouble(),
+          discount: user.discount ?? 0,
         );
       },
     );
   }
-}
 
-/// Колонка с информацией о балансе и скидке
-class _CardInfoColumn extends StatelessWidget {
-  final double balance; // Изменено с int на double для поддержки десятичных значений (например, 11.5)
-  final int discount;
-
-  const _CardInfoColumn({
-    required this.balance,
-    required this.discount,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          'Ваш баланс',
-          style: TextStyle(
-            fontSize: 13,
-            color: Colors.white.withValues(alpha: 0.85),
-            fontWeight: FontWeight.w500,
-            letterSpacing: 0.2,
+  Widget _buildContent(
+    BuildContext context, {
+    required double balance,
+    required int discount,
+  }) {
+    return BonusCardBackground(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'Ваш баланс',
+            style: TextStyle(
+              fontSize: 14,
+              color: context.colorScheme.onSurface,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.2,
+            ),
           ),
-        ),
-        const SizedBox(height: 8),
-        BonusValueText(balance: balance),
-        const SizedBox(height: 16),
-        DiscountBadge(discount: discount),
-      ],
+          const SizedBox(height: 6),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              BonusValueText(balance: balance),
+              DiscountBadge(discount: discount),
+            ],
+          ),
+          const SizedBox(height: 16),
+          BonusCardButton(
+            onPressed: () => BonusSheetHandler.show(context),
+            icon: Icons.qr_code_2_rounded,
+            label: 'Мой QR',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGuestContent(BuildContext context) {
+    return BonusCardBackground(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'Ваш баланс',
+            style: TextStyle(
+              fontSize: 14,
+              color: context.colorScheme.onSurface,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.2,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const BonusValueText(balance: 0),
+              Flexible(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.25),
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                  child: const Text(
+                    'Войдите и начните\nполучать кэшбэк',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                      height: 1.3,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          _GuestLoginButton(),
+        ],
+      ),
     );
   }
 }
 
-/// Кнопка для открытия QR кода
-class _QrActionButton extends StatelessWidget {
-  final VoidCallback onPressed;
-
-  const _QrActionButton({required this.onPressed});
-
+class _GuestLoginButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton.icon(
-      onPressed: onPressed,
-      style: OutlinedButton.styleFrom(
-        backgroundColor: Colors.white,
-        side: BorderSide.none,
-        padding: const EdgeInsets.symmetric(
-          horizontal: 18,
-          vertical: 14,
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        elevation: 0,
-      ),
-      icon: const Icon(
-        Icons.qr_code_2_rounded,
-        color: Color(0xFF1E8449),
-        size: 22,
-      ),
-      label: const Text(
-        'Мой QR',
-        style: TextStyle(
-          color: Color(0xFF1E8449),
-          fontWeight: FontWeight.w600,
-          fontSize: 15,
-          letterSpacing: 0.2,
+    return Material(
+      color: context.colorScheme.surface.withValues(alpha: 0.9),
+      borderRadius: BorderRadius.circular(999),
+      child: InkWell(
+        onTap: () => showRegistrationAlertDialog(context),
+        borderRadius: BorderRadius.circular(999),
+        child: const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+          child: Text(
+            'Войти',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 14,
+              letterSpacing: 0.2,
+            ),
+          ),
         ),
       ),
     );

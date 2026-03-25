@@ -27,6 +27,19 @@ class CurierRepositoryImpl with RepositoryErrorHandler implements CurierReposito
   }
 
   @override
+  Future<Either<Failure, Unit>> setShift(bool onShift) {
+    return makeRequest(() async {
+      await dataSource.setShift(onShift);
+      return unit;
+    });
+  }
+
+  @override
+  Future<Either<Failure, bool>> getShiftStatus() {
+    return makeRequest(() async => await dataSource.getShiftStatus());
+  }
+
+  @override
   Future<Either<Failure, List<CurierEntity>>> getCurierHistory({
     String? startDate,
     String? endDate,

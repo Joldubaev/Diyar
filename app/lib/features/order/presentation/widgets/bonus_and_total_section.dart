@@ -1,3 +1,4 @@
+import 'package:diyar/core/core.dart';
 import 'package:diyar/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,6 +21,8 @@ class BonusAndTotalSection extends StatefulWidget {
 }
 
 class _BonusAndTotalSectionState extends State<BonusAndTotalSection> {
+  static final Pattern _bonusAmountPattern = RegExp(r'^\d*\.?\d{0,2}');
+
   final FocusNode _bonusFocusNode = FocusNode();
 
   @override
@@ -59,7 +62,7 @@ class _BonusAndTotalSectionState extends State<BonusAndTotalSection> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Недостаточно бонусов. Доступно: ${userBalance.toStringAsFixed(2)} сом'),
-            backgroundColor: Colors.red,
+            backgroundColor: context.colorScheme.error,
           ),
         );
         widget.controllers.bonusController.text = userBalance.toStringAsFixed(2);
@@ -71,7 +74,7 @@ class _BonusAndTotalSectionState extends State<BonusAndTotalSection> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Сумма бонусов не может превышать стоимость заказа'),
-            backgroundColor: Colors.red,
+            backgroundColor: context.colorScheme.error,
           ),
         );
         widget.controllers.bonusController.text = totalOrderCost.toStringAsFixed(0);
@@ -110,52 +113,82 @@ class _BonusAndTotalSectionState extends State<BonusAndTotalSection> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Вам доступно ${userBalance % 1 == 0 ? userBalance.toInt().toString() : userBalance.toStringAsFixed(1)} бонусов',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w500,
-                        color: userBalance == 0
-                            ? theme.colorScheme.onSurface.withValues(alpha: 0.5)
-                            : theme.colorScheme.onSurface,
-                      ),
-                    ),
-                    Switch(
-                      value: deliveryFormState.useBonus,
-                      onChanged: userBalance > 0
-                          ? (value) {
-                              context.read<DeliveryFormCubit>().toggleBonus(value);
-                              if (!value) {
-                                widget.controllers.bonusController.clear();
-                              }
-                            }
-                          : null, // Отключаем переключатель, если бонусов нет
-                    ),
-                  ],
-                ),
-                if (deliveryFormState.useBonus) ...[
-                  const SizedBox(height: 10),
-                  TextField(
-                    controller: widget.controllers.bonusController,
-                    focusNode: _bonusFocusNode,
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
-                    ],
-                    onSubmitted: _onBonusAmountSubmitted,
-                    decoration: InputDecoration(
-                      hintText: 'бонус',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      filled: true,
-                      fillColor: theme.colorScheme.surface,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  decoration: BoxDecoration(
+                    color: context.colorScheme.surface.withValues(alpha: 0.6),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: context.colorScheme.primary.withValues(alpha: 0.25),
+                      width: 1,
                     ),
                   ),
-                ],
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.card_giftcard_rounded,
+                            size: 22,
+                            color: context.colorScheme.primary,
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              'Вам доступно ${userBalance % 1 == 0 ? userBalance.toInt().toString() : userBalance.toStringAsFixed(1)} бонусов',
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: userBalance == 0
+                                    ? context.colorScheme.onSurface.withValues(alpha: 0.6)
+                                    : context.colorScheme.onSurface,
+                              ),
+                            ),
+                          ),
+                          Switch.adaptive(
+                            value: deliveryFormState.useBonus,
+                            onChanged: userBalance > 0
+                                ? (value) {
+                                    context.read<DeliveryFormCubit>().toggleBonus(value);
+                                    if (!value) {
+                                      widget.controllers.bonusController.clear();
+                                    }
+                                  }
+                                : null,
+                            activeTrackColor: context.colorScheme.primary.withValues(alpha: 0.6),
+                            activeThumbColor: context.colorScheme.primary,
+                          ),
+                        ],
+                      ),
+                      if (deliveryFormState.useBonus) ...[
+                        const SizedBox(height: 12),
+                        TextField(
+                          controller: widget.controllers.bonusController,
+                          focusNode: _bonusFocusNode,
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(_bonusAmountPattern),
+                          ],
+                          onSubmitted: _onBonusAmountSubmitted,
+                          decoration: InputDecoration(
+                            hintText: 'Сумма бонусов (сом)',
+                            prefixIcon: Icon(
+                              Icons.savings_rounded,
+                              size: 20,
+                              color: context.colorScheme.primary,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            filled: true,
+                            fillColor: context.colorScheme.surface,
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
               ],
             );
           },

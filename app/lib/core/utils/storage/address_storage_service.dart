@@ -6,10 +6,16 @@ class AddressStorageService {
 
   AddressStorageService(this._localStorage);
 
-  Future<void> saveAddress(String address, double lat, double lon) async {
+  Future<void> saveAddress(
+    String address,
+    double lat,
+    double lon, {
+    required double deliveryPrice,
+  }) async {
     await _localStorage.setString(AppConst.savedAddress, address);
     await _localStorage.setDouble(AppConst.savedAddressLat, lat);
     await _localStorage.setDouble(AppConst.savedAddressLon, lon);
+    await _localStorage.setDouble(AppConst.savedDeliveryPrice, deliveryPrice);
     await _localStorage.setBool(AppConst.addressSelected, true);
     await _confirmAddress();
   }
@@ -20,19 +26,14 @@ class AddressStorageService {
 
   double? getLon() => _localStorage.getDouble(AppConst.savedAddressLon);
 
+  double? getDeliveryPrice() =>
+      _localStorage.getDouble(AppConst.savedDeliveryPrice);
+
   bool isAddressSelected() =>
       _localStorage.getBool(AppConst.addressSelected) ?? false;
 
   bool shouldShowAddressConfirmation() {
-    if (!isAddressSelected()) return false;
-
-    final dateStr = _localStorage.getString(AppConst.addressConfirmDate);
-    if (dateStr == null) return true;
-
-    final lastConfirm = DateTime.tryParse(dateStr);
-    if (lastConfirm == null) return true;
-
-    return DateTime.now().difference(lastConfirm).inHours >= 24;
+    return isAddressSelected();
   }
 
   Future<void> confirmAddress() async => _confirmAddress();

@@ -29,6 +29,8 @@ class AppConst {
   static const userId = 'USER_ID';
   static const userRole = 'USER_ROLE';
   static const prefs = 'PREFS';
+  /// Сохранённое состояние переключателя «На смене» (курьер).
+  static const courierOnShift = 'COURIER_ON_SHIFT';
 
   // Map
   static const getLocations = "6d9fa3b5-2a2b-46fa-838b-ce4e9fc4e4f8";
@@ -54,11 +56,6 @@ class AppConst {
   static const String kCachedFoods = 'cached_foods';
   static const String kCachedPopularFoods = 'cached_popular_foods';
 
-  // pin code
-  static const pinCode = 'PIN_CODE';
-  static const setPinCode = 'SET_PIN_CODE';
-  static const biometricEnabled = 'BIOMETRIC_ENABLED';
-
   // first launch
   static const firstLaunch = 'FIRST_LAUNCH';
 
@@ -66,14 +63,12 @@ class AppConst {
   static const savedAddress = 'SAVED_ADDRESS';
   static const savedAddressLat = 'SAVED_ADDRESS_LAT';
   static const savedAddressLon = 'SAVED_ADDRESS_LON';
+  static const savedDeliveryPrice = 'SAVED_DELIVERY_PRICE';
   static const addressConfirmDate = 'ADDRESS_CONFIRM_DATE';
   static const addressSelected = 'ADDRESS_SELECTED';
 
   // yandex map key
   static const yandexMapKey = '1d3a039d-6ce6-44a2-9ad1-209ee24e3eb1';
-
-  //
- static  const  biometricPrefKey = 'biometric_enabled';
 }
 
 String generateOtpCode() {

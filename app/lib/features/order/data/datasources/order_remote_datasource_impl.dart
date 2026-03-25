@@ -1,3 +1,5 @@
+import 'dart:developer' as dev;
+
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:diyar/core/core.dart';
@@ -22,8 +24,14 @@ class OrderRemoteDataSourceImpl extends OrderRemoteDataSource {
       if (response.statusCode == 200 || response.statusCode == 201) {
         return Right(response.data['message']?.toString() ?? 'Success');
       }
-      return Left(ServerFailure('Order creation failed', response.statusCode));
+      final msg = response.data is Map
+          ? (response.data['message'] ?? response.data['error'])?.toString() ?? 'Order creation failed'
+          : 'Order creation failed';
+      return Left(ServerFailure(msg, response.statusCode));
     } on DioException catch (e) {
+      if (e.response != null) {
+        dev.log('createOrder DioException: status=${e.response?.statusCode} data=${e.response?.data}');
+      }
       return Left(ServerFailure.fromDio(e));
     } catch (e) {
       return Left(ServerFailure(e.toString(), null));

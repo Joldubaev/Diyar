@@ -640,4 +640,27 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get yourOrdersConfirm => 'Your orders are confirmed';
+
+  @override
+  String get readyTime => 'Ready time';
+
+  @override
+  String get totalWithoutBonus => 'Total without bonus';
+
+  @override
+  String get bonusDeduction => 'Bonus deduction';
+
+  @override
+  String get totalWithBonus => 'Total with bonus';
+
+  @override
+  String get notSpecified => 'Not specified';
+
+  @override
+  String availableBonus(String count) {
+    return '$count bonuses available';
+  }
+
+  @override
+  String get bonusLabel => 'bonus';
 }

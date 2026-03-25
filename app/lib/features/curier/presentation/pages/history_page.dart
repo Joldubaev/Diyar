@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
+import 'package:diyar/core/di/injectable_config.dart' as di;
 import 'package:diyar/features/curier/curier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,76 +21,90 @@ class HistoryPage extends StatefulWidget {
 class _HistoryPageState extends State<HistoryPage> {
   DateTime? _startDate;
   DateTime? _endDate;
+  bool _initScheduled = false;
 
-  @override
-  void initState() {
-    super.initState();
-    _loadHistory();
+  Future<void> _loadHistoryWithContext(BuildContext context) async {
+    if (!context.mounted) return;
+    final cubit = context.read<CurierCubit>();
+    await cubit.getUser();
+    if (!context.mounted) return;
+    _loadHistory(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(context.l10n.orderHistory, style: context.textTheme.titleSmall),
-        actions: [
-          if (_startDate != null || _endDate != null)
-            IconButton(icon: const Icon(Icons.clear_all), onPressed: _clearFilters),
-        ],
-      ),
-      body: Column(
-        children: [
-          // Виджет фильтров
-          DateFiltersSection(
-            startDate: _startDate,
-            endDate: _endDate,
-            onPick: _showPicker,
-          ),
-          // Виджет списка
-          Expanded(
-            child: BlocConsumer<CurierCubit, CurierState>(
-              listener: (context, state) {
-                if (state.historyError != null) {
-                  context.showSnack(state.historyError!, isError: true);
-                }
-              },
-              builder: (context, state) {
-                // Если состояние не CurierMainState, показываем загрузку
-                if (state is! CurierMainState) {
-                  return context.loadingIndicator;
-                }
-
-                if (state.isHistoryLoading) {
-                  return context.loadingIndicator;
-                }
-
-                if (state.historyError != null) {
-                  return context.errorState(state.historyError!);
-                }
-
-                if (state.historyOrders.isEmpty) {
-                  return context.emptyState(icon: Icons.history, message: context.l10n.noOrders);
-                }
-
-                return RefreshIndicator(
-                  onRefresh: () async => _loadHistory(),
-                  child: _OrdersListView(
-                    orders: state.historyOrders,
-                    hasMore: state.historyHasMore,
-                    isLoadingMore: state.isHistoryLoadingMore,
-                    onLoadMore: () => _loadMore(),
-                  ),
-                );
-              },
+    return BlocProvider(
+      create: (_) => di.sl<CurierCubit>(),
+      child: Builder(
+        builder: (context) {
+          if (!_initScheduled) {
+            _initScheduled = true;
+            WidgetsBinding.instance.addPostFrameCallback((_) => _loadHistoryWithContext(context));
+          }
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(context.l10n.orderHistory, style: context.textTheme.titleSmall),
+              actions: [
+                if (_startDate != null || _endDate != null)
+                  IconButton(icon: const Icon(Icons.clear_all), onPressed: () => _clearFilters(context)),
+              ],
             ),
-          ),
-        ],
+            body: Column(
+              children: [
+                // Виджет фильтров
+                DateFiltersSection(
+                  startDate: _startDate,
+                  endDate: _endDate,
+                  onPick: ({required bool isStart}) => _showPicker(context, isStart: isStart),
+                ),
+                // Виджет списка
+                Expanded(
+                  child: BlocConsumer<CurierCubit, CurierState>(
+                    listener: (context, state) {
+                      if (state.historyError != null) {
+                        context.showSnack(state.historyError!, isError: true);
+                      }
+                    },
+                    builder: (context, state) {
+                      // Если состояние не CurierMainState, показываем загрузку
+                      if (state is! CurierMainState) {
+                        return context.loadingIndicator;
+                      }
+
+                      if (state.isHistoryLoading) {
+                        return context.loadingIndicator;
+                      }
+
+                      if (state.historyError != null) {
+                        return context.errorState(state.historyError!);
+                      }
+
+                      if (state.historyOrders.isEmpty) {
+                        return context.emptyState(icon: Icons.history, message: context.l10n.noOrders);
+                      }
+
+                      return RefreshIndicator(
+                        onRefresh: () async => _loadHistory(context),
+                        child: _OrdersListView(
+                          orders: state.historyOrders,
+                          hasMore: state.historyHasMore,
+                          isLoadingMore: state.isHistoryLoadingMore,
+                          onLoadMore: () => _loadMore(context),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
 
   // --- Логика (оставляем в родителе для управления состоянием) ---
-  void _showPicker({required bool isStart}) {
+  void _showPicker(BuildContext context, {required bool isStart}) {
     DatePicker.showDatePicker(
       context,
       showTitleActions: true,
@@ -104,22 +119,22 @@ class _HistoryPageState extends State<HistoryPage> {
             _endDate = date;
           }
         });
-        _loadHistory();
+        _loadHistory(context);
       },
       currentTime: (isStart ? _startDate : _endDate) ?? DateTime.now(),
       locale: LocaleType.ru,
     );
   }
 
-  void _clearFilters() {
+  void _clearFilters(BuildContext context) {
     setState(() {
       _startDate = null;
       _endDate = null;
     });
-    _loadHistory();
+    _loadHistory(context);
   }
 
-  void _loadHistory() {
+  void _loadHistory(BuildContext context) {
     final fmt = DateFormat('yyyy-MM-dd');
     context.read<CurierCubit>().getCurierHistory(
           startDate: _startDate != null ? fmt.format(_startDate!) : null,
@@ -127,7 +142,7 @@ class _HistoryPageState extends State<HistoryPage> {
         );
   }
 
-  void _loadMore() {
+  void _loadMore(BuildContext context) {
     final fmt = DateFormat('yyyy-MM-dd');
     context.read<CurierCubit>().getCurierHistory(
           startDate: _startDate != null ? fmt.format(_startDate!) : null,

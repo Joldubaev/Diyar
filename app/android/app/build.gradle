@@ -33,6 +33,16 @@ if (keystorePropertiesFile.exists()) {
     }
 }
 
+def yandexMapkitApiKey =
+        localProperties.getProperty('yandex.mapkit.api_key') ?: System.getenv('YANDEX_MAPKIT_API_KEY')
+
+if (yandexMapkitApiKey == null || yandexMapkitApiKey.trim().isEmpty()) {
+    throw new GradleException(
+            "Yandex MapKit API key is missing. Add 'yandex.mapkit.api_key=YOUR_KEY' to local.properties (project root) " +
+                    "or set environment variable 'YANDEX_MAPKIT_API_KEY'."
+    )
+}
+
 android {
     namespace "kg.cdt.diyar_guest"
     compileSdkVersion 36
@@ -51,6 +61,10 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
+    buildFeatures {
+        buildConfig true
+    }
+
     defaultConfig {
         applicationId "kg.cdt.diyar_guest"
         minSdk = 26
@@ -58,9 +72,7 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
-        
-        // Используем split-per-abi при сборке: flutter build apk --split-per-abi
-        // Это создаст отдельные APK для каждой архитектуры, уменьшив размер каждого файла
+        buildConfigField 'String', 'YANDEX_MAPKIT_API_KEY', "\"${yandexMapkitApiKey}\""
     }
 
     signingConfigs {

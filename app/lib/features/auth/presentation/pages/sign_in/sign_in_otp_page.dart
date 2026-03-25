@@ -1,7 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
+import 'package:diyar/core/di/injectable_config.dart';
 import 'package:diyar/features/auth/presentation/cubit/sign_in/sign_in_cubit.dart';
-import 'package:diyar/injection_container.dart';
+import 'package:diyar/core/di/injectable_config.dart' as di;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pinput/pinput.dart';
@@ -76,69 +77,76 @@ class _SignInOtpPageState extends State<SignInOtpPage> with TimerMixin<SignInOtp
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SignInCubit, SignInState>(
-      listener: (context, state) {
-        if (state is SignInSuccessWithUser) {
-          final role = sl<LocalStorage>().getString(AppConst.userRole);
-          final targetRoute = role == "Courier" ? const CurierRoute() : const MainHomeRoute();
-          context.router.pushAndPopUntil(targetRoute, predicate: (_) => false);
-        } else if (state is SignInFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: Colors.red,
-            ),
-          );
-          _codeController.clear();
-        }
-      },
-      child: Scaffold(
-        appBar: AppBar(elevation: 0),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'Введите код',
-                  style: _kTitleStyle,
-                ),
-                const SizedBox(height: 10),
-                const Center(
-                  child: Text(
-                    'Мы отправили код подтверждения на ваш номер',
-                    textAlign: TextAlign.center,
-                    style: _kSubtitleStyle,
+    return BlocProvider(
+      create: (_) => di.sl<SignInCubit>(),
+      child: BlocListener<SignInCubit, SignInState>(
+        listener: (context, state) {
+          if (state is SignInSuccessWithUser) {
+            final role = sl<LocalStorage>().getString(AppConst.userRole);
+            final targetRoute = role == "Courier" ? const CurierRoute() : const MainHomeRoute();
+            context.router.pushAndPopUntil(targetRoute, predicate: (_) => false);
+          } else if (state is SignInFailure) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Colors.red,
+              ),
+            );
+            _codeController.clear();
+          }
+        },
+        child: Builder(
+          builder: (context) {
+            return Scaffold(
+              appBar: AppBar(elevation: 0),
+              body: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Введите код',
+                        style: _kTitleStyle,
+                      ),
+                      const SizedBox(height: 10),
+                      const Center(
+                        child: Text(
+                          'Мы отправили код подтверждения на ваш номер',
+                          textAlign: TextAlign.center,
+                          style: _kSubtitleStyle,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        widget.phone,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 22,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      const SizedBox(height: 35),
+                      Pinput(
+                        length: 6,
+                        controller: _codeController,
+                        onCompleted: (value) {
+                          context.read<SignInCubit>().verifySmsCodeForLogin(
+                                widget.phone,
+                                value,
+                              );
+                        },
+                        defaultPinTheme: _kDefaultPinTheme,
+                      ),
+                      const SizedBox(height: 15),
+                      _buildTimerSection(context),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 10),
-                Text(
-                  widget.phone,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 22,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                const SizedBox(height: 35),
-                Pinput(
-                  length: 6,
-                  controller: _codeController,
-                  onCompleted: (value) {
-                    context.read<SignInCubit>().verifySmsCodeForLogin(
-                          widget.phone,
-                          value,
-                        );
-                  },
-                  defaultPinTheme: _kDefaultPinTheme,
-                ),
-                const SizedBox(height: 15),
-                _buildTimerSection(context),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         ),
       ),
     );

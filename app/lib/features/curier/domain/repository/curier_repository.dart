@@ -5,6 +5,9 @@ import 'package:diyar/features/curier/domain/domain.dart';
 abstract class CurierRepository {
   Future<Either<Failure, List<CurierEntity>>> getCurierOrders();
   Future<Either<Failure, Unit>> getFinishOrder(int orderId);
+  Future<Either<Failure, Unit>> setShift(bool onShift);
+  /// GET /courier/shift — актуальный статус смены с бэкенда.
+  Future<Either<Failure, bool>> getShiftStatus();
   Future<Either<Failure, List<CurierEntity>>> getCurierHistory({
     String? startDate,
     String? endDate,

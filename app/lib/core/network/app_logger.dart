@@ -3,46 +3,41 @@ import 'dart:developer' as developer;
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 
-Logger logger = Logger("App Logger");
+Logger logger = Logger('APP_LOGGER');
 
 void initRootLogger() {
-  // only enable logging for debug mode
   if (kDebugMode) {
     Logger.root.level = Level.ALL;
   } else {
     Logger.root.level = Level.OFF;
   }
+
   hierarchicalLoggingEnabled = true;
 
   Logger.root.onRecord.listen((record) {
-    if (!kDebugMode) {
-      return;
-    }
+    if (!kDebugMode) return;
 
-    var start = '\x1b[90m';
     const end = '\x1b[0m';
-    // const white = '\x1b[37m';
+    String color;
 
     switch (record.level.name) {
       case 'INFO':
-        start = '\x1b[92m';
+        color = '\x1b[94m'; // blue
         break;
       case 'WARNING':
-        start = '\x1b[93m';
+        color = '\x1b[93m'; // yellow
         break;
       case 'SEVERE':
-        start = '\x1b[103m\x1b[31m';
+        color = '\x1b[31m'; // red
         break;
       case 'SHOUT':
-        start = '\x1b[41m\x1b[93m';
+        color = '\x1b[41m\x1b[93m'; // yellow on red
         break;
+      default:
+        color = '\x1b[37m'; // white
     }
 
-    final message = '$end$start${record.message}$end';
-    developer.log(
-      message,
-      // name: record.loggerName.padRight(25),
-      level: record.level.value,
-    );
+    final message = '$color${record.message}$end';
+    developer.log(message, name: record.loggerName, level: record.level.value);
   });
 }

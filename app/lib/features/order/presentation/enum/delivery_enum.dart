@@ -1,1 +1,1 @@
-enum PaymentTypeDelivery { cash, card, online }
+enum PaymentTypeDelivery { cash, online }

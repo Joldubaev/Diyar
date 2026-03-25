@@ -81,8 +81,12 @@ scripts:
 
   # Build apk and appbundle My Quran
   build-apk:
+    run: cd app && fvm flutter build apk --split-per-abi
+    description: "Build an APK file (split per ABI)"
+
+  build-apk-universal:
     run: cd app && fvm flutter build apk
-    description: "Build an APK file"
+    description: "Build a universal APK file (all ABIs)"
 
   build-ios:
     run: cd app && fvm flutter build ios --release --no-codesign

@@ -7,7 +7,7 @@ class SubmitButtonWidget extends StatelessWidget {
     this.onTap,
     required this.title,
     required this.bgColor,
-     this.textStyle,
+    this.textStyle,
     this.isLoading = false,
     this.height,
     this.width,
@@ -28,20 +28,13 @@ class SubmitButtonWidget extends StatelessWidget {
     return ElevatedButton(
       onPressed: isLoading == true ? null : onTap,
       style: ElevatedButton.styleFrom(
-        foregroundColor: borderColor != null
-            ? borderColor!.withAlpha(1)
-            : AppColors.primaryAccent,
+        foregroundColor: borderColor != null ? borderColor!.withAlpha(1) : AppColors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(height ?? 55),
-          side: borderColor != null
-              ? BorderSide(color: borderColor!)
-              : BorderSide.none,
+          side: borderColor != null ? BorderSide(color: borderColor!) : BorderSide.none,
         ),
-        shadowColor:
-            borderColor != null ? AppColors.transparent : AppColors.grey1,
-        minimumSize: width != null
-            ? Size(width!, height ?? 50)
-            : Size.fromHeight(height ?? 50),
+        shadowColor: borderColor != null ? AppColors.transparent : AppColors.grey1,
+        minimumSize: width != null ? Size(width!, height ?? 50) : Size.fromHeight(height ?? 50),
         backgroundColor: bgColor,
       ),
       child: isLoading == true

@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:diyar/features/order_detail/domain/domain.dart';
+import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 
 part 'order_detail_state.dart';

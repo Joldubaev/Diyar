@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:diyar/core/core.dart';
+import 'package:flutter/material.dart';
 
-enum PaymentTypeDelivery { cash, online }
+import '../enum/delivery_enum.dart';
 
 class PaymentTypeSelector extends StatelessWidget {
   final PaymentTypeDelivery currentPaymentType;
@@ -58,9 +58,9 @@ class _PaymentTypeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color =
-        selected ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.surface.withValues(alpha: 0.1);
-    final textColor = selected ? Theme.of(context).colorScheme.onPrimary : Theme.of(context).colorScheme.onSurface;
+    final scheme = context.colorScheme;
+    final color = selected ? scheme.primary : scheme.surface.withValues(alpha: 0.1);
+    final textColor = selected ? scheme.onPrimary : scheme.onSurface;
 
     return Expanded(
       child: GestureDetector(
@@ -73,7 +73,7 @@ class _PaymentTypeCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
             boxShadow: selected ? [BoxShadow(color: color.withValues(alpha: 0.2), blurRadius: 8)] : [],
             border: Border.all(
-              color: selected ? Theme.of(context).colorScheme.primary : Colors.grey.shade300,
+              color: selected ? scheme.primary : scheme.outlineVariant,
               width: 2,
             ),
           ),

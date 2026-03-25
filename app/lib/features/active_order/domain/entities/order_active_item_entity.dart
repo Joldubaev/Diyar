@@ -3,6 +3,8 @@ import 'package:flutter/widgets.dart';
 
 import 'package:diyar/features/menu/menu.dart';
 
+import 'payment_display_state.dart';
+
 class OrderActiveItemEntity extends Equatable {
   final String? id;
   final String? userId;
@@ -23,6 +25,7 @@ class OrderActiveItemEntity extends Equatable {
   final String? timeRequest;
   final String? courierId;
   final String? status;
+  final String? paymentStatus;
   final int? deliveryPrice;
   final int? sdacha;
   final int? amountToReduce;
@@ -47,6 +50,7 @@ class OrderActiveItemEntity extends Equatable {
     this.timeRequest,
     this.courierId,
     this.status,
+    this.paymentStatus,
     this.deliveryPrice,
     this.sdacha,
     this.amountToReduce,
@@ -73,6 +77,7 @@ class OrderActiveItemEntity extends Equatable {
         timeRequest,
         courierId,
         status,
+        paymentStatus,
         deliveryPrice,
         sdacha,
         amountToReduce,
@@ -98,6 +103,7 @@ class OrderActiveItemEntity extends Equatable {
     ValueGetter<String?>? timeRequest,
     ValueGetter<String?>? courierId,
     ValueGetter<String?>? status,
+    ValueGetter<String?>? paymentStatus,
     ValueGetter<int?>? deliveryPrice,
     ValueGetter<int?>? sdacha,
     ValueGetter<int?>? amountToReduce,
@@ -122,6 +128,7 @@ class OrderActiveItemEntity extends Equatable {
       timeRequest: timeRequest != null ? timeRequest() : this.timeRequest,
       courierId: courierId != null ? courierId() : this.courierId,
       status: status != null ? status() : this.status,
+      paymentStatus: paymentStatus != null ? paymentStatus() : this.paymentStatus,
       deliveryPrice: deliveryPrice != null ? deliveryPrice() : this.deliveryPrice,
       sdacha: sdacha != null ? sdacha() : this.sdacha,
       amountToReduce: amountToReduce != null ? amountToReduce() : this.amountToReduce,
@@ -131,7 +138,32 @@ class OrderActiveItemEntity extends Equatable {
   String get fullAddress => '${address ?? ''}, д. ${houseNumber ?? ''}'.trim();
   bool get isCompleted => status == 'completed';
 
+  /// Статус оплаты для отображения. New, Await → pending; Successful, Charge → paid; Reject → rejected.
+  PaymentDisplayState get paymentDisplayState {
+    switch (paymentStatus) {
+      case 'Successful':
+      case 'Charge':
+        return PaymentDisplayState.paid;
+      case 'Reject':
+        return PaymentDisplayState.rejected;
+      case 'New':
+      case 'Await':
+      default:
+        return PaymentDisplayState.pending;
+    }
+  }
+
   /// Определяет, является ли заказ самовывозом (pickup)
   /// Обычно pickup заказы не имеют адреса доставки
   bool get isPickup => address == null || address!.isEmpty;
+
+  /// Итоговая сумма к оплате: цена + доставка - бонусы
+  int get totalPrice => (price ?? 0) + (deliveryPrice ?? 0) - (amountToReduce ?? 0);
+
+  /// Можно ли продолжить онлайн-оплату:
+  /// заказ ожидает, выбрана онлайн-оплата, платёж ещё не проведён
+  bool get canResumePayment =>
+      paymentMethod == 'card_online' &&
+      (paymentStatus == 'New' || paymentStatus == 'Await') &&
+      status == 'Awaits';
 }

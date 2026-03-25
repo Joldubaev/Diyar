@@ -208,5 +208,19 @@
   "yes": "Ооба",
   "yourAddress": "Сиздин адресиңиз",
   "yourName": "Атыңыз",
-  "yourOrdersConfirm": "Сиздин тапшырууларыңызды тастыктаңыз"
+  "yourOrdersConfirm": "Сиздин тапшырууларыңызды тастыктаңыз",
+  "readyTime": "Даяр болуу убактысы",
+  "totalWithoutBonus": "Бонуссуз жалпы сумма",
+  "bonusDeduction": "Бонус чегерилет",
+  "totalWithBonus": "Бонус менен жалпы сумма",
+  "notSpecified": "Көрсөтүлгөн эмес",
+  "@availableBonus": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "availableBonus": "{count} бонус бар",
+  "bonusLabel": "бонус"
 }
