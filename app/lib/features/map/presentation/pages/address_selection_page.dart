@@ -20,7 +20,7 @@ class AddressSelectionPage extends StatefulWidget {
 
 class _AddressSelectionPageState extends State<AddressSelectionPage> {
   final _mapControllerCompleter = Completer<YandexMapController>();
-  static const double _defaultZoom = 20.0;
+  static const double _defaultZoom = 19.0;
   static const double _minZoom = 12.0;
   static const double _maxZoom = 21.0;
 
@@ -61,6 +61,7 @@ class _AddressSelectionPageState extends State<AddressSelectionPage> {
           final data = state is AddressSelectionData ? state : null;
           final address = data?.address;
           final isLoading = data?.isLoading ?? false;
+          final deliveryPrice = data?.deliveryPrice ?? 0.0;
           final latitude = data?.latitude ?? 42.882004;
           final longitude = data?.longitude ?? 74.582748;
 
@@ -96,6 +97,7 @@ class _AddressSelectionPageState extends State<AddressSelectionPage> {
               theme: theme,
               address: address,
               isLoading: isLoading,
+              deliveryPrice: deliveryPrice,
               onSearchPressed: () => _onSearchPressed(context),
               onConfirm: () {
                 if (address == null || data == null) return;
@@ -167,11 +169,13 @@ class _AddressSelectionPageState extends State<AddressSelectionPage> {
   void _onMapTap(Point point) {
     // При тапе по карте сразу переносим “цель” на точку дома
     // и затем сделаем reverse-geocode после завершения движения камеры.
-    context.read<AddressSelectionCubit>().setLocationFromSearch(
-          null,
-          point.latitude,
-          point.longitude,
-        );
+    unawaited(
+      context.read<AddressSelectionCubit>().setLocationFromSearch(
+            null,
+            point.latitude,
+            point.longitude,
+          ),
+    );
   }
 
   Future<void> _initPermission() async {
@@ -188,11 +192,14 @@ class _AddressSelectionPageState extends State<AddressSelectionPage> {
       context,
       onSearch: (addressName, latitude, longitude) {
         if (latitude != null && longitude != null) {
-          context.read<AddressSelectionCubit>().setLocationFromSearch(
-                addressName,
-                latitude,
-                longitude,
-              );
+          // Метод асинхронный: вычислим цену доставки и координаты.
+          unawaited(
+            context.read<AddressSelectionCubit>().setLocationFromSearch(
+                  addressName,
+                  latitude,
+                  longitude,
+                ),
+          );
         } else {
           context.read<AddressSelectionCubit>().searchByText(addressName);
         }

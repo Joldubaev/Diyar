@@ -37,15 +37,18 @@ class AddressSelectionCubit extends Cubit<AddressSelectionState> {
       latitude: lat,
       longitude: lon,
       address: null,
+      deliveryPrice: state is AddressSelectionData ? (state as AddressSelectionData).deliveryPrice : 0,
       isLoading: true,
     ));
 
     try {
+      final priceFuture = _calculateDeliveryPrice(lat, lon);
       final searchSessionData = await YandexSearch.searchByPoint(
         point: Point(latitude: lat, longitude: lon),
         searchOptions: const SearchOptions(),
       );
       final result = await searchSessionData.$2;
+      final deliveryPrice = await priceFuture;
 
       if (isClosed) return;
 
@@ -54,6 +57,7 @@ class AddressSelectionCubit extends Cubit<AddressSelectionState> {
           latitude: lat,
           longitude: lon,
           address: result.items!.first.name,
+          deliveryPrice: deliveryPrice,
           isLoading: false,
         ));
       } else {
@@ -61,15 +65,18 @@ class AddressSelectionCubit extends Cubit<AddressSelectionState> {
           latitude: lat,
           longitude: lon,
           address: 'Адрес не найден',
+          deliveryPrice: deliveryPrice,
           isLoading: false,
         ));
       }
     } catch (_) {
       if (isClosed) return;
+      final deliveryPrice = await _calculateDeliveryPrice(lat, lon);
       emit(AddressSelectionData(
         latitude: lat,
         longitude: lon,
         address: 'Адрес не найден',
+        deliveryPrice: deliveryPrice,
         isLoading: false,
       ));
     }
@@ -93,16 +100,19 @@ class AddressSelectionCubit extends Cubit<AddressSelectionState> {
     }
   }
 
-  void setLocationFromSearch(String? address, double lat, double lon) {
+  Future<void> setLocationFromSearch(String? address, double lat, double lon) async {
     if (!MapHelper.isPointInServiceZone(lat, lon)) {
       emit(AddressSelectionSearchError('Адрес находится за пределами зоны доставки'));
       return;
     }
     emit(AddressSelectionMoveTo(lat, lon));
+    final deliveryPrice = await _calculateDeliveryPrice(lat, lon);
+    if (isClosed) return;
     emit(AddressSelectionData(
       latitude: lat,
       longitude: lon,
       address: address,
+      deliveryPrice: deliveryPrice,
       isLoading: false,
     ));
   }
@@ -150,10 +160,12 @@ class AddressSelectionCubit extends Cubit<AddressSelectionState> {
       emit(AddressSelectionMoveTo(point.latitude, point.longitude));
       if (isClosed) return;
 
+      final deliveryPrice = await _calculateDeliveryPrice(point.latitude, point.longitude);
       emit(AddressSelectionData(
         latitude: point.latitude,
         longitude: point.longitude,
         address: firstItem.name,
+        deliveryPrice: deliveryPrice,
         isLoading: false,
       ));
     } catch (_) {
@@ -210,6 +222,35 @@ class AddressSelectionCubit extends Cubit<AddressSelectionState> {
 
     if (!isClosed) {
       emit(const AddressSelectionConfirmed());
+    }
+  }
+
+  Future<double> _calculateDeliveryPrice(double lat, double lon) async {
+    try {
+      final yandexId = MapHelper.getYandexIdForCoordinate(
+        lat,
+        lon,
+        polygons: Polygons.getPolygons(),
+      );
+
+      if (yandexId != null) {
+        final priceModel = await _priceRepository.getDistrictPrice(
+          yandexId: yandexId.toString(),
+        );
+        return priceModel.price?.toDouble() ?? 0;
+      }
+
+      return MapHelper.isCoordinateInsidePolygons(
+        lat,
+        lon,
+        polygons: Polygons.getPolygons(),
+      );
+    } catch (_) {
+      return MapHelper.isCoordinateInsidePolygons(
+        lat,
+        lon,
+        polygons: Polygons.getPolygons(),
+      );
     }
   }
 }

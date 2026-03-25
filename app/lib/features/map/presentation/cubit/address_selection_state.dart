@@ -15,17 +15,19 @@ final class AddressSelectionData extends AddressSelectionState {
   final double latitude;
   final double longitude;
   final String? address;
+  final double deliveryPrice;
   final bool isLoading;
 
   const AddressSelectionData({
     required this.latitude,
     required this.longitude,
     this.address,
+    this.deliveryPrice = 0,
     this.isLoading = false,
   });
 
   @override
-  List<Object?> get props => [latitude, longitude, address, isLoading];
+  List<Object?> get props => [latitude, longitude, address, deliveryPrice, isLoading];
 }
 
 final class AddressSelectionMoveTo extends AddressSelectionState {
