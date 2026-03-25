@@ -28,9 +28,9 @@ class AddressSelectionCubit extends Cubit<AddressSelectionState> {
     this._addressStorage,
     this._appLocation,
   ) : super(const AddressSelectionData(
-    latitude: 42.882004,
-    longitude: 74.582748,
-  ));
+          latitude: 42.882004,
+          longitude: 74.582748,
+        ));
 
   void updateCoordinates(double lat, double lon) async {
     emit(AddressSelectionData(
@@ -121,7 +121,8 @@ class AddressSelectionCubit extends Cubit<AddressSelectionState> {
     String searchQuery = searchText.trim();
     final lowerQuery = searchQuery.toLowerCase();
     if (!lowerQuery.contains('чуйск') && !lowerQuery.contains('бишкек') && !lowerQuery.contains('bishkek')) {
-      searchQuery = '$searchQuery Чуйская область';
+      // Для городских улиц Бишкек даёт более точные результаты, чем "Чуйская область"
+      searchQuery = '$searchQuery Бишкек';
     }
 
     try {
@@ -140,31 +141,35 @@ class AddressSelectionCubit extends Cubit<AddressSelectionState> {
         return;
       }
 
-      final firstItem = result.items!.first;
-      if (firstItem.geometry.isEmpty) {
-        emit(AddressSelectionSearchError('Адрес не найден'));
-        return;
+      // Не берём слепо первый результат: у Яндекса первым может прийти объект вне зоны,
+      // хотя в выдаче есть подходящий вариант в пределах доставки.
+      Point? selectedPoint;
+      String? selectedName;
+      for (final item in result.items!) {
+        if (item.geometry.isEmpty) continue;
+        final p = item.geometry.first.point;
+        if (p == null) continue;
+        if (MapHelper.isPointInServiceZone(p.latitude, p.longitude)) {
+          selectedPoint = p;
+          selectedName = item.name;
+          break;
+        }
       }
 
-      final point = firstItem.geometry.first.point;
-      if (point == null) {
-        emit(AddressSelectionSearchError('Адрес не найден'));
-        return;
-      }
-
-      if (!MapHelper.isPointInServiceZone(point.latitude, point.longitude)) {
+      // Если ничего не нашли внутри зоны — сообщаем понятную причину.
+      if (selectedPoint == null) {
         emit(AddressSelectionSearchError('Адрес находится за пределами зоны доставки'));
         return;
       }
 
-      emit(AddressSelectionMoveTo(point.latitude, point.longitude));
+      emit(AddressSelectionMoveTo(selectedPoint.latitude, selectedPoint.longitude));
       if (isClosed) return;
 
-      final deliveryPrice = await _calculateDeliveryPrice(point.latitude, point.longitude);
+      final deliveryPrice = await _calculateDeliveryPrice(selectedPoint.latitude, selectedPoint.longitude);
       emit(AddressSelectionData(
-        latitude: point.latitude,
-        longitude: point.longitude,
-        address: firstItem.name,
+        latitude: selectedPoint.latitude,
+        longitude: selectedPoint.longitude,
+        address: selectedName,
         deliveryPrice: deliveryPrice,
         isLoading: false,
       ));

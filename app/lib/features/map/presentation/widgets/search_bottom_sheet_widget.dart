@@ -11,9 +11,10 @@ Future<void> showMapSearchBottom(
   BuildContext context, {
   required Function(String, double?, double?) onSearch,
 }) async {
-  const chuiOblastBounds = BoundingBox(
-    northEast: Point(latitude: 43.10, longitude: 76.00),
-    southWest: Point(latitude: 42.40, longitude: 73.50),
+  /// BoundingBox зоны доставки (Бишкек) — чтобы подсказки не уводили в область/сёла
+  const serviceZoneBounds = BoundingBox(
+    northEast: Point(latitude: 42.957, longitude: 74.924),
+    southWest: Point(latitude: 42.71, longitude: 74.285),
   );
 
   await showModalBottomSheet<void>(
@@ -24,7 +25,7 @@ Future<void> showMapSearchBottom(
       final theme = Theme.of(context);
       return _MapSearchBottomSheet(
         theme: theme,
-        chuiOblastBounds: chuiOblastBounds,
+        chuiOblastBounds: serviceZoneBounds,
         onSearch: onSearch,
       );
     },
@@ -101,17 +102,29 @@ class _MapSearchBottomSheetState extends State<_MapSearchBottomSheet> {
 
       final allResults = result.items ?? [];
       log('[SEARCH] Найдено результатов: ${allResults.length}');
-      for (int i = 0; i < allResults.length && i < 10; i++) {
-        final item = allResults[i];
+
+      // Оставляем только те адреса, чьи координаты внутри ServiceZone полигона.
+      // Если у подсказки нет координат (center == null) — оставляем: текстовый поиск
+      // в cubit дополнительно проверит их через isPointInServiceZone.
+      final filteredResults = allResults.where((item) {
+        if (item.center == null) return true;
+        return MapHelper.isPointInServiceZone(
+          item.center!.latitude,
+          item.center!.longitude,
+        );
+      }).toList();
+
+      for (int i = 0; i < filteredResults.length && i < 10; i++) {
+        final item = filteredResults[i];
         log('[SEARCH] Результат ${i + 1}: title="${item.title}", subtitle="${item.subtitle ?? "нет"}"');
       }
 
       setState(() {
-        _searchResults = allResults;
+        _searchResults = filteredResults;
         _isLoading = false;
       });
 
-      log('[SEARCH] Состояние обновлено, отображено ${allResults.length} результатов');
+      log('[SEARCH] Состояние обновлено, отображено ${filteredResults.length} результатов (из ${allResults.length})');
     } catch (e, stackTrace) {
       log('[SEARCH] Ошибка поиска: $e');
       log('[SEARCH] Stack trace: $stackTrace');
@@ -127,7 +140,7 @@ class _MapSearchBottomSheetState extends State<_MapSearchBottomSheet> {
   String _enhanceSearchQuery(String query) {
     final lowerQuery = query.toLowerCase();
     if (!lowerQuery.contains('чуйск') && !lowerQuery.contains('бишкек') && !lowerQuery.contains('bishkek')) {
-      return '$query Чуйская область';
+      return '$query Бишкек';
     }
     return query;
   }
