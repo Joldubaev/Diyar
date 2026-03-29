@@ -4,7 +4,6 @@ import 'package:diyar/features/cart/cart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 
 import 'cart_count_badge.dart';
 
@@ -21,6 +20,9 @@ class CartFabWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final primary = theme.colorScheme.primary;
+    final isDark = theme.brightness == Brightness.dark;
+    final fabBackground = theme.colorScheme.primary;
+    final fabIconColor = theme.colorScheme.onPrimary;
 
     return BlocBuilder<CartBloc, CartState>(
       builder: (context, state) {
@@ -33,28 +35,23 @@ class CartFabWidget extends StatelessWidget {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.12),
+                    color: Colors.black.withValues(alpha: isDark ? 0.35 : 0.12),
                     blurRadius: 20,
                     offset: const Offset(0, 6),
                   ),
                   BoxShadow(
-                    color: primary.withValues(alpha: 0.08),
+                    color: primary.withValues(alpha: isDark ? 0.22 : 0.08),
                     blurRadius: 14,
                     offset: const Offset(0, 3),
                   ),
                 ],
               ),
-              child: FakeGlass(
-                shape: const LiquidOval(),
-                settings: const LiquidGlassSettings(
-                  blur: 18,
-                  thickness: 12,
-                  glassColor: Color(0x26FFFFFF),
-                  lightIntensity: 0.65,
-                  ambientStrength: 0.12,
-                  saturation: 1.3,
-                ),
-                child: GestureDetector(
+              child: Material(
+                color: fabBackground,
+                shape: const CircleBorder(),
+                clipBehavior: Clip.antiAlias,
+                child: InkWell(
+                  customBorder: const CircleBorder(),
                   onTap: () async {
                     final router = context.router;
                     if (!UserHelper.isAuth()) {
@@ -74,7 +71,7 @@ class CartFabWidget extends StatelessWidget {
                         'assets/icons/cart_icon.svg',
                         height: 33,
                         colorFilter: ColorFilter.mode(
-                          theme.colorScheme.onSurface,
+                          fabIconColor,
                           BlendMode.srcIn,
                         ),
                       ),

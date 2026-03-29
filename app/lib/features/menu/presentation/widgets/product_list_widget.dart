@@ -60,7 +60,9 @@ class _ProductsListState extends State<ProductsList> {
                   crossAxisCount: 2,
                   mainAxisSpacing: 10,
                   crossAxisSpacing: 10,
-                  childAspectRatio: 0.80,
+                  // Немного выше карточка, чтобы исключить переполнение по нижнему краю
+                  // на устройствах с небольшим экраном/повышенным scale текста.
+                  childAspectRatio: 0.74,
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 itemCount: foods.length,

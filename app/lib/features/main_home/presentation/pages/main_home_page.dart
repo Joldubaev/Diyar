@@ -44,22 +44,25 @@ class _MainHomePageState extends State<MainHomePage> {
         return ProfileNavigationScope(
           navigateToProfileOrRequireAuth: () => _navigateToProfileOrRequireAuth(context),
           child: Scaffold(
-            extendBody: true,
+            extendBody: false,
             body: child,
             floatingActionButton: CartFabWidget(showRegisterDialog: showRegistrationAlertDialog),
             floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-            bottomNavigationBar: CustomBottomNavigationBar(
-              currentIndex: tabsRouter.activeIndex,
-              onTap: (index) async {
-                final restrictedTabs = [2, 3];
-                bool allowNavigation = true;
-                if (restrictedTabs.contains(index)) {
-                  allowNavigation = await _navigateToProfileOrRequireAuth(context);
-                }
-                if (allowNavigation) {
-                  tabsRouter.setActiveIndex(index);
-                }
-              },
+            bottomNavigationBar: SafeArea(
+              top: false,
+              child: CustomBottomNavigationBar(
+                currentIndex: tabsRouter.activeIndex,
+                onTap: (index) async {
+                  final restrictedTabs = [2, 3];
+                  bool allowNavigation = true;
+                  if (restrictedTabs.contains(index)) {
+                    allowNavigation = await _navigateToProfileOrRequireAuth(context);
+                  }
+                  if (allowNavigation) {
+                    tabsRouter.setActiveIndex(index);
+                  }
+                },
+              ),
             ),
           ),
         );

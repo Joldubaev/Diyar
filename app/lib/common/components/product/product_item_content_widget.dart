@@ -17,7 +17,9 @@ class ProductItemContentWidget extends StatefulWidget {
   static const double _cardBorderRadius = 10.0;
 
   /// Запас под текст, счётчик и отступы карточки — высота фото не должна его превышать.
-  static const double _reservedBelowImage = 95.0;
+  // Запас снизу (название, вес/цена, счётчик, отступы). Увеличен для
+  // стабильной верстки без RenderFlex overflow на узких экранах.
+  static const double _reservedBelowImage = 108.0;
   static const double _imageWidth = 170.0;
   static const int _memCacheWidth = 400;
   static const int _memCacheHeight = 400;

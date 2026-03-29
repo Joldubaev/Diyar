@@ -66,6 +66,8 @@ class AppConst {
   static const savedDeliveryPrice = 'SAVED_DELIVERY_PRICE';
   static const addressConfirmDate = 'ADDRESS_CONFIRM_DATE';
   static const addressSelected = 'ADDRESS_SELECTED';
+  static const addressConfirmedInServiceZone = 'ADDRESS_CONFIRMED_IN_SERVICE_ZONE';
+  static const addressConfirmedZoneId = 'ADDRESS_CONFIRMED_ZONE_ID';
 
   // yandex map key
   static const yandexMapKey = '1d3a039d-6ce6-44a2-9ad1-209ee24e3eb1';

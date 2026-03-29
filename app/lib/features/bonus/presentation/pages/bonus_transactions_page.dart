@@ -102,167 +102,187 @@ class _BonusTransactionsPageState extends State<BonusTransactionsPage> {
             final transactions = response?.transactions ?? [];
             final totalPages = response?.totalPages ?? 0;
 
-            return Column(
-              children: [
-                Expanded(
-                  child: transactions.isEmpty
-                      ? Center(
-                          child: Text(
-                            'Нет транзакций',
-                            style: theme.textTheme.bodyLarge?.copyWith(
-                              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                            ),
-                          ),
-                        )
-                      : ListView.builder(
-                          padding: const EdgeInsets.all(16),
-                          itemCount: transactions.length,
-                          itemBuilder: (context, index) {
-                            final transaction = transactions[index];
-                            final dateFormat = DateFormat('dd.MM.yyyy HH:mm');
-                            final formattedDate = dateFormat.format(transaction.createdAt);
-
-                            return Card(
-                              margin: const EdgeInsets.only(bottom: 12),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
+            return SafeArea(
+              top: false,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: transactions.isEmpty
+                        ? Center(
+                            child: Text(
+                              'Нет транзакций',
+                              style: theme.textTheme.bodyLarge?.copyWith(
+                                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(16),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                transaction.userName,
-                                                style: theme.textTheme.titleMedium?.copyWith(
-                                                  fontWeight: FontWeight.bold,
+                            ),
+                          )
+                        : ListView.builder(
+                            padding: const EdgeInsets.all(16),
+                            itemCount: transactions.length,
+                            itemBuilder: (context, index) {
+                              final transaction = transactions[index];
+                              final dateFormat = DateFormat('dd.MM.yyyy HH:mm');
+                              final formattedDate = dateFormat.format(transaction.createdAt);
+
+                              return Card(
+                                margin: const EdgeInsets.only(bottom: 12),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  transaction.userName,
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: theme.textTheme.titleMedium?.copyWith(
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                                 ),
-                                              ),
-                                              const SizedBox(height: 4),
-                                              Text(
-                                                transaction.phone,
-                                                style: theme.textTheme.bodySmall?.copyWith(
-                                                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                                                const SizedBox(height: 4),
+                                                Text(
+                                                  transaction.phone,
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: theme.textTheme.bodySmall?.copyWith(
+                                                    color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                          decoration: BoxDecoration(
-                                            color: _getTransactionTypeColor(transaction.type).withValues(alpha: 0.1),
-                                            borderRadius: BorderRadius.circular(8),
-                                            border: Border.all(
-                                              color: _getTransactionTypeColor(transaction.type).withValues(alpha: 0.3),
+                                              ],
                                             ),
                                           ),
-                                          child: Text(
-                                            _getTransactionTypeText(transaction.type),
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w600,
-                                              color: _getTransactionTypeColor(transaction.type),
+                                          const SizedBox(width: 8),
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                            decoration: BoxDecoration(
+                                              color: _getTransactionTypeColor(transaction.type).withValues(alpha: 0.1),
+                                              borderRadius: BorderRadius.circular(8),
+                                              border: Border.all(
+                                                color: _getTransactionTypeColor(transaction.type).withValues(alpha: 0.3),
+                                              ),
+                                            ),
+                                            child: Text(
+                                              _getTransactionTypeText(transaction.type),
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w600,
+                                                color: _getTransactionTypeColor(transaction.type),
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 12),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'Сумма',
-                                              style: theme.textTheme.bodySmall?.copyWith(
-                                                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                                              ),
-                                            ),
-                                            const SizedBox(height: 4),
-                                            Text(
-                                              '${transaction.amount > 0 ? '+' : ''}${transaction.amount.toStringAsFixed(2)} сом',
-                                              style: theme.textTheme.titleMedium?.copyWith(
-                                                color: transaction.amount > 0 ? AppColors.success : AppColors.error,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.end,
-                                          children: [
-                                            Text(
-                                              'Баланс после',
-                                              style: theme.textTheme.bodySmall?.copyWith(
-                                                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                                              ),
-                                            ),
-                                            const SizedBox(height: 4),
-                                            Text(
-                                              '${transaction.balanceAfter.toStringAsFixed(2)} сом',
-                                              style: theme.textTheme.titleMedium?.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    if (transaction.description != null && transaction.description!.isNotEmpty) ...[
+                                        ],
+                                      ),
                                       const SizedBox(height: 12),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  'Сумма',
+                                                  style: theme.textTheme.bodySmall?.copyWith(
+                                                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 4),
+                                                Text(
+                                                  '${transaction.amount > 0 ? '+' : ''}${transaction.amount.toStringAsFixed(2)} сом',
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: theme.textTheme.titleMedium?.copyWith(
+                                                    color: transaction.amount > 0 ? AppColors.success : AppColors.error,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(width: 12),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.end,
+                                              children: [
+                                                Text(
+                                                  'Баланс после',
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: theme.textTheme.bodySmall?.copyWith(
+                                                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 4),
+                                                Text(
+                                                  '${transaction.balanceAfter.toStringAsFixed(2)} сом',
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: theme.textTheme.titleMedium?.copyWith(
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      if (transaction.description != null && transaction.description!.isNotEmpty) ...[
+                                        const SizedBox(height: 12),
+                                        Text(
+                                          transaction.description!,
+                                          style: theme.textTheme.bodySmall?.copyWith(
+                                            color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                                          ),
+                                        ),
+                                      ],
+                                      const SizedBox(height: 8),
                                       Text(
-                                        transaction.description!,
+                                        formattedDate,
                                         style: theme.textTheme.bodySmall?.copyWith(
-                                          color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                                          color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                                         ),
                                       ),
                                     ],
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      formattedDate,
-                                      style: theme.textTheme.bodySmall?.copyWith(
-                                        color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                        ),
-                ),
-                if (totalPages > 1)
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        IconButton(
-                          onPressed: currentPage > 1 ? () => _loadPage(currentPage - 1) : null,
-                          icon: const Icon(Icons.chevron_left),
-                        ),
-                        Text(
-                          '$currentPage / $totalPages',
-                          style: theme.textTheme.bodyMedium,
-                        ),
-                        IconButton(
-                          onPressed: currentPage < totalPages ? () => _loadPage(currentPage + 1) : null,
-                          icon: const Icon(Icons.chevron_right),
-                        ),
-                      ],
-                    ),
+                              );
+                            },
+                          ),
                   ),
-              ],
+                  if (totalPages > 1)
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+                      child: Wrap(
+                        alignment: WrapAlignment.center,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        spacing: 8,
+                        children: [
+                          IconButton(
+                            onPressed: currentPage > 1 ? () => _loadPage(currentPage - 1) : null,
+                            icon: const Icon(Icons.chevron_left),
+                          ),
+                          Text(
+                            '$currentPage / $totalPages',
+                            style: theme.textTheme.bodyMedium,
+                          ),
+                          IconButton(
+                            onPressed: currentPage < totalPages ? () => _loadPage(currentPage + 1) : null,
+                            icon: const Icon(Icons.chevron_right),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
             );
           },
         ),

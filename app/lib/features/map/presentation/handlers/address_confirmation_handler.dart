@@ -3,6 +3,8 @@ import 'package:diyar/common/components/bottom_sheets/address_confirm_bottom_she
 import 'package:diyar/core/core.dart';
 import 'package:diyar/core/di/injectable_config.dart';
 import 'package:diyar/core/utils/storage/address_storage_service.dart';
+import 'package:diyar/features/map/data/repositories/yandex_service.dart';
+import 'package:diyar/features/map/presentation/widgets/coordinats_backup.dart';
 import 'package:flutter/material.dart';
 
 /// Отвечает за показ диалога подтверждения адреса.
@@ -18,11 +20,53 @@ abstract class AddressConfirmationHandler {
     required VoidCallback onAddressChanged,
   }) async {
     final storage = sl<AddressStorageService>();
+    final locationService = sl<AppLocation>();
 
-    if (!storage.shouldShowAddressConfirmation()) return;
+    if (!storage.isAddressSelected()) return;
 
     final address = storage.getAddress();
     if (address == null || !context.mounted) return;
+
+    // Миграция: если snapshot зоны ещё не сохранен, инициализируем его
+    // от текущего сохраненного адреса и не показываем диалог на этом заходе.
+    if (storage.getConfirmedInServiceZone() == null) {
+      final savedLat = storage.getLat();
+      final savedLon = storage.getLon();
+      if (savedLat != null && savedLon != null) {
+        final savedInServiceZone = MapHelper.isPointInServiceZone(savedLat, savedLon);
+        final savedZoneId = MapHelper.getYandexIdForCoordinate(
+          savedLat,
+          savedLon,
+          polygons: Polygons.getPolygons(),
+        );
+        await storage.saveConfirmedZoneSnapshot(
+          inServiceZone: savedInServiceZone,
+          zoneId: savedZoneId,
+        );
+      }
+      return;
+    }
+
+    final hasPermission = await locationService.checkPermission();
+    if (!hasPermission) return;
+
+    final position = await locationService.getCurrentLocation();
+    final currentInServiceZone = MapHelper.isPointInServiceZone(
+      position.latitude,
+      position.longitude,
+    );
+    final currentZoneId = MapHelper.getYandexIdForCoordinate(
+      position.latitude,
+      position.longitude,
+      polygons: Polygons.getPolygons(),
+    );
+
+    final shouldShow = storage.shouldShowAddressConfirmationForZone(
+      currentInServiceZone: currentInServiceZone,
+      currentZoneId: currentZoneId,
+    );
+    if (!shouldShow) return;
+    if (!context.mounted) return;
 
     final result = await showAddressConfirmBottomSheet(context, address: address);
 
@@ -30,8 +74,13 @@ abstract class AddressConfirmationHandler {
 
     if (result == true) {
       await storage.confirmAddress();
+      await storage.saveConfirmedZoneSnapshot(
+        inServiceZone: currentInServiceZone,
+        zoneId: currentZoneId,
+      );
     } else if (result == false) {
-      await context.router.push(const AddressSelectionRoute());
+      final router = context.router;
+      await router.push(const AddressSelectionRoute());
       onAddressChanged();
     }
   }

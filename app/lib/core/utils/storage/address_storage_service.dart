@@ -38,6 +38,50 @@ class AddressStorageService {
 
   Future<void> confirmAddress() async => _confirmAddress();
 
+  bool? getConfirmedInServiceZone() {
+    return _localStorage.getBool(AppConst.addressConfirmedInServiceZone);
+  }
+
+  int? getConfirmedZoneId() {
+    final value = _localStorage.getInt(AppConst.addressConfirmedZoneId);
+    return value == null || value <= 0 ? null : value;
+  }
+
+  Future<void> saveConfirmedZoneSnapshot({
+    required bool inServiceZone,
+    int? zoneId,
+  }) async {
+    await _localStorage.setBool(
+      AppConst.addressConfirmedInServiceZone,
+      inServiceZone,
+    );
+    await _localStorage.setInt(
+      AppConst.addressConfirmedZoneId,
+      zoneId ?? 0,
+    );
+  }
+
+  bool shouldShowAddressConfirmationForZone({
+    required bool currentInServiceZone,
+    required int? currentZoneId,
+  }) {
+    if (!isAddressSelected()) return false;
+
+    final confirmedInServiceZone = getConfirmedInServiceZone();
+    final confirmedZoneId = getConfirmedZoneId();
+
+    // Миграция старых данных: если слепка зоны нет, нужно однократное уточнение.
+    if (confirmedInServiceZone == null) return true;
+
+    if (currentInServiceZone != confirmedInServiceZone) return true;
+
+    if (currentInServiceZone && confirmedInServiceZone) {
+      return currentZoneId != confirmedZoneId;
+    }
+
+    return false;
+  }
+
   Future<void> _confirmAddress() async {
     await _localStorage.setString(
       AppConst.addressConfirmDate,
