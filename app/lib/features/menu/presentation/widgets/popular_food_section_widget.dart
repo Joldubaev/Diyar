@@ -13,8 +13,15 @@ class PopularFoodSectionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CartBloc, CartState>(
+      buildWhen: (prev, curr) => curr is CartLoaded || curr is CartInitial,
       builder: (context, cartState) {
-        final cartItems = cartState is CartLoaded ? cartState.items : <CartItemEntity>[];
+        final quantityMap = <String, int>{};
+        if (cartState is CartLoaded) {
+          for (final item in cartState.items) {
+            final id = item.food?.id;
+            if (id != null) quantityMap[id] = item.quantity ?? 0;
+          }
+        }
 
         return PaginatedMasonryGridView<FoodEntity>(
           items: menu,
@@ -22,13 +29,9 @@ class PopularFoodSectionWidget extends StatelessWidget {
           loadMore: () {},
           shrinkWrap: true,
           itemBuilder: (context, food) {
-            final cartItem = cartItems.firstWhere(
-              (e) => e.food?.id == food.id,
-              orElse: () => CartItemEntity(food: food, quantity: 0),
-            );
             return ProductItemWidget(
               food: food,
-              quantity: cartItem.quantity ?? 0,
+              quantity: quantityMap[food.id] ?? 0,
               isCompact: true,
             );
           },

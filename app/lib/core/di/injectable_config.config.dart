@@ -407,7 +407,10 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i966.BonusRepositoryImpl(gh<_i475.BonusRemoteDataSource>()));
     gh.factory<_i573.AboutUsCubit>(
         () => _i573.AboutUsCubit(gh<_i168.AboutUsRepository>()));
-    gh.factory<_i517.CartBloc>(() => _i517.CartBloc(gh<_i26.CartRepository>()));
+    gh.factory<_i517.CartBloc>(() => _i517.CartBloc(
+          gh<_i26.CartRepository>(),
+          gh<_i1043.OrderCalculationService>(),
+        ));
     gh.lazySingleton<_i809.PickUpRepositories>(
         () => _i493.PickUpRepository(gh<_i1066.RemotePickUpDataSource>()));
     gh.factory<_i830.ProfileCubit>(

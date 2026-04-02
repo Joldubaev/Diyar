@@ -14,10 +14,12 @@ part 'cart_state.dart';
 @injectable
 class CartBloc extends Bloc<CartEvent, CartState> {
   final CartRepository? _cartRepository;
+  final OrderCalculationService _calculationService;
   StreamSubscription<List<CartItemEntity>>? _cartSubscription;
 
-  CartBloc(CartRepository cartRepository)
+  CartBloc(CartRepository cartRepository, OrderCalculationService calculationService)
       : _cartRepository = cartRepository,
+        _calculationService = calculationService,
         super(CartInitial()) {
     // Register event handlers
     on<LoadCart>(_onLoadCart);
@@ -127,9 +129,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   }
 
   // --- Helper Methods ---
-
-  // Используем OrderCalculationService для расчета цены товаров
-  static final _calculationService = OrderCalculationService();
 
   double _calculateTotalPrice(List<CartItemEntity> items) {
     return _calculationService.calculateItemsPrice(items);

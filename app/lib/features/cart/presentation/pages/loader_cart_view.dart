@@ -1,5 +1,5 @@
-import 'package:diyar/features/cart/domain/services/order_calculation_service.dart';
 import 'package:diyar/core/core.dart';
+import 'package:diyar/core/di/injectable_config.dart';
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/cart/presentation/cubit/cart_cutlery_cubit.dart';
 import 'package:diyar/features/cart/presentation/cubit/cart_price_cubit.dart';
@@ -72,7 +72,7 @@ class _CartProviders extends StatelessWidget {
             final items = cartBloc?.state is CartLoaded ? (cartBloc!.state as CartLoaded).items : initialItems;
 
             return CartPriceCubit(
-              OrderCalculationService(),
+              sl(),
               initialItems: items,
             );
           },

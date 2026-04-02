@@ -190,7 +190,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget>
               onQuantityChanged: _handleQuantityChanged,
               isCompact: widget.isCompact,
             ),
-          SizedBox(height: widget.isCompact ? 4 : 8),
+          SizedBox(height: widget.isCompact ? 6 : 8),
         ],
       ),
     );

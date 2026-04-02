@@ -135,6 +135,7 @@ class _MenuPageState extends State<MenuPage> {
           onRefresh: () async {
             final catCubit = ctx.read<MenuCategoryCubit>();
             final productsCubit = ctx.read<MenuProductsCubit>();
+            productsCubit.clearCache();
             await catCubit.loadCategories();
             final name = catCubit.activeCategoryName;
             if (name != null) productsCubit.loadProducts(name);

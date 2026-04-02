@@ -8,16 +8,28 @@ part 'menu_products_state.dart';
 @injectable
 class MenuProductsCubit extends Cubit<MenuProductsState> {
   final MenuRepository _repository;
+  final Map<String, List<CategoryFoodEntity>> _cache = {};
 
-  MenuProductsCubit(this._repository) : super(const MenuProductsState());
+  MenuProductsCubit(this._repository)
+      : super(const MenuProductsState(isLoading: true));
 
   Future<void> loadProducts(String categoryName) async {
+    if (_cache.containsKey(categoryName)) {
+      emit(state.copyWith(isLoading: false, foods: _cache[categoryName]!, error: null));
+      return;
+    }
+
     emit(state.copyWith(isLoading: true, error: null));
     final result = await _repository.getProducts(foodName: categoryName);
     if (isClosed) return;
     result.fold(
       (f) => emit(state.copyWith(isLoading: false, error: f.message)),
-      (foods) => emit(state.copyWith(isLoading: false, foods: foods)),
+      (foods) {
+        _cache[categoryName] = foods;
+        emit(state.copyWith(isLoading: false, foods: foods));
+      },
     );
   }
+
+  void clearCache() => _cache.clear();
 }
