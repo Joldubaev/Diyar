@@ -3,11 +3,9 @@ import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:diyar/features/active_order/data/services/order_status_service.dart';
-import 'package:diyar/features/active_order/domain/usecases/get_active_orders_usecase.dart';
-import 'package:diyar/features/active_order/domain/usecases/cancel_order_usecase.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:equatable/equatable.dart';
 import 'package:diyar/features/active_order/domain/domain.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 part 'active_order_state.dart';
@@ -15,30 +13,24 @@ part 'active_order_state.dart';
 @LazySingleton()
 class ActiveOrderCubit extends Cubit<ActiveOrderState> {
   static const _statusDebounceMs = 2000;
-
-  // Статусы, при которых заказ считается активным (всё остальное — терминальное)
   static const _activeStatuses = {'Awaits', 'Processing', 'OnTheWay'};
 
-  final GetActiveOrdersUseCase _getActiveOrdersUseCase;
-  final CancelOrderUseCase _cancelOrderUseCase;
+  final ActiveOrderRepository _repository;
   final OrderStatusService _statusService;
-  StreamSubscription? _statusSubscription;
+  StreamSubscription<List<OrderStatusEntity>>? _statusSubscription;
   DateTime? _lastStatusEmit;
 
   ActiveOrderCubit(
-    this._getActiveOrdersUseCase,
-    this._cancelOrderUseCase,
+    this._repository,
     this._statusService,
   ) : super(ActiveOrderInitial());
 
   Future<void> getActiveOrders() async {
-    // Если уже загружаем, не спамим запросами
     if (state is ActiveOrdersLoading) return;
 
     emit(ActiveOrdersLoading());
 
-    final result = await _getActiveOrdersUseCase();
-
+    final result = await _repository.getActiveOrders();
     if (isClosed) return;
 
     result.fold(
@@ -59,7 +51,9 @@ class ActiveOrderCubit extends Cubit<ActiveOrderState> {
         if (isClosed) return;
 
         final now = DateTime.now();
-        if (_lastStatusEmit != null && now.difference(_lastStatusEmit!).inMilliseconds < _statusDebounceMs) {
+        if (_lastStatusEmit != null &&
+            now.difference(_lastStatusEmit!).inMilliseconds <
+                _statusDebounceMs) {
           return;
         }
         _lastStatusEmit = now;
@@ -76,8 +70,8 @@ class ActiveOrderCubit extends Cubit<ActiveOrderState> {
                 }
                 return order;
               })
-              // Убираем заказы с терминальным статусом (доставлен, отменён и т.д.)
-              .where((o) => o.status == null || _activeStatuses.contains(o.status))
+              .where((o) =>
+                  o.status == null || _activeStatuses.contains(o.status))
               .toList();
 
           emit(ActiveOrdersLoaded(updatedOrders));
@@ -90,7 +84,7 @@ class ActiveOrderCubit extends Cubit<ActiveOrderState> {
   Future<void> cancelOrder(OrderActiveItemEntity order) async {
     if (order.orderNumber == null) return;
 
-    final result = await _cancelOrderUseCase(
+    final result = await _repository.cancelOrder(
       orderNumber: order.orderNumber!,
       isPickup: order.isPickup,
     );
@@ -99,14 +93,10 @@ class ActiveOrderCubit extends Cubit<ActiveOrderState> {
 
     result.fold(
       (failure) => emit(ActiveOrdersError(failure.message)),
-      (_) {
-        // После отмены обновляем список заказов, чтобы убрать отмененный заказ
-        getActiveOrders();
-      },
+      (_) => getActiveOrders(),
     );
   }
 
-  /// Сброс состояния при логауте (отменяет подписку SignalR и очищает данные)
   void reset() {
     _statusSubscription?.cancel();
     _statusSubscription = null;
@@ -117,7 +107,6 @@ class ActiveOrderCubit extends Cubit<ActiveOrderState> {
   @override
   Future<void> close() {
     _statusSubscription?.cancel();
-    // ВАЖНО: Сервис сокетов лучше закрывать только если Cubit единственный его владелец
     _statusService.dispose();
     return super.close();
   }

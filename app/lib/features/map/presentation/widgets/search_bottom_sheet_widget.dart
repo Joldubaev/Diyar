@@ -103,16 +103,20 @@ class _MapSearchBottomSheetState extends State<_MapSearchBottomSheet> {
       final allResults = result.items ?? [];
       log('[SEARCH] Найдено результатов: ${allResults.length}');
 
-      // Оставляем только те адреса, чьи координаты внутри ServiceZone полигона.
-      // Если у подсказки нет координат (center == null) — оставляем: текстовый поиск
-      // в cubit дополнительно проверит их через isPointInServiceZone.
-      final filteredResults = allResults.where((item) {
-        if (item.center == null) return true;
-        return MapHelper.isPointInServiceZone(
-          item.center!.latitude,
-          item.center!.longitude,
-        );
-      }).toList();
+      // Filter to addresses inside the service zone polygon.
+      // Items without coordinates are kept (cubit re-checks on selection).
+      final filteredResults = <SuggestItem>[];
+      for (final item in allResults) {
+        if (item.center == null) {
+          filteredResults.add(item);
+        } else {
+          final inZone = await MapHelper.isPointInServiceZone(
+            item.center!.latitude,
+            item.center!.longitude,
+          );
+          if (inZone) filteredResults.add(item);
+        }
+      }
 
       for (int i = 0; i < filteredResults.length && i < 10; i++) {
         final item = filteredResults[i];

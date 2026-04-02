@@ -4,17 +4,13 @@ import 'package:diyar/core/core.dart';
 import 'package:diyar/core/di/injectable_config.dart';
 import 'package:diyar/core/utils/storage/address_storage_service.dart';
 import 'package:diyar/features/map/data/repositories/yandex_service.dart';
-import 'package:diyar/features/map/presentation/widgets/coordinats_backup.dart';
 import 'package:flutter/material.dart';
 
-/// Отвечает за показ диалога подтверждения адреса.
+/// Handles address confirmation dialog display.
 ///
-/// Вся логика (проверка, показ, обработка результата) сосредоточена здесь.
-/// Вызывается из [HomeTabPage] при старте и при возврате из фона.
+/// All logic (check, display, result handling) is centralized here.
+/// Called from [HomeTabPage] on startup and when returning from background.
 abstract class AddressConfirmationHandler {
-  /// Проверяет, нужно ли показать диалог, и если да — показывает его.
-  ///
-  /// [onAddressChanged] вызывается, если пользователь выбрал новый адрес.
   static Future<void> checkAndShow(
     BuildContext context, {
     required VoidCallback onAddressChanged,
@@ -27,18 +23,15 @@ abstract class AddressConfirmationHandler {
     final address = storage.getAddress();
     if (address == null || !context.mounted) return;
 
-    // Миграция: если snapshot зоны ещё не сохранен, инициализируем его
-    // от текущего сохраненного адреса и не показываем диалог на этом заходе.
+    // Migration: initialize zone snapshot from saved address on first run.
     if (storage.getConfirmedInServiceZone() == null) {
       final savedLat = storage.getLat();
       final savedLon = storage.getLon();
       if (savedLat != null && savedLon != null) {
-        final savedInServiceZone = MapHelper.isPointInServiceZone(savedLat, savedLon);
-        final savedZoneId = MapHelper.getYandexIdForCoordinate(
-          savedLat,
-          savedLon,
-          polygons: Polygons.getPolygons(),
-        );
+        final savedInServiceZone =
+            await MapHelper.isPointInServiceZone(savedLat, savedLon);
+        final savedZoneId =
+            await MapHelper.getYandexIdForCoordinate(savedLat, savedLon);
         await storage.saveConfirmedZoneSnapshot(
           inServiceZone: savedInServiceZone,
           zoneId: savedZoneId,
@@ -51,14 +44,13 @@ abstract class AddressConfirmationHandler {
     if (!hasPermission) return;
 
     final position = await locationService.getCurrentLocation();
-    final currentInServiceZone = MapHelper.isPointInServiceZone(
+    final currentInServiceZone = await MapHelper.isPointInServiceZone(
       position.latitude,
       position.longitude,
     );
-    final currentZoneId = MapHelper.getYandexIdForCoordinate(
+    final currentZoneId = await MapHelper.getYandexIdForCoordinate(
       position.latitude,
       position.longitude,
-      polygons: Polygons.getPolygons(),
     );
 
     final shouldShow = storage.shouldShowAddressConfirmationForZone(
@@ -68,7 +60,10 @@ abstract class AddressConfirmationHandler {
     if (!shouldShow) return;
     if (!context.mounted) return;
 
-    final result = await showAddressConfirmBottomSheet(context, address: address);
+    final result = await showAddressConfirmBottomSheet(
+      context,
+      address: address,
+    );
 
     if (!context.mounted) return;
 

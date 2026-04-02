@@ -79,19 +79,19 @@ import 'package:diyar/features/menu/presentation/pages/product_detail_page.dart'
     as _i22;
 import 'package:diyar/features/menu/presentation/pages/search_menu_page.dart'
     as _i28;
-import 'package:diyar/features/order/presentation/pages/delivery_page.dart'
+import 'package:diyar/features/ordering/delivery/presentation/pages/delivery_page.dart'
     as _i11;
-import 'package:diyar/features/order_detail/presentation/pages/order_detail_page.dart'
+import 'package:diyar/features/ordering/detail/presentation/pages/order_detail_page.dart'
     as _i19;
-import 'package:diyar/features/pick_up/presentation/pages/pickup_page.dart'
+import 'package:diyar/features/ordering/pickup/presentation/pages/pickup_page.dart'
     as _i21;
-import 'package:diyar/features/profile/data/data.dart' as _i45;
-import 'package:diyar/features/profile/presentation/pages/profile/profile_page.dart'
-    as _i24;
-import 'package:diyar/features/profile/presentation/pages/profile_info/profile_info_page.dart'
-    as _i23;
 import 'package:diyar/features/templates/presentation/pages/templates_page.dart'
     as _i35;
+import 'package:diyar/features/user/profile/data/data.dart' as _i45;
+import 'package:diyar/features/user/profile/presentation/pages/profile/profile_page.dart'
+    as _i24;
+import 'package:diyar/features/user/profile/presentation/pages/profile_info/profile_info_page.dart'
+    as _i23;
 import 'package:diyar/features/web_payment/presentation/pages/web_payment_page.dart'
     as _i18;
 import 'package:flutter/material.dart' as _i42;

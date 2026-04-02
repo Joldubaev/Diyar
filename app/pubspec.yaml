@@ -31,7 +31,7 @@ dependencies:
   dio: ^5.4.1
   jwt_decoder: ^2.0.1
   internet_connection_checker_plus: ^2.2.0
-  dartz: ^0.10.1
+  fpdart: ^1.1.0
   get_it: ^9.2.0
   url_launcher: ^6.3.0
   mask_text_input_formatter: ^2.9.0
@@ -69,9 +69,17 @@ dependencies:
   freezed_annotation: ^2.4.4
   json_annotation: ^4.9.0
   rest_client:
-    path: ../package/rest_client
+    path: ../packages/rest_client
   storage:
-    path: ../package/storage
+    path: ../packages/storage
+  network:
+    path: ../packages/network
+  signalr_client:
+    path: ../packages/signalr_client
+  geo:
+    path: ../packages/geo
+  ui_kit:
+    path: ../packages/ui_kit
   intl: ^0.20.2
   qr_flutter: ^4.1.0
   liquid_glass_navbar: ^1.0.3
@@ -88,6 +96,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  mocktail: ^1.0.4
 
   # СТАБИЛЬНЫЕ ВЕРСИИ
   build_runner: ^2.4.15
@@ -104,6 +113,7 @@ flutter:
     - assets/
     - assets/icons/
     - assets/images/
+    - packages/geo/assets/
 
   fonts:
     - family: Inter

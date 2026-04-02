@@ -1,9 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:diyar/features/web_payment/domain/enum/payment_status_type.dart';
-import 'package:diyar/features/web_payment/domain/services/i_payment_status_signalr_service.dart';
-import 'package:diyar/features/web_payment/domain/usecase/create_pay_link_usecase.dart';
+import 'package:diyar/features/web_payment/domain/domain.dart';
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 
@@ -11,14 +9,14 @@ part 'open_banking_state.dart';
 
 @injectable
 final class OpenBankingCubit extends Cubit<OpenBankingState> {
-  final CreatePayLinkUsecase _createPayLinkUsecase;
+  final IOpenBankingRepository _repository;
   final IPaymentStatusSignalRService _signalRService;
 
   StreamSubscription<PaymentStatusType>? _statusSubscription;
   String? _orderNumber;
   int? _amount;
 
-  OpenBankingCubit(this._createPayLinkUsecase, this._signalRService)
+  OpenBankingCubit(this._repository, this._signalRService)
       : super(const OpenBankingInitializing());
 
   Future<void> initialize({
@@ -28,7 +26,7 @@ final class OpenBankingCubit extends Cubit<OpenBankingState> {
     _orderNumber = orderNumber;
     _amount = amount;
 
-    final result = await _createPayLinkUsecase.call(
+    final result = await _repository.createPayLink(
       amount: amount,
       orderNumber: orderNumber,
     );

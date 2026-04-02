@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geo/geo.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 import 'package:diyar/common/common.dart';
@@ -25,11 +26,18 @@ class _AddressSelectionPageState extends State<AddressSelectionPage> {
   static const double _maxZoom = 21.0;
 
   double _currentZoom = _defaultZoom;
+  List<GeoPoint> _serviceZoneBoundary = const [];
 
   @override
   void initState() {
     super.initState();
     _initPermission();
+    _loadServiceZone();
+  }
+
+  Future<void> _loadServiceZone() async {
+    final boundary = await MapHelper.getServiceZoneBoundary();
+    if (mounted) setState(() => _serviceZoneBoundary = boundary);
   }
 
   @override
@@ -74,6 +82,7 @@ class _AddressSelectionPageState extends State<AddressSelectionPage> {
               automaticallyImplyLeading: false,
             ),
             body: AddressSelectionMapContent(
+              serviceZoneBoundary: _serviceZoneBoundary,
               onMapCreated: (controller) {
                 if (!_mapControllerCompleter.isCompleted) {
                   _mapControllerCompleter.complete(controller);

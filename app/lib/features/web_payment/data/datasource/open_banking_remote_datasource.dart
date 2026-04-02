@@ -1,4 +1,4 @@
-import 'package:dartz/dartz.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:dio/dio.dart';
 import 'package:diyar/core/constants/api_const/api_const.dart';
 import 'package:diyar/core/error/failure.dart';

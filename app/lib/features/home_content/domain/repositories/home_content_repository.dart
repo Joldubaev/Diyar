@@ -1,4 +1,4 @@
-import 'package:dartz/dartz.dart'; // Для Either
+import 'package:fpdart/fpdart.dart'; // Для Either
 import 'package:diyar/features/home_content/domain/entities/news_entity.dart';
 import 'package:diyar/features/home_content/domain/entities/sale_entity.dart';
 

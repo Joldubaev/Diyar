@@ -1,4 +1,4 @@
-import 'package:dartz/dartz.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/auth/data/models/user_model.dart';
 import 'package:diyar/features/auth/data/models/reset_password_model.dart';

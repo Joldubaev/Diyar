@@ -313,14 +313,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.1"
-  dartz:
-    dependency: "direct main"
-    description:
-      name: dartz
-      sha256: e6acf34ad2e31b1eb00948692468c30ab48ac8250e0f0df661e29f12dd252168
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.10.1"
   dbus:
     dependency: transitive
     description:
@@ -669,6 +661,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "10.8.0"
+  fpdart:
+    dependency: "direct main"
+    description:
+      name: fpdart
+      sha256: f8e9d0989ba293946673e382c59ac513e30cb6746a9452df195f29e3357a73d4
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.0"
   freezed:
     dependency: "direct dev"
     description:
@@ -693,6 +693,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.0"
+  geo:
+    dependency: "direct main"
+    description:
+      path: "../packages/geo"
+      relative: true
+    source: path
+    version: "1.0.0"
   geoclue:
     dependency: transitive
     description:
@@ -1029,6 +1036,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  mocktail:
+    dependency: "direct dev"
+    description:
+      name: mocktail
+      sha256: "890df3f9688106f25755f26b1c60589a92b3ab91a22b8b224947ad041bf172d8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.4"
   motor:
     dependency: transitive
     description:
@@ -1044,6 +1059,13 @@ packages:
       sha256: "03bac4c528c64c95c722ec99280375a6f2fc708eec17c7b3f07253b626cd2a20"
       url: "https://pub.dev"
     source: hosted
+    version: "1.0.0"
+  network:
+    dependency: "direct main"
+    description:
+      path: "../packages/network"
+      relative: true
+    source: path
     version: "1.0.0"
   nm:
     dependency: transitive
@@ -1312,7 +1334,7 @@ packages:
   rest_client:
     dependency: "direct main"
     description:
-      path: "../package/rest_client"
+      path: "../packages/rest_client"
       relative: true
     source: path
     version: "0.0.1"
@@ -1436,6 +1458,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
+  signalr_client:
+    dependency: "direct main"
+    description:
+      path: "../packages/signalr_client"
+      relative: true
+    source: path
+    version: "1.0.0"
   signalr_netcore:
     dependency: "direct main"
     description:
@@ -1548,7 +1577,7 @@ packages:
   storage:
     dependency: "direct main"
     description:
-      path: "../package/storage"
+      path: "../packages/storage"
       relative: true
     source: path
     version: "0.0.1"
@@ -1624,6 +1653,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
+  ui_kit:
+    dependency: "direct main"
+    description:
+      path: "../packages/ui_kit"
+      relative: true
+    source: path
+    version: "1.0.0"
   universal_io:
     dependency: transitive
     description:

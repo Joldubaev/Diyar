@@ -1,14 +1,11 @@
 import 'package:bloc/bloc.dart';
-import 'package:diyar/features/active_order/domain/entities/order_active_item_entity.dart';
-import 'package:diyar/features/active_order/domain/usecases/get_active_orders_usecase.dart';
+import 'package:diyar/features/active_order/domain/domain.dart';
 import 'package:diyar/features/home_content/domain/entities/news_entity.dart';
 import 'package:diyar/features/home_content/domain/entities/sale_entity.dart';
 import 'package:diyar/features/home_content/domain/usecases/get_news.dart';
 import 'package:diyar/features/home_content/domain/usecases/get_sales.dart';
 import 'package:diyar/features/menu/domain/domain.dart';
-import 'package:diyar/features/menu/domain/usecases/get_popular_products_usecase.dart';
-import 'package:diyar/features/profile/data/usecases/get_profile_usecase.dart';
-import 'package:diyar/features/profile/profile.dart';
+import 'package:diyar/features/user/profile/profile.dart';
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 
@@ -18,40 +15,51 @@ part 'home_content_state.dart';
 class HomeContentCubit extends Cubit<HomeContentState> {
   final GetNewsUseCase _getNewsUseCase;
   final GetSalesUseCase _getSalesUseCase;
-  final GetPopularProductsUseCase _getPopularProductsUseCase;
-  final GetActiveOrdersUseCase _getActiveOrdersUseCase;
-  final GetProfileUseCase _getProfileUseCase;
+  final MenuRepository _menuRepository;
+  final ActiveOrderRepository _activeOrderRepository;
+  final ProfileRepository _profileRepository;
 
   HomeContentCubit({
     required GetNewsUseCase getNewsUseCase,
     required GetSalesUseCase getSalesUseCase,
-    required GetPopularProductsUseCase getPopularProductsUseCase,
-    required GetActiveOrdersUseCase getActiveOrdersUseCase,
-    required GetProfileUseCase getProfileUseCase,
+    required MenuRepository menuRepository,
+    required ActiveOrderRepository activeOrderRepository,
+    required ProfileRepository profileRepository,
   })  : _getNewsUseCase = getNewsUseCase,
         _getSalesUseCase = getSalesUseCase,
-        _getPopularProductsUseCase = getPopularProductsUseCase,
-        _getActiveOrdersUseCase = getActiveOrdersUseCase,
-        _getProfileUseCase = getProfileUseCase,
+        _menuRepository = menuRepository,
+        _activeOrderRepository = activeOrderRepository,
+        _profileRepository = profileRepository,
         super(HomeContentInitial());
 
-  /// Загрузка всех данных главной вкладки через UseCase (только этот метод дергать с HomeTabPage).
-  Future<void> loadHome({bool loadActiveOrders = true, bool loadProfile = true}) async {
+  /// Load all home tab data in parallel using Future.wait for faster startup.
+  Future<void> loadHome({
+    bool loadActiveOrders = true,
+    bool loadProfile = true,
+  }) async {
     emit(const HomeContentLoading());
 
-    final newsResult = await _getNewsUseCase();
-    final salesResult = await _getSalesUseCase();
-    final popularResult = await _getPopularProductsUseCase();
-    final ordersResult = loadActiveOrders ? await _getActiveOrdersUseCase() : null;
-    final profileResult = loadProfile ? await _getProfileUseCase() : null;
+    final futures = await (
+      _getNewsUseCase(),
+      _getSalesUseCase(),
+      _menuRepository.getPopularFoods(),
+      loadActiveOrders
+          ? _activeOrderRepository.getActiveOrders()
+          : Future.value(null),
+      loadProfile ? _profileRepository.getUser() : Future.value(null),
+    ).wait;
 
     if (isClosed) return;
 
-    final news = newsResult.fold((_) => <NewsEntity>[], (v) => v);
-    final sales = salesResult.fold((_) => <SaleEntity>[], (v) => v);
-    final popular = popularResult.fold((_) => <FoodEntity>[], (v) => v);
-    final orders = ordersResult?.fold((_) => <OrderActiveItemEntity>[], (v) => v) ?? <OrderActiveItemEntity>[];
-    final profile = profileResult?.fold((_) => null, (v) => v);
+    final news = futures.$1.fold((_) => <NewsEntity>[], (v) => v);
+    final sales = futures.$2.fold((_) => <SaleEntity>[], (v) => v);
+    final popular = futures.$3.fold((_) => <FoodEntity>[], (v) => v);
+    final orders = futures.$4?.fold(
+          (_) => <OrderActiveItemEntity>[],
+          (v) => v,
+        ) ??
+        <OrderActiveItemEntity>[];
+    final profile = futures.$5?.fold((_) => null, (v) => v);
 
     emit(HomeContentLoaded(
       news: news,

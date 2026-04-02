@@ -6,7 +6,7 @@ import 'package:diyar/features/cart/presentation/cubit/cart_cutlery_cubit.dart';
 import 'package:diyar/features/cart/presentation/cubit/cart_price_cubit.dart';
 import 'package:diyar/features/features.dart';
 import 'package:diyar/features/templates/presentation/widgets/address_picker_bottom_sheet.dart';
-import 'package:diyar/features/settings/domain/entities/timer_entites.dart';
+import 'package:diyar/features/user/settings/domain/entities/timer_entites.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

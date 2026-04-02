@@ -1,4 +1,4 @@
-import 'package:dartz/dartz.dart';
+import 'package:fpdart/fpdart.dart';
 // import 'package:diyar/core/error/failure.dart'; // Временно
 // import 'package:diyar/core/usecase/usecase.dart'; // Убираем базовый UseCase
 import 'package:diyar/features/home_content/domain/entities/news_entity.dart';

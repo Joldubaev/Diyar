@@ -1,4 +1,4 @@
-import 'package:dartz/dartz.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/web_payment/data/datasource/open_banking_remote_datasource.dart';
 import 'package:diyar/features/web_payment/domain/repository/i_open_banking_repository.dart';

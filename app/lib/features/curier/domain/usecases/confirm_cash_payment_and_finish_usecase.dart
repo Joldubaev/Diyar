@@ -1,4 +1,4 @@
-import 'package:dartz/dartz.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:diyar/core/error/failure.dart';
 import 'package:diyar/features/curier/domain/domain.dart';
 import 'package:injectable/injectable.dart';

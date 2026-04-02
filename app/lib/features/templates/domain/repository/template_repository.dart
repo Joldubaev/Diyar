@@ -1,4 +1,4 @@
-import 'package:dartz/dartz.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/templates/domain/entities/template_entity.dart';
 

@@ -6,7 +6,7 @@ import 'package:diyar/features/home_content/data/model/sale_model.dart';
 import 'package:diyar/features/home_content/domain/entities/news_entity.dart';
 import 'package:diyar/features/home_content/domain/entities/sale_entity.dart';
 import 'package:diyar/features/home_content/domain/repositories/home_content_repository.dart';
-import 'package:dartz/dartz.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:dio/dio.dart'; // Нужен Dio для реализации datasource здесь (или в отдельном файле)
 import 'package:injectable/injectable.dart';
 

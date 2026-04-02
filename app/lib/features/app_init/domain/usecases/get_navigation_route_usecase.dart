@@ -1,4 +1,4 @@
-import 'package:diyar/features/security/domain/services/secure_storage_service.dart';
+import 'package:diyar/features/user/security/domain/services/secure_storage_service.dart';
 import 'package:injectable/injectable.dart';
 
 /// Тип маршрута для навигации (domain не должен знать про auto_route)

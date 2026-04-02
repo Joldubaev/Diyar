@@ -1,6 +1,6 @@
 import 'package:diyar/common/common.dart';
 import 'package:diyar/features/features.dart';
-import 'package:diyar/features/settings/domain/entities/timer_entites.dart';
+import 'package:diyar/features/user/settings/domain/entities/timer_entites.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
