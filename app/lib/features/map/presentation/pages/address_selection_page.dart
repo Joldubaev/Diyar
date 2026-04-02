@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
@@ -127,7 +128,7 @@ class _AddressSelectionPageState extends State<AddressSelectionPage> {
     try {
       final controller = await _mapControllerCompleter.future;
       if (mounted) action(controller);
-    } catch (_) {}
+    } catch (e) { log('[address_selection_page] $e'); }
   }
 
   Future<void> _moveToLocation(double latitude, double longitude) async {
@@ -193,7 +194,7 @@ class _AddressSelectionPageState extends State<AddressSelectionPage> {
       if (!await locationService.checkPermission()) {
         await locationService.requestPermission();
       }
-    } catch (_) {}
+    } catch (e) { log('[address_selection_page] $e'); }
   }
 
   void _onSearchPressed(BuildContext context) {

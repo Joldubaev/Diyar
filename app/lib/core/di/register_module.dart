@@ -50,8 +50,7 @@ abstract class RegisterModule {
   Future<SharedPreferences> get prefs => SharedPreferences.getInstance();
 
   @preResolve
-  Future<LocalStorage> get localStorage async {
-    final prefs = await SharedPreferences.getInstance();
+  Future<LocalStorage> localStorage(SharedPreferences prefs) async {
     return await LocalStorage.getInstance(prefs);
   }
 

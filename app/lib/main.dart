@@ -31,7 +31,6 @@ class App extends StatelessWidget {
         BlocProvider(create: (_) => di.sl<SettingsCubit>()),
         BlocProvider(create: (_) => di.sl<CartBloc>()..add(LoadCart())),
         BlocProvider(create: (_) => di.sl<BonusCubit>()),
-        BlocProvider(create: (_) => di.sl<AboutUsCubit>()),
       ],
       child: AppListener(
         navigationKey: appRoute.navigatorKey,

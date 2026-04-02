@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
@@ -138,7 +139,7 @@ class LoggerInterceptor extends Interceptor {
     try {
       const encoder = JsonEncoder.withIndent('  ');
       return encoder.convert(data);
-    } catch (_) {
+    } catch (e) { log('[logger_interceptor] $e');
       return data.toString();
     }
   }

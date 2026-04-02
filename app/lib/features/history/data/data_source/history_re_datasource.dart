@@ -1,9 +1,10 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/active_order/active_order.dart';
 import 'package:diyar/features/history/data/model/user_pickup_history_model.dart';
 import 'package:diyar/features/history/data/model/pickup_history_response_model.dart';
-import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -73,7 +74,7 @@ class HistoryReDatasourceImpl implements HistoryReDatasource {
         throw Exception('Error getting pickup history orders');
       }
     } catch (e) {
-      debugPrint('Error in getPickupHistory: $e');
+      log('[HistoryDataSource] getPickupHistory error: $e');
       throw Exception('Failed to get pickup history orders');
     }
   }

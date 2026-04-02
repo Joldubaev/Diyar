@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'qr_generate_entity.freezed.dart';
@@ -22,7 +23,7 @@ class QrGenerateEntity with _$QrGenerateEntity {
       final uri = Uri.parse(data);
       // Если это URL с параметром token — берем его, иначе возвращаем саму строку
       return uri.queryParameters['token'] ?? data;
-    } catch (_) {
+    } catch (e) { log('[qr_generate_entity] $e');
       return data;
     }
   }

@@ -21,7 +21,6 @@ import 'package:rest_client/rest_client.dart' as _i1030;
 import 'package:shared_preferences/shared_preferences.dart' as _i460;
 import 'package:storage/storage.dart' as _i431;
 
-import '../../common/calculator/order_calculation_service.dart' as _i912;
 import '../../features/about_us/data/data.dart' as _i798;
 import '../../features/about_us/data/remote_datasource/about_us_remote_datasource.dart'
     as _i243;
@@ -125,8 +124,11 @@ import '../../features/menu/data/datasources/remote_datasource/menu_remote_data_
 import '../../features/menu/data/repositories/menu_repository.dart' as _i1024;
 import '../../features/menu/domain/domain.dart' as _i872;
 import '../../features/menu/menu.dart' as _i660;
-import '../../features/menu/presentation/bloc/menu_bloc.dart' as _i395;
-import '../../features/menu/presentation/cubit/popular_cubit.dart' as _i739;
+import '../../features/menu/presentation/cubit/menu_category_cubit.dart'
+    as _i266;
+import '../../features/menu/presentation/cubit/menu_products_cubit.dart'
+    as _i202;
+import '../../features/menu/presentation/cubit/search_cubit.dart' as _i182;
 import '../../features/ordering/delivery/data/datasources/order_remote_datasource.dart'
     as _i755;
 import '../../features/ordering/delivery/data/datasources/order_remote_datasource_impl.dart'
@@ -231,10 +233,6 @@ extension GetItInjectableX on _i174.GetIt {
       () => registerModule.prefs,
       preResolve: true,
     );
-    await gh.factoryAsync<_i31.LocalStorage>(
-      () => registerModule.localStorage,
-      preResolve: true,
-    );
     await gh.factoryAsync<_i655.PackageInfo>(
       () => registerModule.packageInfo,
       preResolve: true,
@@ -256,8 +254,10 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i736.ZoneRepository>(() => registerModule.zoneRepository);
     gh.lazySingleton<_i1043.OrderCalculationService>(
         () => _i1043.OrderCalculationService());
-    gh.lazySingleton<_i912.OrderCalculationService>(
-        () => _i912.OrderCalculationService());
+    await gh.factoryAsync<_i31.LocalStorage>(
+      () => registerModule.localStorage(gh<_i460.SharedPreferences>()),
+      preResolve: true,
+    );
     gh.lazySingleton<_i706.CartLocalDataSource>(
         () => _i706.CartHiveDataSource());
     gh.lazySingleton<_i424.ProfileRemoteDataSource>(
@@ -357,14 +357,14 @@ extension GetItInjectableX on _i174.GetIt {
       () => cartModule.cartRepository(gh<_i706.CartLocalDataSource>()),
       preResolve: true,
     );
+    gh.factory<_i198.PrepareDeliveryNavigationUseCase>(() =>
+        _i198.PrepareDeliveryNavigationUseCase(
+            gh<_i1043.OrderCalculationService>()));
     gh.lazySingleton<_i49.HistoryReDatasource>(
         () => _i49.HistoryReDatasourceImpl(
               gh<_i361.Dio>(),
               gh<_i460.SharedPreferences>(),
             ));
-    gh.factory<_i198.PrepareDeliveryNavigationUseCase>(() =>
-        _i198.PrepareDeliveryNavigationUseCase(
-            gh<_i1043.OrderCalculationService>()));
     gh.lazySingleton<_i835.AppLocation>(() => _i835.LocationService(
           gh<_i361.Dio>(),
           gh<_i460.SharedPreferences>(),
@@ -394,6 +394,12 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i471.AboutUsRepositoryImpl(gh<_i798.AboutUsRemoteDataSource>()));
     gh.lazySingleton<_i635.CreateOrderUseCase>(
         () => _i635.CreateOrderUseCase(gh<_i701.OrderRepository>()));
+    gh.factory<_i266.MenuCategoryCubit>(
+        () => _i266.MenuCategoryCubit(gh<_i872.MenuRepository>()));
+    gh.factory<_i182.MenuSearchCubit>(
+        () => _i182.MenuSearchCubit(gh<_i872.MenuRepository>()));
+    gh.factory<_i202.MenuProductsCubit>(
+        () => _i202.MenuProductsCubit(gh<_i872.MenuRepository>()));
     gh.lazySingleton<_i251.TemplateRemoteDataSource>(() =>
         _i692.TemplateRemoteDataSourceImpl(
             gh<_i1030.RestClient>(instanceName: 'authRestClient')));
@@ -439,10 +445,6 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i478.AddressStorageService>(),
           gh<_i835.AppLocation>(),
         ));
-    gh.factory<_i739.PopularCubit>(
-        () => _i739.PopularCubit(gh<_i872.MenuRepository>()));
-    gh.factory<_i395.MenuBloc>(
-        () => _i395.MenuBloc(gh<_i872.MenuRepository>()));
     gh.lazySingleton<_i566.CurierRepository>(
         () => _i537.CurierRepositoryImpl(gh<_i566.CurierDataSource>()));
     gh.factory<_i968.BonusCubit>(
@@ -456,6 +458,10 @@ extension GetItInjectableX on _i174.GetIt {
               gh<_i140.AuthRepository>(),
               gh<_i835.AuthLocalDataSource>(),
             ));
+    gh.factory<_i316.DeliveryFormCubit>(() => _i316.DeliveryFormCubit(
+          gh<_i1043.OrderCalculationService>(),
+          gh<_i635.CreateOrderUseCase>(),
+        ));
     gh.factory<_i661.UserMapCubit>(() => _i661.UserMapCubit(
           gh<_i659.PriceRepository>(),
           gh<_i835.AppLocation>(),
@@ -474,10 +480,6 @@ extension GetItInjectableX on _i174.GetIt {
               gh<_i949.CurierPaymentRepository>(),
               gh<_i949.CurierRepository>(),
             ));
-    gh.factory<_i316.DeliveryFormCubit>(() => _i316.DeliveryFormCubit(
-          gh<_i1043.OrderCalculationService>(),
-          gh<_i635.CreateOrderUseCase>(),
-        ));
     gh.factory<_i449.HandleFirstLaunchUseCase>(
         () => _i449.HandleFirstLaunchUseCase(gh<_i895.SecureStorageService>()));
     gh.factory<_i141.CheckAuthenticationStatusUseCase>(() =>

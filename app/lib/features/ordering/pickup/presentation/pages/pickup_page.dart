@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/common/common.dart';
 import 'package:diyar/core/core.dart';
@@ -85,7 +86,7 @@ class _PickupFormPageState extends State<PickupFormPage> {
           userPhone: user.phone ?? '+996',
         );
       }
-    } catch (_) {
+    } catch (e) { log('[pickup_page] $e');
       // Игнорируем ошибки профиля - форма работает с пустыми полями
     }
   }

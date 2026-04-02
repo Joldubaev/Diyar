@@ -5,8 +5,6 @@ import 'package:diyar/core/di/injectable_config.dart' as di;
 import 'package:diyar/features/active_order/active_order.dart';
 import 'package:diyar/features/auth/presentation/cubit/sign_in/sign_in_cubit.dart';
 import 'package:diyar/features/home_content/presentation/cubit/home_content_cubit.dart';
-import 'package:diyar/features/menu/presentation/bloc/menu_bloc.dart';
-import 'package:diyar/features/menu/presentation/cubit/popular_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -26,8 +24,6 @@ class _MainHomePageState extends State<MainHomePage> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => di.sl<MenuBloc>()..add(GetFoodsByCategoryEvent())),
-        BlocProvider(create: (_) => di.sl<PopularCubit>()),
         BlocProvider(create: (_) => di.sl<HomeContentCubit>()),
         BlocProvider.value(value: di.sl<ActiveOrderCubit>()),
         BlocProvider(create: (_) => di.sl<SignInCubit>()),

@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -8,7 +9,7 @@ extension BlocReadSafe on BuildContext {
   T? maybeRead<T extends StateStreamableSource<Object?>>() {
     try {
       return read<T>();
-    } catch (_) {
+    } catch (e) { log('[bloc_read_safe] $e');
       return null;
     }
   }

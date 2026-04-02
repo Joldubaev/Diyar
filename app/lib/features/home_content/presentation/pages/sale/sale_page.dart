@@ -15,19 +15,10 @@ class SalePage extends StatefulWidget {
 }
 
 class _SalePageState extends State<SalePage> {
-  SaleEntity? sale;
-
-  @override
-  void initState() {
-    setState(() {
-      sale = widget.sale;
-    });
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final SaleEntity? sale = widget.sale;
     return Scaffold(
       appBar: AppBar(
           backgroundColor: theme.colorScheme.primary,
@@ -59,7 +50,7 @@ class _SalePageState extends State<SalePage> {
                   ClipRRect(
                     borderRadius: const BorderRadius.all(Radius.circular(20)),
                     child: CachedNetworkImage(
-                      imageUrl: sale?.photoLink ?? '',
+                      imageUrl: sale.photoLink ?? '',
                       width: double.infinity,
                       fit: BoxFit.cover,
                       height: 200,
@@ -73,11 +64,11 @@ class _SalePageState extends State<SalePage> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    sale?.name ?? "",
+                    sale.name ?? "",
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   const SizedBox(height: 5),
-                  Text(sale?.description ?? ""),
+                  Text(sale.description ?? ""),
                   const SizedBox(height: 10),
                 ],
               ),

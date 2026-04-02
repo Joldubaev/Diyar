@@ -1,3 +1,4 @@
+import 'dart:developer';
 extension OrderDateTimeParserX on String? {
   /// Парсит дату из форматов: dd.MM.yyyy, MM/dd/yyyy, yyyy-MM-dd (с необязательным временем HH:mm:ss).
   DateTime? parseOrderDateTime() {
@@ -36,7 +37,7 @@ extension OrderDateTimeParserX on String? {
       }
 
       return date;
-    } catch (_) {
+    } catch (e) { log('[date_time_parser] $e');
       return null;
     }
   }

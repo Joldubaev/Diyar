@@ -73,22 +73,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "9.3.1"
-  barcode:
-    dependency: transitive
-    description:
-      name: barcode
-      sha256: "7b6729c37e3b7f34233e2318d866e8c48ddb46c1f7ad01ff7bb2a8de1da2b9f4"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.2.9"
-  bidi:
-    dependency: transitive
-    description:
-      name: bidi
-      sha256: "77f475165e94b261745cf1032c751e2032b8ed92ccb2bf5716036db79320637d"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.13"
   bloc:
     dependency: "direct main"
     description:
@@ -611,14 +595,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.2"
-  flutter_shaders:
-    dependency: transitive
-    description:
-      name: flutter_shaders
-      sha256: "34794acadd8275d971e02df03afee3dee0f98dbfb8c4837082ad0034f612a3e2"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.3"
   flutter_staggered_grid_view:
     dependency: "direct main"
     description:
@@ -964,22 +940,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.1.1"
-  liquid_glass_navbar:
-    dependency: "direct main"
-    description:
-      name: liquid_glass_navbar
-      sha256: acc92271cf678721fec6c1db35c2802fcf5d216add476b09347b98cb7dafa7cb
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.3"
-  liquid_glass_renderer:
-    dependency: "direct main"
-    description:
-      name: liquid_glass_renderer
-      sha256: "789be157494b38cdef7607bb9b63e7fe3fab76fae16149e52fa313c2d858cb3f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.0-dev.4"
   logging:
     dependency: "direct main"
     description:
@@ -1044,14 +1004,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
-  motor:
-    dependency: transitive
-    description:
-      name: motor
-      sha256: cbd49f21b00e568c2b1a55f134ed803614a107782f4fea7769693bca32940c58
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.0"
   nested:
     dependency: transitive
     description:
@@ -1171,14 +1123,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.0"
-  pdf:
-    dependency: "direct main"
-    description:
-      name: pdf
-      sha256: "28eacad99bffcce2e05bba24e50153890ad0255294f4dd78a17075a2ba5c8416"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.11.3"
   permission_handler:
     dependency: "direct main"
     description:
@@ -1235,14 +1179,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.0"
-  photo_view:
-    dependency: "direct main"
-    description:
-      name: photo_view
-      sha256: "1fc3d970a91295fbd1364296575f854c9863f225505c28c46e0a03e48960c75e"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.15.0"
   pinput:
     dependency: "direct main"
     description:
@@ -1805,7 +1741,7 @@ packages:
     source: hosted
     version: "0.1.6"
   web_socket_channel:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: web_socket_channel
       sha256: d645757fb0f4773d602444000a8131ff5d48c9e47adfe9772652dd1a4f2d45c8
@@ -1861,7 +1797,7 @@ packages:
     source: hosted
     version: "1.1.0"
   xml:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: xml
       sha256: b015a8ad1c488f66851d762d3090a21c600e479dc75e68328c52774040cf9226
@@ -1886,4 +1822,4 @@ packages:
     version: "4.2.1"
 sdks:
   dart: ">=3.9.0-0 <4.0.0"
-  flutter: ">=3.32.4"
+  flutter: ">=3.32.0"

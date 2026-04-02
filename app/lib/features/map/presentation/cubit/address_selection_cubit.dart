@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/core/utils/helper/map_helper.dart';
@@ -66,7 +67,7 @@ class AddressSelectionCubit extends Cubit<AddressSelectionState> {
         deliveryPrice: deliveryPrice,
         isLoading: false,
       ));
-    } catch (_) {
+    } catch (e) { log('[address_selection_cubit] $e');
       if (isClosed) return;
       final deliveryPrice = await _calculateDeliveryPrice(lat, lon);
       emit(AddressSelectionData(
@@ -86,7 +87,7 @@ class AddressSelectionCubit extends Cubit<AddressSelectionState> {
       emit(AddressSelectionMoveTo(position.latitude, position.longitude));
       if (isClosed) return;
       updateCoordinates(position.latitude, position.longitude);
-    } catch (_) {
+    } catch (e) { log('[address_selection_cubit] $e');
       final data = state is AddressSelectionData
           ? state as AddressSelectionData
           : null;
@@ -182,7 +183,7 @@ class AddressSelectionCubit extends Cubit<AddressSelectionState> {
         deliveryPrice: deliveryPrice,
         isLoading: false,
       ));
-    } catch (_) {
+    } catch (e) { log('[address_selection_cubit] $e');
       if (isClosed) return;
       emit(AddressSelectionSearchError('Ошибка поиска'));
     }
@@ -230,7 +231,7 @@ class AddressSelectionCubit extends Cubit<AddressSelectionState> {
       }
 
       return _fallbackDeliveryPrice;
-    } catch (_) {
+    } catch (e) { log('[address_selection_cubit] $e');
       return _fallbackDeliveryPrice;
     }
   }
