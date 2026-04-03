@@ -1,4 +1,5 @@
 export 'error/failure.dart';
+export 'error/failures.dart';
 export 'error/exception.dart';
 export 'router/routes.dart';
 export 'router/routes.gr.dart';

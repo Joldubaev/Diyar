@@ -1,6 +1,6 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:diyar/core/error/failure.dart';
-import 'package:diyar/core/network/error/failures.dart';
+import 'package:diyar/core/error/failures.dart';
 import 'package:diyar/features/ordering/pickup/domain/domain.dart';
 import 'package:diyar/features/ordering/pickup/pick_up.dart';
 import 'package:injectable/injectable.dart';

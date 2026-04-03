@@ -1,4 +1,4 @@
-import 'package:bloc/bloc.dart';
+import 'package:diyar/core/bloc/base_cubit.dart';
 import 'package:diyar/features/active_order/domain/domain.dart';
 import 'package:diyar/features/home_content/domain/entities/news_entity.dart';
 import 'package:diyar/features/home_content/domain/entities/sale_entity.dart';
@@ -12,7 +12,7 @@ import 'package:injectable/injectable.dart';
 part 'home_content_state.dart';
 
 @injectable
-class HomeContentCubit extends Cubit<HomeContentState> {
+class HomeContentCubit extends BaseCubit<HomeContentState> {
   final GetNewsUseCase _getNewsUseCase;
   final GetSalesUseCase _getSalesUseCase;
   final MenuRepository _menuRepository;
@@ -71,20 +71,22 @@ class HomeContentCubit extends Cubit<HomeContentState> {
   }
 
   Future<void> getNews() async {
-    emit(GetNewsLoading());
-    final failureOrNews = await _getNewsUseCase();
-    failureOrNews.fold(
-      (failure) => emit(HomeContentError(message: failure.toString())),
-      (news) => emit(GetNewsLoaded(news: news)),
+    safeEmit(const GetNewsLoading());
+    final result = await _getNewsUseCase();
+    if (isClosed) return;
+    result.fold(
+      (f) => safeEmit(HomeContentError(message: f.message)),
+      (news) => safeEmit(GetNewsLoaded(news: news)),
     );
   }
 
   Future<void> getSales() async {
-    emit(GetSalesLoading());
-    final failureOrSales = await _getSalesUseCase();
-    failureOrSales.fold(
-      (failure) => emit(HomeContentError(message: failure.toString())),
-      (sales) => emit(GetSalesLoaded(sales: sales)),
+    safeEmit(const GetSalesLoading());
+    final result = await _getSalesUseCase();
+    if (isClosed) return;
+    result.fold(
+      (f) => safeEmit(HomeContentError(message: f.message)),
+      (sales) => safeEmit(GetSalesLoaded(sales: sales)),
     );
   }
 }

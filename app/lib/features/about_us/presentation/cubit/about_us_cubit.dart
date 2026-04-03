@@ -1,4 +1,4 @@
-import 'package:bloc/bloc.dart';
+import 'package:diyar/core/bloc/base_cubit.dart';
 import 'package:diyar/features/about_us/domain/domain.dart';
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
@@ -6,18 +6,17 @@ import 'package:injectable/injectable.dart';
 part 'about_us_state.dart';
 
 @injectable
-class AboutUsCubit extends Cubit<AboutUsState> {
-  AboutUsCubit(this._repository) : super(AboutUsInitial());
+class AboutUsCubit extends BaseCubit<AboutUsState> {
+  AboutUsCubit(this._repository) : super(const AboutUsInitial());
 
   final AboutUsRepository _repository;
 
-  void getAboutUs({required String type}) async {
-    emit(AboutUsLoading());
-    try {
-      final aboutUs = await _repository.getAboutUs(type: type);
-      emit(AboutUsLoaded(aboutUs));
-    } catch (e) {
-      emit(AboutUsError(e.toString()));
-    }
+  Future<void> getAboutUs({required String type}) {
+    return handleEither(
+      call: () => _repository.getAboutUs(type: type),
+      onLoading: () => const AboutUsLoading(),
+      onSuccess: (data) => AboutUsLoaded(data),
+      onFailure: (f) => AboutUsError(f.message),
+    );
   }
 }

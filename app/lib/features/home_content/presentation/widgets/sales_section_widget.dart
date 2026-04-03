@@ -24,6 +24,7 @@ class _SalesSectionWidgetState extends State<SalesSectionWidget> with RouteAware
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeContentCubit, HomeContentState>(
+      buildWhen: (prev, curr) => curr is GetSalesLoading || curr is GetSalesLoaded || curr is HomeContentLoaded,
       builder: (context, state) {
         if (state is GetSalesLoading) {
           return const Center(

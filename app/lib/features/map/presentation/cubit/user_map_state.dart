@@ -4,27 +4,31 @@ sealed class UserMapState extends Equatable {
   const UserMapState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
-final class UserMapInitial extends UserMapState {}
+final class UserMapInitial extends UserMapState {
+  const UserMapInitial();
+}
 
-final class GetDistrictPriceLoading extends UserMapState {}
+final class GetDistrictPriceLoading extends UserMapState {
+  const GetDistrictPriceLoading();
+}
 
 final class GetDistrictPriceLoaded extends UserMapState {
-  final PriceModel priceModel;
+  final DeliveryPriceEntity priceEntity;
 
-  const GetDistrictPriceLoaded(this.priceModel);
+  const GetDistrictPriceLoaded(this.priceEntity);
 
   @override
-  List<Object> get props => [priceModel];
+  List<Object?> get props => [priceEntity];
 }
 
 final class GetDelPriceError extends UserMapState {
-  final String? message;
+  final String message;
 
-  const GetDelPriceError([this.message]);
+  const GetDelPriceError(this.message);
 
   @override
-  List<Object> get props => [message ?? ''];
+  List<Object?> get props => [message];
 }

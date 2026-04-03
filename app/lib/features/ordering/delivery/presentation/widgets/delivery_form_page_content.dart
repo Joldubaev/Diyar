@@ -2,10 +2,10 @@ import 'package:diyar/common/common.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/features.dart';
-import 'package:diyar/features/ordering/delivery/presentation/widgets/adress_section_widget.dart';
+import 'package:diyar/features/ordering/delivery/presentation/widgets/address_section_widget.dart';
 import 'package:diyar/features/ordering/delivery/presentation/widgets/bonus_and_total_section.dart';
 import 'package:diyar/features/ordering/delivery/presentation/enum/delivery_enum.dart';
-import 'package:diyar/features/ordering/delivery/presentation/widgets/change_amoun_section.dart';
+import 'package:diyar/features/ordering/delivery/presentation/widgets/change_amount_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

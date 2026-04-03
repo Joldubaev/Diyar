@@ -11,6 +11,7 @@ class HomeActiveOrdersSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ActiveOrderCubit, ActiveOrderState>(
+      buildWhen: (prev, curr) => curr is ActiveOrdersLoaded || curr is ActiveOrderInitial,
       builder: (context, activeState) {
         return BlocBuilder<HomeContentCubit, HomeContentState>(
           buildWhen: (prev, curr) => curr is HomeContentLoading || curr is HomeContentLoaded,

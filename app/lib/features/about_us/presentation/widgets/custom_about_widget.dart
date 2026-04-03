@@ -10,7 +10,7 @@ class CustomAboutWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final images = model.photoLinks ?? [];
+    final images = model.photoLinks;
 
     return Scaffold(
       backgroundColor: Colors.white,

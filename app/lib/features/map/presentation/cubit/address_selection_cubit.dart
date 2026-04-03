@@ -3,7 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/core/utils/helper/map_helper.dart';
 import 'package:diyar/core/utils/storage/address_storage_service.dart';
-import 'package:diyar/features/map/data/repositories/price_repository.dart';
+import 'package:diyar/features/map/domain/domain.dart';
 import 'package:diyar/features/map/data/repositories/yandex_service.dart';
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
@@ -224,10 +224,13 @@ class AddressSelectionCubit extends Cubit<AddressSelectionState> {
           await MapHelper.getYandexIdForCoordinate(lat, lon);
 
       if (yandexId != null) {
-        final priceModel = await _priceRepository.getDistrictPrice(
+        final result = await _priceRepository.getDistrictPrice(
           yandexId: yandexId.toString(),
         );
-        return priceModel.price?.toDouble() ?? _fallbackDeliveryPrice;
+        return result.fold(
+          (_) => _fallbackDeliveryPrice,
+          (entity) => entity.price.toDouble(),
+        );
       }
 
       return _fallbackDeliveryPrice;

@@ -7,7 +7,7 @@ import 'package:diyar/features/active_order/active_order.dart';
 import 'package:diyar/features/curier/curier.dart';
 import 'package:diyar/features/history/history.dart';
 import 'package:diyar/features/ordering/detail/order_detail.dart';
-import 'package:diyar/features/ordering/detail/presentation/widget/adress_grid_widget.dart';
+import 'package:diyar/features/ordering/detail/presentation/widget/address_grid_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

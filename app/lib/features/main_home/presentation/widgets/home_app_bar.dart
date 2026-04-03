@@ -60,6 +60,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       actions: [
         BlocBuilder<ProfileCubit, ProfileState>(
+          buildWhen: (prev, curr) => curr is ProfileGetLoaded || curr is ProfileInitial,
           builder: (context, state) {
             final userName = context.read<ProfileCubit>().user?.userName;
             if (userName == null) return const SizedBox.shrink();

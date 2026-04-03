@@ -1,9 +1,9 @@
-import 'package:fpdart/fpdart.dart'; // Для Either
+import 'package:diyar/core/error/failure.dart';
 import 'package:diyar/features/home_content/domain/entities/news_entity.dart';
 import 'package:diyar/features/home_content/domain/entities/sale_entity.dart';
+import 'package:fpdart/fpdart.dart' show Either;
 
 abstract class HomeContentRepository {
-  // Указываем dynamic вместо Failure временно
-  Future<Either<dynamic, List<NewsEntity>>> getNews();
-  Future<Either<dynamic, List<SaleEntity>>> getSales();
+  Future<Either<Failure, List<NewsEntity>>> getNews();
+  Future<Either<Failure, List<SaleEntity>>> getSales();
 }

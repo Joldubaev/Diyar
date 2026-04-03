@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-class TimerEntites extends Equatable {
-  const TimerEntites({
+class TimerEntity extends Equatable {
+  const TimerEntity({
     this.startTime,
     this.endTime,
     this.isTechnicalWork,
@@ -12,6 +12,7 @@ class TimerEntites extends Equatable {
   final String? endTime;
   final bool? isTechnicalWork;
   final String? serverTime;
+
   @override
   List<Object?> get props => [
         startTime,
@@ -20,3 +21,6 @@ class TimerEntites extends Equatable {
         serverTime,
       ];
 }
+
+/// Backward compatibility alias
+typedef TimerEntites = TimerEntity;

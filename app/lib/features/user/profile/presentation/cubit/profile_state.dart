@@ -1,52 +1,63 @@
 part of 'profile_cubit.dart';
 
-abstract class ProfileState extends Equatable {
+sealed class ProfileState extends Equatable {
   const ProfileState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
-class ProfileInitial extends ProfileState {}
+final class ProfileInitial extends ProfileState {
+  const ProfileInitial();
+}
 
-class ProfileGetLoading extends ProfileState {}
+final class ProfileGetLoading extends ProfileState {
+  const ProfileGetLoading();
+}
 
-class ProfileGetLoaded extends ProfileState {
+final class ProfileGetLoaded extends ProfileState {
   final UserProfileModel userModel;
 
   const ProfileGetLoaded(this.userModel);
 
   @override
-  List<Object> get props => [userModel];
+  List<Object?> get props => [userModel];
 }
 
-class ProfileGetError extends ProfileState {}
+final class ProfileGetError extends ProfileState {
+  const ProfileGetError();
+}
 
-// Delete user
+final class ProfileDeleteLoading extends ProfileState {
+  const ProfileDeleteLoading();
+}
 
-class ProfileDeleteLoading extends ProfileState {}
+final class ProfileDeleteLoaded extends ProfileState {
+  const ProfileDeleteLoaded();
+}
 
-class ProfileDeleteLoaded extends ProfileState {}
+final class ProfileDeleteError extends ProfileState {
+  const ProfileDeleteError();
+}
 
-class ProfileDeleteError extends ProfileState {}
+final class ProfileUpdateLoading extends ProfileState {
+  const ProfileUpdateLoading();
+}
 
-// Update user
-class ProfileUpdateLoading extends ProfileState {}
-
-class ProfileUpdateLoaded extends ProfileState {
+final class ProfileUpdateLoaded extends ProfileState {
   final String message;
 
   const ProfileUpdateLoaded(this.message);
 
   @override
-  List<Object> get props => [message];
+  List<Object?> get props => [message];
 }
 
-class ProfileUpdateError extends ProfileState {
+final class ProfileUpdateError extends ProfileState {
   final String message;
 
   const ProfileUpdateError(this.message);
 
   @override
-  List<Object> get props => [message];
+  List<Object?> get props => [message];
 }
