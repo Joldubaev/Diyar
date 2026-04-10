@@ -56,6 +56,7 @@ class _MenuPageState extends State<MenuPage> {
 
   @override
   Widget build(BuildContext context) {
+
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -83,6 +84,34 @@ class _MenuPageState extends State<MenuPage> {
                   const SizedBox(height: 10),
                   _buildProductArea(ctx),
                 ],
+
+    return Scaffold(
+      body: BlocConsumer<MenuBloc, MenuState>(
+        listenWhen: (prev, curr) => prev.runtimeType != curr.runtimeType,
+        listener: (context, state) {
+          if (state is GetFoodsByCategoryFailure) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(context.l10n.loadedWrong),
+              ),
+            );
+          }
+          if (state is GetFoodsByCategoryLoaded) {
+            categories = state.categories;
+            if (_activeIndex.value == 0 && state.categories.isNotEmpty && state.categories[0].name != null) {
+              final firstCategoryName = state.categories[0].name!;
+              context.read<MenuBloc>().add(
+                    GetProductsEvent(foodName: firstCategoryName),
+                  );
+            }
+          } else if (state is GetProductsLoaded) {
+            menu = state.foods;
+          } else if (state is GetProductsFailure) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Ошибка загрузки продуктов: ${state.message}"),
+                backgroundColor: Colors.red,
+
               ),
             ),
           ),
