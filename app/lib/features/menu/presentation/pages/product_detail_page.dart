@@ -37,9 +37,12 @@ class ProductDetailPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Hero(
-                tag: 'food_image_${food.id}',
-                child: ProductImage(food: food),
+              SizedBox(
+                height: 260,
+                child: Hero(
+                  tag: 'food_image_${food.id}',
+                  child: ProductImage(food: food),
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),

@@ -12,11 +12,18 @@ class ProductImage extends StatefulWidget {
     super.key,
     required this.food,
     required this.quantity,
-    // this.fit = BoxFit.cover,
+    this.fit = BoxFit.cover,
+    this.memCacheWidth,
+    this.memCacheHeight,
   });
 
   final FoodEntity food;
   final int quantity;
+  final BoxFit fit;
+
+  /// Размер декодирования в пикселях устройства; если null — 400×400.
+  final int? memCacheWidth;
+  final int? memCacheHeight;
 
   @override
   State<ProductImage> createState() => _ProductImageState();
@@ -61,6 +68,9 @@ class _ProductImageState extends State<ProductImage> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final memW = widget.memCacheWidth ?? 300;
+    final memH = widget.memCacheHeight ?? 406; // 300 * 1024 / 758 ≈ 406
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(10.0),
       child: Material(
@@ -100,9 +110,10 @@ class _ProductImageState extends State<ProductImage> with SingleTickerProviderSt
                       ),
                     ],
                   ),
-                  memCacheWidth: 400,
-                  memCacheHeight: 400,
+                  memCacheWidth: memW,
+                  memCacheHeight: memH,
                   cacheManager: DefaultCacheManager(),
+                  fit: widget.fit,
                   alignment: Alignment.center,
                 ),
               ),

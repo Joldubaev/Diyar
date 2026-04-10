@@ -22,7 +22,7 @@ class ProductItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return SizedBox(
-      height: isCompact ? null : 220.0,
+      // height: isCompact ? null : 225.0,
       child: MediaQuery.withClampedTextScaling(
         minScaleFactor: 0.85,
         maxScaleFactor: 1.2,
@@ -40,24 +40,15 @@ class ProductItemWidget extends StatelessWidget {
             ],
           ),
           child: Column(
-            mainAxisSize: isCompact ? MainAxisSize.min : MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              if (!isCompact)
-                Expanded(
-                  child: ProductImage(
-                    food: food,
-                    quantity: quantity,
-                  ),
-                )
-              else
-                AspectRatio(
-                  aspectRatio: 1,
-                  child: ProductImage(
-                    food: food,
-                    quantity: quantity,
-                  ),
+              SizedBox(
+                height: 120,
+                child: ProductImage(
+                  food: food,
+                  quantity: quantity,
+                  fit: BoxFit.contain,
                 ),
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 6.0),
                 child: Column(
@@ -98,13 +89,13 @@ class ProductItemWidget extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                padding: const EdgeInsets.symmetric(horizontal: 6.0),
                 child: Center(
                   child: CounterWidget(
                     value: quantity,
-                    height: 44.0,
-                    borderRadius: 11.0,
-                    iconSize: 20.0,
+                    height: 36.0,
+                    borderRadius: 10.0,
+                    iconSize: 18.0,
                     borderColor: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
                     textStyle: theme.textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w500,

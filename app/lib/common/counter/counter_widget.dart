@@ -3,12 +3,12 @@ import 'package:flutter/services.dart';
 
 /// Константы для виджета счетчика
 class _CounterConstants {
-  static const double defaultHeight = 44.0;
+  static const double defaultHeight = 35.0;
   static const double defaultBorderRadius = 33.0;
-  static const double defaultIconSize = 22.0;
-  static const double fieldWidth = 40.0;
-  static const double iconTapSize = 29.0;
-  static const double gap = 7.0;
+  static const double defaultIconSize = 18.0;
+  static const double fieldWidth = 34.0;
+  static const double iconTapSize = 26.0;
+  static const double gap = 4.0;
 }
 
 /// Универсальный виджет счетчика для увеличения/уменьшения значений
@@ -178,7 +178,7 @@ class _CounterWidgetState extends State<CounterWidget> {
               height: effectiveHeight,
               child: Center(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 2),
                   child: Text(
                     widget.value.toString(),
                     style: effectiveTextStyle,

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram_storyboard/flutter_instagram_storyboard.dart';
@@ -82,15 +84,9 @@ class _MqStoryItemsWidgetState extends State<MqStoryItemsWidget> {
               storyPages: e.storyPagesImages
                   .map(
                     (i) => StoryPageScaffold(
-                      body: Container(
-                        width: double.infinity,
-                        height: double.infinity,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: CachedNetworkImageProvider(i),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+                      body: _StoryPageImageBody(
+                        pageImageUrl: i,
+                        previewImageUrl: e.cardImageLink,
                       ),
                     ),
                   )
@@ -99,6 +95,66 @@ class _MqStoryItemsWidgetState extends State<MqStoryItemsWidget> {
             ),
           )
           .toList(),
+    );
+  }
+}
+
+/// Пока грузится полноэкранный кадр — размытая обложка сторис и затемнение вместо пустого чёрного.
+class _StoryPageImageBody extends StatelessWidget {
+  const _StoryPageImageBody({
+    required this.pageImageUrl,
+    required this.previewImageUrl,
+  });
+
+  final String pageImageUrl;
+  final String previewImageUrl;
+
+  static const double _blurSigma = 14;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        Positioned.fill(
+          child: ClipRect(
+            child: ImageFiltered(
+              imageFilter: ImageFilter.blur(sigmaX: _blurSigma, sigmaY: _blurSigma),
+              child: Transform.scale(
+                scale: 1.08,
+                child: CachedNetworkImage(
+                  imageUrl: previewImageUrl,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: double.infinity,
+                  errorWidget: (_, __, ___) =>
+                      ColoredBox(color: theme.colorScheme.surface),
+                ),
+              ),
+            ),
+          ),
+        ),
+        Positioned.fill(
+          child: ColoredBox(
+            color: theme.colorScheme.scrim.withValues(alpha: 0.42),
+          ),
+        ),
+        Positioned.fill(
+          child: CachedNetworkImage(
+            imageUrl: pageImageUrl,
+            fit: BoxFit.cover,
+            placeholder: (_, __) => const SizedBox.shrink(),
+            errorWidget: (_, __, ___) => Center(
+              child: Icon(
+                Icons.broken_image_outlined,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                size: 48,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
