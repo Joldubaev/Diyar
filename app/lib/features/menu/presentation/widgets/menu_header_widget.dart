@@ -17,7 +17,7 @@ class MenuHeaderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 65,
+      height: 52,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [

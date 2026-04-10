@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/common/components/components.dart';
-import 'package:diyar/common/components/product/product_card_constants.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/core/di/injectable_config.dart' as di;
 import 'package:diyar/features/cart/cart.dart';
@@ -107,8 +106,7 @@ class SearchMenuPage extends StatelessWidget {
                                 crossAxisCount: 2,
                                 mainAxisSpacing: 10,
                                 crossAxisSpacing: 10,
-                                childAspectRatio:
-                                    ProductCardConstants.gridTileChildAspectRatio,
+                                childAspectRatio: 156 / 196,
                               ),
                               itemCount: state.results.length,
                               itemBuilder: (context, index) {

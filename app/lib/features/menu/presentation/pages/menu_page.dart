@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/common/common.dart';
-import 'package:diyar/common/components/product/product_card_constants.dart';
 import 'package:diyar/core/di/injectable_config.dart' as di;
 import 'package:diyar/features/menu/domain/domain.dart';
 import 'package:diyar/features/menu/presentation/presentation.dart';
@@ -56,7 +55,6 @@ class _MenuPageState extends State<MenuPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -79,39 +77,11 @@ class _MenuPageState extends State<MenuPage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   _buildHeader(ctx),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 6),
                   _buildCategoryList(ctx),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 6),
                   _buildProductArea(ctx),
                 ],
-
-    return Scaffold(
-      body: BlocConsumer<MenuBloc, MenuState>(
-        listenWhen: (prev, curr) => prev.runtimeType != curr.runtimeType,
-        listener: (context, state) {
-          if (state is GetFoodsByCategoryFailure) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(context.l10n.loadedWrong),
-              ),
-            );
-          }
-          if (state is GetFoodsByCategoryLoaded) {
-            categories = state.categories;
-            if (_activeIndex.value == 0 && state.categories.isNotEmpty && state.categories[0].name != null) {
-              final firstCategoryName = state.categories[0].name!;
-              context.read<MenuBloc>().add(
-                    GetProductsEvent(foodName: firstCategoryName),
-                  );
-            }
-          } else if (state is GetProductsLoaded) {
-            menu = state.foods;
-          } else if (state is GetProductsFailure) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text("Ошибка загрузки продуктов: ${state.message}"),
-                backgroundColor: Colors.red,
-
               ),
             ),
           ),
@@ -206,7 +176,7 @@ class _ShimmerGrid extends StatelessWidget {
         crossAxisCount: 2,
         mainAxisSpacing: 16,
         crossAxisSpacing: 16,
-        childAspectRatio: ProductCardConstants.gridTileChildAspectRatio,
+        childAspectRatio: 156 / 196,
       ),
       itemBuilder: (_, __) => Shimmer.fromColors(
         baseColor: Colors.grey[300]!,

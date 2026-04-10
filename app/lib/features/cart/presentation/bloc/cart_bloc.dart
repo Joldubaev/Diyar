@@ -3,7 +3,8 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:diyar/features/cart/domain/services/order_calculation_service.dart';
 import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
-import 'package:diyar/features/cart/domain/repository/cart_repository.dart'; // Assuming interface is moved
+import 'package:diyar/features/cart/domain/repository/cart_repository.dart';
+import 'package:diyar/features/menu/domain/domain.dart';
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
@@ -30,6 +31,9 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     on<DecrementItemQuantity>(_onDecrementItemQuantity);
     on<SetItemCount>(_onSetItemCount);
     on<ClearCart>(_onClearCart);
+    on<ProductCardIncrementRequested>(_onProductCardIncrementRequested);
+    on<ProductCardDecrementRequested>(_onProductCardDecrementRequested);
+    on<ProductCardCountCommitted>(_onProductCardCountCommitted);
   }
 
   // --- Event Handlers ---
@@ -125,6 +129,58 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       // State will update automatically
     } catch (e) {
       emit(CartError("Ошибка очистки корзины: ${e.toString()}"));
+    }
+  }
+
+  Future<void> _onProductCardIncrementRequested(
+    ProductCardIncrementRequested event,
+    Emitter<CartState> emit,
+  ) async {
+    final foodId = event.food.id;
+    if (foodId == null) return;
+    try {
+      if (event.displayedQuantity <= 0) {
+        await _cartRepository?.addToCart(
+          CartItemEntity(food: event.food, quantity: 1),
+        );
+      } else {
+        await _cartRepository?.incrementCart(foodId);
+      }
+    } catch (e) {
+      emit(CartError('Ошибка добавления: ${e.toString()}'));
+    }
+  }
+
+  Future<void> _onProductCardDecrementRequested(
+    ProductCardDecrementRequested event,
+    Emitter<CartState> emit,
+  ) async {
+    final foodId = event.food.id;
+    if (foodId == null) return;
+    try {
+      if (event.displayedQuantity > 1) {
+        await _cartRepository?.decrementCart(foodId);
+      } else if (event.displayedQuantity == 1) {
+        await _cartRepository?.removeFromCart(foodId);
+      }
+    } catch (e) {
+      emit(CartError('Ошибка изменения количества: ${e.toString()}'));
+    }
+  }
+
+  Future<void> _onProductCardCountCommitted(
+    ProductCardCountCommitted event,
+    Emitter<CartState> emit,
+  ) async {
+    if (event.newQuantity <= 0) return;
+    final foodId = event.food.id;
+    if (foodId == null) return;
+    try {
+      await _cartRepository?.setCartItemCount(
+        CartItemEntity(food: event.food, quantity: event.newQuantity),
+      );
+    } catch (e) {
+      emit(CartError('Ошибка установки количества: ${e.toString()}'));
     }
   }
 

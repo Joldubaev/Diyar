@@ -70,4 +70,43 @@ class SetItemCount extends CartEvent {
 // Event to clear the entire cart
 class ClearCart extends CartEvent {}
 
+/// События с карточки товара (меню / «Популярное»): правила add vs increment в [CartBloc].
+class ProductCardIncrementRequested extends CartEvent {
+  final FoodEntity food;
+  final int displayedQuantity;
+
+  const ProductCardIncrementRequested({
+    required this.food,
+    required this.displayedQuantity,
+  });
+
+  @override
+  List<Object?> get props => [food, displayedQuantity];
+}
+
+class ProductCardDecrementRequested extends CartEvent {
+  final FoodEntity food;
+  final int displayedQuantity;
+
+  const ProductCardDecrementRequested({
+    required this.food,
+    required this.displayedQuantity,
+  });
+
+  @override
+  List<Object?> get props => [food, displayedQuantity];
+}
+
+class ProductCardCountCommitted extends CartEvent {
+  final FoodEntity food;
+  final int newQuantity;
+
+  const ProductCardCountCommitted({
+    required this.food,
+    required this.newQuantity,
+  });
+
+  @override
+  List<Object?> get props => [food, newQuantity];
+}
 

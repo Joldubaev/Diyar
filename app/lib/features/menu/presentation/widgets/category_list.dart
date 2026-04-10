@@ -37,7 +37,7 @@ class CategoryList extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 decoration: BoxDecoration(
                   color: index == activeIdx ? theme.colorScheme.primary : theme.colorScheme.surface,
-                  borderRadius: const BorderRadius.all(Radius.circular(20)),
+                  borderRadius: BorderRadius.circular(10),
                   border: Border.all(
                     color: index == activeIdx ? theme.colorScheme.primary : theme.colorScheme.onSurface,
                     width: 0.4,
