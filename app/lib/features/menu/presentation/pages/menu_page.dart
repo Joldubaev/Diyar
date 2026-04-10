@@ -1,4 +1,6 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:diyar/common/common.dart';
+import 'package:diyar/common/components/product/product_card_constants.dart';
 import 'package:diyar/core/di/injectable_config.dart' as di;
 import 'package:diyar/features/menu/domain/domain.dart';
 import 'package:diyar/features/menu/presentation/presentation.dart';
@@ -64,8 +66,7 @@ class _MenuPageState extends State<MenuPage> {
       child: Builder(
         builder: (ctx) => Scaffold(
           body: BlocListener<MenuCategoryCubit, MenuCategoryState>(
-            listenWhen: (prev, curr) =>
-                prev.categories.isEmpty && curr.categories.isNotEmpty,
+            listenWhen: (prev, curr) => prev.categories.isEmpty && curr.categories.isNotEmpty,
             listener: (context, state) {
               final name = state.categories.firstOrNull?.name;
               if (name != null) {
@@ -91,8 +92,7 @@ class _MenuPageState extends State<MenuPage> {
   }
 
   Widget _buildHeader(BuildContext ctx) {
-    return BlocSelector<MenuCategoryCubit, MenuCategoryState,
-        List<CategoryEntity>>(
+    return BlocSelector<MenuCategoryCubit, MenuCategoryState, List<CategoryEntity>>(
       selector: (state) => state.categories,
       builder: (context, categories) => MenuHeaderWidget(
         onTapMenu: (i) => _onCategoryTap(ctx, i),
@@ -146,7 +146,11 @@ class _MenuPageState extends State<MenuPage> {
                 return const _ShimmerGrid();
               }
               if (state.error != null && state.foods.isEmpty) {
-                return Center(child: Text('Ошибка: ${state.error}'));
+                return AppEmptyWidget(
+                  icon: Icons.wifi_off_outlined,
+                  title: 'Не удалось загрузить',
+                  subtitle: state.error,
+                );
               }
               return ProductsList(
                 activeIndex: ValueNotifier(0),
@@ -173,7 +177,7 @@ class _ShimmerGrid extends StatelessWidget {
         crossAxisCount: 2,
         mainAxisSpacing: 16,
         crossAxisSpacing: 16,
-        childAspectRatio: 0.8,
+        childAspectRatio: ProductCardConstants.gridTileChildAspectRatio,
       ),
       itemBuilder: (_, __) => Shimmer.fromColors(
         baseColor: Colors.grey[300]!,

@@ -1,4 +1,5 @@
 import 'package:diyar/common/components/product/custom_gridview.dart';
+import 'package:diyar/common/components/product/product_card_constants.dart';
 import 'package:diyar/common/components/product/product_item_widget.dart';
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/features.dart';
@@ -29,15 +30,20 @@ class PopularFoodSectionWidget extends StatelessWidget {
           loadMore: () {},
           shrinkWrap: true,
           itemBuilder: (context, food) {
-            return ProductItemWidget(
-              food: food,
-              quantity: quantityMap[food.id] ?? 0,
-              isCompact: true,
+            return Center(
+              child: FractionallySizedBox(
+                widthFactor: ProductCardConstants.popularMasonryCardWidthFactor,
+                child: ProductItemWidget(
+                  food: food,
+                  quantity: quantityMap[food.id] ?? 0,
+                  isCompact: true,
+                ),
+              ),
             );
           },
           crossAxisCount: 2,
-          mainAxisSpacing: 10,
-          crossAxisSpacing: 10,
+          mainAxisSpacing: 8,
+          crossAxisSpacing: 8,
           padding: const EdgeInsets.only(bottom: 16),
         );
       },

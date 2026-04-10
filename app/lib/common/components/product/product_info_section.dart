@@ -10,33 +10,38 @@ class ProductInfoSection extends StatelessWidget {
     super.key,
     required this.food,
     this.isCompact = false,
+    /// Плотная вёрстка для сетки меню (меньше overflow при крупном шрифте).
+    this.dense = false,
   });
 
   final FoodEntity food;
   final bool isCompact;
+  final bool dense;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final titleStyle = dense ? theme.textTheme.bodyMedium : theme.textTheme.bodyLarge;
     return Padding(
       padding: ProductCardConstants.infoPadding,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const SizedBox(height: 4),
+          SizedBox(height: dense ? 2 : 4),
           Text(
             food.name ?? 'Название блюда',
-            style: theme.textTheme.bodyLarge,
+            style: titleStyle?.copyWith(height: dense ? 1.15 : null),
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 2),
+          SizedBox(height: dense ? 1 : 2),
           Text.rich(
             TextSpan(
               text: food.weight ?? '',
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
+                height: dense ? 1.15 : null,
               ),
               children: [
                 if (food.price != null)

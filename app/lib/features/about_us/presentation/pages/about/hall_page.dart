@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
+import 'package:diyar/core/di/injectable_config.dart' as di;
 import 'package:diyar/features/about_us/domain/domain.dart';
 import 'package:diyar/features/features.dart';
 import 'package:flutter/material.dart';
@@ -18,16 +19,16 @@ class _HallPageState extends State<HallPage> {
   AboutUsEntities? model;
 
   @override
-  void initState() {
-    context.read<AboutUsCubit>().getAboutUs(type: 'БАНКЕТ ХОЛЛ');
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Scaffold(
+    return BlocProvider(
+      create: (_) {
+        final cubit = di.sl<AboutUsCubit>();
+        cubit.getAboutUs(type: 'БАНКЕТ ХОЛЛ');
+        return cubit;
+      },
+      child: Scaffold(
       appBar: AppBar(
         backgroundColor: theme.colorScheme.primary,
         title:
@@ -60,6 +61,7 @@ class _HallPageState extends State<HallPage> {
           return CustomAboutWidget(model: model!);
         },
       ),
+    ),
     );
   }
 }

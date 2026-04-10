@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/core/core.dart';
+import 'package:diyar/core/di/injectable_config.dart' as di;
 import 'package:diyar/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,22 +18,27 @@ class _AboutUsPageState extends State<AboutUsPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Scaffold(
-      appBar: AppBar(
-          backgroundColor: theme.colorScheme.primary,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios, color: AppColors.white),
-            onPressed: () {
-              context.router.maybePop();
-            },
-          ),
-          title: Text(
-            context.l10n.aboutUs,
-            style:
-                Theme.of(context).textTheme.titleSmall!.copyWith(color: AppColors.white, fontWeight: FontWeight.w500),
-          )),
-      body: const SafeArea(
-        child: AboutUsBody(),
+    return BlocProvider(
+      create: (_) => di.sl<AboutUsCubit>(),
+      child: Scaffold(
+        appBar: AppBar(
+            backgroundColor: theme.colorScheme.primary,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios, color: AppColors.white),
+              onPressed: () {
+                context.router.maybePop();
+              },
+            ),
+            title: Text(
+              context.l10n.aboutUs,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleSmall!
+                  .copyWith(color: AppColors.white, fontWeight: FontWeight.w500),
+            )),
+        body: const SafeArea(
+          child: AboutUsBody(),
+        ),
       ),
     );
   }

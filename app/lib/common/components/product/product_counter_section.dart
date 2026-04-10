@@ -59,6 +59,7 @@ class _ProductCounterSectionState extends State<ProductCounterSection> {
     return Container(
       height: ProductCardConstants.counterHeight,
       margin: ProductCardConstants.counterMargin,
+      alignment: Alignment.center,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(
           ProductCardConstants.counterBorderRadius,
@@ -68,33 +69,36 @@ class _ProductCounterSectionState extends State<ProductCounterSection> {
         ),
       ),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _CounterIconButton(
+          _CounterTapIcon(
             icon: Icons.remove,
             onPressed: widget.quantity > 0 ? widget.onDecrement : null,
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 6),
           SizedBox(
             width: 36,
+            height: ProductCardConstants.counterHeight,
             child: TextField(
               controller: _controller,
               textAlign: TextAlign.center,
+              textAlignVertical: TextAlignVertical.center,
               keyboardType: TextInputType.number,
-              style: theme.textTheme.bodyLarge?.copyWith(
+              maxLines: 1,
+              style: theme.textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.w500,
+                height: 1.1,
               ),
               decoration: const InputDecoration(
                 border: InputBorder.none,
                 isDense: true,
-                contentPadding: EdgeInsets.zero,
+                contentPadding: EdgeInsets.symmetric(vertical: 4),
               ),
               onChanged: _onFieldChanged,
             ),
           ),
-          const SizedBox(width: 8),
-          _CounterIconButton(
+          const SizedBox(width: 6),
+          _CounterTapIcon(
             icon: Icons.add,
             onPressed: widget.onIncrement,
           ),
@@ -104,8 +108,9 @@ class _ProductCounterSectionState extends State<ProductCounterSection> {
   }
 }
 
-class _CounterIconButton extends StatelessWidget {
-  const _CounterIconButton({required this.icon, this.onPressed});
+/// Без [IconButton] — у Material минимальная зона ~48px, из‑за неё был overflow в карточке.
+class _CounterTapIcon extends StatelessWidget {
+  const _CounterTapIcon({required this.icon, this.onPressed});
 
   final IconData icon;
   final VoidCallback? onPressed;
@@ -114,16 +119,20 @@ class _CounterIconButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final enabled = onPressed != null;
-    return IconButton(
-      splashRadius: 20,
-      iconSize: 20,
-      visualDensity: VisualDensity.compact,
-      color: enabled
-          ? theme.colorScheme.primary
-          : theme.colorScheme.onSurface.withValues(alpha: 0.38),
-      onPressed: onPressed,
-      icon: Icon(icon),
-      disabledColor: theme.colorScheme.onSurface.withValues(alpha: 0.38),
+    final color = enabled
+        ? theme.colorScheme.primary
+        : theme.colorScheme.onSurface.withValues(alpha: 0.38);
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onPressed,
+        customBorder: const CircleBorder(),
+        child: SizedBox(
+          width: 26,
+          height: 26,
+          child: Icon(icon, size: 18, color: color),
+        ),
+      ),
     );
   }
 }

@@ -15,6 +15,9 @@ class ProductImageSection extends StatelessWidget {
   final double imageHeight;
   final bool isCompact;
 
+  /// Для сетки меню: [BoxFit.cover] заполняет рамку без «полос» при [BoxFit.contain].
+  final BoxFit imageBoxFit;
+
   const ProductImageSection({
     super.key,
     required this.food,
@@ -24,6 +27,7 @@ class ProductImageSection extends StatelessWidget {
     required this.imageWidth,
     required this.imageHeight,
     this.isCompact = false,
+    this.imageBoxFit = BoxFit.contain,
   });
 
   @override
@@ -38,27 +42,29 @@ class ProductImageSection extends StatelessWidget {
           child: Stack(
             alignment: Alignment.center,
             children: [
-              Container(
+              SizedBox(
                 width: imageWidth,
                 height: imageHeight,
-                color: theme.colorScheme.surface,
-                alignment: Alignment.center,
-                child: CachedNetworkImage(
-                  imageUrl: food.urlPhoto ?? 'https://via.placeholder.com/150',
-                  placeholder: (_, __) => _Placeholder(
+                child: ColoredBox(
+                  color: theme.colorScheme.surface,
+                  child: CachedNetworkImage(
+                    imageUrl: food.urlPhoto ?? 'https://via.placeholder.com/150',
+                    placeholder: (_, __) => _Placeholder(
+                      width: imageWidth,
+                      height: imageHeight,
+                    ),
+                    errorWidget: (_, __, ___) => _ErrorWidget(
+                      width: imageWidth,
+                      height: imageHeight,
+                    ),
+                    memCacheWidth: ProductCardConstants.memCacheWidth,
+                    memCacheHeight: ProductCardConstants.memCacheHeight,
+                    cacheManager: DefaultCacheManager(),
+                    fit: imageBoxFit,
+                    alignment: Alignment.center,
                     width: imageWidth,
                     height: imageHeight,
                   ),
-                  errorWidget: (_, __, ___) => _ErrorWidget(
-                    width: imageWidth,
-                    height: imageHeight,
-                  ),
-                  width: imageWidth,
-                  height: imageHeight,
-                  memCacheWidth: ProductCardConstants.memCacheWidth,
-                  memCacheHeight: ProductCardConstants.memCacheHeight,
-                  cacheManager: DefaultCacheManager(),
-                  fit: BoxFit.contain,
                 ),
               ),
               _QuantityOverlay(

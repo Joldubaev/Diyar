@@ -19,18 +19,14 @@ class _VipPageState extends State<VipPage> {
   AboutUsEntities? model;
 
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => context.read<AboutUsCubit>().getAboutUs(type: 'VIP ЗАЛЫ'),
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return BlocProvider(
-      create: (_) => di.sl<AboutUsCubit>(),
+      create: (_) {
+        final cubit = di.sl<AboutUsCubit>();
+        cubit.getAboutUs(type: 'VIP ЗАЛЫ');
+        return cubit;
+      },
       child: Scaffold(
       appBar: AppBar(
         backgroundColor: theme.colorScheme.primary,

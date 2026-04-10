@@ -107,7 +107,6 @@ flutter:
     - assets/
     - assets/icons/
     - assets/images/
-    - packages/geo/assets/
 
   fonts:
     - family: Inter

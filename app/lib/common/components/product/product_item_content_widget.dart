@@ -37,12 +37,10 @@ class ProductItemContentWidget extends StatefulWidget {
   });
 
   @override
-  State<ProductItemContentWidget> createState() =>
-      _ProductItemContentWidgetState();
+  State<ProductItemContentWidget> createState() => _ProductItemContentWidgetState();
 }
 
-class _ProductItemContentWidgetState extends State<ProductItemContentWidget>
-    with TickerProviderStateMixin {
+class _ProductItemContentWidgetState extends State<ProductItemContentWidget> with TickerProviderStateMixin {
   late final AnimationController _overlayController;
   late final Animation<double> _overlayOpacity;
   Timer? _fadeOutTimer;
@@ -63,9 +61,7 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget>
   @override
   void didUpdateWidget(ProductItemContentWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.isCounter &&
-        oldWidget.quantity != widget.quantity &&
-        widget.quantity > 0) {
+    if (widget.isCounter && oldWidget.quantity != widget.quantity && widget.quantity > 0) {
       _triggerOverlay();
     }
   }
@@ -138,60 +134,127 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget>
         );
   }
 
-  ({double width, double height}) _imageSize(double cardW, double cardH) {
-    if (widget.isCompact) return (width: 120.0, height: 80.0);
-    final w = (cardW - ProductCardConstants.cardPadding.horizontal)
-        .clamp(48.0, 400.0);
-    final effectiveH = cardH.isFinite ? cardH : 220.0;
-    final hAvail =
-        (effectiveH - ProductCardConstants.reservedBelowImage).clamp(0.0, 400.0);
-    if (hAvail <= 0) return (width: w, height: 100.0);
-    final h = math.min(w, hAvail).clamp(96.0, w * 1.15);
-    return (width: w, height: h);
+  /// Размер превью для [isCompact]: квадрат, ограниченный [ProductCardConstants.compactImageMaxSide].
+  ({double width, double height}) _imageSizeCompact(double cardW) {
+    final hPad = ProductCardConstants.cardPadding.horizontal;
+    final inner = cardW - hPad;
+    final side = math.max(
+      ProductCardConstants.compactImageMinSide,
+      math.min(inner, ProductCardConstants.compactImageMaxSide),
+    );
+    return (width: side, height: side);
   }
 
-  Widget _buildCard(ThemeData theme, double imgW, double imgH) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(
-          ProductCardConstants.cardBorderRadius,
-        ),
-        boxShadow: widget.isShadowVisible
-            ? [
-                BoxShadow(
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
-                  spreadRadius: 0.5,
-                  blurRadius: 4,
-                  offset: const Offset(0, 1),
-                ),
-              ]
-            : null,
+  BoxDecoration _cardDecoration(ThemeData theme) {
+    return BoxDecoration(
+      color: theme.colorScheme.surface,
+      borderRadius: BorderRadius.circular(
+        ProductCardConstants.cardBorderRadius,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          ProductImageSection(
-            food: widget.food,
-            onTap: widget.onTap,
-            overlayOpacityAnimation: _overlayOpacity,
-            quantity: widget.quantity,
-            imageWidth: imgW,
-            imageHeight: imgH,
-            isCompact: widget.isCompact,
-          ),
-          ProductInfoSection(food: widget.food, isCompact: widget.isCompact),
-          const Spacer(),
-          if (widget.isCounter)
-            ProductCounterSection(
-              quantity: widget.quantity,
-              onDecrement: () => _handleCartAction(isIncrement: false),
-              onIncrement: () => _handleCartAction(isIncrement: true),
-              onQuantityChanged: _handleQuantityChanged,
-              isCompact: widget.isCompact,
+      boxShadow: widget.isShadowVisible
+          ? [
+              BoxShadow(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.08),
+                spreadRadius: 0.5,
+                blurRadius: 4,
+                offset: const Offset(0, 1),
+              ),
+            ]
+          : null,
+    );
+  }
+
+  /// Сетка меню: фото в [Expanded] — при нехватке места сжимается картинка, без RenderFlex overflow.
+  Widget _buildCardGrid(ThemeData theme) {
+    return MediaQuery.withClampedTextScaling(
+      minScaleFactor: 0.85,
+      maxScaleFactor: 1.2,
+      child: DecoratedBox(
+        decoration: _cardDecoration(theme),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  // Квадрат по меньшей стороне: иначе tall Expanded + contain даёт мелкое фото и полосы.
+                  final hPad = ProductCardConstants.cardPadding.horizontal;
+                  final vPad = ProductCardConstants.cardPadding.vertical;
+                  final innerW = (constraints.maxWidth - hPad).clamp(48.0, 400.0);
+                  final innerH = math.max(40.0, constraints.maxHeight - vPad);
+                  final side = math.min(innerW, innerH);
+                  return Align(
+                    alignment: Alignment.topCenter,
+                    child: ProductImageSection(
+                      food: widget.food,
+                      onTap: widget.onTap,
+                      overlayOpacityAnimation: _overlayOpacity,
+                      quantity: widget.quantity,
+                      imageWidth: side,
+                      imageHeight: side,
+                      isCompact: false,
+                      imageBoxFit: BoxFit.cover,
+                    ),
+                  );
+                },
+              ),
             ),
-          SizedBox(height: widget.isCompact ? 6 : 8),
-        ],
+            ProductInfoSection(food: widget.food, isCompact: false, dense: true),
+            if (widget.isCounter)
+              ProductCounterSection(
+                quantity: widget.quantity,
+                onDecrement: () => _handleCartAction(isIncrement: false),
+                onIncrement: () => _handleCartAction(isIncrement: true),
+                onQuantityChanged: _handleQuantityChanged,
+                isCompact: false,
+              ),
+            const SizedBox(height: 8),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// [fillVerticalSpace] — когда карточке задана явная высота: [Spacer] прижимает счётчик вниз.
+  /// Для masonry («Популярные блюда») высота не фиксируется — иначе при крупном тексте [RenderFlex] overflow.
+  Widget _buildCardCompact(
+    ThemeData theme,
+    double imgW,
+    double imgH, {
+    required bool fillVerticalSpace,
+  }) {
+    return MediaQuery.withClampedTextScaling(
+      minScaleFactor: 0.85,
+      maxScaleFactor: 1.2,
+      child: DecoratedBox(
+        decoration: _cardDecoration(theme),
+        child: Column(
+          mainAxisSize: fillVerticalSpace ? MainAxisSize.max : MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            ProductImageSection(
+              food: widget.food,
+              onTap: widget.onTap,
+              overlayOpacityAnimation: _overlayOpacity,
+              quantity: widget.quantity,
+              imageWidth: imgW,
+              imageHeight: imgH,
+              isCompact: true,
+              imageBoxFit: BoxFit.contain,
+            ),
+            ProductInfoSection(food: widget.food, isCompact: true, dense: true),
+            if (fillVerticalSpace) const Spacer(),
+            if (widget.isCounter)
+              ProductCounterSection(
+                quantity: widget.quantity,
+                onDecrement: () => _handleCartAction(isIncrement: false),
+                onIncrement: () => _handleCartAction(isIncrement: true),
+                onQuantityChanged: _handleQuantityChanged,
+                isCompact: true,
+              ),
+            const SizedBox(height: 4),
+          ],
+        ),
       ),
     );
   }
@@ -201,30 +264,43 @@ class _ProductItemContentWidgetState extends State<ProductItemContentWidget>
     final theme = Theme.of(context);
 
     if (widget.width != null && widget.height != null) {
-      final d = _imageSize(widget.width!, widget.height!);
+      final w = widget.width!;
+      final h = widget.height!;
+      if (widget.isCompact) {
+        final d = _imageSizeCompact(w);
+        return SizedBox(
+          width: w,
+          height: h,
+          child: _buildCardCompact(theme, d.width, d.height, fillVerticalSpace: true),
+        );
+      }
       return SizedBox(
-        width: widget.width,
-        height: widget.height,
-        child: _buildCard(theme, d.width, d.height),
+        width: w,
+        height: h,
+        child: _buildCardGrid(theme),
       );
     }
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final defaultW =
-            widget.width ?? (widget.isCompact ? 140.0 : ProductCardConstants.imageWidth);
+        final defaultW = widget.width ?? (widget.isCompact ? 140.0 : ProductCardConstants.imageWidth);
         final defaultH = widget.height ?? (widget.isCompact ? 180.0 : 220.0);
-        final cardW =
-            constraints.maxWidth.isFinite ? constraints.maxWidth : defaultW;
+        final cardW = constraints.maxWidth.isFinite ? constraints.maxWidth : defaultW;
         var cardH = defaultH;
         if (constraints.maxHeight.isFinite && defaultH > constraints.maxHeight) {
           cardH = constraints.maxHeight;
         }
-        final d = _imageSize(cardW, cardH);
+        if (widget.isCompact) {
+          final d = _imageSizeCompact(cardW);
+          return SizedBox(
+            width: cardW,
+            child: _buildCardCompact(theme, d.width, d.height, fillVerticalSpace: false),
+          );
+        }
         return SizedBox(
           width: cardW,
           height: cardH,
-          child: _buildCard(theme, d.width, d.height),
+          child: _buildCardGrid(theme),
         );
       },
     );
