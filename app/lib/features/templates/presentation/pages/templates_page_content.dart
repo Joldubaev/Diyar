@@ -3,7 +3,7 @@ import 'package:diyar/common/common.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/core/di/injectable_config.dart';
 import 'package:diyar/core/utils/storage/address_storage_service.dart';
-import 'package:diyar/features/profile/profile.dart';
+import 'package:diyar/features/user/profile/profile.dart';
 import 'package:diyar/features/templates/presentation/presentation.dart';
 import 'package:diyar/features/templates/presentation/widgets/empty_template_widget.dart';
 import 'package:diyar/features/templates/presentation/widgets/templates_bottom_buttons_section.dart';

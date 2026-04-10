@@ -1,3 +1,5 @@
+import 'package:diyar/features/map/domain/entities/delivery_price_entity.dart';
+
 class PriceModel {
   final String? districtId;
   final String? districtName;
@@ -10,19 +12,6 @@ class PriceModel {
     this.price,
     this.yandexId,
   });
-
-  PriceModel copyWith({
-    String? districtId,
-    String? districtName,
-    int? price,
-    int? yandexId,
-  }) =>
-      PriceModel(
-        districtId: districtId ?? this.districtId,
-        districtName: districtName ?? this.districtName,
-        price: price ?? this.price,
-        yandexId: yandexId ?? this.yandexId,
-      );
 
   Map<String, dynamic> toJson() {
     return {
@@ -41,4 +30,11 @@ class PriceModel {
       yandexId: map['yandexId']?.toInt(),
     );
   }
+
+  DeliveryPriceEntity toEntity() => DeliveryPriceEntity(
+        districtId: districtId,
+        districtName: districtName,
+        price: price ?? 0,
+        yandexId: yandexId,
+      );
 }

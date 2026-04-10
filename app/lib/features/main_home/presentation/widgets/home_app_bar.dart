@@ -1,4 +1,4 @@
-import 'package:diyar/features/profile/presentation/cubit/profile_cubit.dart';
+import 'package:diyar/features/user/profile/presentation/cubit/profile_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -60,6 +60,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       actions: [
         BlocBuilder<ProfileCubit, ProfileState>(
+          buildWhen: (prev, curr) => curr is ProfileGetLoaded || curr is ProfileInitial,
           builder: (context, state) {
             final userName = context.read<ProfileCubit>().user?.userName;
             if (userName == null) return const SizedBox.shrink();

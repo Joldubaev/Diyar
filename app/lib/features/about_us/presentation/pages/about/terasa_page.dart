@@ -19,18 +19,14 @@ class TerasaPageState extends State<TerasaPage> {
   AboutUsEntities? model;
 
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => context.read<AboutUsCubit>().getAboutUs(type: 'ТЕРАССА'),
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return BlocProvider(
-      create: (_) => di.sl<AboutUsCubit>(),
+      create: (_) {
+        final cubit = di.sl<AboutUsCubit>();
+        cubit.getAboutUs(type: 'ТЕРАССА');
+        return cubit;
+      },
       child: Scaffold(
       appBar: AppBar(
         backgroundColor: theme.colorScheme.primary,

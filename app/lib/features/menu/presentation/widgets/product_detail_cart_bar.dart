@@ -16,6 +16,7 @@ class ProductDetailCartBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CartBloc, CartState>(
+      buildWhen: (prev, curr) => curr is CartLoaded || curr is CartInitial,
       builder: (context, state) {
         int itemQuantity = 0;
         CartItemEntity? cartItem;

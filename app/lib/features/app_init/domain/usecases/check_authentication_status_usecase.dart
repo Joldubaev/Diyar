@@ -1,4 +1,4 @@
-import 'package:diyar/features/security/domain/services/secure_storage_service.dart';
+import 'package:diyar/features/user/security/domain/services/secure_storage_service.dart';
 import 'package:injectable/injectable.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 

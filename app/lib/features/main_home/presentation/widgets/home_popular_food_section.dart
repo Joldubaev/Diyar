@@ -17,6 +17,7 @@ class HomePopularFoodSection extends StatelessWidget {
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 10,
           children: [
             RowTextWidget(text: context.l10n.popularFood, theme: context.theme),
             if (isLoading)

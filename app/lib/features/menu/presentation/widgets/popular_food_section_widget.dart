@@ -1,4 +1,5 @@
 import 'package:diyar/common/components/product/custom_gridview.dart';
+import 'package:diyar/common/components/product/product_card_constants.dart';
 import 'package:diyar/common/components/product/product_item_widget.dart';
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/features.dart';
@@ -13,8 +14,15 @@ class PopularFoodSectionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CartBloc, CartState>(
+      buildWhen: (prev, curr) => curr is CartLoaded || curr is CartInitial,
       builder: (context, cartState) {
-        final cartItems = cartState is CartLoaded ? cartState.items : <CartItemEntity>[];
+        final quantityMap = <String, int>{};
+        if (cartState is CartLoaded) {
+          for (final item in cartState.items) {
+            final id = item.food?.id;
+            if (id != null) quantityMap[id] = item.quantity ?? 0;
+          }
+        }
 
         return PaginatedMasonryGridView<FoodEntity>(
           items: menu,
@@ -22,19 +30,20 @@ class PopularFoodSectionWidget extends StatelessWidget {
           loadMore: () {},
           shrinkWrap: true,
           itemBuilder: (context, food) {
-            final cartItem = cartItems.firstWhere(
-              (e) => e.food?.id == food.id,
-              orElse: () => CartItemEntity(food: food, quantity: 0),
-            );
-            return ProductItemWidget(
-              food: food,
-              quantity: cartItem.quantity ?? 0,
-              isCompact: true,
+            return Center(
+              child: FractionallySizedBox(
+                widthFactor: ProductCardConstants.popularMasonryCardWidthFactor,
+                child: ProductItemWidget(
+                  food: food,
+                  quantity: quantityMap[food.id] ?? 0,
+                  isCompact: true,
+                ),
+              ),
             );
           },
           crossAxisCount: 2,
-          mainAxisSpacing: 10,
-          crossAxisSpacing: 10,
+          mainAxisSpacing: 8,
+          crossAxisSpacing: 8,
           padding: const EdgeInsets.only(bottom: 16),
         );
       },

@@ -1,11 +1,17 @@
+import 'package:equatable/equatable.dart';
+
 import 'package:diyar/features/menu/domain/domain.dart';
 
-class CategoryFoodEntity {
+class CategoryFoodEntity extends Equatable {
   final List<FoodEntity> foodModels;
 
-  CategoryFoodEntity({
+  const CategoryFoodEntity({
     required this.foodModels,
   });
+
+  @override
+  List<Object?> get props => [foodModels];
+
   CategoryFoodEntity copyWith({
     List<FoodEntity>? foodModels,
   }) =>

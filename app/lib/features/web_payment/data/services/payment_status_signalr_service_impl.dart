@@ -5,97 +5,71 @@ import 'package:diyar/core/constants/api_const/api_const.dart';
 import 'package:diyar/features/web_payment/domain/enum/payment_status_type.dart';
 import 'package:diyar/features/web_payment/domain/services/i_payment_status_signalr_service.dart';
 import 'package:injectable/injectable.dart';
-import 'package:logging/logging.dart';
-import 'package:signalr_netcore/hub_connection.dart';
-import 'package:signalr_netcore/hub_connection_builder.dart';
+import 'package:signalr_client/signalr_client.dart';
 
 @Injectable(as: IPaymentStatusSignalRService)
 class PaymentStatusSignalRServiceImpl implements IPaymentStatusSignalRService {
-  HubConnection? _hubConnection;
+  HubManager? _hub;
   final _statusController = StreamController<PaymentStatusType>.broadcast();
   int? _currentOrderNum;
 
   @override
   Stream<PaymentStatusType> get statusStream => _statusController.stream;
 
-  Future<void> _resubscribe() async {
-    if (_hubConnection == null || _currentOrderNum == null) return;
-    try {
-      await _hubConnection!.invoke('Subscribe', args: [_currentOrderNum!]);
-      await _hubConnection!.invoke('RequestStatus', args: [_currentOrderNum!]);
-      dev.log('[PaymentStatusSignalR] Re-subscribed after reconnect');
-    } catch (e) {
-      dev.log('[PaymentStatusSignalR] Resubscribe error: $e');
-    }
-  }
-
   @override
   Future<void> connect(String orderNumber) async {
-    if (_hubConnection != null) return;
+    if (_hub != null) return;
 
     final parsed = int.tryParse(orderNumber);
     if (parsed == null) {
-      dev.log('[PaymentStatusSignalR] Invalid orderNumber: "$orderNumber" is not a valid integer');
-      throw ArgumentError('orderNumber must be a valid integer, got: "$orderNumber"');
+      throw ArgumentError(
+        'orderNumber must be a valid integer, got: "$orderNumber"',
+      );
     }
     _currentOrderNum = parsed;
 
-    try {
-      final logger = Logger('PaymentStatusSignalR')..level = Level.ALL;
-      _hubConnection = HubConnectionBuilder()
-          .withUrl(ApiConst.paymentStatusHubUrl)
-          .withAutomaticReconnect()
-          .configureLogging(logger)
-          .build();
+    _hub = HubManager(
+      config: HubConnectionConfig(
+        hubUrl: ApiConst.paymentStatusHubUrl,
+        loggerName: 'PaymentStatusHub',
+      ),
+    );
 
-      _hubConnection!.on('ReceiveStatus', _onReceiveStatus);
-      _hubConnection!.onclose(({error}) {
-        dev.log('[PaymentStatusSignalR] Connection closed: $error');
-      });
-      _hubConnection!.onreconnected(({connectionId}) {
-        dev.log('[PaymentStatusSignalR] Reconnected, resubscribing...');
-        unawaited(_resubscribe());
-      });
+    _hub!.on('ReceiveStatus', _onReceiveStatus);
 
-      await _hubConnection!.start();
-
-      await _resubscribe();
-    } catch (e) {
-      dev.log('[PaymentStatusSignalR] Connect error: $e');
-      rethrow;
-    }
+    await _hub!.start();
+    await _hub!.invoke('Subscribe', args: [_currentOrderNum!]);
+    await _hub!.invoke('RequestStatus', args: [_currentOrderNum!]);
   }
 
   void _onReceiveStatus(List<Object?>? data) {
-    dev.log('[PaymentStatusSignalR] ReceiveStatus raw: $data');
+    dev.log('[PaymentStatusHub] ReceiveStatus raw: $data');
     if (data == null || data.isEmpty) return;
     try {
-      final raw = data.isNotEmpty ? data.first : data;
+      final raw = data.first;
       final map = raw is Map ? Map<String, dynamic>.from(raw) : null;
       if (map == null) return;
-      dev.log(
-          '[PaymentStatusSignalR] ReceiveStatus parsed: orderNumber=${map['orderNumber']}, status=${map['status']}');
       final status = map['status']?.toString() ?? '';
       if (status.isNotEmpty) {
         _statusController.add(PaymentStatusTypeMapper.fromCode(status));
       }
     } catch (e) {
-      dev.log('[PaymentStatusSignalR] Parse error: $e');
+      dev.log('[PaymentStatusHub] Parse error: $e');
     }
   }
 
   @override
   Future<void> disconnect(String orderNumber) async {
     try {
-      if (_hubConnection != null) {
+      if (_hub != null) {
         final orderNum = int.tryParse(orderNumber) ?? 0;
-        await _hubConnection!.invoke('Unsubscribe', args: [orderNum]);
-        await _hubConnection!.stop();
+        await _hub!.invoke('Unsubscribe', args: [orderNum]);
       }
     } catch (e) {
-      dev.log('[PaymentStatusSignalR] Disconnect error: $e');
+      dev.log('[PaymentStatusHub] Disconnect error: $e');
     } finally {
-      _hubConnection = null;
+      await _hub?.dispose();
+      _hub = null;
       _currentOrderNum = null;
     }
   }

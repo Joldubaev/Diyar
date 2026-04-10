@@ -5,25 +5,22 @@ import 'package:diyar/core/constants/api_const/api_const.dart';
 import 'package:diyar/core/constants/app_const/app_const.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:injectable/injectable.dart';
-import 'package:logging/logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:signalr_netcore/hub_connection.dart';
-import 'package:signalr_netcore/hub_connection_builder.dart';
+import 'package:signalr_client/signalr_client.dart';
 
-/// Отправка геопозиции курьера в хаб courier-location-hub по WebSocket (SignalR).
-/// Вызывать [start] при открытии экрана курьера, [stop] при уходе.
+/// Sends courier location to the hub every 2 seconds via SignalR.
+/// Call [start] when opening the courier screen, [stop] when leaving.
 @lazySingleton
 class CourierLocationHubService {
   CourierLocationHubService(this._prefs);
 
   final SharedPreferences _prefs;
-  HubConnection? _hubConnection;
+  HubManager? _hub;
   Timer? _locationTimer;
   static const _interval = Duration(seconds: 2);
 
-  /// Подключается к хабу с JWT в query и запускает периодическую отправку координат.
   Future<void> start() async {
-    if (_hubConnection != null) return;
+    if (_hub != null) return;
 
     final token = _prefs.getString(AppConst.accessToken);
     if (token == null || token.isEmpty) {
@@ -31,34 +28,27 @@ class CourierLocationHubService {
       return;
     }
 
-    final url = '${ApiConst.courierLocationHubUrl}?access_token=${Uri.encodeComponent(token)}';
-
     try {
-      _hubConnection = HubConnectionBuilder()
-          .withUrl(url)
-          .withAutomaticReconnect()
-          .configureLogging(Logger('CourierLocationHub'))
-          .build();
+      _hub = HubManager(
+        config: HubConnectionConfig(
+          hubUrl: ApiConst.courierLocationHubUrl,
+          accessToken: token,
+          loggerName: 'CourierLocationHub',
+        ),
+      );
 
-      _hubConnection!.onclose(({error}) {
-        log('[CourierLocationHub] Connection closed: $error');
-      });
-
-      await _hubConnection!.start();
-      log('[CourierLocationHub] Connected');
+      await _hub!.start();
 
       _locationTimer = Timer.periodic(_interval, (_) => _sendLocation());
-      // Первая отправка сразу после подключения
       _sendLocation();
     } catch (e) {
       log('[CourierLocationHub] Start error: $e');
-      _hubConnection = null;
+      _hub = null;
     }
   }
 
   Future<void> _sendLocation() async {
-    final connection = _hubConnection;
-    if (connection == null) return;
+    if (_hub == null || !_hub!.isConnected) return;
 
     try {
       final permission = await Geolocator.checkPermission();
@@ -72,9 +62,10 @@ class CourierLocationHubService {
       if (permission == LocationPermission.deniedForever) return;
 
       final position = await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(accuracy: LocationAccuracy.medium),
+        locationSettings:
+            const LocationSettings(accuracy: LocationAccuracy.medium),
       );
-      await connection.invoke('UpdateMyLocation', args: [
+      await _hub!.invoke('UpdateMyLocation', args: [
         position.latitude,
         position.longitude,
       ]);
@@ -83,17 +74,10 @@ class CourierLocationHubService {
     }
   }
 
-  /// Останавливает таймер и отключается от хаба.
   Future<void> stop() async {
     _locationTimer?.cancel();
     _locationTimer = null;
-    if (_hubConnection != null) {
-      try {
-        await _hubConnection!.stop();
-      } catch (e) {
-        log('[CourierLocationHub] Stop error: $e');
-      }
-      _hubConnection = null;
-    }
+    await _hub?.dispose();
+    _hub = null;
   }
 }

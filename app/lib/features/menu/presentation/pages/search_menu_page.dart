@@ -1,11 +1,11 @@
-import 'dart:developer';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/common/components/components.dart';
+import 'package:diyar/common/components/product/product_card_constants.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/core/di/injectable_config.dart' as di;
 import 'package:diyar/features/cart/cart.dart';
-import 'package:diyar/features/menu/menu.dart';
+import 'package:diyar/features/menu/presentation/cubit/search_cubit.dart';
+import 'package:diyar/features/menu/presentation/widgets/widgets.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,10 +13,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 @RoutePage()
 class SearchMenuPage extends StatelessWidget {
   const SearchMenuPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => di.sl<MenuBloc>(),
+      create: (_) => di.sl<MenuSearchCubit>(),
       child: Builder(
         builder: (context) => Scaffold(
           appBar: AppBar(
@@ -34,45 +35,23 @@ class SearchMenuPage extends StatelessWidget {
                     onSearch: (value) {
                       if (value.isEmpty) {
                         EasyDebounce.cancel('menu-search-debounce');
-                        context.read<MenuBloc>().add(ClearSearchEvent());
+                        context.read<MenuSearchCubit>().clear();
                       } else {
                         EasyDebounce.debounce(
                           'menu-search-debounce',
                           const Duration(milliseconds: 500),
-                          () => context.read<MenuBloc>().add(SearchFoodsEvent(query: value)),
+                          () => context
+                              .read<MenuSearchCubit>()
+                              .search(value),
                         );
                       }
                     },
                   ),
                   const SizedBox(height: 10),
                   Expanded(
-                    child: BlocBuilder<MenuBloc, MenuState>(
-                      builder: (context, menuState) {
-                        List<FoodEntity> currentFoods = [];
-                        if (menuState is SearchFoodsLoaded) {
-                          currentFoods = menuState.foods;
-                          log("SearchFoodsLoaded: ${currentFoods.length}", name: "SEARCH_LOADED");
-                        }
-
-                        if (menuState is SearchFoodsLoading) {
-                          return const Center(child: CircularProgressIndicator());
-                        }
-
-                        if (menuState is SearchFoodsFailure) {
-                          final errorMessage =
-                              menuState.message.isNotEmpty ? menuState.message : context.l10n.loadedWrong;
-                          return Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Text(
-                                "Ошибка поиска: $errorMessage",
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          );
-                        }
-
-                        if (menuState is MenuInitial) {
+                    child: BlocBuilder<MenuSearchCubit, MenuSearchState>(
+                      builder: (context, state) {
+                        if (state.isEmpty) {
                           return Center(
                             child: Text(
                               context.l10n.searchByNames,
@@ -81,34 +60,63 @@ class SearchMenuPage extends StatelessWidget {
                           );
                         }
 
-                        if (menuState is SearchFoodsLoaded && currentFoods.isEmpty) {
-                          return Center(child: Text(context.l10n.notFound));
+                        if (state.isLoading) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+
+                        if (state.error != null) {
+                          return Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Text(
+                                'Ошибка поиска: ${state.error}',
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          );
+                        }
+
+                        if (state.results.isEmpty) {
+                          return Center(
+                            child: Text(context.l10n.notFound),
+                          );
                         }
 
                         return BlocBuilder<CartBloc, CartState>(
+                          buildWhen: (prev, curr) =>
+                              curr is CartLoaded || curr is CartInitial,
                           builder: (context, cartState) {
-                            List<CartItemEntity> cartItems = [];
+                            final quantityMap = <String, int>{};
                             if (cartState is CartLoaded) {
-                              cartItems = cartState.items;
+                              for (final item in cartState.items) {
+                                final id = item.food?.id;
+                                if (id != null) {
+                                  quantityMap[id] = item.quantity ?? 0;
+                                }
+                              }
                             }
                             return GridView.builder(
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 10,
+                              ),
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2,
                                 mainAxisSpacing: 10,
                                 crossAxisSpacing: 10,
-                                childAspectRatio: 0.80,
+                                childAspectRatio:
+                                    ProductCardConstants.gridTileChildAspectRatio,
                               ),
-                              itemCount: currentFoods.length,
+                              itemCount: state.results.length,
                               itemBuilder: (context, index) {
-                                final food = currentFoods[index];
-                                final cartItem = cartItems.firstWhere(
-                                  (element) => element.food?.id == food.id,
-                                  orElse: () => CartItemEntity(food: food, quantity: 0),
-                                );
+                                final food = state.results[index];
                                 return ProductItemWidget(
+                                  key: ValueKey(food.id),
                                   food: food,
-                                  quantity: cartItem.quantity ?? 0,
+                                  quantity: quantityMap[food.id] ?? 0,
                                 );
                               },
                             );

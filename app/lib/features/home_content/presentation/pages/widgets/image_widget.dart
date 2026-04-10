@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class ImageWidget extends StatelessWidget {
@@ -12,44 +13,38 @@ class ImageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        ClipRRect(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(8),
-            topRight: Radius.circular(8),
-          ),
-          child: Image.asset(
-            placeholderImage,
-            fit: BoxFit.cover,
-            height: 150,
-            width: double.infinity,
-          ),
-        ),
-        if (image != null && image!.isNotEmpty)
-          Image.network(
-            image!,
-            fit: BoxFit.cover,
-            height: 150,
-            width: double.infinity,
-            loadingBuilder: (context, child, loadingProgress) {
-              if (loadingProgress == null) {
-                return child;
-              } else {
-                return const CircularProgressIndicator();
-              }
-            },
-            errorBuilder: (context, error, stackTrace) {
-              return Image.asset(
+    return ClipRRect(
+      borderRadius: const BorderRadius.only(
+        topLeft: Radius.circular(8),
+        topRight: Radius.circular(8),
+      ),
+      child: (image != null && image!.isNotEmpty)
+          ? CachedNetworkImage(
+              imageUrl: image!,
+              fit: BoxFit.cover,
+              height: 150,
+              width: double.infinity,
+              memCacheWidth: 400,
+              memCacheHeight: 300,
+              placeholder: (_, __) => Image.asset(
                 placeholderImage,
                 fit: BoxFit.cover,
                 height: 150,
                 width: double.infinity,
-              );
-            },
-          ),
-      ],
+              ),
+              errorWidget: (_, __, ___) => Image.asset(
+                placeholderImage,
+                fit: BoxFit.cover,
+                height: 150,
+                width: double.infinity,
+              ),
+            )
+          : Image.asset(
+              placeholderImage,
+              fit: BoxFit.cover,
+              height: 150,
+              width: double.infinity,
+            ),
     );
   }
 }

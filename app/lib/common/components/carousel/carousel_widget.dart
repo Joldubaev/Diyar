@@ -64,6 +64,17 @@ class _CarouselWidgetState extends State<CarouselWidget> {
   }
 
   @override
+  void didUpdateWidget(covariant CarouselWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.autoScroll && !oldWidget.autoScroll) {
+      _startAutoScroll();
+    } else if (!widget.autoScroll && oldWidget.autoScroll) {
+      _timer?.cancel();
+      _timer = null;
+    }
+  }
+
+  @override
   void dispose() {
     _timer?.cancel();
     _pageController.dispose();

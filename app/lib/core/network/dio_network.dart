@@ -1,11 +1,9 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/auth/domain/domain.dart';
 import 'package:diyar/core/di/injectable_config.dart';
-import 'package:flutter/foundation.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -48,11 +46,6 @@ class DioNetwork {
         String? token = sl<SharedPreferences>().getString(AppConst.accessToken);
         if (token != null) {
           options.headers['Authorization'] = 'Bearer $token';
-        }
-
-        if (kDebugMode) {
-          print("Request Headers after adding access token:");
-          print(json.encode(options.headers));
         }
 
         return handler.next(options);
@@ -102,12 +95,6 @@ class DioNetwork {
         Map<String, dynamic> headers = {if (token != null) 'Authorization': 'Bearer $token'};
 
         options.headers.addAll(headers);
-
-        if (kDebugMode) {
-          print("Request Headers after adding custom headers:");
-          print(json.encode(options.headers));
-        }
-
         return r.next(options);
       },
       onResponse: (response, handler) async {

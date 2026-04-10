@@ -19,18 +19,14 @@ class _CofePageState extends State<CofePage> {
   AboutUsEntities? model;
 
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => context.read<AboutUsCubit>().getAboutUs(type: 'ЭКСПРЕСС КАФЕ'),
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return BlocProvider(
-      create: (_) => di.sl<AboutUsCubit>(),
+      create: (_) {
+        final cubit = di.sl<AboutUsCubit>();
+        cubit.getAboutUs(type: 'ЭКСПРЕСС КАФЕ');
+        return cubit;
+      },
       child: Scaffold(
       appBar: AppBar(
         backgroundColor: theme.colorScheme.primary,

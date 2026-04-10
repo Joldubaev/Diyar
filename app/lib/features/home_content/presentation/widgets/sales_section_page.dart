@@ -15,6 +15,7 @@ class SalesSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeContentCubit, HomeContentState>(
+      buildWhen: (prev, curr) => curr is GetSalesLoading || curr is GetSalesLoaded || curr is HomeContentError,
       builder: (context, state) {
         return switch (state) {
           GetSalesLoading() => _buildLoadingState(),

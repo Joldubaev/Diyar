@@ -59,6 +59,8 @@ class FoodImageWidget extends StatelessWidget {
             fit: fit,
             width: imageWidth,
             height: imageHeight,
+            memCacheWidth: 400,
+            memCacheHeight: 400,
           )
         : Image.asset(
             _FoodImageConstants.placeholderAsset,

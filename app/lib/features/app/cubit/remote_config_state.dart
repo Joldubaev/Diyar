@@ -32,23 +32,20 @@ class RemoteConfigState extends Equatable {
 }
 
 @immutable
-abstract class AppVersionStatus {
+sealed class AppVersionStatus {
   const AppVersionStatus();
 }
 
-@immutable
 final class NoNewVersion extends AppVersionStatus {
   const NoNewVersion();
 }
 
-@immutable
 final class YesRecommendedVersion extends AppVersionStatus {
   const YesRecommendedVersion(this.buildNumber);
 
   final int buildNumber;
 }
 
-@immutable
 final class YesRequiredVersion extends AppVersionStatus {
   const YesRequiredVersion(this.buildNumber);
 

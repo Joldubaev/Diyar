@@ -8,10 +8,9 @@ part 'bonus_state.dart';
 
 @injectable
 class BonusCubit extends Cubit<BonusState> {
-  final GenerateQrUseCase _generateQrUseCase;
   final BonusRepository _bonusRepository;
 
-  BonusCubit(this._generateQrUseCase, this._bonusRepository) : super(BonusInitial());
+  BonusCubit(this._bonusRepository) : super(BonusInitial());
 
   Future<void> generateQr() async {
     if (state is BonusQrLoading) return;
@@ -21,7 +20,7 @@ class BonusCubit extends Cubit<BonusState> {
     }
 
     emit(BonusQrLoading());
-    final result = await _generateQrUseCase();
+    final result = await _bonusRepository.generateQr();
     if (isClosed) return;
 
     result.fold(
@@ -44,7 +43,9 @@ class BonusCubit extends Cubit<BonusState> {
       return;
     }
 
-    final previousResponse = state is BonusTransactionsLoaded ? (state as BonusTransactionsLoaded).response : null;
+    final previousResponse = state is BonusTransactionsLoaded
+        ? (state as BonusTransactionsLoaded).response
+        : null;
     emit(BonusTransactionsLoading(previousResponse: previousResponse));
     final result = await _bonusRepository.getBonusTransactions(
       page: page,

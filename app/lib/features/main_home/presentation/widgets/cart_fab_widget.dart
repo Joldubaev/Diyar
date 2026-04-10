@@ -25,6 +25,7 @@ class CartFabWidget extends StatelessWidget {
     final fabIconColor = theme.colorScheme.onPrimary;
 
     return BlocBuilder<CartBloc, CartState>(
+      buildWhen: (prev, curr) => curr is CartLoaded || curr is CartInitial,
       builder: (context, state) {
         final cartCount = state is CartLoaded ? state.totalItems : 0;
 

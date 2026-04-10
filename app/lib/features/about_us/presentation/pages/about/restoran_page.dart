@@ -19,18 +19,14 @@ class _RestorantPageState extends State<RestorantPage> {
   AboutUsEntities? model;
 
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => context.read<AboutUsCubit>().getAboutUs(type: 'РЕСТОРАН'),
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return BlocProvider(
-      create: (_) => di.sl<AboutUsCubit>(),
+      create: (_) {
+        final cubit = di.sl<AboutUsCubit>();
+        cubit.getAboutUs(type: 'РЕСТОРАН');
+        return cubit;
+      },
       child: Scaffold(
       appBar: AppBar(
         backgroundColor: theme.colorScheme.primary,

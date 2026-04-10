@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:diyar/core/launch/launch.dart';
 import 'package:diyar/features/app/cubit/remote_config_cubit.dart';
-import 'package:diyar/features/settings/presentation/cubit/settings_cubit.dart';
+import 'package:diyar/features/user/settings/presentation/cubit/settings_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

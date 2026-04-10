@@ -1,27 +1,30 @@
-import 'package:flutter/widgets.dart';
+import 'package:equatable/equatable.dart';
 
 import 'package:diyar/features/menu/domain/domain.dart';
 
-class CartItemEntity {
+class CartItemEntity extends Equatable {
   final FoodEntity? food;
   final int? quantity;
   final double? totalPrice;
 
-  CartItemEntity({
+  const CartItemEntity({
     this.food,
     this.quantity,
     this.totalPrice,
   });
 
+  @override
+  List<Object?> get props => [food, quantity, totalPrice];
+
   CartItemEntity copyWith({
-    ValueGetter<FoodEntity?>? food,
-    ValueGetter<int?>? quantity,
-    ValueGetter<double?>? totalPrice,
+    FoodEntity? food,
+    int? quantity,
+    double? totalPrice,
   }) {
     return CartItemEntity(
-      food: food != null ? food() : this.food,
-      quantity: quantity != null ? quantity() : this.quantity,
-      totalPrice: totalPrice != null ? totalPrice() : this.totalPrice,
+      food: food ?? this.food,
+      quantity: quantity ?? this.quantity,
+      totalPrice: totalPrice ?? this.totalPrice,
     );
   }
 }

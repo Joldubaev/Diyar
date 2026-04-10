@@ -1,30 +1,34 @@
 part of 'about_us_cubit.dart';
 
-abstract class AboutUsState extends Equatable {
+sealed class AboutUsState extends Equatable {
   const AboutUsState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
-class AboutUsInitial extends AboutUsState {}
+final class AboutUsInitial extends AboutUsState {
+  const AboutUsInitial();
+}
 
-class AboutUsLoading extends AboutUsState {}
+final class AboutUsLoading extends AboutUsState {
+  const AboutUsLoading();
+}
 
-class AboutUsLoaded extends AboutUsState {
-  final AboutUsEntities aboutUsModel;
+final class AboutUsLoaded extends AboutUsState {
+  final AboutUsEntity aboutUsModel;
 
   const AboutUsLoaded(this.aboutUsModel);
 
   @override
-  List<Object> get props => [aboutUsModel];
+  List<Object?> get props => [aboutUsModel];
 }
 
-class AboutUsError extends AboutUsState {
+final class AboutUsError extends AboutUsState {
   final String message;
 
   const AboutUsError(this.message);
 
   @override
-  List<Object> get props => [message];
+  List<Object?> get props => [message];
 }

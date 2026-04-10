@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:geo/geo.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 import '../user_map/order_map.dart';
 import 'address_selection_map_controls.dart';
-import 'coordinats_backup.dart';
 
-/// Контент карты выбора адреса: карта, центр-пин, контролы зума и геолокации
+/// Map content for address selection: map, center pin, zoom/location controls.
 class AddressSelectionMapContent extends StatelessWidget {
   final void Function(YandexMapController) onMapCreated;
-  final void Function(CameraPosition, CameraUpdateReason, bool) onCameraPositionChanged;
+  final void Function(CameraPosition, CameraUpdateReason, bool)
+      onCameraPositionChanged;
   final VoidCallback onZoomIn;
   final VoidCallback onZoomOut;
   final VoidCallback onLocate;
   final void Function(Point point)? onMapTap;
+
+  /// Service zone boundary points for drawing the polygon overlay.
+  /// Pass from parent after loading via [MapHelper.getServiceZoneBoundary()].
+  final List<GeoPoint> serviceZoneBoundary;
 
   const AddressSelectionMapContent({
     super.key,
@@ -21,6 +26,7 @@ class AddressSelectionMapContent extends StatelessWidget {
     required this.onZoomIn,
     required this.onZoomOut,
     required this.onLocate,
+    required this.serviceZoneBoundary,
     this.onMapTap,
   });
 
@@ -33,14 +39,17 @@ class AddressSelectionMapContent extends StatelessWidget {
     ),
   );
 
-  static List<MapObject> _getServiceZoneMapObjects() {
-    final coords = ServiceZone.getCoordinates();
+  List<MapObject> _getServiceZoneMapObjects() {
+    if (serviceZoneBoundary.isEmpty) return const [];
     return [
       PolygonMapObject(
         mapId: const MapObjectId('service_zone'),
         polygon: Polygon(
           outerRing: LinearRing(
-            points: coords.map((c) => Point(latitude: c.latitude, longitude: c.longitude)).toList(),
+            points: serviceZoneBoundary
+                .map((c) =>
+                    Point(latitude: c.latitude, longitude: c.longitude))
+                .toList(),
           ),
           innerRings: const [],
         ),

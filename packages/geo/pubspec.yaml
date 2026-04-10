@@ -1,0 +1,19 @@
+name: geo
+description: Delivery zone geometry and geocoding models for Diyar.
+publish_to: none
+version: 1.0.0
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+flutter:
+  assets:
+    - assets/delivery_zones.json
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter

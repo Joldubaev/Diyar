@@ -1,23 +1,19 @@
-class AboutUsEntities {
+import 'package:equatable/equatable.dart';
+
+class AboutUsEntity extends Equatable {
   final String name;
   final String description;
-  final List? photoLinks;
+  final List<String> photoLinks;
 
-  AboutUsEntities({
+  const AboutUsEntity({
     required this.name,
     required this.description,
     required this.photoLinks,
   });
 
-  AboutUsEntities copyWith({
-    String? name,
-    String? description,
-    List? photoLinks,
-  }) {
-    return AboutUsEntities(
-      name: name ?? this.name,
-      description: description ?? this.description,
-      photoLinks: photoLinks ?? this.photoLinks,
-    );
-  }
+  @override
+  List<Object?> get props => [name, description, photoLinks];
 }
+
+/// Backward compatibility alias
+typedef AboutUsEntities = AboutUsEntity;

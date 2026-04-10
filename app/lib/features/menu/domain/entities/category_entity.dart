@@ -1,10 +1,14 @@
-// import 'message_entity.dart';
+import 'package:equatable/equatable.dart';
 
-// class CategoryEntity {
-//   final int? code;
-//   final List<MessageEntity>? message;
-//   CategoryEntity({
-//     this.code,
-//     this.message,
-//   });
-// }
+class CategoryEntity extends Equatable {
+  final String? id;
+  final String? name;
+
+  const CategoryEntity({
+    this.id,
+    this.name,
+  });
+
+  @override
+  List<Object?> get props => [id, name];
+}

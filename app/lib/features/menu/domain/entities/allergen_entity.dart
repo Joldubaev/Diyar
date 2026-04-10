@@ -1,13 +1,18 @@
-class AllergenEntity {
+import 'package:equatable/equatable.dart';
+
+class AllergenEntity extends Equatable {
   final String? id;
   final String? name;
   final int? sortOrder;
 
-  AllergenEntity({
+  const AllergenEntity({
     this.id,
     this.name,
     this.sortOrder,
   });
+
+  @override
+  List<Object?> get props => [id, name, sortOrder];
 
   AllergenEntity copyWith({
     String? id,

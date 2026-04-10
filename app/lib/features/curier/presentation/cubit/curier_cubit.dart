@@ -28,7 +28,7 @@ class CurierCubit extends Cubit<CurierState> {
       userResult.fold((f) => emit(UserError(f.message)), (_) {});
       return;
     }
-    final user = userResult.getOrElse(() => throw StateError('user'));
+    final user = userResult.getOrElse((_) => throw StateError('user'));
 
     final shiftResult = await _repository.getShiftStatus();
     final isOnShift = shiftResult.fold(

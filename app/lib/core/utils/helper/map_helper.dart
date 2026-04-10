@@ -1,93 +1,81 @@
-import 'dart:math' as math;
 import 'dart:developer';
-// import 'dart:math' show asin, cos, sqrt;
+import 'dart:math' as math;
 
-import 'package:diyar/features/map/presentation/widgets/coordinats_backup.dart';
+import 'package:geo/geo.dart';
 
+/// Utility for delivery zone geometry checks.
+///
+/// Zones are loaded lazily on first use and cached.
+/// All public methods are async to support the initial load.
 class MapHelper {
-  /// Проверяет, находится ли точка внутри зоны обслуживания (границы доставки).
-  static bool isPointInServiceZone(double latitude, double longitude) {
+  static ZoneRepository? _zoneRepo;
+  static List<DeliveryZone>? _cachedZones;
+  static DeliveryZone? _cachedServiceZone;
+
+  static ZoneRepository get _repo => _zoneRepo ??= ZoneRepository();
+
+  /// Ensures zones are loaded. Call early (e.g. in bootstrap) for warm cache.
+  static Future<void> preloadZones() async {
+    _cachedServiceZone ??= await _repo.getServiceZone();
+    _cachedZones ??= await _repo.getDeliveryZones();
+  }
+
+  /// Checks if a point is inside the service zone (outer delivery boundary).
+  static Future<bool> isPointInServiceZone(
+    double latitude,
+    double longitude,
+  ) async {
+    await preloadZones();
     return isPointInPolygon(
-      latitude,
-      longitude,
-      ServiceZone.getCoordinates(),
+      GeoPoint(latitude: latitude, longitude: longitude),
+      _cachedServiceZone!.boundary,
     );
   }
 
-  // Check if a coordinate is within Bishkek bounds
-  static bool isInBishkekBounds(double latitude, double longitude) {
-    double minLatitude = 42.8000;
-    double maxLatitude = 42.9200;
-    double minLongitude = 74.4500;
-    double maxLongitude = 74.6200;
-    return latitude >= minLatitude && latitude <= maxLatitude && longitude >= minLongitude && longitude <= maxLongitude;
-  }
+  /// Returns the delivery zone ID for the given coordinate, or null.
+  static Future<int?> getYandexIdForCoordinate(
+    double latitude,
+    double longitude,
+  ) async {
+    await preloadZones();
+    final point = GeoPoint(latitude: latitude, longitude: longitude);
 
-  // Calculate the distance between two coordinates
-  static double calculateDistance(
-      double startLatitude, double startLongitude, double destinationLatitude, double destinationLongitude) {
-    var p = 0.017453292519943295;
-    var c = math.cos;
-    var a = 0.5 -
-        c((destinationLatitude - startLatitude) * p) / 2 +
-        c(startLatitude * p) * c(destinationLatitude * p) * (1 - c((destinationLongitude - startLongitude) * p)) / 2;
-    return 12742 * math.asin(math.sqrt(a));
-  }
-
-  // Check if a coordinate is inside a polygon
-  static double isCoordinateInsidePolygons(double latitude, double longitude,
-      {required List<DeliveryPolygon> polygons}) {
-    for (var polygon in polygons) {
-      if (isPointInPolygon(latitude, longitude, polygon.coordinates)) {
-        // return polygon.deliveryPrice;
-      }
-    }
-    return 600;
-  }
-
-  // Get yandexId of polygon containing the coordinate
-  static int? getYandexIdForCoordinate(double latitude, double longitude, {required List<DeliveryPolygon> polygons}) {
     log('Checking coordinate: $latitude, $longitude');
-    log('Total polygons to check: ${polygons.length}');
-
-    for (var polygon in polygons) {
-      log('Checking polygon ID: ${polygon.id}');
-      if (isPointInPolygon(latitude, longitude, polygon.coordinates)) {
-        log('Point is inside polygon ID: ${polygon.id}');
-        return polygon.id;
-      } else {
-        log('Point is NOT inside polygon ID: ${polygon.id}');
-      }
+    final zone = findZoneForPoint(point, _cachedZones!);
+    if (zone != null) {
+      log('Point is inside zone ID: ${zone.id}');
+      return int.tryParse(zone.id);
     }
     log('Point is not inside any polygon');
     return null;
   }
 
-  // Check if a point is within a polygon
-  static bool isPointInPolygon(
-    double latitude,
-    double longitude,
-    List<Coordinate> coordinates,
-  ) {
-    int intersectCount = 0;
-    for (int i = 0; i < coordinates.length - 1; i++) {
-      double vertex1Lat = coordinates[i].latitude;
-      double vertex1Long = coordinates[i].longitude;
-      double vertex2Lat = coordinates[i + 1].latitude;
-      double vertex2Long = coordinates[i + 1].longitude;
+  /// Returns service zone boundary points (for map drawing).
+  static Future<List<GeoPoint>> getServiceZoneBoundary() async {
+    await preloadZones();
+    return _cachedServiceZone!.boundary;
+  }
 
-      // Check if the point is within the y-range of the edge
-      if ((vertex1Long > longitude) != (vertex2Long > longitude)) {
-        // Calculate the x-coordinate where the edge intersects with the vertical line of longitude
-        double xIntersect =
-            (vertex2Lat - vertex1Lat) * (longitude - vertex1Long) / (vertex2Long - vertex1Long) + vertex1Lat;
-        // Check if the intersection point is above the given latitude
-        if (latitude < xIntersect) {
-          intersectCount++;
-        }
-      }
-    }
-    // If the number of intersections is odd, the point is inside the polygon
-    return intersectCount % 2 == 1;
+  static bool isInBishkekBounds(double latitude, double longitude) {
+    return latitude >= 42.8000 &&
+        latitude <= 42.9200 &&
+        longitude >= 74.4500 &&
+        longitude <= 74.6200;
+  }
+
+  static double calculateDistance(
+    double startLat,
+    double startLon,
+    double destLat,
+    double destLon,
+  ) {
+    const p = 0.017453292519943295;
+    final a = 0.5 -
+        math.cos((destLat - startLat) * p) / 2 +
+        math.cos(startLat * p) *
+            math.cos(destLat * p) *
+            (1 - math.cos((destLon - startLon) * p)) /
+            2;
+    return 12742 * math.asin(math.sqrt(a));
   }
 }

@@ -1,0 +1,17 @@
+name: signalr_client
+description: Generic SignalR hub manager for Diyar — connection, reconnection, dispose.
+publish_to: none
+version: 1.0.0
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+
+dependencies:
+  logging: ^1.3.0
+  signalr_netcore: ^1.4.3
+  web_socket_channel: ^3.0.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  mocktail: ^1.0.4

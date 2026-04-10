@@ -26,7 +26,11 @@ final class GetHistoryOrdersLoaded extends HistoryState {
 }
 
 final class GetHistoryOrdersError extends HistoryState {
-  const GetHistoryOrdersError();
+  final String message;
+  const GetHistoryOrdersError(this.message);
+
+  @override
+  List<Object?> get props => [message];
 }
 
 final class GetPickupHistoryLoading extends HistoryState {
@@ -43,5 +47,9 @@ final class GetPickupHistoryLoaded extends HistoryState {
 }
 
 final class GetPickupHistoryError extends HistoryState {
-  const GetPickupHistoryError();
+  final String message;
+  const GetPickupHistoryError(this.message);
+
+  @override
+  List<Object?> get props => [message];
 }

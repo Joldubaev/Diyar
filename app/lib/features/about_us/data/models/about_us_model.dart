@@ -14,10 +14,10 @@ class AboutUsModel with _$AboutUsModel {
 
   factory AboutUsModel.fromJson(Map<String, dynamic> json) => _$AboutUsModelFromJson(json);
 
-  factory AboutUsModel.fromEntity(AboutUsEntities entity) => AboutUsModel(
+  factory AboutUsModel.fromEntity(AboutUsEntity entity) => AboutUsModel(
         name: entity.name,
         description: entity.description,
-        photoLinks: entity.photoLinks?.map((item) => item.toString()).toList(),
+        photoLinks: entity.photoLinks,
       );
 }
 

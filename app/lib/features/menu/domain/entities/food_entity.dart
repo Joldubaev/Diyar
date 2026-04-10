@@ -1,7 +1,9 @@
+import 'package:equatable/equatable.dart';
+
 import 'allergen_entity.dart';
 import 'ingredient_entity.dart';
 
-class FoodEntity {
+class FoodEntity extends Equatable {
   final String? id;
   final String? name;
   final String? description;
@@ -18,7 +20,7 @@ class FoodEntity {
   final List<IngredientEntity>? ingredients;
   final List<AllergenEntity>? allergens;
 
-  FoodEntity({
+  const FoodEntity({
     this.id,
     this.name,
     this.description,
@@ -35,6 +37,25 @@ class FoodEntity {
     this.ingredients,
     this.allergens,
   });
+
+  @override
+  List<Object?> get props => [
+        id,
+        name,
+        description,
+        categoryId,
+        price,
+        weight,
+        urlPhoto,
+        stopList,
+        iDctMax,
+        containerName,
+        containerCount,
+        quantity,
+        containerPrice,
+        ingredients,
+        allergens,
+      ];
 
   FoodEntity copyWith({
     String? id,
