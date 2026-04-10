@@ -98,9 +98,7 @@ class _MenuPageState extends State<MenuPage> with SingleTickerProviderStateMixin
           }
           if (state is GetFoodsByCategoryLoaded) {
             categories = state.categories;
-            if (_activeIndex.value == 0 &&
-                state.categories.isNotEmpty &&
-                state.categories[0].name != null) {
+            if (_activeIndex.value == 0 && state.categories.isNotEmpty && state.categories[0].name != null) {
               final firstCategoryName = state.categories[0].name!;
               context.read<MenuBloc>().add(
                     GetProductsEvent(foodName: firstCategoryName),
