@@ -27,6 +27,7 @@ mixin _$FoodModel {
   int? get price => throw _privateConstructorUsedError;
   String? get weight => throw _privateConstructorUsedError;
   String? get urlPhoto => throw _privateConstructorUsedError;
+  String? get urlPhotoThumb => throw _privateConstructorUsedError;
   bool? get stopList => throw _privateConstructorUsedError;
   int? get iDctMax => throw _privateConstructorUsedError;
   String? get containerName => throw _privateConstructorUsedError;
@@ -59,6 +60,7 @@ abstract class $FoodModelCopyWith<$Res> {
       int? price,
       String? weight,
       String? urlPhoto,
+      String? urlPhotoThumb,
       bool? stopList,
       int? iDctMax,
       String? containerName,
@@ -91,6 +93,7 @@ class _$FoodModelCopyWithImpl<$Res, $Val extends FoodModel>
     Object? price = freezed,
     Object? weight = freezed,
     Object? urlPhoto = freezed,
+    Object? urlPhotoThumb = freezed,
     Object? stopList = freezed,
     Object? iDctMax = freezed,
     Object? containerName = freezed,
@@ -128,6 +131,10 @@ class _$FoodModelCopyWithImpl<$Res, $Val extends FoodModel>
       urlPhoto: freezed == urlPhoto
           ? _value.urlPhoto
           : urlPhoto // ignore: cast_nullable_to_non_nullable
+              as String?,
+      urlPhotoThumb: freezed == urlPhotoThumb
+          ? _value.urlPhotoThumb
+          : urlPhotoThumb // ignore: cast_nullable_to_non_nullable
               as String?,
       stopList: freezed == stopList
           ? _value.stopList
@@ -181,6 +188,7 @@ abstract class _$$FoodModelImplCopyWith<$Res>
       int? price,
       String? weight,
       String? urlPhoto,
+      String? urlPhotoThumb,
       bool? stopList,
       int? iDctMax,
       String? containerName,
@@ -211,6 +219,7 @@ class __$$FoodModelImplCopyWithImpl<$Res>
     Object? price = freezed,
     Object? weight = freezed,
     Object? urlPhoto = freezed,
+    Object? urlPhotoThumb = freezed,
     Object? stopList = freezed,
     Object? iDctMax = freezed,
     Object? containerName = freezed,
@@ -248,6 +257,10 @@ class __$$FoodModelImplCopyWithImpl<$Res>
       urlPhoto: freezed == urlPhoto
           ? _value.urlPhoto
           : urlPhoto // ignore: cast_nullable_to_non_nullable
+              as String?,
+      urlPhotoThumb: freezed == urlPhotoThumb
+          ? _value.urlPhotoThumb
+          : urlPhotoThumb // ignore: cast_nullable_to_non_nullable
               as String?,
       stopList: freezed == stopList
           ? _value.stopList
@@ -296,6 +309,7 @@ class _$FoodModelImpl implements _FoodModel {
       this.price,
       this.weight,
       this.urlPhoto,
+      this.urlPhotoThumb,
       this.stopList,
       this.iDctMax,
       this.containerName,
@@ -324,6 +338,8 @@ class _$FoodModelImpl implements _FoodModel {
   final String? weight;
   @override
   final String? urlPhoto;
+  @override
+  final String? urlPhotoThumb;
   @override
   final bool? stopList;
   @override
@@ -358,7 +374,7 @@ class _$FoodModelImpl implements _FoodModel {
 
   @override
   String toString() {
-    return 'FoodModel(id: $id, name: $name, description: $description, categoryId: $categoryId, price: $price, weight: $weight, urlPhoto: $urlPhoto, stopList: $stopList, iDctMax: $iDctMax, containerName: $containerName, containerCount: $containerCount, quantity: $quantity, containerPrice: $containerPrice, ingredients: $ingredients, allergens: $allergens)';
+    return 'FoodModel(id: $id, name: $name, description: $description, categoryId: $categoryId, price: $price, weight: $weight, urlPhoto: $urlPhoto, urlPhotoThumb: $urlPhotoThumb, stopList: $stopList, iDctMax: $iDctMax, containerName: $containerName, containerCount: $containerCount, quantity: $quantity, containerPrice: $containerPrice, ingredients: $ingredients, allergens: $allergens)';
   }
 
   @override
@@ -376,6 +392,8 @@ class _$FoodModelImpl implements _FoodModel {
             (identical(other.weight, weight) || other.weight == weight) &&
             (identical(other.urlPhoto, urlPhoto) ||
                 other.urlPhoto == urlPhoto) &&
+            (identical(other.urlPhotoThumb, urlPhotoThumb) ||
+                other.urlPhotoThumb == urlPhotoThumb) &&
             (identical(other.stopList, stopList) ||
                 other.stopList == stopList) &&
             (identical(other.iDctMax, iDctMax) || other.iDctMax == iDctMax) &&
@@ -404,6 +422,7 @@ class _$FoodModelImpl implements _FoodModel {
       price,
       weight,
       urlPhoto,
+      urlPhotoThumb,
       stopList,
       iDctMax,
       containerName,
@@ -438,6 +457,7 @@ abstract class _FoodModel implements FoodModel {
       final int? price,
       final String? weight,
       final String? urlPhoto,
+      final String? urlPhotoThumb,
       final bool? stopList,
       final int? iDctMax,
       final String? containerName,
@@ -464,6 +484,8 @@ abstract class _FoodModel implements FoodModel {
   String? get weight;
   @override
   String? get urlPhoto;
+  @override
+  String? get urlPhotoThumb;
   @override
   bool? get stopList;
   @override

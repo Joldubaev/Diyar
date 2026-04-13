@@ -1,3 +1,4 @@
+import 'package:diyar/features/menu/domain/domain.dart';
 import 'package:flutter/material.dart';
 import 'utils/food_image_widget.dart';
 import 'utils/food_price_formatter.dart';
@@ -89,7 +90,13 @@ class FoodCardWidget extends StatelessWidget {
     // Безопасное извлечение полей через динамический доступ
     final foodId = (food as dynamic).id as String?;
     final foodName = (food as dynamic).name as String?;
-    final foodImageUrl = (food as dynamic).urlPhoto as String?;
+    final String? foodImageUrl = food is FoodEntity
+        ? food.imageUrlForList
+        : () {
+            final thumb = (food as dynamic).urlPhotoThumb as String?;
+            if (thumb != null && thumb.isNotEmpty) return thumb;
+            return (food as dynamic).urlPhoto as String?;
+          }();
     final foodWeight = (food as dynamic).weight as String?;
     final foodPrice = (food as dynamic).price as int?;
 

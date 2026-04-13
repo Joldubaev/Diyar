@@ -5,14 +5,23 @@ class NewsEntity extends Equatable {
   final String? name;
   final String? description;
   final String? photoLink;
+  final String? previewPhotoLink;
 
   const NewsEntity({
     this.id,
     this.name,
     this.description,
     this.photoLink,
+    this.previewPhotoLink,
   });
 
+  /// Лента / карточка: превью, иначе основное фото (GET get-all-news).
+  String? get listImageUrl {
+    final p = previewPhotoLink;
+    if (p != null && p.isNotEmpty) return p;
+    return photoLink;
+  }
+
   @override
-  List<Object?> get props => [id, name, description, photoLink];
+  List<Object?> get props => [id, name, description, photoLink, previewPhotoLink];
 }

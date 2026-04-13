@@ -20,7 +20,7 @@ class ProductImage extends StatelessWidget {
         child: ColoredBox(
           color: surface,
           child: CachedNetworkImage(
-            imageUrl: food.urlPhoto ?? 'https://i.ibb.co/GkL25DB/ALE-1357-7.png',
+            imageUrl: food.imageUrlForDetail ?? 'https://i.ibb.co/GkL25DB/ALE-1357-7.png',
             memCacheWidth: 600,
             memCacheHeight: 810,
             filterQuality: FilterQuality.medium,

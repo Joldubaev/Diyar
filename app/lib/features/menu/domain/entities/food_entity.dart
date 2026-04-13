@@ -11,6 +11,7 @@ class FoodEntity extends Equatable {
   final int? price;
   final String? weight;
   final String? urlPhoto;
+  final String? urlPhotoThumb;
   final bool? stopList;
   final int? iDctMax;
   final String? containerName;
@@ -28,6 +29,7 @@ class FoodEntity extends Equatable {
     this.price,
     this.weight,
     this.urlPhoto,
+    this.urlPhotoThumb,
     this.stopList,
     this.iDctMax,
     this.containerName,
@@ -38,6 +40,20 @@ class FoodEntity extends Equatable {
     this.allergens,
   });
 
+  /// Список меню, корзина, миниатюра: thumb, иначе полное фото.
+  String? get imageUrlForList {
+    final t = urlPhotoThumb;
+    if (t != null && t.isNotEmpty) return t;
+    return urlPhoto;
+  }
+
+  /// Деталь / полный экран: полное фото, иначе thumb.
+  String? get imageUrlForDetail {
+    final f = urlPhoto;
+    if (f != null && f.isNotEmpty) return f;
+    return urlPhotoThumb;
+  }
+
   @override
   List<Object?> get props => [
         id,
@@ -47,6 +63,7 @@ class FoodEntity extends Equatable {
         price,
         weight,
         urlPhoto,
+        urlPhotoThumb,
         stopList,
         iDctMax,
         containerName,
@@ -65,6 +82,7 @@ class FoodEntity extends Equatable {
     int? price,
     String? weight,
     String? urlPhoto,
+    String? urlPhotoThumb,
     bool? stopList,
     int? iDctMax,
     String? containerName,
@@ -82,6 +100,7 @@ class FoodEntity extends Equatable {
         price: price ?? this.price,
         weight: weight ?? this.weight,
         urlPhoto: urlPhoto ?? this.urlPhoto,
+        urlPhotoThumb: urlPhotoThumb ?? this.urlPhotoThumb,
         stopList: stopList ?? this.stopList,
         iDctMax: iDctMax ?? this.iDctMax,
         containerName: containerName ?? this.containerName,

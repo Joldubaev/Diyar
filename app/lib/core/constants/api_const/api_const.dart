@@ -59,8 +59,10 @@ class ApiConst {
   static String getAboutUs = "$baseUrl/about-us/information";
   // sale
   static const getSales = "$baseUrl/sale/get-all-sales";
-  //news
+  // news
   static const getNews = "$baseUrl/news/get-all-news";
+  static const adminCreateNews = "$baseUrl/admin/create-news";
+  static const adminUpdateNews = "$baseUrl2/admin/update-news";
 
   // ORDER
   static const createOrder = "$baseUrl/orders/create-order";
