@@ -135,23 +135,7 @@ class OrderActiveItemEntity extends Equatable {
     );
   }
 
-  String get fullAddress => '${address ?? ''}, д. ${houseNumber ?? ''}'.trim();
-  bool get isCompleted => status == 'completed';
-
-  /// Статус оплаты для отображения. New, Await → pending; Successful, Charge → paid; Reject → rejected.
-  PaymentDisplayState get paymentDisplayState {
-    switch (paymentStatus) {
-      case 'Successful':
-      case 'Charge':
-        return PaymentDisplayState.paid;
-      case 'Reject':
-        return PaymentDisplayState.rejected;
-      case 'New':
-      case 'Await':
-      default:
-        return PaymentDisplayState.pending;
-    }
-  }
+  PaymentDisplayState get paymentDisplayState => PaymentDisplayState.fromRaw(paymentStatus);
 
   /// Определяет, является ли заказ самовывозом (pickup)
   /// Обычно pickup заказы не имеют адреса доставки

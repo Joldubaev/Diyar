@@ -39,19 +39,14 @@ class ProductItemWidget extends StatelessWidget {
               ),
             ],
           ),
-          child: Column(
-            children: [
-              SizedBox(
-                height: 120,
-                child: ProductImage(
-                  food: food,
-                  quantity: quantity,
-                  fit: BoxFit.contain,
-                ),
-              ),
-              Padding(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final tightHeight = constraints.hasBoundedHeight;
+
+              final textBlock = Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 6.0),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const SizedBox(height: 2),
@@ -87,28 +82,53 @@ class ProductItemWidget extends StatelessWidget {
                     ),
                   ],
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                child: Center(
-                  child: CounterWidget(
-                    value: quantity,
-                    height: 36.0,
-                    borderRadius: 10.0,
-                    iconSize: 18.0,
-                    borderColor: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
-                    textStyle: theme.textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w500,
-                      height: 1.1,
+              );
+
+              return Column(
+                children: [
+                  SizedBox(
+                    height: 120,
+                    child: ProductImage(
+                      food: food,
+                      quantity: quantity,
+                      fit: BoxFit.contain,
                     ),
-                    onIncrement: () => ProductCartDispatch.increment(context, food, quantity),
-                    onDecrement: quantity > 0 ? () => ProductCartDispatch.decrement(context, food, quantity) : null,
-                    onValueChanged: (value) => ProductCartDispatch.setCount(context, food, value),
                   ),
-                ),
-              ),
-              const SizedBox(height: 8),
-            ],
+                  if (tightHeight)
+                    Expanded(
+                      child: ClipRect(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.center,
+                          child: textBlock,
+                        ),
+                      ),
+                    )
+                  else
+                    textBlock,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                    child: Center(
+                      child: CounterWidget(
+                        value: quantity,
+                        height: 40.0,
+                        borderRadius: 12.0,
+                        iconSize: 20.0,
+                        borderColor: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
+                        textStyle: theme.textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w500,
+                          height: 1.1,
+                        ),
+                        onIncrement: () => ProductCartDispatch.increment(context, food, quantity),
+                        onDecrement: quantity > 0 ? () => ProductCartDispatch.decrement(context, food, quantity) : null,
+                        onValueChanged: (value) => ProductCartDispatch.setCount(context, food, value),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                ],
+              );
+            },
           ),
         ),
       ),

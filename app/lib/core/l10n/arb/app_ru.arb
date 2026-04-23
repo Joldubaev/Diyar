@@ -222,5 +222,13 @@
     }
   },
   "availableBonus": "{count} бонусов",
-  "bonusLabel": "бонус"
+  "bonusLabel": "бонус",
+  "@pickupOrderReadySnackBar": {
+    "placeholders": {
+      "orderNumber": {
+        "type": "int"
+      }
+    }
+  },
+  "pickupOrderReadySnackBar": "Заказ №{orderNumber} готов к выдаче"
 }

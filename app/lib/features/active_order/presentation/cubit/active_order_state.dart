@@ -29,22 +29,3 @@ final class ActiveOrdersError extends ActiveOrderState {
   List<Object> get props => [message];
 }
 
-final class OrderItemLoading extends ActiveOrderState {}
-
-final class OrderItemLoaded extends ActiveOrderState {
-  final OrderActiveItemEntity order;
-
-  const OrderItemLoaded(this.order);
-
-  @override
-  List<Object> get props => [order];
-}
-
-final class OrderItemError extends ActiveOrderState {
-  final String message;
-
-  const OrderItemError(this.message);
-
-  @override
-  List<Object> get props => [message];
-}

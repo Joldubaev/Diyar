@@ -1383,6 +1383,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'bonus'**
   String get bonusLabel;
+
+  /// No description provided for @pickupOrderReadySnackBar.
+  ///
+  /// In en, this message translates to:
+  /// **'Order #{orderNumber} is ready for pickup'**
+  String pickupOrderReadySnackBar(int orderNumber);
 }
 
 class _AppLocalizationsDelegate

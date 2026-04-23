@@ -3,12 +3,10 @@ import 'package:flutter/services.dart';
 
 /// Константы для виджета счетчика
 class _CounterConstants {
-  static const double defaultHeight = 35.0;
-  static const double defaultBorderRadius = 33.0;
-  static const double defaultIconSize = 18.0;
-  static const double fieldWidth = 34.0;
-  static const double iconTapSize = 26.0;
-  static const double gap = 4.0;
+  static const double defaultHeight = 40.0;
+  static const double defaultBorderRadius = 44.0;
+  static const double defaultIconSize = 24.0;
+  static const double fieldWidth = 40.0;
 }
 
 /// Универсальный виджет счетчика для увеличения/уменьшения значений
@@ -137,17 +135,18 @@ class _CounterWidgetState extends State<CounterWidget> {
         borderRadius: BorderRadius.circular(effectiveBorderRadius),
         border: Border.all(color: effectiveBorderColor),
       ),
+      clipBehavior: Clip.antiAlias,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _CounterTapIcon(
             icon: Icons.remove,
             iconSize: effectiveIconSize,
+            height: effectiveHeight,
             onPressed: canDecrement ? _onDecrementTap : null,
           ),
-          const SizedBox(width: _CounterConstants.gap),
           if (widget.onValueChanged != null)
             SizedBox(
               width: _CounterConstants.fieldWidth,
@@ -186,10 +185,10 @@ class _CounterWidgetState extends State<CounterWidget> {
                 ),
               ),
             ),
-          const SizedBox(width: _CounterConstants.gap),
           _CounterTapIcon(
             icon: Icons.add,
             iconSize: effectiveIconSize,
+            height: effectiveHeight,
             onPressed: canIncrement ? widget.onIncrement : null,
           ),
         ],
@@ -198,16 +197,19 @@ class _CounterWidgetState extends State<CounterWidget> {
   }
 }
 
-/// Без [IconButton] — у Material минимальная зона ~48px, из‑за неё был overflow в карточке.
+/// Зона тапа — весь доступный столбец [height] × половина ширины счётчика:
+/// это даёт крупный hit‑target без необходимости тянуть пальцем в точный глиф.
 class _CounterTapIcon extends StatelessWidget {
   const _CounterTapIcon({
     required this.icon,
     required this.iconSize,
+    required this.height,
     this.onPressed,
   });
 
   final IconData icon;
   final double iconSize;
+  final double height;
   final VoidCallback? onPressed;
 
   @override
@@ -219,11 +221,10 @@ class _CounterTapIcon extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onPressed,
-        customBorder: const CircleBorder(),
         child: SizedBox(
-          width: _CounterConstants.iconTapSize,
-          height: _CounterConstants.iconTapSize,
-          child: Icon(icon, size: iconSize, color: color),
+          width: height,
+          height: height,
+          child: Center(child: Icon(icon, size: iconSize, color: color)),
         ),
       ),
     );

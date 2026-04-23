@@ -12,13 +12,12 @@ part 'active_order_state.dart';
 
 @LazySingleton()
 class ActiveOrderCubit extends Cubit<ActiveOrderState> {
-  static const _statusDebounceMs = 2000;
-  static const _activeStatuses = {'Awaits', 'Processing', 'OnTheWay'};
+  static const _activeDeliveryStatuses = {'Awaits', 'Processing', 'OnTheWay'};
+  static const _activePickupStatuses = {'Awaits', 'Processing', 'Cooked'};
 
   final ActiveOrderRepository _repository;
   final OrderStatusService _statusService;
   StreamSubscription<List<OrderStatusEntity>>? _statusSubscription;
-  DateTime? _lastStatusEmit;
 
   ActiveOrderCubit(
     this._repository,
@@ -37,26 +36,19 @@ class ActiveOrderCubit extends Cubit<ActiveOrderState> {
       (failure) => emit(ActiveOrdersError(failure.message)),
       (orders) {
         emit(ActiveOrdersLoaded(orders));
-        _listenToStatusUpdates();
+        _listenToStatusUpdates(orders);
       },
     );
   }
 
-  void _listenToStatusUpdates() {
+  void _listenToStatusUpdates(List<OrderActiveItemEntity> orders) {
     _statusSubscription?.cancel();
-    _statusService.initAndConnect();
+    final connectPickup = orders.any((o) => o.isPickup);
+    unawaited(_statusService.initAndConnect(connectPickupHub: connectPickup));
 
     _statusSubscription = _statusService.statusStream.listen(
       (newStatuses) {
         if (isClosed) return;
-
-        final now = DateTime.now();
-        if (_lastStatusEmit != null &&
-            now.difference(_lastStatusEmit!).inMilliseconds <
-                _statusDebounceMs) {
-          return;
-        }
-        _lastStatusEmit = now;
 
         final currentState = state;
         if (currentState is ActiveOrdersLoaded) {
@@ -70,8 +62,13 @@ class ActiveOrderCubit extends Cubit<ActiveOrderState> {
                 }
                 return order;
               })
-              .where((o) =>
-                  o.status == null || _activeStatuses.contains(o.status))
+              .where((o) {
+                if (o.status == null) return true;
+                if (o.isPickup) {
+                  return _activePickupStatuses.contains(o.status);
+                }
+                return _activeDeliveryStatuses.contains(o.status);
+              })
               .toList();
 
           emit(ActiveOrdersLoaded(updatedOrders));
@@ -100,7 +97,6 @@ class ActiveOrderCubit extends Cubit<ActiveOrderState> {
   void reset() {
     _statusSubscription?.cancel();
     _statusSubscription = null;
-    _lastStatusEmit = null;
     emit(ActiveOrderInitial());
   }
 

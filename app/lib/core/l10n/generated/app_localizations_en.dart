@@ -663,4 +663,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get bonusLabel => 'bonus';
+
+  @override
+  String pickupOrderReadySnackBar(int orderNumber) {
+    return 'Order #$orderNumber is ready for pickup';
+  }
 }

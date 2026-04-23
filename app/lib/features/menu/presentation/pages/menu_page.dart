@@ -176,7 +176,7 @@ class _ShimmerGrid extends StatelessWidget {
         crossAxisCount: 2,
         mainAxisSpacing: 16,
         crossAxisSpacing: 16,
-        childAspectRatio: 189 / 225,
+        mainAxisExtent: 200,
       ),
       itemBuilder: (_, __) => Shimmer.fromColors(
         baseColor: Colors.grey[300]!,

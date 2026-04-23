@@ -22,25 +22,18 @@ class HomeStoriesSection extends StatelessWidget {
                 : <NewsEntity>[];
         if (news.isEmpty) return const SizedBox.shrink();
 
-        final items = news
-            .where((e) => (e.listImageUrl?.isNotEmpty ?? false))
-            .toList()
-            .asMap()
-            .entries
-            .map((e) {
-              final n = e.value;
-              final listImg = n.listImageUrl!;
-              final mainImg =
-                  (n.photoLink != null && n.photoLink!.isNotEmpty) ? n.photoLink! : listImg;
-              return DiyarStoryItem(
-                id: n.id ?? e.key.toString(),
-                cardImageLink: listImg,
-                cardLabel: n.name ?? '',
-                storyPagesImages: [mainImg],
-                storyPageDuration: const [Duration(seconds: 5)],
-              );
-            })
-            .toList();
+        final items = news.where((e) => (e.listImageUrl?.isNotEmpty ?? false)).toList().asMap().entries.map((e) {
+          final n = e.value;
+          final listImg = n.listImageUrl!;
+          final mainImg = (n.photoLink != null && n.photoLink!.isNotEmpty) ? n.photoLink! : listImg;
+          return DiyarStoryItem(
+            id: n.id ?? e.key.toString(),
+            cardImageLink: listImg,
+            cardLabel: n.name ?? '',
+            storyPagesImages: [mainImg],
+            storyPageDuration: const [Duration(seconds: 5)],
+          );
+        }).toList();
 
         return items.isEmpty ? const SizedBox.shrink() : MqStoryItemsWidget(items: items);
       },
