@@ -122,13 +122,7 @@ class AddressSelectionCubit extends Cubit<AddressSelectionState> {
   }
 
   Future<void> searchByText(String searchText) async {
-    String searchQuery = searchText.trim();
-    final lowerQuery = searchQuery.toLowerCase();
-    if (!lowerQuery.contains('чуйск') &&
-        !lowerQuery.contains('бишкек') &&
-        !lowerQuery.contains('bishkek')) {
-      searchQuery = '$searchQuery Бишкек';
-    }
+    final searchQuery = searchText.trim();
 
     try {
       final searchResult = await YandexSearch.searchByText(

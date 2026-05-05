@@ -6,6 +6,9 @@ import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
+const _bishkekCenterLat = 42.876;
+const _bishkekCenterLon = 74.604;
+
 /// Показывает bottom sheet для поиска адресов на карте
 Future<void> showMapSearchBottom(
   BuildContext context, {
@@ -74,16 +77,10 @@ class _MapSearchBottomSheetState extends State<_MapSearchBottomSheet> {
     try {
       log('[SEARCH] Начало поиска: "$query"');
 
-      // Улучшаем поисковый запрос: добавляем "Бишкек" если его нет
-      final searchQuery = _enhanceSearchQuery(query.trim());
-      log('[SEARCH] Итоговый запрос: "$searchQuery"');
-
-      // Закрываем предыдущую сессию
       await _activeSession?.close();
 
-      log('[SEARCH] Вызов YandexSuggest.getSuggestions');
       final suggestResponse = await YandexSuggest.getSuggestions(
-        text: searchQuery,
+        text: query.trim(),
         boundingBox: widget.chuiOblastBounds,
         suggestOptions: const SuggestOptions(
           suggestType: SuggestType.unspecified,
@@ -91,44 +88,48 @@ class _MapSearchBottomSheetState extends State<_MapSearchBottomSheet> {
         ),
       );
 
-      log('[SEARCH] Получен ответ от YandexSuggest, ожидание результата...');
       _activeSession = suggestResponse.$1;
       final result = await suggestResponse.$2;
 
-      if (!mounted) {
-        log('[SEARCH] Context не mounted, прерывание');
-        return;
-      }
+      if (!mounted) return;
 
       final allResults = result.items ?? [];
       log('[SEARCH] Найдено результатов: ${allResults.length}');
 
-      // Filter to addresses inside the service zone polygon.
-      // Items without coordinates are kept (cubit re-checks on selection).
-      final filteredResults = <SuggestItem>[];
+      // Keep only items inside the service zone polygon. Items without
+      // coordinates are kept (cubit re-checks on selection) and sorted last.
+      final withDistance = <(SuggestItem, double)>[];
+      final withoutCenter = <SuggestItem>[];
       for (final item in allResults) {
         if (item.center == null) {
-          filteredResults.add(item);
-        } else {
-          final inZone = await MapHelper.isPointInServiceZone(
-            item.center!.latitude,
-            item.center!.longitude,
-          );
-          if (inZone) filteredResults.add(item);
+          withoutCenter.add(item);
+          continue;
         }
+        final lat = item.center!.latitude;
+        final lon = item.center!.longitude;
+        final inZone = await MapHelper.isPointInServiceZone(lat, lon);
+        if (!inZone) continue;
+        final distance = MapHelper.calculateDistance(
+          _bishkekCenterLat,
+          _bishkekCenterLon,
+          lat,
+          lon,
+        );
+        withDistance.add((item, distance));
       }
 
-      for (int i = 0; i < filteredResults.length && i < 10; i++) {
-        final item = filteredResults[i];
-        log('[SEARCH] Результат ${i + 1}: title="${item.title}", subtitle="${item.subtitle ?? "нет"}"');
-      }
+      withDistance.sort((a, b) => a.$2.compareTo(b.$2));
+      final filteredResults = [
+        ...withDistance.map((e) => e.$1),
+        ...withoutCenter,
+      ];
 
       setState(() {
         _searchResults = filteredResults;
         _isLoading = false;
       });
 
-      log('[SEARCH] Состояние обновлено, отображено ${filteredResults.length} результатов (из ${allResults.length})');
+      log('[SEARCH] Отображено ${filteredResults.length} результатов (из ${allResults.length})');
     } catch (e, stackTrace) {
       log('[SEARCH] Ошибка поиска: $e');
       log('[SEARCH] Stack trace: $stackTrace');
@@ -139,14 +140,6 @@ class _MapSearchBottomSheetState extends State<_MapSearchBottomSheet> {
         });
       }
     }
-  }
-
-  String _enhanceSearchQuery(String query) {
-    final lowerQuery = query.toLowerCase();
-    if (!lowerQuery.contains('чуйск') && !lowerQuery.contains('бишкек') && !lowerQuery.contains('bishkek')) {
-      return '$query Бишкек';
-    }
-    return query;
   }
 
   void _onSearchTextChanged(String text) {

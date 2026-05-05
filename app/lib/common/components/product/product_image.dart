@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui' as ui;
 
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -13,6 +14,8 @@ class ProductImage extends StatefulWidget {
     required this.food,
     required this.quantity,
     this.fit = BoxFit.cover,
+    this.blurFill = false,
+    this.smartFit = false,
     this.memCacheWidth,
     this.memCacheHeight,
   });
@@ -20,6 +23,15 @@ class ProductImage extends StatefulWidget {
   final FoodEntity food;
   final int quantity;
   final BoxFit fit;
+
+  /// При true фон заполняется размытой копией того же фото (cover),
+  /// поверх — само фото в [fit] (обычно contain).
+  final bool blurFill;
+
+  /// При true фит выбирается автоматически по аспекту фото:
+  /// квадрат/почти квадрат → cover, портрет/ландшафт → contain.
+  /// До определения аспекта используется [fit].
+  final bool smartFit;
 
   /// Размер декодирования в пикселях устройства; если null — 400×400.
   final int? memCacheWidth;
@@ -33,6 +45,9 @@ class _ProductImageState extends State<ProductImage> with SingleTickerProviderSt
   late final AnimationController _controller;
   late final Animation<double> _opacity;
   Timer? _timer;
+  BoxFit? _autoFit;
+  ImageStream? _resolvingStream;
+  ImageStreamListener? _resolvingListener;
 
   @override
   void initState() {
@@ -42,6 +57,29 @@ class _ProductImageState extends State<ProductImage> with SingleTickerProviderSt
       vsync: this,
     );
     _opacity = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
+    if (widget.smartFit) _resolveAutoFit();
+  }
+
+  void _resolveAutoFit() {
+    final url = widget.food.imageUrlForList;
+    if (url == null || url.isEmpty) return;
+    final provider = CachedNetworkImageProvider(url);
+    final stream = provider.resolve(const ImageConfiguration());
+    final listener = ImageStreamListener(
+      (info, _) {
+        final aspect = info.image.width / info.image.height;
+        if (mounted) {
+          setState(() {
+            _autoFit =
+                (aspect >= 0.85 && aspect <= 1.2) ? BoxFit.cover : BoxFit.contain;
+          });
+        }
+      },
+      onError: (_, __) {},
+    );
+    stream.addListener(listener);
+    _resolvingStream = stream;
+    _resolvingListener = listener;
   }
 
   @override
@@ -62,6 +100,9 @@ class _ProductImageState extends State<ProductImage> with SingleTickerProviderSt
   void dispose() {
     _controller.dispose();
     _timer?.cancel();
+    if (_resolvingStream != null && _resolvingListener != null) {
+      _resolvingStream!.removeListener(_resolvingListener!);
+    }
     super.dispose();
   }
 
@@ -70,6 +111,8 @@ class _ProductImageState extends State<ProductImage> with SingleTickerProviderSt
     final theme = Theme.of(context);
     final memW = widget.memCacheWidth ?? 300;
     final memH = widget.memCacheHeight ?? 406; // 300 * 1024 / 758 ≈ 406
+    final effectiveFit =
+        widget.smartFit ? (_autoFit ?? BoxFit.contain) : widget.fit;
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(10.0),
@@ -113,8 +156,31 @@ class _ProductImageState extends State<ProductImage> with SingleTickerProviderSt
                   memCacheWidth: memW,
                   memCacheHeight: memH,
                   cacheManager: DefaultCacheManager(),
-                  fit: widget.fit,
+                  fit: effectiveFit,
                   alignment: Alignment.center,
+                  imageBuilder: widget.blurFill
+                      ? (context, imageProvider) => Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              ImageFiltered(
+                                imageFilter: ui.ImageFilter.blur(
+                                  sigmaX: 6,
+                                  sigmaY: 6,
+                                ),
+                                child: Image(
+                                  image: imageProvider,
+                                  fit: BoxFit.cover,
+                                  color: Colors.white.withValues(alpha: 0.6),
+                                  colorBlendMode: BlendMode.srcATop,
+                                ),
+                              ),
+                              Image(
+                                image: imageProvider,
+                                fit: effectiveFit,
+                              ),
+                            ],
+                          )
+                      : null,
                 ),
               ),
               FadeTransition(
