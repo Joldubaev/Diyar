@@ -28,8 +28,9 @@ class PaginatedMasonryGridView<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return NotificationListener<ScrollNotification>(
-      onNotification: (ScrollNotification scrollInfo) {
-        if (scrollInfo.metrics.pixels >= scrollInfo.metrics.maxScrollExtent - 100 && !isLoadingMore) {
+      onNotification: (scrollInfo) {
+        if (scrollInfo.metrics.pixels >= scrollInfo.metrics.maxScrollExtent - 100 &&
+            !isLoadingMore) {
           loadMore();
         }
         return false;
@@ -46,7 +47,7 @@ class PaginatedMasonryGridView<T> extends StatelessWidget {
         itemBuilder: (context, index) {
           if (index == items.length) {
             return isLoadingMore
-                ? SizedBox(height: 140, child: const CircularProgressIndicator())
+                ? const SizedBox(height: 140, child: CircularProgressIndicator())
                 : const SizedBox.shrink();
           }
           return itemBuilder(context, items[index]);

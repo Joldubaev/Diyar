@@ -10,16 +10,12 @@ Future<void> showRegistrationAlertDialog(BuildContext context) async {
     builder: (BuildContext dialogContext) {
       return RegistrationAlertDialog(
         onRegister: () async {
-          await dialogContext.router.pushAndPopUntil(
-            CheckPhoneNumberRoute(),
-            predicate: (route) => false,
-          );
+          dialogContext.router.maybePop();
+          await context.router.push(CheckPhoneNumberRoute());
         },
         onLogin: () {
-          dialogContext.router.pushAndPopUntil(
-            const SignInRoute(),
-            predicate: (route) => false,
-          );
+          dialogContext.router.maybePop();
+          context.router.push(const SignInRoute());
         },
       );
     },

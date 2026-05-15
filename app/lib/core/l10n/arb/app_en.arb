@@ -220,5 +220,13 @@
     }
   },
   "availableBonus": "{count} bonuses available",
-  "bonusLabel": "bonus"
+  "bonusLabel": "bonus",
+  "@pickupOrderReadySnackBar": {
+    "placeholders": {
+      "orderNumber": {
+        "type": "int"
+      }
+    }
+  },
+  "pickupOrderReadySnackBar": "Order #{orderNumber} is ready for pickup"
 }

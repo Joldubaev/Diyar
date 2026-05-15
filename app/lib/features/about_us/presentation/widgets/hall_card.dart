@@ -28,7 +28,7 @@ class HallCardWidget extends StatelessWidget {
               hallName,
               style: theme.textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
+                color: theme.colorScheme.onSurface,
               ),
             ),
           ),
@@ -42,10 +42,26 @@ class HallCardWidget extends StatelessWidget {
                 width: double.infinity,
                 height: 180,
               ),
+              // Градиент снизу — текст читается на любом фото
+              Positioned.fill(
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.transparent,
+                        Colors.black.withValues(alpha: 0.65),
+                      ],
+                      stops: const [0.45, 1.0],
+                    ),
+                  ),
+                ),
+              ),
               Positioned(
                 left: 10,
                 right: 10,
-                bottom: 0,
+                bottom: 10,
                 child: Row(
                   children: [
                     Expanded(
@@ -54,7 +70,7 @@ class HallCardWidget extends StatelessWidget {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.bodyLarge?.copyWith(
-                          color: theme.colorScheme.onPrimary,
+                          color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -74,7 +90,7 @@ class HallCardWidget extends StatelessWidget {
                           ),
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),

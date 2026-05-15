@@ -35,7 +35,9 @@ class _NewsPageState extends State<NewsPage> {
         ),
         title: Text(
           context.l10n.news,
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(color: AppColors.white),
+          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                color: AppColors.white,
+              ),
         ),
       ),
       body: BlocConsumer<HomeContentCubit, HomeContentState>(
@@ -58,12 +60,18 @@ class _NewsPageState extends State<NewsPage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SvgPicture.asset('assets/icons/cuate.svg', width: 200, height: 200),
+                      SvgPicture.asset(
+                        'assets/icons/cuate.svg',
+                        width: 200,
+                        height: 200,
+                      ),
                       const SizedBox(height: 20),
                       Text(
                         context.l10n.noNews,
                         style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.5,
+                              ),
                             ),
                       ),
                     ],
@@ -76,7 +84,7 @@ class _NewsPageState extends State<NewsPage> {
                     return CardWidget(
                       title: currentNews.name ?? 'Новость',
                       description: currentNews.description ?? '',
-                      image: currentNews.photoLink,
+                      image: currentNews.listImageUrl,
                     );
                   },
                 );

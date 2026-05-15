@@ -11,6 +11,7 @@ class NewsModel with _$NewsModel {
     String? name,
     String? description,
     String? photoLink,
+    String? previewPhotoLink,
   }) = _NewsModel;
 
   factory NewsModel.fromJson(Map<String, dynamic> json) =>
@@ -21,6 +22,7 @@ class NewsModel with _$NewsModel {
         name: entity.name,
         description: entity.description,
         photoLink: entity.photoLink,
+        previewPhotoLink: entity.previewPhotoLink,
       );
 }
 
@@ -30,5 +32,6 @@ extension NewsModelX on NewsModel {
         name: name,
         description: description,
         photoLink: photoLink,
+        previewPhotoLink: previewPhotoLink,
       );
 }

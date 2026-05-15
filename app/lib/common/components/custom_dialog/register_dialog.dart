@@ -16,7 +16,7 @@ class RegistrationAlertDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Dialog(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.colorScheme.surface,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24),
       ),
@@ -35,7 +35,7 @@ class RegistrationAlertDialog extends StatelessWidget {
               "Регистрация",
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
+                color: theme.colorScheme.onSurface,
               ),
               textAlign: TextAlign.center,
             ),
@@ -43,7 +43,7 @@ class RegistrationAlertDialog extends StatelessWidget {
             Text(
               "Создайте аккаунт или войдите, чтобы разблокировать все функции",
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: Colors.grey[600],
+                color: theme.colorScheme.onSurfaceVariant,
                 fontWeight: FontWeight.normal,
               ),
               textAlign: TextAlign.center,
@@ -56,7 +56,7 @@ class RegistrationAlertDialog extends StatelessWidget {
                 bgColor: theme.colorScheme.primary,
                 title: "Зарегистрироваться",
                 textStyle: theme.textTheme.bodyLarge?.copyWith(
-                  color: Colors.white,
+                  color: theme.colorScheme.onPrimary,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -66,10 +66,10 @@ class RegistrationAlertDialog extends StatelessWidget {
               width: double.infinity,
               child: SubmitButtonWidget(
                 onTap: onLogin,
-                bgColor: theme.colorScheme.onPrimary,
+                bgColor: theme.colorScheme.surfaceContainerHighest,
                 title: "Авторизоваться",
                 textStyle: theme.textTheme.bodyLarge?.copyWith(
-                  color: Colors.black,
+                  color: theme.colorScheme.onSurface,
                   fontWeight: FontWeight.w500,
                 ),
               ),

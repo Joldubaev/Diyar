@@ -24,6 +24,7 @@ mixin _$NewsModel {
   String? get name => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
   String? get photoLink => throw _privateConstructorUsedError;
+  String? get previewPhotoLink => throw _privateConstructorUsedError;
 
   /// Serializes this NewsModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -40,7 +41,12 @@ abstract class $NewsModelCopyWith<$Res> {
   factory $NewsModelCopyWith(NewsModel value, $Res Function(NewsModel) then) =
       _$NewsModelCopyWithImpl<$Res, NewsModel>;
   @useResult
-  $Res call({String? id, String? name, String? description, String? photoLink});
+  $Res call(
+      {String? id,
+      String? name,
+      String? description,
+      String? photoLink,
+      String? previewPhotoLink});
 }
 
 /// @nodoc
@@ -62,6 +68,7 @@ class _$NewsModelCopyWithImpl<$Res, $Val extends NewsModel>
     Object? name = freezed,
     Object? description = freezed,
     Object? photoLink = freezed,
+    Object? previewPhotoLink = freezed,
   }) {
     return _then(_value.copyWith(
       id: freezed == id
@@ -80,6 +87,10 @@ class _$NewsModelCopyWithImpl<$Res, $Val extends NewsModel>
           ? _value.photoLink
           : photoLink // ignore: cast_nullable_to_non_nullable
               as String?,
+      previewPhotoLink: freezed == previewPhotoLink
+          ? _value.previewPhotoLink
+          : previewPhotoLink // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -92,7 +103,12 @@ abstract class _$$NewsModelImplCopyWith<$Res>
       __$$NewsModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String? id, String? name, String? description, String? photoLink});
+  $Res call(
+      {String? id,
+      String? name,
+      String? description,
+      String? photoLink,
+      String? previewPhotoLink});
 }
 
 /// @nodoc
@@ -112,6 +128,7 @@ class __$$NewsModelImplCopyWithImpl<$Res>
     Object? name = freezed,
     Object? description = freezed,
     Object? photoLink = freezed,
+    Object? previewPhotoLink = freezed,
   }) {
     return _then(_$NewsModelImpl(
       id: freezed == id
@@ -130,6 +147,10 @@ class __$$NewsModelImplCopyWithImpl<$Res>
           ? _value.photoLink
           : photoLink // ignore: cast_nullable_to_non_nullable
               as String?,
+      previewPhotoLink: freezed == previewPhotoLink
+          ? _value.previewPhotoLink
+          : previewPhotoLink // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -137,7 +158,12 @@ class __$$NewsModelImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$NewsModelImpl implements _NewsModel {
-  const _$NewsModelImpl({this.id, this.name, this.description, this.photoLink});
+  const _$NewsModelImpl(
+      {this.id,
+      this.name,
+      this.description,
+      this.photoLink,
+      this.previewPhotoLink});
 
   factory _$NewsModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$NewsModelImplFromJson(json);
@@ -150,10 +176,12 @@ class _$NewsModelImpl implements _NewsModel {
   final String? description;
   @override
   final String? photoLink;
+  @override
+  final String? previewPhotoLink;
 
   @override
   String toString() {
-    return 'NewsModel(id: $id, name: $name, description: $description, photoLink: $photoLink)';
+    return 'NewsModel(id: $id, name: $name, description: $description, photoLink: $photoLink, previewPhotoLink: $previewPhotoLink)';
   }
 
   @override
@@ -166,13 +194,15 @@ class _$NewsModelImpl implements _NewsModel {
             (identical(other.description, description) ||
                 other.description == description) &&
             (identical(other.photoLink, photoLink) ||
-                other.photoLink == photoLink));
+                other.photoLink == photoLink) &&
+            (identical(other.previewPhotoLink, previewPhotoLink) ||
+                other.previewPhotoLink == previewPhotoLink));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, name, description, photoLink);
+  int get hashCode => Object.hash(
+      runtimeType, id, name, description, photoLink, previewPhotoLink);
 
   /// Create a copy of NewsModel
   /// with the given fields replaced by the non-null parameter values.
@@ -195,7 +225,8 @@ abstract class _NewsModel implements NewsModel {
       {final String? id,
       final String? name,
       final String? description,
-      final String? photoLink}) = _$NewsModelImpl;
+      final String? photoLink,
+      final String? previewPhotoLink}) = _$NewsModelImpl;
 
   factory _NewsModel.fromJson(Map<String, dynamic> json) =
       _$NewsModelImpl.fromJson;
@@ -208,6 +239,8 @@ abstract class _NewsModel implements NewsModel {
   String? get description;
   @override
   String? get photoLink;
+  @override
+  String? get previewPhotoLink;
 
   /// Create a copy of NewsModel
   /// with the given fields replaced by the non-null parameter values.

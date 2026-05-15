@@ -59,14 +59,18 @@ class ApiConst {
   static String getAboutUs = "$baseUrl/about-us/information";
   // sale
   static const getSales = "$baseUrl/sale/get-all-sales";
-  //news
+  // news
   static const getNews = "$baseUrl/news/get-all-news";
+  static const adminCreateNews = "$baseUrl/admin/create-news";
+  static const adminUpdateNews = "$baseUrl2/admin/update-news";
 
   // ORDER
   static const createOrder = "$baseUrl/orders/create-order";
   static const getActualOrders = "$baseUrl/orders/get-all-actual-orders-by-user";
+  static const cancelDeliveryOrder = "$baseUrl/orders/cancel-order-by-user";
   static const getPickupOrder = "$baseUrl/pickup-orders/create-pickup-order";
   static const getPickupHistoryOrders = "$baseUrl/pickup-orders/get-all-pickup-orders-by-user";
+  static const cancelPickupOrder = "$baseUrl/pickup-orders/cancel-order-by-user";
   static const getOrderItem = "$baseUrl/orders/get-order";
   static const getOrderHistory = "$baseUrl/orders/get-history";
 
@@ -92,6 +96,11 @@ class ApiConst {
   static const createPayLink = "$baseUrl/openbanking/create-pay-link";
   /// URL хаба для SignalR: передавать https (negotiate идёт по HTTP, затем upgrade в WebSocket).
   static const paymentStatusHubUrl = "https://api.diyar.kg/api/payment-status-hub";
+  /// SignalR: статусы заказов на доставку (JWT в query: ?access_token=...).
+  static const orderStatusHubUrl = "https://api.diyar.kg/api/order-status-hub";
+  /// SignalR: статусы заказов на самовывоз (событие ReceivePickupStatus).
+  /// Должен совпадать с `MapHub` на сервере; при 404 на negotiate хаб ещё не выкатили на API.
+  static const pickupOrderStatusHubUrl = "https://api.diyar.kg/api/pickup-order-status-hub";
 
   //payment
   static const finipayCallBack = "$baseUrl/payment/finipay-callback";

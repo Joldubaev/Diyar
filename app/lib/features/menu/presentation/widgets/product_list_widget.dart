@@ -1,5 +1,4 @@
 import 'package:diyar/common/components/components.dart';
-import 'package:diyar/common/components/product/product_card_constants.dart';
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/menu/presentation/cubit/menu_products_cubit.dart';
 import 'package:flutter/material.dart';
@@ -68,7 +67,7 @@ class ProductsList extends StatelessWidget {
                 crossAxisCount: 2,
                 mainAxisSpacing: 10,
                 crossAxisSpacing: 10,
-                childAspectRatio: ProductCardConstants.gridTileChildAspectRatio,
+                childAspectRatio: 0.71,
               ),
               padding: const EdgeInsets.symmetric(
                 horizontal: 16,

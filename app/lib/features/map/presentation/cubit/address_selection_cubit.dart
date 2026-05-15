@@ -13,7 +13,7 @@ part 'address_selection_state.dart';
 
 /// BoundingBox зоны обслуживания для ограничения поиска Yandex.
 const _serviceZoneBounds = BoundingBox(
-  northEast: Point(latitude: 42.957, longitude: 74.924),
+  northEast: Point(latitude: 42.957, longitude: 75.1),
   southWest: Point(latitude: 42.71, longitude: 74.285),
 );
 
@@ -122,13 +122,7 @@ class AddressSelectionCubit extends Cubit<AddressSelectionState> {
   }
 
   Future<void> searchByText(String searchText) async {
-    String searchQuery = searchText.trim();
-    final lowerQuery = searchQuery.toLowerCase();
-    if (!lowerQuery.contains('чуйск') &&
-        !lowerQuery.contains('бишкек') &&
-        !lowerQuery.contains('bishkek')) {
-      searchQuery = '$searchQuery Бишкек';
-    }
+    final searchQuery = searchText.trim();
 
     try {
       final searchResult = await YandexSearch.searchByText(

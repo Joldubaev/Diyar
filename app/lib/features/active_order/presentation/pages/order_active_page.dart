@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:diyar/common/components/components.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/core/di/injectable_config.dart' as di;
@@ -7,38 +8,74 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 @RoutePage()
-class ActiveOrderPage extends StatelessWidget {
+class ActiveOrderPage extends StatefulWidget {
   const ActiveOrderPage({super.key});
+
+  @override
+  State<ActiveOrderPage> createState() => _ActiveOrderPageState();
+}
+
+class _ActiveOrderPageState extends State<ActiveOrderPage> {
+  List<OrderActiveItemEntity> _ordersSnapshot = const [];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) di.sl<ActiveOrderCubit>().getActiveOrders();
+    });
+  }
+
+  void _onOrdersState(BuildContext context, ActiveOrderState state) {
+    if (state is! ActiveOrdersLoaded) {
+      if (state is ActiveOrderInitial || state is ActiveOrdersLoading) {
+        _ordersSnapshot = const [];
+      }
+      return;
+    }
+
+    for (final o in state.orders) {
+      if (!o.isPickup || o.status != 'Cooked' || o.orderNumber == null) continue;
+      final before = _ordersSnapshot.firstWhereOrNull((x) => x.orderNumber == o.orderNumber);
+      if (before != null && before.status != 'Cooked') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(context.l10n.pickupOrderReadySnackBar(o.orderNumber!))),
+        );
+      }
+    }
+    _ordersSnapshot = List<OrderActiveItemEntity>.from(state.orders);
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    // BlocProvider.value — используем синглтон, не закрываем его при pop.
-    // Тот же экземпляр, что и в MainHomePage → баннер реагирует на изменения.
     return BlocProvider.value(
-      value: di.sl<ActiveOrderCubit>()..getActiveOrders(),
-      child: Scaffold(
-        appBar: AppBar(title: Text(context.l10n.activeOrders)),
-        body: BlocBuilder<ActiveOrderCubit, ActiveOrderState>(
-          builder: (context, state) {
-            return switch (state) {
-              ActiveOrdersLoading() || ActiveOrderInitial() => const Center(child: CircularProgressIndicator()),
-              ActiveOrdersError(message: final msg) => EmptyActiveOrders(text: msg),
-              ActiveOrdersLoaded(orders: final orders) => orders.isEmpty
-                  ? EmptyActiveOrders(text: context.l10n.noActiveOrders)
-                  : ListView.separated(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                      itemCount: orders.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: 10),
-                      itemBuilder: (context, index) {
-                        final order = orders[index];
-                        return _OrderCard(order: order, theme: theme);
-                      },
-                    ),
-              _ => const SizedBox.shrink(),
-            };
-          },
+      value: di.sl<ActiveOrderCubit>(),
+      child: BlocListener<ActiveOrderCubit, ActiveOrderState>(
+        listenWhen: (prev, curr) => curr is ActiveOrdersLoaded,
+        listener: _onOrdersState,
+        child: Scaffold(
+          appBar: AppBar(title: Text(context.l10n.activeOrders)),
+          body: BlocBuilder<ActiveOrderCubit, ActiveOrderState>(
+            builder: (context, state) {
+              return switch (state) {
+                ActiveOrdersLoading() || ActiveOrderInitial() => const Center(child: CircularProgressIndicator()),
+                ActiveOrdersError(message: final msg) => EmptyActiveOrders(text: msg),
+                ActiveOrdersLoaded(orders: final orders) => orders.isEmpty
+                    ? EmptyActiveOrders(text: context.l10n.noActiveOrders)
+                    : ListView.separated(
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        itemCount: orders.length,
+                        separatorBuilder: (_, __) => const SizedBox(height: 10),
+                        itemBuilder: (context, index) {
+                          final order = orders[index];
+                          return _OrderCard(order: order, theme: theme);
+                        },
+                      ),
+              };
+            },
+          ),
         ),
       ),
     );
@@ -88,6 +125,7 @@ class _OrderCard extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             OrderStepper(
+              isPickup: order.isPickup,
               orderStatus: OrderStatusEntity(
                 orderNumber: order.orderNumber,
                 status: order.status,

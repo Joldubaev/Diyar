@@ -13,6 +13,7 @@ import 'signalr_wss_fix.dart';
 ///
 /// Replaces the 3 duplicated SignalR services (OrderStatus,
 /// CourierLocation, PaymentStatus) with a single reusable component.
+/// Pass [onReconnected] to re-invoke Subscribe/RequestStatus after automatic reconnect.
 ///
 /// Usage:
 /// ```dart
@@ -23,9 +24,15 @@ import 'signalr_wss_fix.dart';
 /// await hub.stop();
 /// ```
 class HubManager {
-  HubManager({required this.config});
+  HubManager({
+    required this.config,
+    this.onReconnected,
+  });
 
   final HubConnectionConfig config;
+
+  /// Вызывается после automatic reconnect (снова Subscribe / RequestStatus на сервере).
+  final Future<void> Function()? onReconnected;
 
   HubConnection? _connection;
   final Map<String, void Function(List<Object?>?)> _handlers = {};
@@ -73,6 +80,18 @@ class HubManager {
 
       _connection!.onreconnected(({connectionId}) {
         dev.log('[${config.loggerName}] Reconnected: $connectionId');
+        final cb = onReconnected;
+        if (cb != null) {
+          unawaited(
+            Future(() async {
+              try {
+                await cb();
+              } catch (e, st) {
+                dev.log('[${config.loggerName}] onReconnected error: $e\n$st');
+              }
+            }),
+          );
+        }
       });
 
       await _connection!.start();

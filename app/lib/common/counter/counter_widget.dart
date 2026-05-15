@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 /// Константы для виджета счетчика
 class _CounterConstants {
   static const double defaultHeight = 40.0;
-  static const double defaultBorderRadius = 30.0;
-  static const double defaultIconSize = 20.0;
-  static const double defaultSplashRadius = 20.0;
-  static const EdgeInsets defaultPadding = EdgeInsets.symmetric(horizontal: 4);
-  static const EdgeInsets defaultTextPadding = EdgeInsets.symmetric(horizontal: 8);
+  static const double defaultBorderRadius = 44.0;
+  static const double defaultIconSize = 24.0;
+  static const double fieldWidth = 40.0;
 }
 
 /// Универсальный виджет счетчика для увеличения/уменьшения значений
-class CounterWidget extends StatelessWidget {
+class CounterWidget extends StatefulWidget {
   /// Текущее значение счетчика
   final int value;
 
@@ -29,6 +28,9 @@ class CounterWidget extends StatelessWidget {
 
   /// Callback при достижении минимального значения (например, удаление)
   final VoidCallback? onMinReached;
+
+  /// Callback при изменении значения в поле (если null — только текст, без ввода)
+  final ValueChanged<int>? onValueChanged;
 
   /// Высота виджета
   final double? height;
@@ -56,6 +58,7 @@ class CounterWidget extends StatelessWidget {
     this.onIncrement,
     this.onDecrement,
     this.onMinReached,
+    this.onValueChanged,
     this.height,
     this.borderRadius,
     this.iconSize,
@@ -65,64 +68,164 @@ class CounterWidget extends StatelessWidget {
   });
 
   @override
+  State<CounterWidget> createState() => _CounterWidgetState();
+}
+
+class _CounterWidgetState extends State<CounterWidget> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.value.toString());
+  }
+
+  @override
+  void didUpdateWidget(CounterWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.value != widget.value) {
+      _controller.text = widget.value.toString();
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _onFieldChanged(String value) {
+    if (widget.onValueChanged == null) return;
+    final parsed = int.tryParse(value);
+    if (parsed == null || parsed <= 0) return;
+    final max = widget.maxValue;
+    final upper = max ?? parsed;
+    final clamped = parsed.clamp(widget.minValue, upper);
+    if (clamped <= 0) return;
+    widget.onValueChanged!(clamped);
+  }
+
+  void _onDecrementTap() {
+    if (widget.value == widget.minValue + 1 && widget.onMinReached != null) {
+      widget.onMinReached!();
+    } else if (widget.onDecrement != null) {
+      widget.onDecrement!();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if (value < minValue) {
+    if (widget.value < widget.minValue) {
       return const SizedBox.shrink();
     }
 
     final theme = Theme.of(context);
-    final effectiveHeight = height ?? _CounterConstants.defaultHeight;
-    final effectiveBorderRadius = borderRadius ?? _CounterConstants.defaultBorderRadius;
-    final effectiveIconSize = iconSize ?? _CounterConstants.defaultIconSize;
-    final effectiveBorderColor = borderColor ?? theme.colorScheme.onSurface.withValues(alpha: 0.2);
-    final effectiveTextStyle = textStyle ?? theme.textTheme.bodyLarge;
+    final effectiveHeight = widget.height ?? _CounterConstants.defaultHeight;
+    final effectiveBorderRadius = widget.borderRadius ?? _CounterConstants.defaultBorderRadius;
+    final effectiveIconSize = widget.iconSize ?? _CounterConstants.defaultIconSize;
+    final effectiveBorderColor = widget.borderColor ?? theme.colorScheme.onSurface.withValues(alpha: 0.2);
+    final effectiveTextStyle = widget.textStyle ?? theme.textTheme.bodyLarge ?? const TextStyle();
 
-    final canDecrement = enabled && value > minValue;
-    final effectiveMaxValue = maxValue;
-    final canIncrement = enabled && (effectiveMaxValue == null || value < effectiveMaxValue);
+    final canDecrement = widget.enabled && widget.value > widget.minValue;
+    final canIncrement = widget.enabled && (widget.maxValue == null || widget.value < widget.maxValue!);
 
     return Container(
       height: effectiveHeight,
-      padding: _CounterConstants.defaultPadding,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(effectiveBorderRadius),
         border: Border.all(color: effectiveBorderColor),
       ),
+      clipBehavior: Clip.antiAlias,
       child: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          IconButton(
-            visualDensity: VisualDensity.compact,
-            splashRadius: _CounterConstants.defaultSplashRadius,
+          _CounterTapIcon(
+            icon: Icons.remove,
             iconSize: effectiveIconSize,
-            icon: const Icon(Icons.remove),
-            onPressed: canDecrement
-                ? () {
-                    if (value == minValue + 1 && onMinReached != null) {
-                      onMinReached!();
-                    } else if (onDecrement != null) {
-                      onDecrement!();
-                    }
-                  }
-                : null,
-            color: canDecrement ? null : theme.colorScheme.onSurface.withValues(alpha: 0.38),
+            height: effectiveHeight,
+            onPressed: canDecrement ? _onDecrementTap : null,
           ),
-          Padding(
-            padding: _CounterConstants.defaultTextPadding,
-            child: Text(
-              value.toString(),
-              style: effectiveTextStyle,
+          if (widget.onValueChanged != null)
+            SizedBox(
+              width: _CounterConstants.fieldWidth,
+              height: effectiveHeight,
+              child: Center(
+                child: TextField(
+                  controller: _controller,
+                  textAlign: TextAlign.center,
+                  textAlignVertical: TextAlignVertical.center,
+                  keyboardType: TextInputType.number,
+                  maxLines: 1,
+                  style: effectiveTextStyle.copyWith(height: 1.0),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
+                    isDense: true,
+                    isCollapsed: true,
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                  onChanged: _onFieldChanged,
+                ),
+              ),
+            )
+          else
+            SizedBox(
+              height: effectiveHeight,
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 2),
+                  child: Text(
+                    widget.value.toString(),
+                    style: effectiveTextStyle,
+                  ),
+                ),
+              ),
             ),
-          ),
-          IconButton(
-            visualDensity: VisualDensity.compact,
-            splashRadius: _CounterConstants.defaultSplashRadius,
+          _CounterTapIcon(
+            icon: Icons.add,
             iconSize: effectiveIconSize,
-            icon: const Icon(Icons.add),
-            onPressed: canIncrement ? onIncrement : null,
-            color: canIncrement ? null : theme.colorScheme.onSurface.withValues(alpha: 0.38),
+            height: effectiveHeight,
+            onPressed: canIncrement ? widget.onIncrement : null,
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Зона тапа — весь доступный столбец [height] × половина ширины счётчика:
+/// это даёт крупный hit‑target без необходимости тянуть пальцем в точный глиф.
+class _CounterTapIcon extends StatelessWidget {
+  const _CounterTapIcon({
+    required this.icon,
+    required this.iconSize,
+    required this.height,
+    this.onPressed,
+  });
+
+  final IconData icon;
+  final double iconSize;
+  final double height;
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final enabled = onPressed != null;
+    final color = enabled ? theme.colorScheme.primary : theme.colorScheme.onSurface.withValues(alpha: 0.38);
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onPressed,
+        child: SizedBox(
+          width: height,
+          height: height,
+          child: Center(child: Icon(icon, size: iconSize, color: color)),
+        ),
       ),
     );
   }

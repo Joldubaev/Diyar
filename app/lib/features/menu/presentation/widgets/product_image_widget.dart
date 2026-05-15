@@ -16,14 +16,12 @@ class ProductImage extends StatelessWidget {
     return ClipRRect(
       borderRadius: const BorderRadius.all(Radius.circular(16.0)),
       child: AspectRatio(
-        aspectRatio: 16 / 9,
+        aspectRatio: 758 / 1024,
         child: ColoredBox(
           color: surface,
           child: CachedNetworkImage(
-            imageUrl: food.urlPhoto ?? 'https://i.ibb.co/GkL25DB/ALE-1357-7.png',
-            memCacheWidth: 800,
-            memCacheHeight: 600,
-            filterQuality: FilterQuality.medium,
+            imageUrl: food.imageUrlForDetail ?? 'https://i.ibb.co/GkL25DB/ALE-1357-7.png',
+            filterQuality: FilterQuality.high,
             fit: BoxFit.contain,
             alignment: Alignment.center,
             width: double.infinity,

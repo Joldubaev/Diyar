@@ -12,6 +12,7 @@ _$NewsModelImpl _$$NewsModelImplFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String?,
       description: json['description'] as String?,
       photoLink: json['photoLink'] as String?,
+      previewPhotoLink: json['previewPhotoLink'] as String?,
     );
 
 Map<String, dynamic> _$$NewsModelImplToJson(_$NewsModelImpl instance) =>
@@ -20,4 +21,5 @@ Map<String, dynamic> _$$NewsModelImplToJson(_$NewsModelImpl instance) =>
       'name': instance.name,
       'description': instance.description,
       'photoLink': instance.photoLink,
+      'previewPhotoLink': instance.previewPhotoLink,
     };

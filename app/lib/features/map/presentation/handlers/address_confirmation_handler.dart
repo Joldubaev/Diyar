@@ -1,4 +1,3 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:diyar/common/components/bottom_sheets/address_confirm_bottom_sheet.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/core/di/injectable_config.dart';
@@ -28,10 +27,8 @@ abstract class AddressConfirmationHandler {
       final savedLat = storage.getLat();
       final savedLon = storage.getLon();
       if (savedLat != null && savedLon != null) {
-        final savedInServiceZone =
-            await MapHelper.isPointInServiceZone(savedLat, savedLon);
-        final savedZoneId =
-            await MapHelper.getYandexIdForCoordinate(savedLat, savedLon);
+        final savedInServiceZone = await MapHelper.isPointInServiceZone(savedLat, savedLon);
+        final savedZoneId = await MapHelper.getYandexIdForCoordinate(savedLat, savedLon);
         await storage.saveConfirmedZoneSnapshot(
           inServiceZone: savedInServiceZone,
           zoneId: savedZoneId,
@@ -74,9 +71,13 @@ abstract class AddressConfirmationHandler {
         zoneId: currentZoneId,
       );
     } else if (result == false) {
-      final router = context.router;
-      await router.push(const AddressSelectionRoute());
-      onAddressChanged();
+      // Юзер закрыл диалог — оставляем сохранённый адрес,
+      // фиксируем текущую зону, чтобы шторка не появлялась повторно
+      // до следующей смены зоны.
+      await storage.saveConfirmedZoneSnapshot(
+        inServiceZone: currentInServiceZone,
+        zoneId: currentZoneId,
+      );
     }
   }
 }

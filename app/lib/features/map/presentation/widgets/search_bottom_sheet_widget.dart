@@ -6,40 +6,47 @@ import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
-/// Показывает bottom sheet для поиска адресов на карте
+typedef _AddressResult = ({String title, String? subtitle, double? lat, double? lon});
+
+/// Весь сервисный регион — для searchByText, чтобы находить адреса
+/// в любом месте зоны доставки (Бишкек, Кант, Новопокровка и т.д.).
+const _fullZoneBounds = BoundingBox(
+  northEast: Point(latitude: 42.957, longitude: 75.1),
+  southWest: Point(latitude: 42.71, longitude: 74.285),
+);
+
+/// Показывает bottom sheet для поиска адресов на карте.
+/// [mapCenter] — текущий центр камеры, используется для suggest-подсказок.
 Future<void> showMapSearchBottom(
   BuildContext context, {
+  required Point mapCenter,
   required Function(String, double?, double?) onSearch,
 }) async {
-  /// BoundingBox зоны доставки (Бишкек) — чтобы подсказки не уводили в область/сёла
-  const serviceZoneBounds = BoundingBox(
-    northEast: Point(latitude: 42.957, longitude: 74.924),
-    southWest: Point(latitude: 42.71, longitude: 74.285),
+  final suggestBounds = BoundingBox(
+    northEast: Point(latitude: mapCenter.latitude + 0.15, longitude: mapCenter.longitude + 0.15),
+    southWest: Point(latitude: mapCenter.latitude - 0.15, longitude: mapCenter.longitude - 0.15),
   );
 
   await showModalBottomSheet<void>(
     context: context,
     backgroundColor: Colors.transparent,
     isScrollControlled: true,
-    builder: (_) {
-      final theme = Theme.of(context);
-      return _MapSearchBottomSheet(
-        theme: theme,
-        chuiOblastBounds: serviceZoneBounds,
-        onSearch: onSearch,
-      );
-    },
+    builder: (_) => _MapSearchBottomSheet(
+      theme: Theme.of(context),
+      bounds: suggestBounds,
+      onSearch: onSearch,
+    ),
   );
 }
 
 class _MapSearchBottomSheet extends StatefulWidget {
   final ThemeData theme;
-  final BoundingBox chuiOblastBounds;
+  final BoundingBox bounds;
   final Function(String, double?, double?) onSearch;
 
   const _MapSearchBottomSheet({
     required this.theme,
-    required this.chuiOblastBounds,
+    required this.bounds,
     required this.onSearch,
   });
 
@@ -49,7 +56,7 @@ class _MapSearchBottomSheet extends StatefulWidget {
 
 class _MapSearchBottomSheetState extends State<_MapSearchBottomSheet> {
   final TextEditingController _searchController = TextEditingController();
-  List<SuggestItem> _searchResults = [];
+  List<_AddressResult> _searchResults = [];
   bool _isLoading = false;
   SuggestSession? _activeSession;
 
@@ -61,93 +68,99 @@ class _MapSearchBottomSheetState extends State<_MapSearchBottomSheet> {
   }
 
   Future<void> _performSearch(String query) async {
-    if (query.trim().isEmpty) {
-      setState(() {
-        _searchResults = [];
-        _isLoading = false;
-      });
+    final text = query.trim();
+    if (text.isEmpty) {
+      setState(() { _searchResults = []; _isLoading = false; });
       return;
     }
 
     setState(() => _isLoading = true);
+    log('[SEARCH] Начало поиска: "$text"');
 
     try {
-      log('[SEARCH] Начало поиска: "$query"');
-
-      // Улучшаем поисковый запрос: добавляем "Бишкек" если его нет
-      final searchQuery = _enhanceSearchQuery(query.trim());
-      log('[SEARCH] Итоговый запрос: "$searchQuery"');
-
-      // Закрываем предыдущую сессию
       await _activeSession?.close();
 
-      log('[SEARCH] Вызов YandexSuggest.getSuggestions');
-      final suggestResponse = await YandexSuggest.getSuggestions(
-        text: searchQuery,
-        boundingBox: widget.chuiOblastBounds,
+      // Оба запроса стартуют одновременно (параллельно).
+      final suggestFuture = YandexSuggest.getSuggestions(
+        text: text,
+        boundingBox: widget.bounds,
         suggestOptions: const SuggestOptions(
           suggestType: SuggestType.unspecified,
           suggestWords: true,
         ),
       );
+      final textSearchFuture = YandexSearch.searchByText(
+        searchText: text,
+        searchOptions: const SearchOptions(),
+        geometry: Geometry.fromBoundingBox(_fullZoneBounds),
+      );
 
-      log('[SEARCH] Получен ответ от YandexSuggest, ожидание результата...');
-      _activeSession = suggestResponse.$1;
-      final result = await suggestResponse.$2;
+      final suggestPair = await suggestFuture;
+      final textPair = await textSearchFuture;
 
-      if (!mounted) {
-        log('[SEARCH] Context не mounted, прерывание');
-        return;
-      }
+      _activeSession = suggestPair.$1;
+      final suggestResponse = await suggestPair.$2;
+      final textResponse = await textPair.$2;
 
-      final allResults = result.items ?? [];
-      log('[SEARCH] Найдено результатов: ${allResults.length}');
+      if (!mounted) return;
 
-      // Filter to addresses inside the service zone polygon.
-      // Items without coordinates are kept (cubit re-checks on selection).
-      final filteredResults = <SuggestItem>[];
-      for (final item in allResults) {
-        if (item.center == null) {
-          filteredResults.add(item);
-        } else {
-          final inZone = await MapHelper.isPointInServiceZone(
-            item.center!.latitude,
-            item.center!.longitude,
-          );
-          if (inZone) filteredResults.add(item);
+      // --- Suggest results ---
+      final suggestItems = suggestResponse.items ?? [];
+      log('[SEARCH] Suggest: ${suggestItems.length} результатов');
+
+      final results = <_AddressResult>[];
+      final seenCoords = <(double, double)>{};
+
+      for (final item in suggestItems) {
+        final lat = item.center?.latitude;
+        final lon = item.center?.longitude;
+        if (lat != null && lon != null) {
+          final inZone = await MapHelper.isPointInServiceZone(lat, lon);
+          if (!inZone) continue;
+          seenCoords.add((_round(lat), _round(lon)));
         }
+        results.add((title: item.title, subtitle: item.subtitle, lat: lat, lon: lon));
       }
 
-      for (int i = 0; i < filteredResults.length && i < 10; i++) {
-        final item = filteredResults[i];
-        log('[SEARCH] Результат ${i + 1}: title="${item.title}", subtitle="${item.subtitle ?? "нет"}"');
+      // --- Text search results (строгий bbox — находит адреса в сёлах) ---
+      final textItems = textResponse.items ?? [];
+      log('[SEARCH] TextSearch: ${textItems.length} результатов');
+
+      for (final item in textItems) {
+        final point = item.geometry.firstOrNull?.point;
+        final lat = point?.latitude;
+        final lon = point?.longitude;
+
+        if (lat != null && lon != null) {
+          final inZone = await MapHelper.isPointInServiceZone(lat, lon);
+          if (!inZone) continue;
+          final key = (_round(lat), _round(lon));
+          if (seenCoords.contains(key)) continue; // дубль из suggest
+          seenCoords.add(key);
+        }
+
+        results.add((
+          title: item.name,
+          subtitle: null,
+          lat: lat,
+          lon: lon,
+        ));
       }
 
+      if (!mounted) return;
       setState(() {
-        _searchResults = filteredResults;
+        _searchResults = results;
         _isLoading = false;
       });
-
-      log('[SEARCH] Состояние обновлено, отображено ${filteredResults.length} результатов (из ${allResults.length})');
-    } catch (e, stackTrace) {
-      log('[SEARCH] Ошибка поиска: $e');
-      log('[SEARCH] Stack trace: $stackTrace');
-      if (mounted) {
-        setState(() {
-          _searchResults = [];
-          _isLoading = false;
-        });
-      }
+      log('[SEARCH] Итого показано: ${results.length}');
+    } catch (e, st) {
+      log('[SEARCH] Ошибка: $e\n$st');
+      if (mounted) setState(() { _searchResults = []; _isLoading = false; });
     }
   }
 
-  String _enhanceSearchQuery(String query) {
-    final lowerQuery = query.toLowerCase();
-    if (!lowerQuery.contains('чуйск') && !lowerQuery.contains('бишкек') && !lowerQuery.contains('bishkek')) {
-      return '$query Бишкек';
-    }
-    return query;
-  }
+  /// Округляет до ~100 м для дедупликации.
+  double _round(double v) => (v * 1000).round() / 1000;
 
   void _onSearchTextChanged(String text) {
     EasyDebounce.debounce(
@@ -157,29 +170,15 @@ class _MapSearchBottomSheetState extends State<_MapSearchBottomSheet> {
     );
   }
 
-  void _onItemSelected(SuggestItem item) {
-    log('[SELECT] Выбран адрес: title="${item.title}", subtitle="${item.subtitle ?? "нет"}", center=${item.center}');
-
-    if (item.center != null) {
-      // Передаём координаты напрямую из подсказки — без повторного searchByText
-      log('[SELECT] Координаты из подсказки: lat=${item.center!.latitude}, lon=${item.center!.longitude}');
-      widget.onSearch(item.title, item.center!.latitude, item.center!.longitude);
-    } else {
-      // Fallback: передаём title + subtitle для текстового поиска
-      final fullAddress =
-          item.subtitle != null && item.subtitle!.isNotEmpty ? '${item.title}, ${item.subtitle}' : item.title;
-      log('[SELECT] Нет координат, fallback на текстовый поиск: "$fullAddress"');
-      widget.onSearch(fullAddress, null, null);
-    }
+  void _onItemSelected(_AddressResult item) {
+    log('[SELECT] Выбран: "${item.title}", lat=${item.lat}, lon=${item.lon}');
+    widget.onSearch(item.title, item.lat, item.lon);
     context.maybePop();
   }
 
   void _onClear() {
     _searchController.clear();
-    setState(() {
-      _searchResults = [];
-      _isLoading = false;
-    });
+    setState(() { _searchResults = []; _isLoading = false; });
   }
 
   @override
@@ -201,10 +200,7 @@ class _MapSearchBottomSheetState extends State<_MapSearchBottomSheet> {
         ),
         child: Column(
           children: [
-            // Ручка для перетаскивания
             const DraggableBottomSheetHandle(),
-
-            // Поисковая строка
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: SearchBarWidget(
@@ -215,27 +211,23 @@ class _MapSearchBottomSheetState extends State<_MapSearchBottomSheet> {
                 onClear: _onClear,
               ),
             ),
-
-            // Индикатор загрузки
             if (_isLoading && _searchResults.isEmpty)
               const LinearProgressIndicator(
                 minHeight: 2,
                 backgroundColor: Colors.transparent,
               ),
-
-            // Результаты поиска
             Expanded(
               child: _searchResults.isEmpty && !_isLoading
                   ? const EmptySearchStateWidget(
                       title: 'Начните вводить адрес',
-                      subtitle: 'Например: улица, дом, организация',
+                      subtitle: 'Например: улица, дом, организация\n\nАдрес не найден? Закройте поиск и перетащите карту на нужное место.',
                     )
                   : ListView.separated(
                       controller: scrollController,
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       itemCount: _searchResults.length,
-                      separatorBuilder: (context, index) => const SizedBox(height: 8),
-                      itemBuilder: (context, index) {
+                      separatorBuilder: (_, __) => const SizedBox(height: 8),
+                      itemBuilder: (_, index) {
                         final item = _searchResults[index];
                         return SearchResultItemWidget(
                           title: item.title,

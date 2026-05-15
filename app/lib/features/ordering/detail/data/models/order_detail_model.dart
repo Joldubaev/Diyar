@@ -52,6 +52,7 @@ class OrderDetailModel with _$OrderDetailModel {
             price: e.price,
             weight: null,
             urlPhoto: null,
+            urlPhotoThumb: null,
             stopList: null,
             iDctMax: null,
             containerName: null,

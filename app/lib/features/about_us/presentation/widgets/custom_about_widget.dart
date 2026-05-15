@@ -12,8 +12,10 @@ class CustomAboutWidget extends StatelessWidget {
     final theme = Theme.of(context);
     final images = model.photoLinks;
 
+    final placeholderColor = theme.colorScheme.onSurface.withValues(alpha: 0.08);
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.colorScheme.surface,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -23,14 +25,14 @@ class CustomAboutWidget extends StatelessWidget {
                 model.name,
                 style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: theme.colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 8),
               Text(
                 model.description,
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  color: Colors.black87,
+                  color: theme.colorScheme.onSurfaceVariant,
                   height: 1.4,
                 ),
               ),
@@ -51,12 +53,14 @@ class CustomAboutWidget extends StatelessWidget {
                     child: CachedNetworkImage(
                       imageUrl: images[index],
                       fit: BoxFit.cover,
-                      placeholder: (context, url) => Container(
-                        color: Colors.grey[300],
+                      placeholder: (context, url) => ColoredBox(
+                        color: placeholderColor,
                       ),
-                      errorWidget: (context, url, error) => Container(
-                        color: Colors.grey[300],
-                        child: const Icon(Icons.broken_image, size: 40),
+                      errorWidget: (context, url, error) => ColoredBox(
+                        color: placeholderColor,
+                        child: const Center(
+                          child: Icon(Icons.broken_image, size: 40),
+                        ),
                       ),
                     ),
                   );

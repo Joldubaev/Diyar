@@ -663,4 +663,9 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get bonusLabel => 'бонус';
+
+  @override
+  String pickupOrderReadySnackBar(int orderNumber) {
+    return '№$orderNumber буйрутма алууга даяр';
+  }
 }
