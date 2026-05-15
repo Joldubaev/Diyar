@@ -38,7 +38,7 @@ class ProductDetailPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               SizedBox(
-                height: 260,
+                height: 320,
                 child: Hero(
                   tag: 'food_image_${food.id}',
                   child: ProductImage(food: food),

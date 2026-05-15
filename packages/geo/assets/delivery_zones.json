@@ -42,15 +42,15 @@
       },
       {
         "latitude": 42.775009101761995,
-        "longitude": 74.9223135156248
+        "longitude": 75.05
       },
       {
         "latitude": 42.84881825032479,
-        "longitude": 74.92368680664042
+        "longitude": 75.05
       },
       {
         "latitude": 42.912445228993846,
-        "longitude": 74.91132718749981
+        "longitude": 75.0
       },
       {
         "latitude": 42.9205201163062,
@@ -75,6 +75,75 @@
     ]
   },
   "deliveryZones": [
+    {
+      "id": "29",
+      "name": "zone_29",
+      "deliveryPrice": 0,
+      "boundary": [
+        {
+          "latitude": 42.8808,
+          "longitude": 74.6383
+        },
+        {
+          "latitude": 42.8827,
+          "longitude": 74.6383
+        },
+        {
+          "latitude": 42.8827,
+          "longitude": 74.641
+        },
+        {
+          "latitude": 42.8808,
+          "longitude": 74.641
+        }
+      ]
+    },
+    {
+      "id": "30",
+      "name": "zone_30",
+      "deliveryPrice": 0,
+      "boundary": [
+        {
+          "latitude": 42.8837,
+          "longitude": 74.6499
+        },
+        {
+          "latitude": 42.8849,
+          "longitude": 74.6499
+        },
+        {
+          "latitude": 42.8849,
+          "longitude": 74.6516
+        },
+        {
+          "latitude": 42.8837,
+          "longitude": 74.6516
+        }
+      ]
+    },
+    {
+      "id": "31",
+      "name": "zone_31",
+      "deliveryPrice": 0,
+      "boundary": [
+        {
+          "latitude": 42.8849,
+          "longitude": 74.6493
+        },
+        {
+          "latitude": 42.8858,
+          "longitude": 74.6493
+        },
+        {
+          "latitude": 42.8858,
+          "longitude": 74.6512
+        },
+        {
+          "latitude": 42.8849,
+          "longitude": 74.6512
+        }
+      ]
+    },
     {
       "id": "1",
       "name": "zone_1",
@@ -3108,39 +3177,6 @@
         {
           "latitude": 42.89601820955025,
           "longitude": 74.55590937188005
-        }
-      ]
-    },
-    {
-      "id": "29",
-      "name": "zone_29",
-      "deliveryPrice": 0,
-      "boundary": [
-        {
-          "latitude": 42.881726,
-          "longitude": 74.639674
-        }
-      ]
-    },
-    {
-      "id": "30",
-      "name": "zone_30",
-      "deliveryPrice": 0,
-      "boundary": [
-        {
-          "latitude": 42.884518,
-          "longitude": 74.650871
-        }
-      ]
-    },
-    {
-      "id": "31",
-      "name": "zone_31",
-      "deliveryPrice": 0,
-      "boundary": [
-        {
-          "latitude": 42.885152,
-          "longitude": 74.65035
         }
       ]
     }

@@ -106,7 +106,7 @@ class SearchMenuPage extends StatelessWidget {
                                 crossAxisCount: 2,
                                 mainAxisSpacing: 10,
                                 crossAxisSpacing: 10,
-                                childAspectRatio: 189 / 242,
+                                childAspectRatio: 0.71,
                               ),
                               itemCount: state.results.length,
                               itemBuilder: (context, index) {

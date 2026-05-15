@@ -31,7 +31,12 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   Future<void> logout() async {
     try {
       await Future.wait([
-        prefs.clear(),
+        prefs.delete(AppConst.accessToken),
+        prefs.delete(AppConst.refreshToken),
+        prefs.delete(AppConst.userInfo),
+        prefs.delete(AppConst.userId),
+        prefs.delete(AppConst.userRole),
+        prefs.delete(AppConst.phone),
         secureStorage.clear(),
       ]);
     } catch (e) {

@@ -108,7 +108,7 @@ class _AddressSelectionPageState extends State<AddressSelectionPage> {
               address: address,
               isLoading: isLoading,
               deliveryPrice: deliveryPrice,
-              onSearchPressed: () => _onSearchPressed(context),
+              onSearchPressed: () => _onSearchPressed(context, latitude, longitude),
               onConfirm: () {
                 if (address == null || data == null) return;
                 context.read<AddressSelectionCubit>().confirmAddress(
@@ -197,9 +197,10 @@ class _AddressSelectionPageState extends State<AddressSelectionPage> {
     } catch (e) { log('[address_selection_page] $e'); }
   }
 
-  void _onSearchPressed(BuildContext context) {
+  void _onSearchPressed(BuildContext context, double mapLat, double mapLon) {
     showMapSearchBottom(
       context,
+      mapCenter: Point(latitude: mapLat, longitude: mapLon),
       onSearch: (addressName, latitude, longitude) {
         if (latitude != null && longitude != null) {
           // Метод асинхронный: вычислим цену доставки и координаты.

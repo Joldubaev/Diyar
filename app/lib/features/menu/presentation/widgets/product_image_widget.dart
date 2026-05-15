@@ -21,9 +21,7 @@ class ProductImage extends StatelessWidget {
           color: surface,
           child: CachedNetworkImage(
             imageUrl: food.imageUrlForDetail ?? 'https://i.ibb.co/GkL25DB/ALE-1357-7.png',
-            memCacheWidth: 600,
-            memCacheHeight: 810,
-            filterQuality: FilterQuality.medium,
+            filterQuality: FilterQuality.high,
             fit: BoxFit.contain,
             alignment: Alignment.center,
             width: double.infinity,

@@ -109,8 +109,8 @@ class _ProductImageState extends State<ProductImage> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final memW = widget.memCacheWidth ?? 300;
-    final memH = widget.memCacheHeight ?? 406; // 300 * 1024 / 758 ≈ 406
+    final memW = widget.memCacheWidth ?? 700;
+    final memH = widget.memCacheHeight ?? 700;
     final effectiveFit =
         widget.smartFit ? (_autoFit ?? BoxFit.contain) : widget.fit;
 
@@ -129,7 +129,7 @@ class _ProductImageState extends State<ProductImage> with SingleTickerProviderSt
               ColoredBox(
                 color: theme.colorScheme.surface,
                 child: CachedNetworkImage(
-                  imageUrl: widget.food.imageUrlForList ?? 'https://via.placeholder.com/150',
+                  imageUrl: widget.food.imageUrlForDetail ?? widget.food.imageUrlForList ?? 'https://via.placeholder.com/150',
                   placeholder: (_, __) => Center(
                     child: CircularProgressIndicator(
                       color: theme.colorScheme.primary,
@@ -155,6 +155,7 @@ class _ProductImageState extends State<ProductImage> with SingleTickerProviderSt
                   ),
                   memCacheWidth: memW,
                   memCacheHeight: memH,
+                  filterQuality: FilterQuality.high,
                   cacheManager: DefaultCacheManager(),
                   fit: effectiveFit,
                   alignment: Alignment.center,
