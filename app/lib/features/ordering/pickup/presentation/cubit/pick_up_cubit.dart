@@ -206,6 +206,7 @@ class PickUpCubit extends Cubit<PickUpState> {
   ) async {
     try {
       final result = await _pickUpRepository.getPickupOrder(order);
+      if (isClosed) return;
       result.fold(
         (failure) => emit(CreatePickUpOrderError(failure.message)),
         (entity) {

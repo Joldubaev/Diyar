@@ -23,6 +23,7 @@ class SplashCubit extends Cubit<SplashState> {
 
     try {
       final status = await _checkAuthenticationStatusUseCase();
+      if (isClosed) return;
       emit(SplashAuthenticationStatusLoaded(status));
     } catch (e) {
       emit(SplashError('Ошибка при проверке статуса аутентификации'));
@@ -33,6 +34,7 @@ class SplashCubit extends Cubit<SplashState> {
   Future<void> refreshTokenIfNeeded() async {
     try {
       final result = await _refreshTokenIfNeededUseCase();
+      if (isClosed) return;
       result.fold(
         (failure) => emit(SplashTokenRefreshFailed()),
         (_) => emit(SplashTokenRefreshed()),

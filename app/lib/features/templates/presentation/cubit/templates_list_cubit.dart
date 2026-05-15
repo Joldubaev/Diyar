@@ -28,6 +28,7 @@ class TemplatesListCubit extends Cubit<TemplatesListState> {
     emit(TemplatesListLoading());
 
     final result = await _repository.getAllTemplates();
+    if (isClosed) return;
     result.fold(
       (f) => emit(TemplatesListFailure(f.message)),
       (list) {
@@ -101,6 +102,7 @@ class TemplatesListCubit extends Cubit<TemplatesListState> {
     if (currentState is! TemplatesListLoaded) return;
 
     final result = await _repository.deleteTemplate(templateId);
+    if (isClosed) return;
     result.fold(
       (failure) {
         emit(TemplateDeleteFailure(failure.message));
@@ -151,6 +153,7 @@ class TemplatesListCubit extends Cubit<TemplatesListState> {
     );
 
     final result = await _repository.createTemplate(template);
+    if (isClosed) return;
     result.fold(
       (failure) {
         emit(TemplateCreateFailure(failure.message));

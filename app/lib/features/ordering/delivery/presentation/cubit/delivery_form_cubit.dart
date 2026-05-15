@@ -133,6 +133,7 @@ class DeliveryFormCubit extends Cubit<DeliveryFormState> {
     ));
 
     final result = await _createOrderUseCase(orderEntity);
+    if (isClosed) return;
 
     // Получаем актуальное состояние после async операции
     final updatedState = state;
