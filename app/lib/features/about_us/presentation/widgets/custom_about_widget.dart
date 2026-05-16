@@ -179,21 +179,23 @@ class _InfoChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final primary = theme.colorScheme.primary;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
       decoration: BoxDecoration(
-        color: theme.colorScheme.primaryContainer,
+        color: primary.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: primary.withValues(alpha: 0.3)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 16, color: theme.colorScheme.primary),
+          Icon(icon, size: 16, color: primary),
           const SizedBox(width: 6),
           Text(
             label,
             style: theme.textTheme.labelMedium?.copyWith(
-              color: theme.colorScheme.primary,
+              color: primary,
               fontWeight: FontWeight.w600,
             ),
           ),
