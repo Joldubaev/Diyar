@@ -67,24 +67,24 @@ class _ProfilePageState extends State<ProfilePage> {
           style: Theme.of(context).textTheme.titleSmall?.copyWith(color: AppColors.white),
         ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: CircleAvatar(
-              backgroundColor: AppColors.white,
-              child: IconButton(
-                icon: Icon(
-                  Theme.of(context).brightness == Brightness.dark ? Icons.sunny : Icons.nightlight_round,
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
-                onPressed: () {
-                  final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-                  context.read<ThemeCubit>().toggleTheme(
-                        isDarkMode ? Brightness.light : Brightness.dark,
-                      );
-                },
-              ),
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.all(8.0),
+          //   child: CircleAvatar(
+          //     backgroundColor: AppColors.white,
+          //     child: IconButton(
+          //       icon: Icon(
+          //         Theme.of(context).brightness == Brightness.dark ? Icons.sunny : Icons.nightlight_round,
+          //         color: Theme.of(context).colorScheme.secondary,
+          //       ),
+          //       onPressed: () {
+          //         final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+          //         context.read<ThemeCubit>().toggleTheme(
+          //               isDarkMode ? Brightness.light : Brightness.dark,
+          //             );
+          //       },
+          //     ),
+          //   ),
+          // ),
         ],
         automaticallyImplyLeading: false,
       ),
