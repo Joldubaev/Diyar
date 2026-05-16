@@ -3,12 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:diyar/core/di/injectable_config.dart';
 import 'package:diyar/features/about_us/domain/domain.dart';
 import 'package:diyar/features/about_us/presentation/cubit/about_us_cubit.dart';
+import 'package:diyar/features/about_us/presentation/widgets/about_us_type.dart';
 import 'package:diyar/features/about_us/presentation/widgets/custom_about_widget.dart';
 
 class AboutUsDetailBody extends StatefulWidget {
-  final String apiType;
+  final AboutUsType type;
 
-  const AboutUsDetailBody({super.key, required this.apiType});
+  const AboutUsDetailBody({super.key, required this.type});
 
   @override
   State<AboutUsDetailBody> createState() => _AboutUsDetailBodyState();
@@ -21,7 +22,7 @@ class _AboutUsDetailBodyState extends State<AboutUsDetailBody> {
   @override
   void initState() {
     super.initState();
-    _cubit = sl<AboutUsCubit>()..getAboutUs(type: widget.apiType);
+    _cubit = sl<AboutUsCubit>()..getAboutUs(type: widget.type.apiType);
   }
 
   @override
@@ -51,7 +52,7 @@ class _AboutUsDetailBodyState extends State<AboutUsDetailBody> {
           if (_model == null) {
             return const SizedBox.shrink();
           }
-          return CustomAboutWidget(model: _model!);
+          return CustomAboutWidget(model: _model!, type: widget.type);
         },
       ),
     );
