@@ -114,8 +114,6 @@ class CustomAboutWidget extends StatelessWidget {
           ),
         ),
 
-        // Sticky booking button
-        _BookingButton(type: type),
       ],
     );
   }
@@ -291,49 +289,6 @@ class _SocialButton extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-// ─── Booking button ───────────────────────────────────────────────────────────
-
-class _BookingButton extends StatelessWidget {
-  final AboutUsType type;
-
-  const _BookingButton({required this.type});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Container(
-      padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
-            blurRadius: 12,
-            offset: const Offset(0, -4),
-          ),
-        ],
-      ),
-      child: SizedBox(
-        width: double.infinity,
-        height: 52,
-        child: FilledButton.icon(
-          onPressed: () => _call(type.bookingPhone),
-          icon: const Icon(Icons.phone_rounded, size: 20),
-          label: const Text(
-            'Забронировать столик',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Future<void> _call(String phone) async {
-    final uri = Uri(scheme: 'tel', path: phone);
-    if (await canLaunchUrl(uri)) launchUrl(uri);
   }
 }
 
