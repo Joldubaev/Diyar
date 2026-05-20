@@ -256,10 +256,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       Left.new,
       (data) async {
         String? newAccessToken = data['accessToken'] as String?;
+        String? newRefreshToken = data['refreshToken'] as String?;
 
         final messageData = data['message'];
-        if (newAccessToken == null && messageData is Map) {
-          newAccessToken = messageData['accessToken'] as String?;
+        if (messageData is Map) {
+          newAccessToken ??= messageData['accessToken'] as String?;
+          newRefreshToken ??= messageData['refreshToken'] as String?;
         }
 
         if (newAccessToken == null) {
@@ -267,9 +269,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         }
 
         await _localDataSource.setTokenToCache(
-          refresh: refreshToken,
+          refresh: newRefreshToken ?? refreshToken,
           access: newAccessToken,
-          phone: '',
         );
 
         return const Right(null);
