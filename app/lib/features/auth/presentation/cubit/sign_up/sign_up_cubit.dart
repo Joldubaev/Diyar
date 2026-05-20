@@ -14,8 +14,8 @@ class SignUpCubit extends Cubit<SignUpState> {
 
   Future<void> signUpUser(UserEntities model) async {
     emit(SignUpLoading());
-
     final res = await authRepository.register(model);
+    if (isClosed) return;
     res.fold(
       (failure) => emit(SignUpFailure(failure.message)),
       (_) => emit(SignUpSuccess()),
@@ -24,8 +24,8 @@ class SignUpCubit extends Cubit<SignUpState> {
 
   Future<void> checkPhoneNumber(String phone) async {
     emit(CheckPhoneLoading());
-
     final res = await authRepository.checkPhoneNumber(phone);
+    if (isClosed) return;
     res.fold(
       (failure) => emit(CheckPhoneFailure(failure.message)),
       (_) => emit(CheckPhoneSuccess()),
@@ -34,8 +34,8 @@ class SignUpCubit extends Cubit<SignUpState> {
 
   Future<void> sendVerificationCode(String phone) async {
     emit(SendCodeLoading());
-
     final res = await authRepository.sendVerificationCode(phone);
+    if (isClosed) return;
     res.fold(
       (failure) => emit(SendCodeFailure(failure.message)),
       (_) => emit(SendCodeSuccess()),
@@ -44,8 +44,8 @@ class SignUpCubit extends Cubit<SignUpState> {
 
   Future<void> verifyCode(String phone, String code) async {
     emit(VerifyCodeLoading());
-
     final res = await authRepository.verifyCodeForRegistration(phone, code);
+    if (isClosed) return;
     res.fold(
       (failure) => emit(VerifyCodeFailure(failure.message)),
       (_) => emit(VerifyCodeSuccess()),

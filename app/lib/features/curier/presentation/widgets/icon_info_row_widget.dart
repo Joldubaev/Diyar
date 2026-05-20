@@ -14,13 +14,15 @@ class IconInfoRowWidget extends StatelessWidget {
       children: [
         Icon(icon, size: 16, color: context.theme.hintColor),
         const SizedBox(width: 8),
-        RichText(
-          text: TextSpan(
-            style: context.textTheme.bodyMedium,
-            children: [
-              TextSpan(text: '$label: ', style: const TextStyle(fontWeight: FontWeight.bold)),
-              TextSpan(text: value.isNotEmpty ? value : '—'),
-            ],
+        Expanded(
+          child: RichText(
+            text: TextSpan(
+              style: context.textTheme.bodyMedium,
+              children: [
+                TextSpan(text: '$label: ', style: const TextStyle(fontWeight: FontWeight.bold)),
+                TextSpan(text: value.isNotEmpty ? value : '—'),
+              ],
+            ),
           ),
         ),
       ],

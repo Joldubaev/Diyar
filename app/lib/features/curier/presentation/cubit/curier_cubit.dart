@@ -24,6 +24,7 @@ class CurierCubit extends Cubit<CurierState> {
     emit(const UserLoading());
 
     final userResult = await _repository.getUser();
+    if (isClosed) return;
     if (userResult.isLeft()) {
       userResult.fold((f) => emit(UserError(f.message)), (_) {});
       return;
@@ -31,19 +32,23 @@ class CurierCubit extends Cubit<CurierState> {
     final user = userResult.getOrElse((_) => throw StateError('user'));
 
     final shiftResult = await _repository.getShiftStatus();
+    if (isClosed) return;
     final isOnShift = shiftResult.fold(
       (_) => _prefs.getBool(AppConst.courierOnShift) ?? true,
       (v) => v,
     );
     await _prefs.setBool(AppConst.courierOnShift, isOnShift);
+    if (isClosed) return;
     emit(CurierMainState(user: user, isOnShift: isOnShift));
   }
 
   /// Выход на смену (true) / уход со смены (false). REST: POST /courier/shift.
   Future<bool> setOnShift(bool onShift) async {
     final result = await _repository.setShift(onShift);
+    if (isClosed) return false;
     if (result.isLeft()) return false;
     await _prefs.setBool(AppConst.courierOnShift, onShift);
+    if (isClosed) return false;
     final current = state;
     if (current is CurierMainState) {
       emit(current.copyWith(isOnShift: onShift));
@@ -61,6 +66,7 @@ class CurierCubit extends Cubit<CurierState> {
     emit(currentState.copyWith(isActiveOrdersLoading: true, clearActiveOrdersError: true));
 
     final result = await _repository.getCurierOrders();
+    if (isClosed) return;
     result.fold(
       (failure) => emit(currentState.copyWith(
         isActiveOrdersLoading: false,
@@ -101,6 +107,7 @@ class CurierCubit extends Cubit<CurierState> {
       page: nextPage,
       pageSize: CurierConstants.historyPageSize,
     );
+    if (isClosed) return;
     result.fold(
       (failure) => emit(currentState.copyWith(
         isHistoryLoading: false,
@@ -143,6 +150,7 @@ class CurierCubit extends Cubit<CurierState> {
     emit(FinishOrderLoading(user: user));
 
     final result = await _repository.getFinishOrder(orderId);
+    if (isClosed) return;
     result.fold(
       (failure) {
         if (currentMainState != null) {
@@ -169,6 +177,7 @@ class CurierCubit extends Cubit<CurierState> {
     emit(FinishOrderLoading(user: user));
 
     final result = await _confirmCashPaymentAndFinishUseCase(order);
+    if (isClosed) return;
     result.fold(
       (failure) => emit(FinishOrderError(message: failure.message, user: user)),
       (_) => getCurierOrders(),

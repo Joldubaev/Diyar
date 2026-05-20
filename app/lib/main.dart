@@ -12,6 +12,7 @@ import 'features/features.dart';
 
 Future<void> main() async {
   await bootstrap();
+  di.sl.registerSingleton<AppRouter>(appRoute);
   runApp(const App());
 }
 

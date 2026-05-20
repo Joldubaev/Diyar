@@ -1,8 +1,16 @@
 class ApiConst {
   ApiConst._();
-  static const baseUrl = "https://api.diyar.kg/api/v1";
-  static const baseUrl1_2 = "https://api.diyar.kg/api/v1.2";
-  static const baseUrl2 = "https://api.diyar.kg/api/v2";
+
+  // ── ENV SWITCH: true = ngrok (dev), false = prod ──────────────
+  static const bool _useNgrok = false;
+  static const _ngrokHost = 'https://b756-31-186-54-131.ngrok-free.app';
+  static const _prodHost = 'https://api.diyar.kg';
+  static const _host = _useNgrok ? _ngrokHost : _prodHost;
+  // ─────────────────────────────────────────────────────────────
+
+  static const baseUrl = '$_host/api/v1';
+  static const baseUrl1_2 = '$_host/api/v1.2';
+  static const baseUrl2 = '$_host/api/v2';
 
   // AUTH
   static const signUp = "$baseUrl2/auth/sign-up";
@@ -78,13 +86,17 @@ class ApiConst {
   static const getCuriersFinis = "$baseUrl1_2/courier/finished-orders";
   static const getCuriersAllOrder = "$baseUrl1_2/courier/get-actual-orders-by-courier";
   static const getCuriereOrderHistory = "$baseUrl1_2/courier/get-closed-orders-by-courier";
+
   /// SignalR хаб для трекинга локации курьера (JWT в query: ?access_token=...).
-  static const courierLocationHubUrl = "https://api.diyar.kg/api/courier-location-hub";
+  static const courierLocationHubUrl = '$_host/api/courier-location-hub';
+
   /// Выход на смену / уход со смены. POST, body: { "onShift": true | false }, Header: Authorization.
   static const courierShift = "$baseUrl/courier/shift";
+
   /// Смена статуса оплаты заказа (admin/ctmax/operator).
   /// PUT, body: { "orderNumber": 8339, "paymentStatus": "Successful" }.
   static const setOrderPaymentStatusAdmin = "$baseUrl/admin/order/set-payment-status";
+
   /// Смена статуса оплаты заказа курьером.
   /// PUT, body: { "orderNumber": 8339, "paymentStatus": "Successful" }.
   static const setOrderPaymentStatusCourier = "$baseUrl/courier/order/set-payment-status";
@@ -94,13 +106,16 @@ class ApiConst {
 
   // OpenBanking (платёжная ссылка и статус)
   static const createPayLink = "$baseUrl/openbanking/create-pay-link";
+
   /// URL хаба для SignalR: передавать https (negotiate идёт по HTTP, затем upgrade в WebSocket).
-  static const paymentStatusHubUrl = "https://api.diyar.kg/api/payment-status-hub";
+  static const paymentStatusHubUrl = '$_host/api/payment-status-hub';
+
   /// SignalR: статусы заказов на доставку (JWT в query: ?access_token=...).
-  static const orderStatusHubUrl = "https://api.diyar.kg/api/order-status-hub";
+  static const orderStatusHubUrl = '$_host/api/order-status-hub';
+
   /// SignalR: статусы заказов на самовывоз (событие ReceivePickupStatus).
   /// Должен совпадать с `MapHub` на сервере; при 404 на negotiate хаб ещё не выкатили на API.
-  static const pickupOrderStatusHubUrl = "https://api.diyar.kg/api/pickup-order-status-hub";
+  static const pickupOrderStatusHubUrl = '$_host/api/pickup-order-status-hub';
 
   //payment
   static const finipayCallBack = "$baseUrl/payment/finipay-callback";

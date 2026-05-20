@@ -20,10 +20,10 @@ class SignInCubit extends Cubit<SignInState> {
   final VerifySmsCodeAndHandleFirstLaunchUseCase _verifySmsCodeUseCase;
   final RefreshTokenIfNeededUseCase _refreshTokenUseCase;
 
-  /// Send SMS code for login.
   Future<void> sendSmsCode(String phone) async {
     emit(SignInLoading());
     final result = await _authRepository.sendVerificationCode(phone);
+    if (isClosed) return;
     result.fold(
       (failure) => emit(SignInFailure(failure.message)),
       (_) => emit(SmsCodeSentForLogin(phone)),
@@ -32,10 +32,10 @@ class SignInCubit extends Cubit<SignInState> {
 
   Future<void> sendSmsCodeForLogin(String phone) => sendSmsCode(phone);
 
-  /// Verify SMS code and handle first launch.
   Future<void> verifySmsCode(String phone, String code) async {
     emit(SignInLoading());
     final result = await _verifySmsCodeUseCase(phone, code);
+    if (isClosed) return;
     result.fold(
       (failure) => emit(SignInFailure(failure.message)),
       (_) => emit(SignInSuccessWithUser()),
@@ -45,10 +45,10 @@ class SignInCubit extends Cubit<SignInState> {
   Future<void> verifySmsCodeForLogin(String phone, String code) =>
       verifySmsCode(phone, code);
 
-  /// Send code for password reset.
   Future<void> sendForgotPasswordCode(String phone) async {
     emit(SignInLoading());
     final result = await _authRepository.sendForgotPasswordCodeToPhone(phone);
+    if (isClosed) return;
     result.fold(
       (failure) => emit(SignInFailure(failure.message)),
       (_) => emit(ForgotPasswordSuccess()),
@@ -57,19 +57,19 @@ class SignInCubit extends Cubit<SignInState> {
 
   Future<void> sendCode(String phone) => sendForgotPasswordCode(phone);
 
-  /// Reset password.
   Future<void> resetPassword(ResetPasswordEntity model) async {
     emit(SignInLoading());
     final result = await _authRepository.resetPassword(model);
+    if (isClosed) return;
     result.fold(
       (failure) => emit(SignInFailure(failure.message)),
       (_) => emit(ResetPasswordSuccess()),
     );
   }
 
-  /// Refresh token if expired.
   Future<void> refreshTokenIfNeeded() async {
     final result = await _refreshTokenUseCase();
+    if (isClosed) return;
     result.fold(
       (failure) => emit(RefreshTokenFailure()),
       (_) => emit(RefreshTokenLoaded()),
@@ -78,12 +78,13 @@ class SignInCubit extends Cubit<SignInState> {
 
   Future<void> refreshToken() => refreshTokenIfNeeded();
 
-  /// Logout.
   Future<void> logout() async {
     try {
       await _authRepository.logout();
+      if (isClosed) return;
       emit(LogoutSuccess());
     } catch (e) {
+      if (isClosed) return;
       emit(LogoutFailure('Ошибка при выходе: $e'));
     }
   }

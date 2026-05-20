@@ -14,6 +14,7 @@ class SettingsCubit extends Cubit<SettingsState> {
   Future<void> getTimer() async {
     emit(TimerLoading());
     final result = await repository.getTimer();
+    if (isClosed) return;
     result.fold(
       (failure) => emit(TimerError(failure.message)),
       (timer) => emit(TimerLoaded(timer)),

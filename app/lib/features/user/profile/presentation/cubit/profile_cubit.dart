@@ -35,6 +35,7 @@ class ProfileCubit extends Cubit<ProfileState> {
 
     try {
       final result = await _userRepository.getUser();
+      if (isClosed) return;
       result.fold(
         (failure) => emit(ProfileGetError()),
         (loadedUser) {
@@ -51,6 +52,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   Future<void> deleteUser() async {
     emit(ProfileDeleteLoading());
     final result = await _userRepository.deleteUser();
+    if (isClosed) return;
     result.fold(
       (failure) => emit(ProfileDeleteError()),
       (_) => emit(ProfileDeleteLoaded()),
@@ -60,11 +62,11 @@ class ProfileCubit extends Cubit<ProfileState> {
   Future<void> updateUser(String name, String phone) async {
     emit(ProfileUpdateLoading());
     final result = await _userRepository.updateUser(name, phone);
+    if (isClosed) return;
     result.fold(
       (failure) => emit(ProfileUpdateError(failure.message)),
       (message) {
         emit(ProfileUpdateLoaded(message));
-
         getUser();
       },
     );

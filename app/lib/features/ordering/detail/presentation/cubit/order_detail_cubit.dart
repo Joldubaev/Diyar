@@ -15,7 +15,7 @@ class OrderDetailCubit extends Cubit<OrderDetailState> {
     emit(OrderDetailLoading());
 
     final result = await _repository.getOrderDetail(orderNumber: orderNumber);
-
+    if (isClosed) return;
     result.fold(
       (failure) => emit(OrderDetailError(failure.message)),
       (orderDetail) => emit(OrderDetailLoaded(orderDetail)),
