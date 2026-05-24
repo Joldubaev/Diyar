@@ -7,7 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:intl/intl.dart';
 import '../widgets/data_filter_widget.dart';
-import '../widgets/history_card_widget.dart';
 import '../widgets/state_widgets.dart';
 
 @RoutePage()
@@ -19,6 +18,8 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
+  static final _dateFmt = DateFormat('yyyy-MM-dd');
+
   DateTime? _startDate;
   DateTime? _endDate;
   bool _initScheduled = false;
@@ -42,7 +43,9 @@ class _HistoryPageState extends State<HistoryPage> {
             WidgetsBinding.instance.addPostFrameCallback((_) => _loadHistoryWithContext(context));
           }
           return Scaffold(
+            backgroundColor: AppColors.backgroundGrey,
             appBar: AppBar(
+              backgroundColor: AppColors.backgroundGrey,
               title: Text(context.l10n.orderHistory, style: context.textTheme.titleSmall),
               actions: [
                 if (_startDate != null || _endDate != null)
@@ -51,13 +54,11 @@ class _HistoryPageState extends State<HistoryPage> {
             ),
             body: Column(
               children: [
-                // Виджет фильтров
                 DateFiltersSection(
                   startDate: _startDate,
                   endDate: _endDate,
                   onPick: ({required bool isStart}) => _showPicker(context, isStart: isStart),
                 ),
-                // Виджет списка
                 Expanded(
                   child: BlocConsumer<CurierCubit, CurierState>(
                     listener: (context, state) {
@@ -66,13 +67,8 @@ class _HistoryPageState extends State<HistoryPage> {
                       }
                     },
                     builder: (context, state) {
-                      // Если состояние не CurierMainState, показываем загрузку
-                      if (state is! CurierMainState) {
-                        return context.loadingIndicator;
-                      }
-
-                      if (state.isHistoryLoading) {
-                        return context.loadingIndicator;
+                      if (state is! CurierMainState || state.isHistoryLoading) {
+                        return const HistoryListShimmer();
                       }
 
                       if (state.historyError != null) {
@@ -135,18 +131,16 @@ class _HistoryPageState extends State<HistoryPage> {
   }
 
   void _loadHistory(BuildContext context) {
-    final fmt = DateFormat('yyyy-MM-dd');
     context.read<CurierCubit>().getCurierHistory(
-          startDate: _startDate != null ? fmt.format(_startDate!) : null,
-          endDate: _endDate != null ? fmt.format(_endDate!) : null,
+          startDate: _startDate != null ? _dateFmt.format(_startDate!) : null,
+          endDate: _endDate != null ? _dateFmt.format(_endDate!) : null,
         );
   }
 
   void _loadMore(BuildContext context) {
-    final fmt = DateFormat('yyyy-MM-dd');
     context.read<CurierCubit>().getCurierHistory(
-          startDate: _startDate != null ? fmt.format(_startDate!) : null,
-          endDate: _endDate != null ? fmt.format(_endDate!) : null,
+          startDate: _startDate != null ? _dateFmt.format(_startDate!) : null,
+          endDate: _endDate != null ? _dateFmt.format(_endDate!) : null,
           loadMore: true,
         );
   }

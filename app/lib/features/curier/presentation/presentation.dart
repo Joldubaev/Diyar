@@ -4,3 +4,7 @@ export 'pages/history_page.dart';
 export 'widgets/address_feild.dart';
 export 'widgets/not_active_orders.dart';
 export 'widgets/empty_curier.dart';
+export 'widgets/curier_header_widget.dart';
+export 'widgets/shift_toggle_card.dart';
+export 'widgets/curier_shimmer.dart';
+export 'widgets/history_card_widget.dart';

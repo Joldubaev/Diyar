@@ -313,6 +313,8 @@ extension GetItInjectableX on _i174.GetIt {
         ));
     gh.lazySingleton<_i456.OpenBankingRemoteDatasource>(
         () => _i456.OpenBankingRemoteDatasource(gh<_i361.Dio>()));
+    gh.lazySingleton<_i478.AddressStorageService>(
+        () => registerModule.addressStorageService(gh<_i31.LocalStorage>()));
     gh.lazySingleton<_i701.OrderRepository>(
         () => _i1010.OrderRepositoryImpl(gh<_i755.OrderRemoteDataSource>()));
     gh.lazySingleton<_i805.BonusRemoteDataSource>(
@@ -336,8 +338,6 @@ extension GetItInjectableX on _i174.GetIt {
               gh<_i351.LocalStorage>(),
               gh<_i431.SecureStorage>(),
             ));
-    gh.lazySingleton<_i478.AddressStorageService>(
-        () => registerModule.addressStorageService(gh<_i31.LocalStorage>()));
     gh.lazySingleton<_i533.CurierPaymentRepository>(() =>
         _i225.CurierPaymentRepositoryImpl(gh<_i485.CurierPaymentDataSource>()));
     gh.lazySingleton<_i728.SettingsRepository>(() =>
@@ -513,6 +513,7 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i566.CurierRepository>(),
           gh<_i566.ConfirmCashPaymentAndFinishUseCase>(),
           gh<_i460.SharedPreferences>(),
+          gh<_i566.CourierLocationHubService>(),
         ));
     gh.factory<_i858.SplashCubit>(() => _i858.SplashCubit(
           gh<_i141.CheckAuthenticationStatusUseCase>(),

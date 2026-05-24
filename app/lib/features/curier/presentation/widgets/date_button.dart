@@ -4,12 +4,12 @@ import 'package:diyar/core/theme/theme_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class DateBotton extends StatelessWidget {
+class DateButton extends StatelessWidget {
   final String label;
   final DateTime? date;
   final VoidCallback onTap;
 
-  const DateBotton({super.key, required this.label, this.date, required this.onTap});
+  const DateButton({super.key, required this.label, this.date, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

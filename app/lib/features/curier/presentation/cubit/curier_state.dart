@@ -107,31 +107,6 @@ final class UserLoading extends CurierState {
   }
 }
 
-final class UserLoaded extends CurierState {
-  const UserLoaded(GetUserEntity user) : super(user: user);
-
-  @override
-  UserLoaded copyWith({
-    GetUserEntity? user,
-    List<CurierEntity>? activeOrders,
-    List<CurierEntity>? historyOrders,
-    bool? isActiveOrdersLoading,
-    bool? isHistoryLoading,
-    bool? isHistoryLoadingMore,
-    bool? historyHasMore,
-    int? historyCurrentPage,
-    String? activeOrdersError,
-    String? historyError,
-    bool? isOnShift,
-    bool clearActiveOrdersError = false,
-    bool clearHistoryError = false,
-  }) {
-    return UserLoaded(
-      user ?? this.user!,
-    );
-  }
-}
-
 final class UserError extends CurierState {
   final String message;
   const UserError(this.message);
@@ -254,6 +229,29 @@ final class FinishOrderSuccess extends CurierState {
     bool clearHistoryError = false,
   }) {
     return FinishOrderSuccess(user: user ?? this.user!);
+  }
+}
+
+final class StartDeliverySuccess extends CurierState {
+  const StartDeliverySuccess({required GetUserEntity user}) : super(user: user);
+
+  @override
+  StartDeliverySuccess copyWith({
+    GetUserEntity? user,
+    List<CurierEntity>? activeOrders,
+    List<CurierEntity>? historyOrders,
+    bool? isActiveOrdersLoading,
+    bool? isHistoryLoading,
+    bool? isHistoryLoadingMore,
+    bool? historyHasMore,
+    int? historyCurrentPage,
+    String? activeOrdersError,
+    String? historyError,
+    bool? isOnShift,
+    bool clearActiveOrdersError = false,
+    bool clearHistoryError = false,
+  }) {
+    return StartDeliverySuccess(user: user ?? this.user!);
   }
 }
 

@@ -101,6 +101,10 @@ class ApiConst {
   /// PUT, body: { "orderNumber": 8339, "paymentStatus": "Successful" }.
   static const setOrderPaymentStatusCourier = "$baseUrl/courier/order/set-payment-status";
 
+  /// Курьер забрал заказ из ресторана → статус становится OnTheWay.
+  /// PUT, query: orderNumber={n}.
+  static const startDelivery = "$baseUrl/courier/order/start-delivery";
+
   // DISTRICTS
   static const getDistricts = "$baseUrl/districts/get-all-districts";
 

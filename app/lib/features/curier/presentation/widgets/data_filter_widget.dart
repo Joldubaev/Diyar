@@ -20,9 +20,9 @@ class DateFiltersSection extends StatelessWidget {
       ),
       child: Row(
         children: [
-          DateBotton(label: 'С', date: startDate, onTap: () => onPick(isStart: true)),
+          DateButton(label: 'С', date: startDate, onTap: () => onPick(isStart: true)),
           const Padding(padding: EdgeInsets.symmetric(horizontal: 8), child: Text('—')),
-          DateBotton(label: 'По', date: endDate, onTap: () => onPick(isStart: false)),
+          DateButton(label: 'По', date: endDate, onTap: () => onPick(isStart: false)),
         ],
       ),
     );

@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 class SnackBarMessage {
   void showSuccessSnackBar(
       {required String message, required BuildContext context}) {
-    ScaffoldMessenger.of(context).showSnackBar(
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.hideCurrentSnackBar();
+    messenger.showSnackBar(
       SnackBar(
         content: Text(
           message,
@@ -16,7 +18,9 @@ class SnackBarMessage {
 
   void showErrorSnackBar(
       {required String message, required BuildContext context}) {
-    ScaffoldMessenger.of(context).showSnackBar(
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.hideCurrentSnackBar();
+    messenger.showSnackBar(
       SnackBar(
         content: Text(
           message,

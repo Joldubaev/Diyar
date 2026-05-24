@@ -64,4 +64,12 @@ class CurierRepositoryImpl with RepositoryErrorHandler implements CurierReposito
       return model.toEntity();
     });
   }
+
+  @override
+  Future<Either<Failure, Unit>> startDelivery(int orderNumber) {
+    return makeRequest(() async {
+      await dataSource.startDelivery(orderNumber);
+      return unit;
+    });
+  }
 }

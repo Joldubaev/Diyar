@@ -15,4 +15,7 @@ abstract class CurierRepository {
     int pageSize = 10,
   });
   Future<Either<Failure, GetUserEntity>> getUser();
+  /// PUT /courier/order/start-delivery?orderNumber={n}
+  /// Курьер забрал заказ из ресторана — статус переходит в OnTheWay.
+  Future<Either<Failure, Unit>> startDelivery(int orderNumber);
 }
