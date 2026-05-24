@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'drawer_header.dart';
 import 'drawer_navigation.dart';
-import 'end_shift_section.dart';
 import 'logout_section.dart';
 
 class CustomDrawer extends StatelessWidget {
@@ -15,9 +14,9 @@ class CustomDrawer extends StatelessWidget {
     final theme = Theme.of(context);
 
     return BlocBuilder<CurierCubit, CurierState>(
-      buildWhen: (p, c) => c is UserLoaded || p is UserLoaded,
+      buildWhen: (p, c) => p.user != c.user,
       builder: (context, state) {
-        final user = state is UserLoaded ? state.user : context.read<CurierCubit>().state.user;
+        final user = state.user;
 
         if (user == null) {
           return const Drawer(
@@ -29,19 +28,21 @@ class CustomDrawer extends StatelessWidget {
           backgroundColor: theme.scaffoldBackgroundColor,
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
-              topRight: Radius.circular(20),
-              bottomRight: Radius.circular(20),
+              topLeft: Radius.circular(20),
+              bottomLeft: Radius.circular(20),
             ),
           ),
           child: SafeArea(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 DrawerHeaderWidget(user: user),
-                const Expanded(
-                  child: DrawerNavigation(),
-                ),
-                const EndShiftSection(),
+                const SizedBox(height: 8),
+                const DrawerNavigation(),
+                const Spacer(),
+                const Divider(height: 1),
                 const LogoutSection(),
+                const SizedBox(height: 8),
               ],
             ),
           ),

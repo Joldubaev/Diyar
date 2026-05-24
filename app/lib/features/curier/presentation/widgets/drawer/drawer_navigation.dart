@@ -11,19 +11,17 @@ class DrawerNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: EdgeInsets.zero,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         DrawerItem(
           icon: Icons.delivery_dining_outlined,
           title: 'Активные заказы',
           onTap: () {
             Navigator.pop(context);
-            // Если мы на странице истории, возвращаемся на главную страницу курьера
             if (context.router.canPop()) {
               context.router.maybePop();
             }
-            // Перезагружаем активные заказы
             context.read<CurierCubit>().getCurierOrders();
           },
         ),
@@ -34,7 +32,6 @@ class DrawerNavigation extends StatelessWidget {
             context.router.push(const HistoryRoute());
           },
         ),
-        const Divider(),
       ],
     );
   }

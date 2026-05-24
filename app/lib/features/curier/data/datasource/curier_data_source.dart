@@ -18,6 +18,9 @@ abstract class CurierDataSource {
     int pageSize = 10,
   });
   Future<GetUserModel> getUser();
+
+  /// PUT /courier/order/start-delivery?orderNumber={n}
+  Future<void> startDelivery(int orderNumber);
 }
 
 @LazySingleton(as: CurierDataSource)
@@ -101,6 +104,17 @@ class CurierDataSourceImpl with ResponseValidatorMixin implements CurierDataSour
       }
     }
     return true;
+  }
+
+  @override
+  Future<void> startDelivery(int orderNumber) async {
+    final token = prefs.getString(AppConst.accessToken) ?? '';
+    final res = await dio.put(
+      ApiConst.startDelivery,
+      queryParameters: {'orderNumber': orderNumber},
+      options: Options(headers: ApiConst.authMap(token)),
+    );
+    validateResponse(res);
   }
 
   @override

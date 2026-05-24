@@ -22,7 +22,15 @@ class OrderRemoteDataSourceImpl extends OrderRemoteDataSource {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        return Right(response.data['message']?.toString() ?? 'Success');
+        final msgField = response.data is Map ? response.data['message'] : null;
+        // Server may return 200 with an error object in the message field
+        if (msgField is Map) {
+          final errorMsg = msgField['message']?.toString() ??
+              msgField['developerMessage']?.toString() ??
+              'Ошибка создания заказа';
+          return Left(ServerFailure(errorMsg, response.statusCode));
+        }
+        return Right(msgField?.toString() ?? 'Success');
       }
       final msg = response.data is Map
           ? (response.data['message'] ?? response.data['error'])?.toString() ?? 'Order creation failed'

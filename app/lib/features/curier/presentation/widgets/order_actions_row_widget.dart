@@ -1,12 +1,15 @@
 import 'package:diyar/common/components/components.dart';
 import 'package:flutter/material.dart';
 
-/// Строка кнопок действий
+/// Строка кнопок действий.
+/// Если [onStartDelivery] задан — показывает "Забрал заказ" вместо "Завершить"
+/// (заказ в статусе Cooked, курьер ещё не взял его).
 class OrderActionsRowWidget extends StatelessWidget {
   final VoidCallback onDetails;
   final VoidCallback onFinish;
   final VoidCallback onOpenMap;
   final VoidCallback onCall;
+  final VoidCallback? onStartDelivery;
 
   const OrderActionsRowWidget({
     super.key,
@@ -14,10 +17,12 @@ class OrderActionsRowWidget extends StatelessWidget {
     required this.onFinish,
     required this.onOpenMap,
     required this.onCall,
+    this.onStartDelivery,
   });
 
   @override
   Widget build(BuildContext context) {
+    final isPendingPickup = onStartDelivery != null;
     return Column(
       children: [
         Row(
@@ -33,12 +38,19 @@ class OrderActionsRowWidget extends StatelessWidget {
             const SizedBox(width: 12),
             Expanded(
               flex: 2,
-              child: ActionButtonWidget(
-                onPressed: onFinish,
-                icon: Icons.check_circle_outline,
-                label: 'Завершить',
-                variant: ActionButtonVariant.primary,
-              ),
+              child: isPendingPickup
+                  ? ActionButtonWidget(
+                      onPressed: onStartDelivery!,
+                      icon: Icons.directions_bike_outlined,
+                      label: 'Забрал заказ',
+                      variant: ActionButtonVariant.primary,
+                    )
+                  : ActionButtonWidget(
+                      onPressed: onFinish,
+                      icon: Icons.check_circle_outline,
+                      label: 'Завершить',
+                      variant: ActionButtonVariant.primary,
+                    ),
             ),
           ],
         ),

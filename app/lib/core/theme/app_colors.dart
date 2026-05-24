@@ -8,6 +8,8 @@ class AppColors {
   static const Color grey3 = Color(0xFFD9D9D9);
   /// Фон экранов #F5F5F5. Доступ: context.scaffoldBg, context.bgColor.
   static const Color backgroundLight = Color(0xFFF5F5F5);
+  /// Серый iOS-фон для курьерских экранов.
+  static const Color backgroundGrey = Color(0xFFF2F2F7);
   static const Color white = Color(0xFFFFFFFF);
 
   /// Основной цвет бренда — оранжевый из гайда (HEX #d67c1c, RGB 214 124 28).

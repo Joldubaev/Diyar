@@ -12,17 +12,24 @@ class SignalRHttpClientWssFix extends SignalRHttpClient {
 
   final SignalRHttpClient _inner;
 
+  static const _minTimeoutMs = 10000;
+
   @override
   Future<SignalRHttpResponse> send(SignalRHttpRequest request) {
-    final url = request.url;
-    if (url != null && (url.startsWith('wss://') || url.startsWith('ws://'))) {
+    var url = request.url;
+    // timeout is int? (milliseconds)
+    final originalTimeout = request.timeout;
+    final timeout = (originalTimeout != null && originalTimeout < _minTimeoutMs) ? _minTimeoutMs : originalTimeout;
+
+    final needsUrlFix = url != null && (url.startsWith('wss://') || url.startsWith('ws://'));
+    if (needsUrlFix || timeout != originalTimeout) {
       request = SignalRHttpRequest(
         method: request.method,
-        url: _fixUrl(url),
+        url: needsUrlFix ? _fixUrl(url!) : url,
         content: request.content,
         headers: request.headers,
         abortSignal: request.abortSignal,
-        timeout: request.timeout,
+        timeout: timeout,
       );
     }
     return _inner.send(request);

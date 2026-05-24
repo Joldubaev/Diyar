@@ -18,6 +18,7 @@ class CurierOrderCard extends StatelessWidget {
   final VoidCallback onOpenMap;
   final VoidCallback onDetails;
   final VoidCallback onCall;
+  final VoidCallback? onStartDelivery;
 
   const CurierOrderCard({
     super.key,
@@ -26,6 +27,7 @@ class CurierOrderCard extends StatelessWidget {
     required this.onOpenMap,
     required this.onDetails,
     required this.onCall,
+    this.onStartDelivery,
   });
 
   // Вычисляемые значения вынесены из build с явными типами
@@ -77,6 +79,7 @@ class CurierOrderCard extends StatelessWidget {
             onFinish: onFinish,
             onOpenMap: onOpenMap,
             onCall: onCall,
+            onStartDelivery: onStartDelivery,
           ),
         ],
       ),
@@ -94,6 +97,7 @@ class _OrderContent extends StatelessWidget {
   final VoidCallback onFinish;
   final VoidCallback onOpenMap;
   final VoidCallback onCall;
+  final VoidCallback? onStartDelivery;
 
   const _OrderContent({
     required this.order,
@@ -104,6 +108,7 @@ class _OrderContent extends StatelessWidget {
     required this.onFinish,
     required this.onOpenMap,
     required this.onCall,
+    this.onStartDelivery,
   });
 
   @override
@@ -160,6 +165,7 @@ class _OrderContent extends StatelessWidget {
             onFinish: onFinish,
             onOpenMap: onOpenMap,
             onCall: onCall,
+            onStartDelivery: onStartDelivery,
           ),
         ],
       ),

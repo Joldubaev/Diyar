@@ -5,6 +5,7 @@ import 'package:logging/logging.dart';
 import 'package:signalr_netcore/http_connection_options.dart';
 import 'package:signalr_netcore/hub_connection.dart';
 import 'package:signalr_netcore/hub_connection_builder.dart';
+import 'package:signalr_netcore/itransport.dart';
 
 import 'hub_connection_config.dart';
 import 'signalr_wss_fix.dart';
@@ -27,12 +28,16 @@ class HubManager {
   HubManager({
     required this.config,
     this.onReconnected,
+    this.onClosed,
   });
 
   final HubConnectionConfig config;
 
   /// Вызывается после automatic reconnect (снова Subscribe / RequestStatus на сервере).
   final Future<void> Function()? onReconnected;
+
+  /// Вызывается когда соединение окончательно закрыто (реконнекты исчерпаны или stop).
+  final void Function()? onClosed;
 
   HubConnection? _connection;
   final Map<String, void Function(List<Object?>?)> _handlers = {};
@@ -59,12 +64,19 @@ class HubManager {
             config.effectiveUrl,
             options: HttpConnectionOptions(
               httpClient: SignalRHttpClientWssFix(logger),
+              skipNegotiation: config.skipNegotiation,
+              transport: config.skipNegotiation ? HttpTransportType.WebSockets : null,
             ),
           )
           .configureLogging(logger);
 
       if (config.autoReconnect) {
-        builder.withAutomaticReconnect();
+        final intervals = config.reconnectIntervals;
+        if (intervals != null) {
+          builder.withAutomaticReconnect(retryDelays: intervals);
+        } else {
+          builder.withAutomaticReconnect();
+        }
       }
 
       _connection = builder.build();
@@ -76,6 +88,7 @@ class HubManager {
 
       _connection!.onclose(({error}) {
         dev.log('[${config.loggerName}] Connection closed: $error');
+        onClosed?.call();
       });
 
       _connection!.onreconnected(({connectionId}) {

@@ -4,6 +4,8 @@ class HubConnectionConfig {
     required this.hubUrl,
     this.accessToken,
     this.autoReconnect = true,
+    this.skipNegotiation = false,
+    this.reconnectIntervals,
     this.loggerName = 'SignalR',
   });
 
@@ -15,6 +17,15 @@ class HubConnectionConfig {
 
   /// Whether to enable automatic reconnection.
   final bool autoReconnect;
+
+  /// Skip the negotiate step and connect directly via WebSockets.
+  /// Requires the server to support WebSocket-only transport.
+  /// When true, [transport] is forced to WebSockets.
+  final bool skipNegotiation;
+
+  /// Custom reconnect delay intervals in milliseconds.
+  /// Passed to [withAutomaticReconnect] retryDelays when [autoReconnect] is true.
+  final List<int>? reconnectIntervals;
 
   /// Name for the logger instance.
   final String loggerName;
