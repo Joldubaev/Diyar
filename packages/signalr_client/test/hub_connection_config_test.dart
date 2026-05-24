@@ -43,6 +43,18 @@ void main() {
       expect(config.autoReconnect, isTrue);
       expect(config.loggerName, 'SignalR');
       expect(config.accessToken, isNull);
+      expect(config.skipNegotiation, isFalse);
+      expect(config.reconnectIntervals, isNull);
+    });
+
+    test('skipNegotiation and reconnectIntervals are stored correctly', () {
+      const config = HubConnectionConfig(
+        hubUrl: 'https://example.com',
+        skipNegotiation: true,
+        reconnectIntervals: [2000, 5000, 10000],
+      );
+      expect(config.skipNegotiation, isTrue);
+      expect(config.reconnectIntervals, [2000, 5000, 10000]);
     });
   });
 }
