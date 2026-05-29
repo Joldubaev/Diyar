@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:diyar/core/constants/app_const/app_const.dart';
+import 'package:diyar/core/error/failures.dart';
 import 'package:diyar/features/curier/curier.dart';
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
@@ -69,7 +70,12 @@ class CurierCubit extends Cubit<CurierState> {
     if (isClosed) return;
 
     final user = userResult.fold(
-      (f) { emit(UserError(f.message)); return null; },
+      (f) {
+        final isAuth = f is ServerFailure &&
+            (f.statusCode == 401 || f.statusCode == 403);
+        emit(UserError(f.message, isAuthError: isAuth));
+        return null;
+      },
       (u) => u,
     );
     if (user == null) return;
@@ -87,12 +93,20 @@ class CurierCubit extends Cubit<CurierState> {
 
   /// Выход на смену (true) / уход со смены (false).
   /// Уведомляет и REST и хаб, чтобы диспетчер мог назначать заказы.
+  /// Запускает / останавливает foreground service для фоновой геолокации.
   Future<bool> setOnShift(bool onShift) async {
     final result = await _repository.setShift(onShift);
     if (isClosed) return false;
     if (result.isLeft()) return false;
     await _prefs.setBool(AppConst.courierOnShift, onShift);
     if (isClosed) return false;
+
+    if (onShift) {
+      unawaited(CourierForegroundService.start());
+    } else {
+      unawaited(CourierForegroundService.stop());
+    }
+
     await _locationHub.setOnShift(onShift);
     final current = state;
     if (current is CurierMainState) {

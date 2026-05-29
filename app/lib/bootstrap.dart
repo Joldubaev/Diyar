@@ -9,6 +9,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'core/di/injectable_config.dart' as di;
 import 'core/utils/app_bloc_observer.dart';
 import 'features/cart/data/models/cart_item_model_hive_adapter.dart';
+import 'features/curier/data/services/courier_foreground_service.dart';
 import 'features/menu/data/models/food_model_hive_adapter.dart';
 import 'firebase_options.dart';
 
@@ -16,6 +17,7 @@ import 'firebase_options.dart';
 /// initializations in parallel for faster startup.
 Future<void> bootstrap() async {
   WidgetsFlutterBinding.ensureInitialized();
+  CourierForegroundService.init();
 
   // Phase 1: Independent async inits (parallel)
   await Future.wait([
