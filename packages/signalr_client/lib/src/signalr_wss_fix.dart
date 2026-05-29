@@ -25,7 +25,7 @@ class SignalRHttpClientWssFix extends SignalRHttpClient {
     if (needsUrlFix || timeout != originalTimeout) {
       request = SignalRHttpRequest(
         method: request.method,
-        url: needsUrlFix ? _fixUrl(url!) : url,
+        url: needsUrlFix ? _fixUrl(url) : url,
         content: request.content,
         headers: request.headers,
         abortSignal: request.abortSignal,
@@ -35,7 +35,9 @@ class SignalRHttpClientWssFix extends SignalRHttpClient {
     return _inner.send(request);
   }
 
-  static String _fixUrl(String url) {
+  static String _fixUrl(String? url) {
+    if (url == null) return '';
+
     if (url.startsWith('wss://')) return url.replaceFirst('wss://', 'https://');
     if (url.startsWith('ws://')) return url.replaceFirst('ws://', 'http://');
     return url;
