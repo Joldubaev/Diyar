@@ -70,6 +70,7 @@ class CourierLocationHubService {
       _hub!.on('MyOrders', _onMyOrders);
       _hub!.on('OrderAssigned', _onOrderAssigned);
       _hub!.on('OrderDelivered', _onOrderDelivered);
+      _hub!.on('RequestShiftConfirm', _onRequestShiftConfirm);
 
       await _hub!.start();
 
@@ -155,6 +156,10 @@ class CourierLocationHubService {
     } catch (e) {
       log('[CourierLocationHub] OrderDelivered parse error: $e');
     }
+  }
+
+  void _onRequestShiftConfirm(List<Object?>? _) {
+    _invokeSetOnShift(_currentShiftState);
   }
 
   void _onConnectionClosed() {

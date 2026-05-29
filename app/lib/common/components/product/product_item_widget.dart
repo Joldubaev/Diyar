@@ -40,7 +40,7 @@ class ProductItemWidget extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             AspectRatio(
-              aspectRatio: 1.05,
+              aspectRatio: 1.0,
               child: Stack(
                 children: [
                   Positioned.fill(
