@@ -74,8 +74,8 @@ dependencies:
   intl: ^0.20.2
   qr_flutter: ^4.1.0
   flutter_instagram_storyboard: ^1.0.1
-  webview_flutter: ^4.13.1
-  webview_flutter_android: ^4.10.1
+  webview_flutter: ">=4.10.0 <4.13.0"
+  webview_flutter_android: ">=4.10.1 <4.13.0"
 
 
 
