@@ -27,6 +27,16 @@ class _MenuPageState extends State<MenuPage> {
     super.dispose();
   }
 
+  void _onScrollEndReached(BuildContext ctx) {
+    final catState = ctx.read<MenuCategoryCubit>().state;
+    final productsState = ctx.read<MenuProductsCubit>().state;
+    if (productsState.isLoading) return;
+    final next = catState.activeIndex + 1;
+    if (next < catState.categories.length) {
+      _onCategoryTap(ctx, next);
+    }
+  }
+
   void _onCategoryTap(BuildContext ctx, int index) {
     final catCubit = ctx.read<MenuCategoryCubit>();
     catCubit.selectCategory(index);
@@ -151,10 +161,17 @@ class _MenuPageState extends State<MenuPage> {
                   subtitle: state.error,
                 );
               }
+              final catState = ctx.read<MenuCategoryCubit>().state;
+              final nextIndex = catState.activeIndex + 1;
+              final nextName = nextIndex < catState.categories.length
+                  ? catState.categories[nextIndex].name
+                  : null;
               return ProductsList(
                 activeIndex: ValueNotifier(0),
                 itemScrollController: _itemScrollController,
                 itemPositionsListener: _itemPositionsListener,
+                onEndReached: () => _onScrollEndReached(ctx),
+                nextCategoryName: nextName,
               );
             },
           ),

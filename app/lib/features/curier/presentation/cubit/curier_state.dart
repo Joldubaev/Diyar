@@ -109,10 +109,14 @@ final class UserLoading extends CurierState {
 
 final class UserError extends CurierState {
   final String message;
-  const UserError(this.message);
+  /// true  → 401/403 (сессия истекла) → нужен logout
+  /// false → сетевая/серверная ошибка → показываем сообщение, не выкидываем
+  final bool isAuthError;
+
+  const UserError(this.message, {this.isAuthError = false});
 
   @override
-  List<Object?> get props => [...super.props, message];
+  List<Object?> get props => [...super.props, message, isAuthError];
 
   @override
   UserError copyWith({
@@ -130,7 +134,7 @@ final class UserError extends CurierState {
     bool clearActiveOrdersError = false,
     bool clearHistoryError = false,
   }) {
-    return UserError(message);
+    return UserError(message, isAuthError: isAuthError);
   }
 }
 

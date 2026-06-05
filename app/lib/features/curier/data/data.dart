@@ -7,3 +7,4 @@ export 'datasource/curier_data_source.dart';
 export 'datasource/curier_payment_data_source.dart';
 export 'datasource/response_validator_mixin.dart';
 export 'services/courier_location_hub_service.dart';
+export 'services/courier_foreground_service.dart';

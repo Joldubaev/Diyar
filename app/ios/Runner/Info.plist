@@ -59,6 +59,11 @@
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Приложение использует ваше местоположение для предоставления услуг доставки</string>
 
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+	</array>
+
 	<key>NSMotionUsageDescription</key>
 	<string>Приложение использует данные о движении для улучшения качества услуг</string>
 

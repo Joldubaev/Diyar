@@ -8,6 +8,8 @@ import 'package:diyar/features/curier/presentation/widgets/drawer/custom_drawer.
 import 'package:diyar/core/di/injectable_config.dart' as di;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'curier_order_card.dart';
 
@@ -36,6 +38,7 @@ class _CurierPageState extends State<CurierPage> {
     _courierLocationHub.start();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
+      _requestRequiredPermissions();
       final s = _cubit.state;
       if (s.user == null) {
         _cubit.getUser();
@@ -43,6 +46,32 @@ class _CurierPageState extends State<CurierPage> {
         _cubit.getCurierOrders();
       }
     });
+  }
+
+  /// Запрашивает все необходимые разрешения один раз при открытии экрана.
+  /// Разрешения запрашиваются последовательно: сначала геолокация,
+  /// потом уведомления (нужны для foreground-service на Android 13+).
+  Future<void> _requestRequiredPermissions() async {
+    // 1. Геолокация
+    final locationPermission = await Geolocator.checkPermission();
+    if (locationPermission == LocationPermission.denied) {
+      await Geolocator.requestPermission();
+    }
+    if (!mounted) return;
+
+    // 2. Уведомления (Android 13+ / flutter_foreground_task)
+    final notifPermission =
+        await FlutterForegroundTask.checkNotificationPermission();
+    if (notifPermission != NotificationPermission.granted) {
+      await FlutterForegroundTask.requestNotificationPermission();
+    }
+    if (!mounted) return;
+
+    // 3. Запускаем foreground service ТОЛЬКО после получения разрешений,
+    //    и только если курьер уже на смене.
+    if (_cubit.state.isOnShift) {
+      await CourierForegroundService.start();
+    }
   }
 
   @override
@@ -100,7 +129,16 @@ class _CurierPageState extends State<CurierPage> {
                       c is FinishOrderError ||
                       c is StartDeliverySuccess,
                   listener: (context, state) {
-                    if (state is UserError) _handleLogout(context);
+                    if (state is UserError) {
+                      if (state.isAuthError) {
+                        _handleLogout(context);
+                      } else {
+                        SnackBarMessage().showErrorSnackBar(
+                          message: state.message,
+                          context: context,
+                        );
+                      }
+                    }
                     if (state is FinishOrderSuccess) {
                       SnackBarMessage().showSuccessSnackBar(
                         message: l10n.orderCompleted,

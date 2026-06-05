@@ -39,7 +39,7 @@ class CourierLocationHubService {
   Stream<int> get orderDeliveredStream => _orderDeliveredController.stream;
 
   static const _locationInterval = Duration(seconds: 2);
-  static const _restartDelay = Duration(minutes: 1);
+  static const _restartDelay = Duration(seconds: 5);
 
   Future<void> start() async {
     _isActive = true;
@@ -71,6 +71,7 @@ class CourierLocationHubService {
       _hub!.on('OrderAssigned', _onOrderAssigned);
       _hub!.on('OrderDelivered', _onOrderDelivered);
       _hub!.on('RequestShiftConfirm', _onRequestShiftConfirm);
+      _hub!.on('ShiftStatus', _onShiftStatus);
 
       await _hub!.start();
 
@@ -102,8 +103,9 @@ class CourierLocationHubService {
   // ─── Private helpers ───────────────────────────────────────────────────────
 
   Future<void> _onHubReconnected() async {
-    log('[CourierLocationHub] Reconnected — restoring shift state and orders');
+    log('[CourierLocationHub] Reconnected — restoring shift=$_currentShiftState, restarting timer if needed');
     // SignalR groups reset on reconnect — must re-register.
+    _locationTimer ??= Timer.periodic(_locationInterval, (_) => _sendLocation());
     await _invokeSetOnShift(_currentShiftState);
     await _invokeRequestOrders();
   }
@@ -162,6 +164,17 @@ class CourierLocationHubService {
     _invokeSetOnShift(_currentShiftState);
   }
 
+  void _onShiftStatus(List<Object?>? args) {
+    if (args == null || args.isEmpty || args[0] == null) return;
+    try {
+      final onShift = args[0] as bool;
+      log('[CourierLocationHub] ShiftStatus from server: $onShift');
+      _currentShiftState = onShift;
+    } catch (e) {
+      log('[CourierLocationHub] ShiftStatus parse error: $e');
+    }
+  }
+
   void _onConnectionClosed() {
     _locationTimer?.cancel();
     _locationTimer = null;
@@ -182,12 +195,13 @@ class CourierLocationHubService {
   Future<void> _sendLocation() async {
     if (_hub == null || !_hub!.isConnected) return;
     try {
+      // Only CHECK — never request. Requesting must be done once from the UI layer.
       final permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        final requested = await Geolocator.requestPermission();
-        if (requested != LocationPermission.whileInUse && requested != LocationPermission.always) return;
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        log('[CourierLocationHub] Location permission not granted ($permission) — skipping');
+        return;
       }
-      if (permission == LocationPermission.deniedForever) return;
 
       final position = await Geolocator.getCurrentPosition(
         locationSettings: const LocationSettings(accuracy: LocationAccuracy.medium),
