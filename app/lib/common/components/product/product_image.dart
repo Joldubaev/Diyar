@@ -108,8 +108,8 @@ class _ProductImageState extends State<ProductImage> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final memW = widget.memCacheWidth ?? 512;
-    final effectiveFit = widget.smartFit ? (_autoFit ?? BoxFit.contain) : widget.fit;
+    final memW = widget.memCacheWidth ?? 800;
+    final effectiveFit = widget.smartFit ? (_autoFit ?? BoxFit.cover) : widget.fit;
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(10.0),
@@ -126,7 +126,7 @@ class _ProductImageState extends State<ProductImage> with SingleTickerProviderSt
               ColoredBox(
                 color: theme.colorScheme.surface,
                 child: CachedNetworkImage(
-                  imageUrl: widget.food.imageUrlForList ?? 'https://via.placeholder.com/150',
+                  imageUrl: widget.food.imageUrlForDetail ?? widget.food.imageUrlForList ?? 'https://via.placeholder.com/150',
                   placeholder: (_, __) => Center(
                     child: CircularProgressIndicator(
                       color: theme.colorScheme.primary,

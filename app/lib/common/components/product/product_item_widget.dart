@@ -51,7 +51,7 @@ class ProductItemWidget extends StatelessWidget {
                       child: ProductImage(
                         food: food,
                         quantity: quantity,
-                        fit: BoxFit.contain,
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
