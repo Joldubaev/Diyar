@@ -126,7 +126,8 @@ class _ProductImageState extends State<ProductImage> with SingleTickerProviderSt
               ColoredBox(
                 color: theme.colorScheme.surface,
                 child: CachedNetworkImage(
-                  imageUrl: widget.food.imageUrlForDetail ?? widget.food.imageUrlForList ?? 'https://via.placeholder.com/150',
+                  imageUrl:
+                      widget.food.imageUrlForDetail ?? widget.food.imageUrlForList ?? 'https://via.placeholder.com/150',
                   placeholder: (_, __) => Center(
                     child: CircularProgressIndicator(
                       color: theme.colorScheme.primary,
