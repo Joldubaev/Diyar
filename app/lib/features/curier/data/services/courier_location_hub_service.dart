@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:diyar/core/constants/api_const/api_const.dart';
 import 'package:diyar/core/constants/app_const/app_const.dart';
@@ -22,6 +23,8 @@ class CourierLocationHubService {
   HubManager? _hub;
   Timer? _locationTimer;
   Timer? _restartTimer;
+  StreamSubscription<Position>? _positionSub;
+  Position? _lastPosition;
   bool _isActive = false;
   bool _currentShiftState = false;
 
@@ -75,8 +78,8 @@ class CourierLocationHubService {
 
       await _hub!.start();
 
-      _locationTimer = Timer.periodic(_locationInterval, (_) => _sendLocation());
-      _sendLocation();
+      _locationTimer = Timer.periodic(_locationInterval, (_) => unawaited(_tick()));
+      unawaited(_tick());
 
       // Restore shift state on (re)connect and pull the current order list.
       _currentShiftState = _prefs.getBool(AppConst.courierOnShift) ?? true;
@@ -105,7 +108,7 @@ class CourierLocationHubService {
   Future<void> _onHubReconnected() async {
     log('[CourierLocationHub] Reconnected — restoring shift=$_currentShiftState, restarting timer if needed');
     // SignalR groups reset on reconnect — must re-register.
-    _locationTimer ??= Timer.periodic(_locationInterval, (_) => _sendLocation());
+    _locationTimer ??= Timer.periodic(_locationInterval, (_) => unawaited(_tick()));
     await _invokeSetOnShift(_currentShiftState);
     await _invokeRequestOrders();
   }
@@ -192,20 +195,71 @@ class CourierLocationHubService {
     });
   }
 
-  Future<void> _sendLocation() async {
+  /// Heartbeat-тик: проверяет разрешение, поднимает поток локаций (если ещё нет)
+  /// и до-отправляет последнюю известную позицию (для стационарного курьера в
+  /// foreground / на Android). В фоне iOS таймер заморожен — там отправку
+  /// драйвит сам поток [_ensurePositionStream].
+  Future<void> _tick() async {
+    if (_hub == null || !_hub!.isConnected) return;
+
+    // Only CHECK — never request. Requesting must be done once from the UI layer.
+    final permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      log('[CourierLocationHub] Location permission not granted ($permission) — skip tick');
+      return;
+    }
+
+    _ensurePositionStream();
+    _sendLastPosition();
+  }
+
+  /// Непрерывный поток локаций — единственный надёжный способ получать
+  /// обновления в фоне на iOS: система будит приложение на каждое новое
+  /// местоположение, пока активна сессия с allowBackgroundLocationUpdates.
+  void _ensurePositionStream() {
+    if (_positionSub != null) return;
+    _positionSub = Geolocator.getPositionStream(locationSettings: _locationSettings()).listen(
+      (position) {
+        _lastPosition = position;
+        _sendPosition(position);
+      },
+      onError: (e) => log('[CourierLocationHub] Position stream error: $e'),
+    );
+  }
+
+  LocationSettings _locationSettings() {
+    if (Platform.isIOS) {
+      return AppleSettings(
+        accuracy: LocationAccuracy.medium,
+        activityType: ActivityType.automotiveNavigation,
+        distanceFilter: 10,
+        pauseLocationUpdatesAutomatically: false,
+        showBackgroundLocationIndicator: true,
+        // Требует UIBackgroundModes:location в Info.plist (присутствует) — иначе краш.
+        allowBackgroundLocationUpdates: true,
+      );
+    }
+    if (Platform.isAndroid) {
+      return AndroidSettings(
+        accuracy: LocationAccuracy.medium,
+        distanceFilter: 10,
+      );
+    }
+    return const LocationSettings(
+      accuracy: LocationAccuracy.medium,
+      distanceFilter: 10,
+    );
+  }
+
+  void _sendLastPosition() {
+    final position = _lastPosition;
+    if (position != null) _sendPosition(position);
+  }
+
+  Future<void> _sendPosition(Position position) async {
     if (_hub == null || !_hub!.isConnected) return;
     try {
-      // Only CHECK — never request. Requesting must be done once from the UI layer.
-      final permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied ||
-          permission == LocationPermission.deniedForever) {
-        log('[CourierLocationHub] Location permission not granted ($permission) — skipping');
-        return;
-      }
-
-      final position = await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(accuracy: LocationAccuracy.medium),
-      );
       await _hub!.invoke('UpdateMyLocation', args: [position.latitude, position.longitude]);
     } catch (e) {
       log('[CourierLocationHub] Send location error: $e');
@@ -218,6 +272,9 @@ class CourierLocationHubService {
     _locationTimer = null;
     _restartTimer?.cancel();
     _restartTimer = null;
+    await _positionSub?.cancel();
+    _positionSub = null;
+    _lastPosition = null;
     await _hub?.dispose();
     _hub = null;
   }
