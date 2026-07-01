@@ -70,15 +70,17 @@ class ProductDetailCartBar extends StatelessWidget {
         // Блюдо с обязательным гарниром: добавляем только после выбора в инлайн-блоке.
         if (food.requiresGarnish ?? false) {
           final garnishCubit = context.read<GarnishCubit>();
-          final selectedIndex = garnishCubit.state.selectedIndex;
-          if (selectedIndex == null) {
-            // Ничего не выбрано — привлекаем внимание к блоку гарниров, в корзину не кладём.
+          final garnishState = garnishCubit.state;
+          final selectedIndex = garnishState.selectedIndex;
+          // Если гарниров нет (ошибка/пустой список) — не блокируем заказ, кладём блюдо как есть.
+          if (garnishState.items.isNotEmpty && selectedIndex == null) {
+            // Есть из чего выбрать, но не выбрано — подсвечиваем блок, в корзину не кладём.
             garnishCubit.requestHighlight();
             return;
           }
           cartBloc.add(AddItemToCart(CartItemEntity(food: food, quantity: 1)));
-          if (selectedIndex > 0) {
-            final garnish = garnishCubit.state.items[selectedIndex - 1];
+          if (selectedIndex != null && selectedIndex > 0) {
+            final garnish = garnishState.items[selectedIndex - 1];
             cartBloc.add(AddItemToCart(CartItemEntity(food: garnish, quantity: 1)));
           }
         } else {

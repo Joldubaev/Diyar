@@ -118,14 +118,14 @@ class _CategorySectionView extends StatelessWidget {
     }
 
     return GridView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: section.foods.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        mainAxisSpacing: 10,
-        crossAxisSpacing: 10,
+        mainAxisSpacing: 14,
+        crossAxisSpacing: 14,
         childAspectRatio: 0.71,
       ),
       itemBuilder: (context, index) {
@@ -146,14 +146,14 @@ class _SectionShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: 2,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        mainAxisSpacing: 10,
-        crossAxisSpacing: 10,
+        mainAxisSpacing: 14,
+        crossAxisSpacing: 14,
         mainAxisExtent: 200,
       ),
       itemBuilder: (_, __) => Shimmer.fromColors(

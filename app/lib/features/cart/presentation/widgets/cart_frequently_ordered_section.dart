@@ -27,7 +27,12 @@ class _FrequentlyOrderedView extends StatelessWidget {
   const _FrequentlyOrderedView();
 
   static const double _cardWidth = 150;
-  static const double _carouselHeight = 232;
+
+  /// Фикс. высота карточки: квадратное фото (= _cardWidth) + блок текста
+  /// (цена + 2 строки названия + вес) с запасом под клампованный масштаб
+  /// текста (до 1.2). Заменяет IntrinsicHeight, который недооценивал высоту
+  /// многострочного текста и давал overflow.
+  static const double _cardHeight = 250;
 
   @override
   Widget build(BuildContext context) {
@@ -51,24 +56,28 @@ class _FrequentlyOrderedView extends StatelessWidget {
               children: [
                 RowTextWidget(text: context.l10n.alsoOrdered, theme: Theme.of(context)),
                 const SizedBox(height: 12),
-                SizedBox(
-                  height: _carouselHeight,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.only(bottom: 4),
-                    itemCount: state.items.length,
-                    separatorBuilder: (_, __) => const SizedBox(width: 10),
-                    itemBuilder: (context, index) {
-                      final food = state.items[index];
-                      return SizedBox(
-                        width: _cardWidth,
-                        child: ProductItemWidget(
-                          food: food,
-                          quantity: quantityMap[food.id] ?? 0,
-                          isCompact: true,
-                        ),
-                      );
-                    },
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: SizedBox(
+                    height: _cardHeight,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: List.generate(state.items.length, (index) {
+                        final food = state.items[index];
+                        return Padding(
+                          padding: EdgeInsets.only(left: index == 0 ? 0 : 10),
+                          child: SizedBox(
+                            width: _cardWidth,
+                            child: ProductItemWidget(
+                              food: food,
+                              quantity: quantityMap[food.id] ?? 0,
+                              isCompact: true,
+                            ),
+                          ),
+                        );
+                      }),
+                    ),
                   ),
                 ),
               ],

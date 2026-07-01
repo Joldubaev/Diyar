@@ -58,10 +58,10 @@ class _DishesWidgetState extends State<DishesWidget> {
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(6),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         child: Row(
           children: [
-            SvgPicture.asset('assets/icons/menu_icon.svg', height: 30),
+            SvgPicture.asset('assets/icons/menu_icon.svg', height: 24),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
@@ -74,8 +74,8 @@ class _DishesWidgetState extends State<DishesWidget> {
             ),
             const SizedBox(width: 8),
             Container(
-              height: 40,
-              padding: const EdgeInsets.symmetric(horizontal: 4),
+              height: 34,
+              padding: const EdgeInsets.symmetric(horizontal: 2),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30),
                 border: Border.all(
@@ -85,33 +85,62 @@ class _DishesWidgetState extends State<DishesWidget> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  IconButton(
-                    visualDensity: VisualDensity.compact,
-                    splashRadius: 20,
-                    iconSize: 20,
-                    icon: const Icon(Icons.remove),
-                    color: _count > 0 ? theme.colorScheme.primary : theme.colorScheme.onSurface.withValues(alpha: 0.38),
-                    onPressed: _count > 0 ? _decrement : null,
+                  _StepButton(
+                    icon: Icons.remove,
+                    enabled: _count > 0,
+                    onTap: _decrement,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Text('$_count',
-                        style: theme.textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.w500,
-                        )),
+                  Container(
+                    constraints: const BoxConstraints(minWidth: 22),
+                    alignment: Alignment.center,
+                    child: Text(
+                      '$_count',
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
-                  IconButton(
-                    visualDensity: VisualDensity.compact,
-                    splashRadius: 20,
-                    iconSize: 20,
-                    icon: const Icon(Icons.add),
-                    color: theme.colorScheme.primary,
-                    onPressed: _increment,
+                  _StepButton(
+                    icon: Icons.add,
+                    enabled: true,
+                    onTap: _increment,
                   ),
                 ],
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Компактная круглая кнопка +/- для счётчика приборов.
+class _StepButton extends StatelessWidget {
+  const _StepButton({
+    required this.icon,
+    required this.enabled,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final bool enabled;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final color = enabled ? theme.colorScheme.primary : theme.colorScheme.onSurface.withValues(alpha: 0.3);
+    return Material(
+      color: Colors.transparent,
+      shape: const CircleBorder(),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: enabled ? onTap : null,
+        child: SizedBox(
+          width: 30,
+          height: 30,
+          child: Icon(icon, size: 18, color: color),
         ),
       ),
     );
