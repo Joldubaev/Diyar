@@ -4,6 +4,7 @@ import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:diyar/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:diyar/features/menu/domain/domain.dart';
+import 'package:diyar/features/menu/presentation/cubit/garnish_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -66,7 +67,23 @@ class ProductDetailCartBar extends StatelessWidget {
 
     if (isIncrement) {
       if (currentQuantity == 0) {
-        cartBloc.add(AddItemToCart(CartItemEntity(food: food, quantity: 1)));
+        // Блюдо с обязательным гарниром: добавляем только после выбора в инлайн-блоке.
+        if (food.requiresGarnish ?? false) {
+          final garnishCubit = context.read<GarnishCubit>();
+          final selectedIndex = garnishCubit.state.selectedIndex;
+          if (selectedIndex == null) {
+            // Ничего не выбрано — привлекаем внимание к блоку гарниров, в корзину не кладём.
+            garnishCubit.requestHighlight();
+            return;
+          }
+          cartBloc.add(AddItemToCart(CartItemEntity(food: food, quantity: 1)));
+          if (selectedIndex > 0) {
+            final garnish = garnishCubit.state.items[selectedIndex - 1];
+            cartBloc.add(AddItemToCart(CartItemEntity(food: garnish, quantity: 1)));
+          }
+        } else {
+          cartBloc.add(AddItemToCart(CartItemEntity(food: food, quantity: 1)));
+        }
       } else {
         cartBloc.add(IncrementItemQuantity(foodId));
       }

@@ -1,3 +1,4 @@
+export 'cart_food_card.dart';
 export 'cart_item_widget.dart';
 export 'price_row_widget.dart';
 export 'cart_item_list_widget.dart';
@@ -10,5 +11,6 @@ export 'cart_initializer.dart';
 export 'cart_items_section.dart';
 export 'cart_price_section.dart';
 export 'cart_dishes_section.dart';
+export 'cart_frequently_ordered_section.dart';
 export 'cart_timer_section.dart';
 export 'cart_items_skeleton.dart';

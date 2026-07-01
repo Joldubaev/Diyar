@@ -80,6 +80,8 @@ import '../../features/cart/presentation/bloc/cart_bloc.dart' as _i517;
 import '../../features/cart/presentation/cubit/cart_cutlery_cubit.dart'
     as _i512;
 import '../../features/cart/presentation/cubit/cart_price_cubit.dart' as _i132;
+import '../../features/cart/presentation/cubit/frequently_ordered_cubit.dart'
+    as _i474;
 import '../../features/curier/curier.dart' as _i566;
 import '../../features/curier/data/datasource/curier_data_source.dart' as _i614;
 import '../../features/curier/data/datasource/curier_payment_data_source.dart'
@@ -125,6 +127,7 @@ import '../../features/menu/data/datasources/remote_datasource/menu_remote_data_
 import '../../features/menu/data/repositories/menu_repository.dart' as _i1024;
 import '../../features/menu/domain/domain.dart' as _i872;
 import '../../features/menu/menu.dart' as _i660;
+import '../../features/menu/presentation/cubit/garnish_cubit.dart' as _i1015;
 import '../../features/menu/presentation/cubit/menu_category_cubit.dart'
     as _i266;
 import '../../features/menu/presentation/cubit/menu_products_cubit.dart'
@@ -460,6 +463,10 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i178.HistoryRepositoryImpl(gh<_i368.HistoryReDatasource>()));
     gh.factory<_i500.OrderDetailCubit>(
         () => _i500.OrderDetailCubit(gh<_i913.OrderDetailRepository>()));
+    gh.factory<_i1015.GarnishCubit>(
+        () => _i1015.GarnishCubit(gh<_i872.MenuRepository>()));
+    gh.factory<_i474.FrequentlyOrderedCubit>(
+        () => _i474.FrequentlyOrderedCubit(gh<_i872.MenuRepository>()));
     gh.lazySingleton<_i566.CurierRepository>(
         () => _i537.CurierRepositoryImpl(gh<_i566.CurierDataSource>()));
     gh.factory<_i968.BonusCubit>(

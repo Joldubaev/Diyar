@@ -18,6 +18,15 @@ class FoodEntity extends Equatable {
   final int? containerCount;
   final int? quantity;
   final int? containerPrice;
+
+  /// «Популярное» блюдо.
+  final bool? isFeatured;
+
+  /// Показывать в блоке «Так же заказывают».
+  final bool? isFrequentlyOrdered;
+
+  /// При добавлении блюда обязательно предложить выбор гарнира.
+  final bool? requiresGarnish;
   final List<IngredientEntity>? ingredients;
   final List<AllergenEntity>? allergens;
 
@@ -36,6 +45,9 @@ class FoodEntity extends Equatable {
     this.containerCount,
     this.quantity,
     this.containerPrice,
+    this.isFeatured,
+    this.isFrequentlyOrdered,
+    this.requiresGarnish,
     this.ingredients,
     this.allergens,
   });
@@ -70,6 +82,9 @@ class FoodEntity extends Equatable {
         containerCount,
         quantity,
         containerPrice,
+        isFeatured,
+        isFrequentlyOrdered,
+        requiresGarnish,
         ingredients,
         allergens,
       ];
@@ -89,6 +104,9 @@ class FoodEntity extends Equatable {
     int? containerCount,
     int? quantity,
     int? containerPrice,
+    bool? isFeatured,
+    bool? isFrequentlyOrdered,
+    bool? requiresGarnish,
     List<IngredientEntity>? ingredients,
     List<AllergenEntity>? allergens,
   }) =>
@@ -107,6 +125,9 @@ class FoodEntity extends Equatable {
         containerCount: containerCount ?? this.containerCount,
         quantity: quantity ?? this.quantity,
         containerPrice: containerPrice ?? this.containerPrice,
+        isFeatured: isFeatured ?? this.isFeatured,
+        isFrequentlyOrdered: isFrequentlyOrdered ?? this.isFrequentlyOrdered,
+        requiresGarnish: requiresGarnish ?? this.requiresGarnish,
         ingredients: ingredients ?? this.ingredients,
         allergens: allergens ?? this.allergens,
       );

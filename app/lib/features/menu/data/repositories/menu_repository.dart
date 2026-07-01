@@ -37,6 +37,15 @@ class MenuRepositoryImpl implements MenuRepository {
   }
 
   @override
+  Future<Either<Failure, List<FoodEntity>>> getFrequentlyOrderedFoods() async {
+    final result = await _remoteDataSource.getFrequentlyOrderedFoods();
+    return result.fold(
+      (failure) => Left(failure),
+      (models) => Right(models.map((e) => e.toEntity()).toList()),
+    );
+  }
+
+  @override
   Future<Either<Failure, List<CategoryEntity>>> getFoodsCategory() async {
     final result = await _remoteDataSource.getFoodsCategory();
     return result.fold(

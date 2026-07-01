@@ -20,15 +20,19 @@ class CartItemsListWidget extends StatelessWidget {
           if (cartItemFood == null) {
             return const SizedBox.shrink();
           }
-          return Padding(
-            padding: EdgeInsets.only(bottom: index == items.length - 1 ? 0 : 10),
-            child: CartItemWidget(
-              counter: quantity,
-              food: cartItemFood,
-              onRemove: () {
-                _showDeleteConfirmationDialog(context, cartItemFood);
-              },
-            ),
+          final isLast = index == items.length - 1;
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CartItemWidget(
+                counter: quantity,
+                food: cartItemFood,
+                onRemove: () {
+                  _showDeleteConfirmationDialog(context, cartItemFood);
+                },
+              ),
+              if (!isLast) const Divider(height: 1, thickness: 0.5, indent: 76),
+            ],
           );
         },
         childCount: items.length,

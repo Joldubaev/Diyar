@@ -23,6 +23,9 @@ class FoodModel with _$FoodModel {
     int? containerCount,
     int? quantity,
     num? containerPrice,
+    bool? isFeatured,
+    bool? isFrequentlyOrdered,
+    bool? requiresGarnish,
     List<IngredientModel>? ingredients,
     List<AllergenModel>? allergens,
   }) = _FoodModel;
@@ -45,6 +48,9 @@ class FoodModel with _$FoodModel {
         containerCount: entity.containerCount,
         quantity: entity.quantity,
         containerPrice: entity.containerPrice,
+        isFeatured: entity.isFeatured,
+        isFrequentlyOrdered: entity.isFrequentlyOrdered,
+        requiresGarnish: entity.requiresGarnish,
         ingredients: entity.ingredients
             ?.map((e) => IngredientModel.fromEntity(e))
             .toList(),
@@ -68,6 +74,9 @@ extension FoodModelX on FoodModel {
         containerCount: containerCount,
         quantity: quantity,
         containerPrice: containerPrice?.toInt(),
+        isFeatured: isFeatured,
+        isFrequentlyOrdered: isFrequentlyOrdered,
+        requiresGarnish: requiresGarnish,
         ingredients: ingredients?.map((e) => e.toEntity()).toList(),
         allergens: allergens?.map((e) => e.toEntity()).toList(),
       );

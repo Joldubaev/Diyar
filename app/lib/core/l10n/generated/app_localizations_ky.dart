@@ -142,6 +142,12 @@ class AppLocalizationsKy extends AppLocalizations {
       'Тапшырууну жок кылуу жактыгын кабыл кыласызбы?';
 
   @override
+  String get clearCart => 'Себетти тазалоо';
+
+  @override
+  String get clearCartText => 'Себетти тазалагыңыз келгенине ишенесизби?';
+
+  @override
   String get delivered => 'Жеткирилди';
 
   @override
@@ -520,6 +526,18 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get popularFood => 'Популярдуу тамактар';
+
+  @override
+  String get alsoOrdered => 'Ушундай эле буюрушат';
+
+  @override
+  String get chooseGarnish => 'Гарнир тандаңыз';
+
+  @override
+  String get withoutGarnish => 'Гарнирсиз';
+
+  @override
+  String get somethingWentWrong => 'Бир нерсе туура эмес болду';
 
   @override
   String get postTerminal => 'Картой курь(post terminal)';

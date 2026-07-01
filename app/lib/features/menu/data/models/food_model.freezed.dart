@@ -34,6 +34,9 @@ mixin _$FoodModel {
   int? get containerCount => throw _privateConstructorUsedError;
   int? get quantity => throw _privateConstructorUsedError;
   num? get containerPrice => throw _privateConstructorUsedError;
+  bool? get isFeatured => throw _privateConstructorUsedError;
+  bool? get isFrequentlyOrdered => throw _privateConstructorUsedError;
+  bool? get requiresGarnish => throw _privateConstructorUsedError;
   List<IngredientModel>? get ingredients => throw _privateConstructorUsedError;
   List<AllergenModel>? get allergens => throw _privateConstructorUsedError;
 
@@ -67,6 +70,9 @@ abstract class $FoodModelCopyWith<$Res> {
       int? containerCount,
       int? quantity,
       num? containerPrice,
+      bool? isFeatured,
+      bool? isFrequentlyOrdered,
+      bool? requiresGarnish,
       List<IngredientModel>? ingredients,
       List<AllergenModel>? allergens});
 }
@@ -100,6 +106,9 @@ class _$FoodModelCopyWithImpl<$Res, $Val extends FoodModel>
     Object? containerCount = freezed,
     Object? quantity = freezed,
     Object? containerPrice = freezed,
+    Object? isFeatured = freezed,
+    Object? isFrequentlyOrdered = freezed,
+    Object? requiresGarnish = freezed,
     Object? ingredients = freezed,
     Object? allergens = freezed,
   }) {
@@ -160,6 +169,18 @@ class _$FoodModelCopyWithImpl<$Res, $Val extends FoodModel>
           ? _value.containerPrice
           : containerPrice // ignore: cast_nullable_to_non_nullable
               as num?,
+      isFeatured: freezed == isFeatured
+          ? _value.isFeatured
+          : isFeatured // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      isFrequentlyOrdered: freezed == isFrequentlyOrdered
+          ? _value.isFrequentlyOrdered
+          : isFrequentlyOrdered // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      requiresGarnish: freezed == requiresGarnish
+          ? _value.requiresGarnish
+          : requiresGarnish // ignore: cast_nullable_to_non_nullable
+              as bool?,
       ingredients: freezed == ingredients
           ? _value.ingredients
           : ingredients // ignore: cast_nullable_to_non_nullable
@@ -195,6 +216,9 @@ abstract class _$$FoodModelImplCopyWith<$Res>
       int? containerCount,
       int? quantity,
       num? containerPrice,
+      bool? isFeatured,
+      bool? isFrequentlyOrdered,
+      bool? requiresGarnish,
       List<IngredientModel>? ingredients,
       List<AllergenModel>? allergens});
 }
@@ -226,6 +250,9 @@ class __$$FoodModelImplCopyWithImpl<$Res>
     Object? containerCount = freezed,
     Object? quantity = freezed,
     Object? containerPrice = freezed,
+    Object? isFeatured = freezed,
+    Object? isFrequentlyOrdered = freezed,
+    Object? requiresGarnish = freezed,
     Object? ingredients = freezed,
     Object? allergens = freezed,
   }) {
@@ -286,6 +313,18 @@ class __$$FoodModelImplCopyWithImpl<$Res>
           ? _value.containerPrice
           : containerPrice // ignore: cast_nullable_to_non_nullable
               as num?,
+      isFeatured: freezed == isFeatured
+          ? _value.isFeatured
+          : isFeatured // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      isFrequentlyOrdered: freezed == isFrequentlyOrdered
+          ? _value.isFrequentlyOrdered
+          : isFrequentlyOrdered // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      requiresGarnish: freezed == requiresGarnish
+          ? _value.requiresGarnish
+          : requiresGarnish // ignore: cast_nullable_to_non_nullable
+              as bool?,
       ingredients: freezed == ingredients
           ? _value._ingredients
           : ingredients // ignore: cast_nullable_to_non_nullable
@@ -316,6 +355,9 @@ class _$FoodModelImpl implements _FoodModel {
       this.containerCount,
       this.quantity,
       this.containerPrice,
+      this.isFeatured,
+      this.isFrequentlyOrdered,
+      this.requiresGarnish,
       final List<IngredientModel>? ingredients,
       final List<AllergenModel>? allergens})
       : _ingredients = ingredients,
@@ -352,6 +394,12 @@ class _$FoodModelImpl implements _FoodModel {
   final int? quantity;
   @override
   final num? containerPrice;
+  @override
+  final bool? isFeatured;
+  @override
+  final bool? isFrequentlyOrdered;
+  @override
+  final bool? requiresGarnish;
   final List<IngredientModel>? _ingredients;
   @override
   List<IngredientModel>? get ingredients {
@@ -374,7 +422,7 @@ class _$FoodModelImpl implements _FoodModel {
 
   @override
   String toString() {
-    return 'FoodModel(id: $id, name: $name, description: $description, categoryId: $categoryId, price: $price, weight: $weight, urlPhoto: $urlPhoto, urlPhotoThumb: $urlPhotoThumb, stopList: $stopList, iDctMax: $iDctMax, containerName: $containerName, containerCount: $containerCount, quantity: $quantity, containerPrice: $containerPrice, ingredients: $ingredients, allergens: $allergens)';
+    return 'FoodModel(id: $id, name: $name, description: $description, categoryId: $categoryId, price: $price, weight: $weight, urlPhoto: $urlPhoto, urlPhotoThumb: $urlPhotoThumb, stopList: $stopList, iDctMax: $iDctMax, containerName: $containerName, containerCount: $containerCount, quantity: $quantity, containerPrice: $containerPrice, isFeatured: $isFeatured, isFrequentlyOrdered: $isFrequentlyOrdered, requiresGarnish: $requiresGarnish, ingredients: $ingredients, allergens: $allergens)';
   }
 
   @override
@@ -405,6 +453,12 @@ class _$FoodModelImpl implements _FoodModel {
                 other.quantity == quantity) &&
             (identical(other.containerPrice, containerPrice) ||
                 other.containerPrice == containerPrice) &&
+            (identical(other.isFeatured, isFeatured) ||
+                other.isFeatured == isFeatured) &&
+            (identical(other.isFrequentlyOrdered, isFrequentlyOrdered) ||
+                other.isFrequentlyOrdered == isFrequentlyOrdered) &&
+            (identical(other.requiresGarnish, requiresGarnish) ||
+                other.requiresGarnish == requiresGarnish) &&
             const DeepCollectionEquality()
                 .equals(other._ingredients, _ingredients) &&
             const DeepCollectionEquality()
@@ -413,24 +467,28 @@ class _$FoodModelImpl implements _FoodModel {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      name,
-      description,
-      categoryId,
-      price,
-      weight,
-      urlPhoto,
-      urlPhotoThumb,
-      stopList,
-      iDctMax,
-      containerName,
-      containerCount,
-      quantity,
-      containerPrice,
-      const DeepCollectionEquality().hash(_ingredients),
-      const DeepCollectionEquality().hash(_allergens));
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        id,
+        name,
+        description,
+        categoryId,
+        price,
+        weight,
+        urlPhoto,
+        urlPhotoThumb,
+        stopList,
+        iDctMax,
+        containerName,
+        containerCount,
+        quantity,
+        containerPrice,
+        isFeatured,
+        isFrequentlyOrdered,
+        requiresGarnish,
+        const DeepCollectionEquality().hash(_ingredients),
+        const DeepCollectionEquality().hash(_allergens)
+      ]);
 
   /// Create a copy of FoodModel
   /// with the given fields replaced by the non-null parameter values.
@@ -464,6 +522,9 @@ abstract class _FoodModel implements FoodModel {
       final int? containerCount,
       final int? quantity,
       final num? containerPrice,
+      final bool? isFeatured,
+      final bool? isFrequentlyOrdered,
+      final bool? requiresGarnish,
       final List<IngredientModel>? ingredients,
       final List<AllergenModel>? allergens}) = _$FoodModelImpl;
 
@@ -498,6 +559,12 @@ abstract class _FoodModel implements FoodModel {
   int? get quantity;
   @override
   num? get containerPrice;
+  @override
+  bool? get isFeatured;
+  @override
+  bool? get isFrequentlyOrdered;
+  @override
+  bool? get requiresGarnish;
   @override
   List<IngredientModel>? get ingredients;
   @override

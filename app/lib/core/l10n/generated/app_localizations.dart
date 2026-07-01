@@ -364,6 +364,18 @@ abstract class AppLocalizations {
   /// **'Are you sure you want to delete this order?'**
   String get deleteOrderText;
 
+  /// No description provided for @clearCart.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear cart'**
+  String get clearCart;
+
+  /// No description provided for @clearCartText.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to clear the cart?'**
+  String get clearCartText;
+
   /// No description provided for @delivered.
   ///
   /// In en, this message translates to:
@@ -1107,6 +1119,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Popular dishes'**
   String get popularFood;
+
+  /// No description provided for @alsoOrdered.
+  ///
+  /// In en, this message translates to:
+  /// **'Frequently ordered'**
+  String get alsoOrdered;
+
+  /// No description provided for @chooseGarnish.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a side dish'**
+  String get chooseGarnish;
+
+  /// No description provided for @withoutGarnish.
+  ///
+  /// In en, this message translates to:
+  /// **'Without side dish'**
+  String get withoutGarnish;
+
+  /// No description provided for @somethingWentWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong'**
+  String get somethingWentWrong;
 
   /// No description provided for @postTerminal.
   ///

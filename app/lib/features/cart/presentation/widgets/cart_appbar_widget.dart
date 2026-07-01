@@ -1,6 +1,9 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:diyar/common/components/components.dart';
 import 'package:diyar/core/core.dart';
+import 'package:diyar/features/cart/cart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CartAppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   const CartAppBarWidget({super.key});
@@ -19,33 +22,40 @@ class CartAppBarWidget extends StatelessWidget implements PreferredSizeWidget {
         context.l10n.cart,
         style: theme.textTheme.titleSmall?.copyWith(color: AppColors.white),
       ),
-      // При необходимости можно добавить кнопки действий, например:
-      // actions: [
-      //   IconButton(
-      //     icon: const Icon(Icons.delivery_dining, color: AppColors.white),
-      //     onPressed: () => _onDeliveryPressed(context),
-      //   ),
-      // ],
+      actions: [
+        // Кнопка очистки видна только при непустой корзине.
+        BlocBuilder<CartBloc, CartState>(
+          builder: (context, state) {
+            final hasItems = state is CartLoaded && state.items.isNotEmpty;
+            if (!hasItems) return const SizedBox.shrink();
+            return IconButton(
+              icon: const Icon(Icons.delete_outline, color: AppColors.white),
+              tooltip: context.l10n.clearCart,
+              onPressed: () => _onClearPressed(context),
+            );
+          },
+        ),
+      ],
     );
+  }
+
+  Future<void> _onClearPressed(BuildContext context) async {
+    final cartBloc = context.read<CartBloc>();
+    final l10n = context.l10n;
+
+    final confirmed = await DeleteConfirmationDialog.show(
+      context: context,
+      title: l10n.clearCart,
+      message: l10n.clearCartText,
+      cancelText: l10n.no,
+      deleteText: l10n.yes,
+    );
+
+    if (confirmed == true) {
+      cartBloc.add(ClearCart());
+    }
   }
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
-
-  // void _onDeliveryPressed(BuildContext context) {
-  //   final state = context.read<CartBloc>().state;
-  //   if (state is CartLoaded && state.items.isNotEmpty) {
-  //     context.router.push(
-  //       SecondOrderRoute(
-  //         totalPrice: state.totalPrice.toInt(),
-  //         cart: state.items,
-  //         dishCount: state.totalItems,
-  //       ),
-  //     );
-  //   } else {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text(context.l10n.cartIsEmpty)),
-  //     );
-  //   }
-  // }
 }
