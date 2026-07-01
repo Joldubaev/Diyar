@@ -8,8 +8,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Точка входа для действий корзины с карточки товара: проверка сессии + события [CartBloc].
 abstract final class ProductCartDispatch {
-  static void increment(BuildContext context, FoodEntity food, int displayedQuantity) {
+  static Future<void> increment(BuildContext context, FoodEntity food, int displayedQuantity) async {
     if (!_ensureSignedIn(context)) return;
+
+    // Блюдо с обязательным гарниром: гарнир выбирается на странице блюда,
+    // поэтому вместо добавления открываем деталку.
+    if ((food.requiresGarnish ?? false) && displayedQuantity <= 0) {
+      context.pushRoute(ProductDetailRoute(food: food));
+      return;
+    }
+
     context.read<CartBloc>().add(
           ProductCardIncrementRequested(
             food: food,

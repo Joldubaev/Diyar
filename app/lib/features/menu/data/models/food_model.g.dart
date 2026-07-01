@@ -22,6 +22,9 @@ _$FoodModelImpl _$$FoodModelImplFromJson(Map<String, dynamic> json) =>
       containerCount: (json['containerCount'] as num?)?.toInt(),
       quantity: (json['quantity'] as num?)?.toInt(),
       containerPrice: json['containerPrice'] as num?,
+      isFeatured: json['isFeatured'] as bool?,
+      isFrequentlyOrdered: json['isFrequentlyOrdered'] as bool?,
+      requiresGarnish: json['requiresGarnish'] as bool?,
       ingredients: (json['ingredients'] as List<dynamic>?)
           ?.map((e) => IngredientModel.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -46,6 +49,9 @@ Map<String, dynamic> _$$FoodModelImplToJson(_$FoodModelImpl instance) =>
       'containerCount': instance.containerCount,
       'quantity': instance.quantity,
       'containerPrice': instance.containerPrice,
+      'isFeatured': instance.isFeatured,
+      'isFrequentlyOrdered': instance.isFrequentlyOrdered,
+      'requiresGarnish': instance.requiresGarnish,
       'ingredients': instance.ingredients,
       'allergens': instance.allergens,
     };

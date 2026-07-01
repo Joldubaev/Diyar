@@ -113,6 +113,8 @@ class _CartViewContent extends StatelessWidget {
             const SliverToBoxAdapter(child: SizedBox(height: 10)),
             const CartDishesSection(),
             const SliverToBoxAdapter(child: SizedBox(height: 16)),
+            const CartFrequentlyOrderedSection(),
+            const SliverToBoxAdapter(child: SizedBox(height: 16)),
             CartTimerSection(cartItems: items),
             const SliverToBoxAdapter(child: SizedBox(height: 20)),
           ],

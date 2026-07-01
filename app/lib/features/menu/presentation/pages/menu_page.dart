@@ -21,78 +21,113 @@ class _MenuPageState extends State<MenuPage> {
   final _itemPositionsListener = ItemPositionsListener.create();
   final _categoryScrollController = ScrollController();
 
+  // Кубиты держим как поля State, чтобы колбэк позиций (вне дерева виджетов)
+  // мог обращаться к ним напрямую, а не через context.read.
+  late final MenuCategoryCubit _categoryCubit;
+  late final MenuProductsCubit _productsCubit;
+
+  /// Защита от петли: при тапе по табу мы программно скроллим ленту,
+  /// и нужно игнорировать колбэки позиций, иначе подсветка «дёргается».
+  bool _isProgrammaticScroll = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _categoryCubit = di.sl<MenuCategoryCubit>()..loadCategories();
+    _productsCubit = di.sl<MenuProductsCubit>();
+    _itemPositionsListener.itemPositions.addListener(_onPositionsChanged);
+  }
+
   @override
   void dispose() {
+    _itemPositionsListener.itemPositions.removeListener(_onPositionsChanged);
     _categoryScrollController.dispose();
+    _categoryCubit.close();
+    _productsCubit.close();
     super.dispose();
   }
 
-  void _onScrollEndReached(BuildContext ctx) {
-    final catState = ctx.read<MenuCategoryCubit>().state;
-    final productsState = ctx.read<MenuProductsCubit>().state;
-    if (productsState.isLoading) return;
-    final next = catState.activeIndex + 1;
-    if (next < catState.categories.length) {
-      _onCategoryTap(ctx, next);
+  /// Скролл ленты → подсветка активной категории в таб-баре.
+  void _onPositionsChanged() {
+    if (_isProgrammaticScroll || !mounted) return;
+    final positions = _itemPositionsListener.itemPositions.value;
+    if (positions.isEmpty) return;
+
+    final visible = positions.where((p) => p.itemTrailingEdge > 0).toList()
+      ..sort((a, b) => a.itemLeadingEdge.compareTo(b.itemLeadingEdge));
+    if (visible.isEmpty) return;
+
+    // Секция, занимающая верх вьюпорта: последняя, чей верхний край ушёл выше 0.
+    final top = visible.lastWhere(
+      (p) => p.itemLeadingEdge <= 0,
+      orElse: () => visible.first,
+    );
+
+    if (_categoryCubit.state.activeIndex != top.index) {
+      _categoryCubit.selectCategory(top.index);
+      _animateCategoryBarTo(top.index);
     }
   }
 
-  void _onCategoryTap(BuildContext ctx, int index) {
-    final catCubit = ctx.read<MenuCategoryCubit>();
-    catCubit.selectCategory(index);
+  /// Тап по табу → программный скролл ленты к секции категории.
+  void _onCategoryTap(int index) {
+    _categoryCubit.selectCategory(index);
+    _animateCategoryBarTo(index);
 
-    final name = catCubit.activeCategoryName;
-    if (name != null) {
-      ctx.read<MenuProductsCubit>().loadProducts(name);
-    }
-
-    _categoryScrollController.animateTo(
-      index * 100.0,
-      duration: const Duration(milliseconds: 500),
+    if (!_itemScrollController.isAttached) return;
+    _isProgrammaticScroll = true;
+    _itemScrollController.scrollTo(
+      index: index,
+      duration: const Duration(milliseconds: 350),
       curve: Curves.easeInOut,
     );
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_itemScrollController.isAttached) {
-        _itemScrollController.scrollTo(
-          index: index,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      }
+    Future.delayed(const Duration(milliseconds: 420), () {
+      if (mounted) _isProgrammaticScroll = false;
     });
+  }
+
+  void _animateCategoryBarTo(int index) {
+    if (!_categoryScrollController.hasClients) return;
+    final target = (index * 100.0).clamp(
+      0.0,
+      _categoryScrollController.position.maxScrollExtent,
+    );
+    _categoryScrollController.animateTo(
+      target,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  Future<void> _refresh() async {
+    _productsCubit.clearCache();
+    await _categoryCubit.loadCategories();
+    await _productsCubit.loadAllSections(_categoryCubit.state.categories);
   }
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (_) => di.sl<MenuCategoryCubit>()..loadCategories(),
-        ),
-        BlocProvider(create: (_) => di.sl<MenuProductsCubit>()),
+        BlocProvider.value(value: _categoryCubit),
+        BlocProvider.value(value: _productsCubit),
       ],
-      child: Builder(
-        builder: (ctx) => Scaffold(
-          body: BlocListener<MenuCategoryCubit, MenuCategoryState>(
-            listenWhen: (prev, curr) => prev.categories.isEmpty && curr.categories.isNotEmpty,
-            listener: (context, state) {
-              final name = state.categories.firstOrNull?.name;
-              if (name != null) {
-                context.read<MenuProductsCubit>().loadProducts(name);
-              }
-            },
-            child: SafeArea(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  _buildHeader(ctx),
-                  const SizedBox(height: 6),
-                  _buildCategoryList(ctx),
-                  const SizedBox(height: 6),
-                  _buildProductArea(ctx),
-                ],
-              ),
+      child: Scaffold(
+        body: BlocListener<MenuCategoryCubit, MenuCategoryState>(
+          listenWhen: (prev, curr) => prev.categories.isEmpty && curr.categories.isNotEmpty,
+          listener: (context, state) {
+            _productsCubit.loadAllSections(state.categories);
+          },
+          child: SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _buildHeader(),
+                const SizedBox(height: 6),
+                _buildCategoryList(),
+                const SizedBox(height: 6),
+                _buildProductArea(),
+              ],
             ),
           ),
         ),
@@ -100,81 +135,51 @@ class _MenuPageState extends State<MenuPage> {
     );
   }
 
-  Widget _buildHeader(BuildContext ctx) {
+  Widget _buildHeader() {
     return BlocSelector<MenuCategoryCubit, MenuCategoryState, List<CategoryEntity>>(
       selector: (state) => state.categories,
       builder: (context, categories) => MenuHeaderWidget(
-        onTapMenu: (i) => _onCategoryTap(ctx, i),
+        onTapMenu: _onCategoryTap,
         categoriesFromPage: categories,
       ),
     );
   }
 
-  Widget _buildCategoryList(BuildContext ctx) {
+  Widget _buildCategoryList() {
     return BlocBuilder<MenuCategoryCubit, MenuCategoryState>(
       builder: (context, state) {
         if (state.categories.isEmpty) return const SizedBox.shrink();
         return CategoryList(
           categories: state.categories,
           activeIndex: ValueNotifier(state.activeIndex),
-          onCategoryTap: (i) => _onCategoryTap(ctx, i),
+          onCategoryTap: _onCategoryTap,
           scrollController: _categoryScrollController,
         );
       },
     );
   }
 
-  Widget _buildProductArea(BuildContext ctx) {
+  Widget _buildProductArea() {
     return Expanded(
-      child: GestureDetector(
-        onHorizontalDragEnd: (details) {
-          if (details.primaryVelocity == null) return;
-          final catState = ctx.read<MenuCategoryCubit>().state;
-          if (details.primaryVelocity! < 0) {
-            final next = catState.activeIndex + 1;
-            if (next < catState.categories.length) {
-              _onCategoryTap(ctx, next);
-            }
-          } else if (details.primaryVelocity! > 0) {
-            final prev = catState.activeIndex - 1;
-            if (prev >= 0) _onCategoryTap(ctx, prev);
-          }
-        },
-        child: RefreshIndicator(
-          onRefresh: () async {
-            final catCubit = ctx.read<MenuCategoryCubit>();
-            final productsCubit = ctx.read<MenuProductsCubit>();
-            productsCubit.clearCache();
-            await catCubit.loadCategories();
-            final name = catCubit.activeCategoryName;
-            if (name != null) productsCubit.loadProducts(name);
-          },
-          child: BlocBuilder<MenuProductsCubit, MenuProductsState>(
-            builder: (context, state) {
-              if (state.isLoading && state.foods.isEmpty) {
-                return const _ShimmerGrid();
-              }
-              if (state.error != null && state.foods.isEmpty) {
+      child: RefreshIndicator(
+        onRefresh: _refresh,
+        child: BlocBuilder<MenuProductsCubit, MenuProductsState>(
+          builder: (context, state) {
+            if (state.sections.isEmpty) {
+              if (state.error != null) {
                 return AppEmptyWidget(
                   icon: Icons.wifi_off_outlined,
                   title: 'Не удалось загрузить',
                   subtitle: state.error,
                 );
               }
-              final catState = ctx.read<MenuCategoryCubit>().state;
-              final nextIndex = catState.activeIndex + 1;
-              final nextName = nextIndex < catState.categories.length
-                  ? catState.categories[nextIndex].name
-                  : null;
-              return ProductsList(
-                activeIndex: ValueNotifier(0),
-                itemScrollController: _itemScrollController,
-                itemPositionsListener: _itemPositionsListener,
-                onEndReached: () => _onScrollEndReached(ctx),
-                nextCategoryName: nextName,
-              );
-            },
-          ),
+              return const _ShimmerGrid();
+            }
+            return ProductsList(
+              itemScrollController: _itemScrollController,
+              itemPositionsListener: _itemPositionsListener,
+            );
+          },
         ),
       ),
     );

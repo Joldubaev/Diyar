@@ -142,6 +142,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get deleteOrderText => 'Вы уверены, что хотите удалить это блюдо?';
 
   @override
+  String get clearCart => 'Очистить корзину';
+
+  @override
+  String get clearCartText => 'Вы уверены, что хотите очистить корзину?';
+
+  @override
   String get delivered => 'Доставлено';
 
   @override
@@ -524,6 +530,18 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get popularFood => 'Популярные блюда';
+
+  @override
+  String get alsoOrdered => 'Так же заказывают';
+
+  @override
+  String get chooseGarnish => 'Выберите гарнир';
+
+  @override
+  String get withoutGarnish => 'Без гарнира';
+
+  @override
+  String get somethingWentWrong => 'Что-то пошло не так';
 
   @override
   String get postTerminal => 'Картой курьеру(post terminal)';

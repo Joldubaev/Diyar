@@ -71,6 +71,9 @@ class AppConst {
 
   // yandex map key
   static const yandexMapKey = '1d3a039d-6ce6-44a2-9ad1-209ee24e3eb1';
+
+  /// Название категории гарниров (для обязательного выбора гарнира при requiresGarnish).
+  static const garnishCategoryName = 'Гарниры';
 }
 
 String generateOtpCode() {

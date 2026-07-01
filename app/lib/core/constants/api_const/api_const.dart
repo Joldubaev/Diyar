@@ -42,6 +42,7 @@ class ApiConst {
   static const getCountFoddsByCategory = "$baseUrl/categorys/get-quantity-foods-by-category/";
   static const searchFoodsByName = '$baseUrl/foods/search-foods-by-pagination';
   static const getPopularFoods = "$baseUrl/foods/get-popular-foods";
+  static const getFrequentlyOrderedFoods = "$baseUrl/foods/get-frequently-ordered-foods";
 
   // Map
   static String getLocations({

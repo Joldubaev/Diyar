@@ -142,6 +142,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deleteOrderText => 'Are you sure you want to delete this order?';
 
   @override
+  String get clearCart => 'Clear cart';
+
+  @override
+  String get clearCartText => 'Are you sure you want to clear the cart?';
+
+  @override
   String get delivered => 'Delivered';
 
   @override
@@ -522,6 +528,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get popularFood => 'Popular dishes';
+
+  @override
+  String get alsoOrdered => 'Frequently ordered';
+
+  @override
+  String get chooseGarnish => 'Choose a side dish';
+
+  @override
+  String get withoutGarnish => 'Without side dish';
+
+  @override
+  String get somethingWentWrong => 'Something went wrong';
 
   @override
   String get postTerminal => 'Post terminal';

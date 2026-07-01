@@ -7,6 +7,9 @@ import 'package:injectable/injectable.dart';
 abstract class MenuRemoteDataSource {
   Future<Either<Failure, CatergoryFoodModel>> getProducts({String? foodName});
   Future<Either<Failure, List<FoodModel>>> getPopulartFoods();
+
+  /// Блок «Так же заказывают». 404 трактуется как пустой список (блок скрыть).
+  Future<Either<Failure, List<FoodModel>>> getFrequentlyOrderedFoods();
   Future<Either<Failure, List<FoodModel>>> searchFoods({String? query});
   Future<Either<Failure, List<CategoryModel>>> getFoodsCategory();
 }
@@ -101,6 +104,30 @@ class MenuRemoteDataSourceImpl implements MenuRemoteDataSource {
       return const Left(ServerFailure('Ошибка при получении популярных блюд'));
     } catch (e) {
       return Left(_handleError(e, 'Ошибка при получении популярных блюд'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<FoodModel>>> getFrequentlyOrderedFoods() async {
+    try {
+      final res = await _dio.get(
+        ApiConst.getFrequentlyOrderedFoods,
+        options: Options(headers: BaseHelper.getHeaders(isAuth: true)),
+      );
+
+      if (res.data['code'] == 200 && res.data != null) {
+        final list = res.data['message'] as List;
+        return Right(list.map((e) => FoodModel.fromJson(e as Map<String, dynamic>)).toList());
+      }
+      return const Left(ServerFailure('Ошибка при получении блюд «Так же заказывают»'));
+    } on DioException catch (e) {
+      // 404 → блюд нет, это не ошибка: блок просто скрывается.
+      if (e.response?.statusCode == 404) {
+        return const Right(<FoodModel>[]);
+      }
+      return Left(_handleError(e, 'Ошибка при получении блюд «Так же заказывают»'));
+    } catch (e) {
+      return Left(_handleError(e, 'Ошибка при получении блюд «Так же заказывают»'));
     }
   }
 

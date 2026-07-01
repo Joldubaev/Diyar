@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/common/common.dart';
 import 'package:diyar/core/core.dart';
@@ -53,11 +55,18 @@ class _CurierPageState extends State<CurierPage> {
   /// потом уведомления (нужны для foreground-service на Android 13+).
   Future<void> _requestRequiredPermissions() async {
     // 1. Геолокация
-    final locationPermission = await Geolocator.checkPermission();
+    var locationPermission = await Geolocator.checkPermission();
     if (locationPermission == LocationPermission.denied) {
-      await Geolocator.requestPermission();
+      locationPermission = await Geolocator.requestPermission();
     }
     if (!mounted) return;
+
+    // iOS: для фоновой передачи локации нужен доступ «Всегда».
+    // При статусе «При использовании» повторный запрос предлагает апгрейд до Always.
+    if (Platform.isIOS && locationPermission == LocationPermission.whileInUse) {
+      await Geolocator.requestPermission();
+      if (!mounted) return;
+    }
 
     // 2. Уведомления (Android 13+ / flutter_foreground_task)
     final notifPermission =
