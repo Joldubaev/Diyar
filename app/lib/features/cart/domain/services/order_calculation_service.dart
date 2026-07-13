@@ -14,7 +14,8 @@ class OrderCalculationService {
     if (cartItems.isEmpty) return 0.0;
     return cartItems.fold<double>(
       0.0,
-      (sum, item) => sum + ((item.food?.price?.toDouble() ?? 0.0) * (item.quantity ?? 0)),
+      // unitPrice = цена блюда + цена гарнира позиции
+      (sum, item) => sum + (item.unitPrice * (item.quantity ?? 0)),
     );
   }
 
@@ -23,7 +24,10 @@ class OrderCalculationService {
     if (cartItems.isEmpty) return 0.0;
     return cartItems.fold<double>(
       0.0,
-      (sum, item) => sum + ((item.food?.containerPrice?.toDouble() ?? 0.0) * (item.quantity ?? 0)),
+      (sum, item) =>
+          sum +
+          (((item.food?.containerPrice?.toDouble() ?? 0.0) + (item.garnish?.containerPrice?.toDouble() ?? 0.0)) *
+              (item.quantity ?? 0)),
     );
   }
 

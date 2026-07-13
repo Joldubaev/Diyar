@@ -1,6 +1,5 @@
 import 'package:diyar/common/components/components.dart';
 import 'package:diyar/features/cart/cart.dart';
-import 'package:diyar/features/menu/menu.dart';
 import 'package:diyar/core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,9 +14,7 @@ class CartItemsListWidget extends StatelessWidget {
       delegate: SliverChildBuilderDelegate(
         (context, index) {
           final cartItem = items[index];
-          final cartItemFood = cartItem.food;
-          final quantity = cartItem.quantity ?? 0;
-          if (cartItemFood == null) {
+          if (cartItem.food == null) {
             return const SizedBox.shrink();
           }
           final isLast = index == items.length - 1;
@@ -25,10 +22,9 @@ class CartItemsListWidget extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               CartItemWidget(
-                counter: quantity,
-                food: cartItemFood,
+                item: cartItem,
                 onRemove: () {
-                  _showDeleteConfirmationDialog(context, cartItemFood);
+                  _showDeleteConfirmationDialog(context, cartItem);
                 },
               ),
               if (!isLast) const Divider(height: 1, thickness: 0.5, indent: 76),
@@ -42,10 +38,10 @@ class CartItemsListWidget extends StatelessWidget {
 
   Future<void> _showDeleteConfirmationDialog(
     BuildContext context,
-    FoodEntity? food,
+    CartItemEntity item,
   ) async {
-    final foodId = food?.id;
-    if (foodId == null) return;
+    final rowKey = item.rowKey;
+    if (rowKey == null) return;
 
     final cartBloc = context.read<CartBloc>();
     final l10n = context.l10n;
@@ -59,7 +55,7 @@ class CartItemsListWidget extends StatelessWidget {
     );
 
     if (confirmed == true && context.mounted) {
-      cartBloc.add(RemoveItemFromCart(foodId));
+      cartBloc.add(RemoveItemFromCart(rowKey));
     }
   }
 }

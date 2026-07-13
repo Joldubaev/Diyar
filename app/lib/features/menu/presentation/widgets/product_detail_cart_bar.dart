@@ -19,23 +19,20 @@ class ProductDetailCartBar extends StatelessWidget {
     return BlocBuilder<CartBloc, CartState>(
       buildWhen: (prev, curr) => curr is CartLoaded || curr is CartInitial,
       builder: (context, state) {
-        int itemQuantity = 0;
-        CartItemEntity? cartItem;
+        // Суммарное количество блюда по всем его позициям
+        // (у блюда с гарниром может быть несколько позиций — по гарниру).
+        var itemQuantity = 0;
+        var rows = const <CartItemEntity>[];
 
         if (state is CartLoaded) {
-          cartItem = state.items.firstWhere(
-            (e) => e.food?.id == food.id,
-            orElse: () => CartItemEntity(food: food, quantity: 0),
-          );
-          itemQuantity = cartItem.quantity ?? 0;
+          rows = state.items.where((e) => e.food?.id == food.id).toList();
+          itemQuantity = rows.fold(0, (sum, e) => sum + (e.quantity ?? 0));
         }
-
-        final effectiveItem = cartItem ?? CartItemEntity(food: food, quantity: 0);
 
         return _ProductDetailQuantityBar(
           quantity: itemQuantity,
-          onDecrement: itemQuantity > 0 ? () => _handleCartAction(context, effectiveItem, isIncrement: false) : null,
-          onIncrement: () => _handleCartAction(context, effectiveItem, isIncrement: true),
+          onDecrement: itemQuantity > 0 ? () => _handleCartAction(context, rows, isIncrement: false) : null,
+          onIncrement: () => _handleCartAction(context, rows, isIncrement: true),
         );
       },
     );
@@ -43,7 +40,7 @@ class ProductDetailCartBar extends StatelessWidget {
 
   void _handleCartAction(
     BuildContext context,
-    CartItemEntity cartItem, {
+    List<CartItemEntity> rows, {
     required bool isIncrement,
   }) {
     if (!UserHelper.isAuth()) {
@@ -60,41 +57,51 @@ class ProductDetailCartBar extends StatelessWidget {
       return;
     }
 
-    final currentQuantity = cartItem.quantity ?? 0;
     final cartBloc = context.read<CartBloc>();
-    final foodId = food.id;
-    if (foodId == null) return;
+    if (food.id == null) return;
+
+    // Гарнир, выбранный в инлайн-блоке (null — «Без гарнира» или не требуется).
+    FoodEntity? selectedGarnish;
+    if (food.requiresGarnish ?? false) {
+      final garnishCubit = context.read<GarnishCubit>();
+      final garnishState = garnishCubit.state;
+      final selectedIndex = garnishState.selectedIndex;
+      // Если гарниров нет (ошибка/пустой список) — не блокируем заказ, кладём блюдо как есть.
+      if (isIncrement && garnishState.items.isNotEmpty && selectedIndex == null) {
+        // Есть из чего выбрать, но не выбрано — подсвечиваем блок, в корзину не кладём.
+        garnishCubit.requestHighlight();
+        return;
+      }
+      if (selectedIndex != null && selectedIndex > 0 && selectedIndex <= garnishState.items.length) {
+        selectedGarnish = garnishState.items[selectedIndex - 1];
+      }
+    }
 
     if (isIncrement) {
-      if (currentQuantity == 0) {
-        // Блюдо с обязательным гарниром: добавляем только после выбора в инлайн-блоке.
-        if (food.requiresGarnish ?? false) {
-          final garnishCubit = context.read<GarnishCubit>();
-          final garnishState = garnishCubit.state;
-          final selectedIndex = garnishState.selectedIndex;
-          // Если гарниров нет (ошибка/пустой список) — не блокируем заказ, кладём блюдо как есть.
-          if (garnishState.items.isNotEmpty && selectedIndex == null) {
-            // Есть из чего выбрать, но не выбрано — подсвечиваем блок, в корзину не кладём.
-            garnishCubit.requestHighlight();
-            return;
-          }
-          cartBloc.add(AddItemToCart(CartItemEntity(food: food, quantity: 1)));
-          if (selectedIndex != null && selectedIndex > 0) {
-            final garnish = garnishState.items[selectedIndex - 1];
-            cartBloc.add(AddItemToCart(CartItemEntity(food: garnish, quantity: 1)));
-          }
-        } else {
-          cartBloc.add(AddItemToCart(CartItemEntity(food: food, quantity: 1)));
-        }
-      } else {
-        cartBloc.add(IncrementItemQuantity(foodId));
-      }
+      // Позиция «блюдо + выбранный гарнир»: повторное добавление с тем же
+      // гарниром сольётся в одну позицию, с другим — создаст новую.
+      cartBloc.add(AddItemToCart(CartItemEntity(
+        food: food,
+        garnish: selectedGarnish,
+        quantity: 1,
+      )));
+      return;
+    }
+
+    // Уменьшаем позицию с текущим выбранным гарниром; если такой нет —
+    // первую позицию этого блюда.
+    if (rows.isEmpty) return;
+    final selectedKey = CartItemEntity(food: food, garnish: selectedGarnish).rowKey;
+    final target = rows.firstWhere(
+      (e) => e.rowKey == selectedKey,
+      orElse: () => rows.first,
+    );
+    final targetKey = target.rowKey;
+    if (targetKey == null) return;
+    if ((target.quantity ?? 0) > 1) {
+      cartBloc.add(DecrementItemQuantity(targetKey));
     } else {
-      if (currentQuantity > 1) {
-        cartBloc.add(DecrementItemQuantity(foodId));
-      } else if (currentQuantity == 1) {
-        cartBloc.add(RemoveItemFromCart(foodId));
-      }
+      cartBloc.add(RemoveItemFromCart(targetKey));
     }
   }
 }

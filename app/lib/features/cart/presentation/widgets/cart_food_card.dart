@@ -15,14 +15,16 @@ class _CartCardConstants {
 /// Карточка блюда в корзине в плоском стиле:
 /// фото слева, по центру — название + подзаголовок + строка «цена · вес»,
 /// счётчик справа по вертикальному центру.
-///
-/// Слот [subtitle] зарезервирован под выбранный гарнир (пока не заполняется).
 class CartFoodCard extends StatelessWidget {
   final FoodEntity food;
   final int counter;
 
-  /// Подзаголовок под названием (напр. выбранный гарнир). Скрыт, если пуст.
+  /// Строка модификатора под названием (напр. «+ Рис · 45 сом»). Скрыта, если пуста.
   final String? subtitle;
+
+  /// Цена гарнира — прибавляется к цене блюда в строке цены,
+  /// чтобы цена карточки соответствовала полной цене позиции.
+  final int? garnishPrice;
 
   final VoidCallback onIncrement;
   final VoidCallback onDecrement;
@@ -37,6 +39,7 @@ class CartFoodCard extends StatelessWidget {
     required this.onDecrement,
     required this.onMinReached,
     this.subtitle,
+    this.garnishPrice,
     this.onTap,
   });
 
@@ -62,7 +65,14 @@ class CartFoodCard extends StatelessWidget {
             ),
           ),
           const SizedBox(width: _CartCardConstants.spacing),
-          Expanded(child: _CartFoodInfo(food: food, subtitle: subtitle, theme: theme)),
+          Expanded(
+            child: _CartFoodInfo(
+              food: food,
+              subtitle: subtitle,
+              garnishPrice: garnishPrice,
+              theme: theme,
+            ),
+          ),
           const SizedBox(width: _CartCardConstants.spacing),
           CounterWidget(
             value: counter,
@@ -86,14 +96,22 @@ class CartFoodCard extends StatelessWidget {
 class _CartFoodInfo extends StatelessWidget {
   final FoodEntity food;
   final String? subtitle;
+  final int? garnishPrice;
   final ThemeData theme;
 
-  const _CartFoodInfo({required this.food, required this.subtitle, required this.theme});
+  const _CartFoodInfo({
+    required this.food,
+    required this.subtitle,
+    required this.garnishPrice,
+    required this.theme,
+  });
 
   @override
   Widget build(BuildContext context) {
     final name = food.name?.isNotEmpty == true ? food.name! : 'Без названия';
-    final priceText = FoodPriceFormatter.formatPriceWithCurrency(food.price);
+    // Цена единицы позиции: блюдо + гарнир (если выбран).
+    final unitPrice = (food.price ?? 0) + (garnishPrice ?? 0);
+    final priceText = FoodPriceFormatter.formatPriceWithCurrency(unitPrice);
     final weight = food.weight;
     final subtitleText = subtitle;
     final mutedColor = theme.colorScheme.onSurface.withValues(alpha: 0.6);
