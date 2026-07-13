@@ -11,6 +11,14 @@ class BonusQrPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (!BonusFlags.qrEnabled) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Мой QR')),
+        body: const SafeArea(
+          child: Center(child: QrPlaceholderWidget()),
+        ),
+      );
+    }
     return BlocProvider(
       create: (_) => di.sl<BonusCubit>()..generateQr(),
       child: Scaffold(

@@ -9,6 +9,9 @@ class BonusQrSheetContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (!BonusFlags.qrEnabled) {
+      return const QrPlaceholderWidget();
+    }
     return BlocBuilder<BonusCubit, BonusState>(
       builder: (context, state) {
         if (state is BonusQrLoaded) {
