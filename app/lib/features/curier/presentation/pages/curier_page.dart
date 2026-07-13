@@ -30,7 +30,10 @@ class _CurierPageState extends State<CurierPage> {
 
   late final CurierCubit _cubit;
   late final SignInCubit _signInCubit;
-  bool _shiftToggleLoading = false;
+
+  /// ValueNotifier вместо setState: индикатор на кнопке смены не должен
+  /// перестраивать весь экран.
+  final _shiftToggleLoading = ValueNotifier<bool>(false);
 
   @override
   void initState() {
@@ -86,6 +89,7 @@ class _CurierPageState extends State<CurierPage> {
   @override
   void dispose() {
     _courierLocationHub.stop();
+    _shiftToggleLoading.dispose();
     _cubit.close();
     _signInCubit.close();
     super.dispose();
@@ -95,10 +99,10 @@ class _CurierPageState extends State<CurierPage> {
     final cubit = context.read<CurierCubit>();
     final wasOnShift = cubit.state.isOnShift;
 
-    setState(() => _shiftToggleLoading = true);
+    _shiftToggleLoading.value = true;
     final success = await cubit.setOnShift(!wasOnShift);
     if (!mounted) return;
-    setState(() => _shiftToggleLoading = false);
+    _shiftToggleLoading.value = false;
 
     if (!context.mounted) return;
     if (success) {
@@ -190,6 +194,13 @@ class _CurierPageState extends State<CurierPage> {
               ],
               child: SafeArea(
                 child: BlocBuilder<CurierCubit, CurierState>(
+                  // Транзитные состояния (FinishOrder*, StartDeliverySuccess)
+                  // обрабатываются слушателями выше и не несут activeOrders —
+                  // перестройка на них роняла список заказов и мигала шиммером.
+                  buildWhen: (prev, curr) =>
+                      curr is UserInitial ||
+                      curr is UserLoading ||
+                      curr is CurierMainState,
                   builder: (context, state) {
                     if (state is UserLoading || state is UserInitial || state.user == null) {
                       return const CurierPageShimmer();
@@ -213,10 +224,13 @@ class _CurierPageState extends State<CurierPage> {
                           SliverToBoxAdapter(
                             child: Padding(
                               padding: const EdgeInsets.only(bottom: 16),
-                              child: ShiftToggleCard(
-                                isOnShift: state.isOnShift,
-                                isLoading: _shiftToggleLoading,
-                                onToggle: () => _toggleShift(context),
+                              child: ValueListenableBuilder<bool>(
+                                valueListenable: _shiftToggleLoading,
+                                builder: (context, isLoading, _) => ShiftToggleCard(
+                                  isOnShift: state.isOnShift,
+                                  isLoading: isLoading,
+                                  onToggle: () => _toggleShift(context),
+                                ),
                               ),
                             ),
                           ),

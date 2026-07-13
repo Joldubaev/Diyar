@@ -6,7 +6,6 @@ class _FoodImageConstants {
   static const double defaultImageWidth = 120.0;
   static const double defaultImageHeight = 120.0;
   static const double placeholderSize = 50.0;
-  static const String placeholderAsset = 'assets/images/placeholder.png';
 }
 
 /// Универсальный виджет для отображения изображения товара
@@ -52,9 +51,9 @@ class FoodImageWidget extends StatelessWidget {
                 child: CircularProgressIndicator(),
               ),
             ),
-            errorWidget: (context, url, error) => Image.asset(
-              _FoodImageConstants.placeholderAsset,
-              fit: fit,
+            errorWidget: (context, url, error) => _NoImagePlaceholder(
+              width: imageWidth,
+              height: imageHeight,
             ),
             fit: fit,
             width: imageWidth,
@@ -63,9 +62,7 @@ class FoodImageWidget extends StatelessWidget {
             memCacheHeight: 700,
             filterQuality: FilterQuality.high,
           )
-        : Image.asset(
-            _FoodImageConstants.placeholderAsset,
-            fit: fit,
+        : _NoImagePlaceholder(
             width: imageWidth,
             height: imageHeight,
           );
@@ -73,6 +70,34 @@ class FoodImageWidget extends StatelessWidget {
     return ClipRRect(
       borderRadius: borderRadius,
       child: imageWidget,
+    );
+  }
+}
+
+/// Заглушка при отсутствии или ошибке загрузки изображения товара
+class _NoImagePlaceholder extends StatelessWidget {
+  final double width;
+  final double height;
+
+  const _NoImagePlaceholder({
+    required this.width,
+    required this.height,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return ColoredBox(
+      color: theme.colorScheme.surface,
+      child: SizedBox(
+        width: width,
+        height: height,
+        child: Icon(
+          Icons.broken_image_outlined,
+          size: _FoodImageConstants.placeholderSize,
+          color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+        ),
+      ),
     );
   }
 }

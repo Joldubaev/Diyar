@@ -42,28 +42,28 @@ class OrderHistoryPage extends StatelessWidget {
                 children: [
                   OrderMenuCard(
                     title: context.l10n.activeOrders,
-                    image: 'assets/images/active_order.png',
+                    image: 'assets/images/active_order.webp',
                     onTap: () {
                       context.router.push(const ActiveOrderRoute());
                     },
                   ),
                   OrderMenuCard(
                     title: context.l10n.pickup,
-                    image: 'assets/images/pickup.png',
+                    image: 'assets/images/pickup.webp',
                     onTap: () {
                       context.router.push(const UserPickupHistoryRoute());
                     },
                   ),
                   OrderMenuCard(
                     title: context.l10n.orderHistory,
-                    image: 'assets/images/order_history.png',
+                    image: 'assets/images/order_history.webp',
                     onTap: () {
                       context.router.push(const UserOrderHistoryRoute());
                     },
                   ),
                   OrderMenuCard(
                     title: "История бонусов",
-                    image: 'assets/images/bonus_history.png',
+                    image: 'assets/images/bonus_history.webp',
                     onTap: () {
                       context.router.push(const BonusTransactionsRoute());
                     },

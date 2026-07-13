@@ -30,6 +30,22 @@ class _MenuPageState extends State<MenuPage> {
   /// и нужно игнорировать колбэки позиций, иначе подсветка «дёргается».
   bool _isProgrammaticScroll = false;
 
+  // Лента теперь плоская (заголовки + ряды блюд), поэтому индекс элемента
+  // списка не равен индексу категории — маппинг даёт MenuFlatList.
+  // Кэшируем его по identity списка секций, т.к. колбэк позиций
+  // вызывается на каждый кадр скролла.
+  List<CategorySection>? _flatSource;
+  MenuFlatList? _flatCache;
+
+  MenuFlatList get _flatList {
+    final sections = _productsCubit.state.sections;
+    if (_flatCache == null || !identical(sections, _flatSource)) {
+      _flatSource = sections;
+      _flatCache = MenuFlatList.fromSections(sections);
+    }
+    return _flatCache!;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -57,15 +73,16 @@ class _MenuPageState extends State<MenuPage> {
       ..sort((a, b) => a.itemLeadingEdge.compareTo(b.itemLeadingEdge));
     if (visible.isEmpty) return;
 
-    // Секция, занимающая верх вьюпорта: последняя, чей верхний край ушёл выше 0.
+    // Элемент, занимающий верх вьюпорта: последний, чей верхний край ушёл выше 0.
     final top = visible.lastWhere(
       (p) => p.itemLeadingEdge <= 0,
       orElse: () => visible.first,
     );
 
-    if (_categoryCubit.state.activeIndex != top.index) {
-      _categoryCubit.selectCategory(top.index);
-      _animateCategoryBarTo(top.index);
+    final categoryIndex = _flatList.categoryOf(top.index);
+    if (_categoryCubit.state.activeIndex != categoryIndex) {
+      _categoryCubit.selectCategory(categoryIndex);
+      _animateCategoryBarTo(categoryIndex);
     }
   }
 
@@ -75,9 +92,11 @@ class _MenuPageState extends State<MenuPage> {
     _animateCategoryBarTo(index);
 
     if (!_itemScrollController.isAttached) return;
+    final firstIndexes = _flatList.firstIndexOfCategory;
+    if (index >= firstIndexes.length) return;
     _isProgrammaticScroll = true;
     _itemScrollController.scrollTo(
-      index: index,
+      index: firstIndexes[index],
       duration: const Duration(milliseconds: 350),
       curve: Curves.easeInOut,
     );
