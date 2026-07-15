@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/core/di/injectable_config.dart';
 import 'package:diyar/features/cart/cart.dart';
@@ -54,10 +55,12 @@ class ProductDetailPage extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
                 child: ProductDetailInfoSection(food: food),
               ),
+              // Блок гарниров виден всегда: выбор не должен исчезать после
+              // добавления в корзину — смена гарнира создаёт новую конфигурацию.
               if (needsGarnish)
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
-                  child: _GarnishSlot(food: food),
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(20, 0, 20, 24),
+                  child: ProductDetailGarnishSection(),
                 ),
             ],
           ),
@@ -74,28 +77,21 @@ class ProductDetailPage extends StatelessWidget {
     if (!needsGarnish) return scaffold;
 
     return BlocProvider(
-      create: (_) => sl<GarnishCubit>()..load(),
-      child: scaffold,
-    );
-  }
-}
-
-/// Показывает блок выбора гарнира, пока блюдо ещё не добавлено в корзину.
-class _GarnishSlot extends StatelessWidget {
-  const _GarnishSlot({required this.food});
-
-  final FoodEntity food;
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<CartBloc, CartState>(
-      buildWhen: (prev, curr) => curr is CartLoaded || curr is CartInitial,
-      builder: (context, state) {
-        final inCart = state is CartLoaded &&
-            state.items.any((e) => e.food?.id == food.id && (e.quantity ?? 0) > 0);
-        if (inCart) return const SizedBox.shrink();
-        return const ProductDetailGarnishSection();
+      create: (context) {
+        final cubit = sl<GarnishCubit>();
+        final cartState = context.read<CartBloc>().state;
+        cubit.load().then((_) {
+          // Если конфигурация блюда уже в корзине — предвыбираем её гарнир,
+          // чтобы панель сразу показала «Уже в корзине» с её количеством.
+          if (cubit.isClosed || cartState is! CartLoaded) return;
+          final row = cartState.items
+              .where((e) => e.food?.id == food.id && (e.quantity ?? 0) > 0)
+              .firstOrNull;
+          if (row != null) cubit.preselectGarnishId(row.garnish?.id);
+        });
+        return cubit;
       },
+      child: scaffold,
     );
   }
 }

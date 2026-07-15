@@ -32,6 +32,19 @@ class GarnishCubit extends Cubit<GarnishState> {
   /// Выбор пункта: `0` — «Без гарнира», `index + 1` — гарнир из списка.
   void select(int index) => emit(state.copyWith(selectedIndex: index));
 
+  /// Предвыбор гарнира по id (из уже лежащей в корзине конфигурации блюда),
+  /// чтобы при повторном открытии блюда экран показывал «Уже в корзине».
+  /// `null` — «Без гарнира». Ничего не делает, если выбор уже сделан.
+  void preselectGarnishId(String? garnishId) {
+    if (state.selectedIndex != null) return;
+    if (garnishId == null) {
+      emit(state.copyWith(selectedIndex: 0));
+      return;
+    }
+    final index = state.items.indexWhere((e) => e.id == garnishId);
+    if (index >= 0) emit(state.copyWith(selectedIndex: index + 1));
+  }
+
   /// Просит UI обратить внимание на блок гарниров (скролл + подсветка).
   void requestHighlight() => emit(state.copyWith(highlightNonce: state.highlightNonce + 1));
 }
