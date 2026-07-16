@@ -1,8 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:diyar/common/components/custom_dialog/register_dialog.dart';
+import 'package:diyar/common/components/snackbar/snackbar_message.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/menu/domain/domain.dart';
+import 'package:diyar/features/menu/presentation/widgets/garnish/garnish_picker_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -11,10 +13,16 @@ abstract final class ProductCartDispatch {
   static Future<void> increment(BuildContext context, FoodEntity food, int displayedQuantity) async {
     if (!_ensureSignedIn(context)) return;
 
-    // Блюдо с обязательным гарниром: гарнир выбирается на странице блюда,
-    // поэтому вместо добавления открываем деталку.
-    if ((food.requiresGarnish ?? false) && displayedQuantity <= 0) {
-      context.pushRoute(ProductDetailRoute(food: food));
+    // Блюдо с обязательным гарниром: каждое добавление — осознанный выбор
+    // конфигурации, поэтому открываем шит выбора гарнира и количества.
+    if (food.requiresGarnish ?? false) {
+      final added = await GarnishPickerSheet.show(context, food);
+      if (added == true && context.mounted) {
+        SnackBarMessage().showSuccessSnackBar(
+          message: 'Добавлено в корзину',
+          context: context,
+        );
+      }
       return;
     }
 

@@ -6,22 +6,17 @@ import 'package:diyar/core/core.dart';
 import 'package:diyar/features/cart/domain/entities/cart_item_entity.dart';
 import 'package:diyar/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:diyar/features/menu/domain/domain.dart';
-import 'package:diyar/features/menu/presentation/cubit/garnish_cubit.dart';
+import 'package:diyar/features/menu/presentation/widgets/garnish/garnish_picker_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Нижняя панель страницы блюда.
 ///
-/// Количество всегда принадлежит конкретной конфигурации «блюдо + гарнир»,
-/// а не блюду вообще. Состояния панели:
-/// 1. Гарнир обязателен, но не выбран — степпер выключен, CTA «Выберите гарнир».
-/// 2. Конфигурация выбрана, но её нет в корзине — степпер черновика +
-///    CTA «Добавить · полная цена × количество».
-/// 3. Эта конфигурация уже в корзине — пометка «Уже в корзине», степпер
-///    правит количество позиции корзины напрямую.
+/// Блюдо с обязательным гарниром: одна кнопка «Добавить» — открывает шит
+/// [GarnishPickerSheet], где выбираются гарнир и количество.
 ///
-/// Смена гарнира в блоке выше мгновенно переключает панель на состояние
-/// той конфигурации — так в одном флоу собираются «3× с рисом» и «1× с пюре».
+/// Обычное блюдо: степпер черновика + «Добавить · цена», а если блюдо уже
+/// в корзине — пометка «Уже в корзине» и степпер, правящий позицию корзины.
 class ProductDetailCartBar extends StatefulWidget {
   const ProductDetailCartBar({super.key, required this.food});
 
@@ -32,77 +27,67 @@ class ProductDetailCartBar extends StatefulWidget {
 }
 
 class _ProductDetailCartBarState extends State<ProductDetailCartBar> {
-  /// Черновое количество для конфигурации, которой ещё нет в корзине.
+  /// Черновое количество для блюда, которого ещё нет в корзине.
   int _draftQuantity = 1;
-
-  /// Ключ конфигурации, для которой набрано [_draftQuantity]: количество
-  /// принадлежит конфигурации, поэтому при смене гарнира черновик сбрасывается.
-  String? _draftConfigKey;
 
   bool get _needsGarnish => widget.food.requiresGarnish ?? false;
 
   @override
   Widget build(BuildContext context) {
-    if (!_needsGarnish) {
-      return _buildForGarnish(context, garnish: null);
+    if (_needsGarnish) {
+      // Весь выбор (гарнир + количество) происходит в шите.
+      return _CtaButton(
+        label: 'Добавить · ${FoodPriceFormatter.formatPriceWithCurrency(widget.food.price)}',
+        emphasized: true,
+        onPressed: () => _guarded(context, () => _openGarnishSheet(context)),
+      );
     }
-    return BlocBuilder<GarnishCubit, GarnishState>(
-      builder: (context, garnishState) {
-        final selectedIndex = garnishState.selectedIndex;
-        // Есть из чего выбирать, но выбор не сделан — просим выбрать гарнир.
-        if (garnishState.items.isNotEmpty && selectedIndex == null) {
-          return _SelectGarnishBar(
-            onTap: () => context.read<GarnishCubit>().requestHighlight(),
-          );
-        }
-        FoodEntity? garnish;
-        if (selectedIndex != null && selectedIndex > 0 && selectedIndex <= garnishState.items.length) {
-          garnish = garnishState.items[selectedIndex - 1];
-        }
-        return _buildForGarnish(context, garnish: garnish);
-      },
-    );
+    return _buildPlain(context);
   }
 
-  Widget _buildForGarnish(BuildContext context, {required FoodEntity? garnish}) {
+  Future<void> _openGarnishSheet(BuildContext context) async {
+    final added = await GarnishPickerSheet.show(context, widget.food);
+    if (added == true && context.mounted) {
+      SnackBarMessage().showSuccessSnackBar(
+        message: 'Добавлено в корзину',
+        context: context,
+      );
+    }
+  }
+
+  Widget _buildPlain(BuildContext context) {
     return BlocBuilder<CartBloc, CartState>(
       buildWhen: (prev, curr) => curr is CartLoaded || curr is CartInitial,
       builder: (context, state) {
-        final configKey = CartItemEntity(food: widget.food, garnish: garnish).rowKey;
-        if (configKey != _draftConfigKey) {
-          _draftConfigKey = configKey;
-          _draftQuantity = 1;
-        }
+        final rowKey = widget.food.id;
         CartItemEntity? cartRow;
-        if (state is CartLoaded && configKey != null) {
-          cartRow = state.items.firstWhereOrNull((e) => e.rowKey == configKey);
+        if (state is CartLoaded && rowKey != null) {
+          cartRow = state.items.firstWhereOrNull((e) => e.rowKey == rowKey);
         }
 
         if (cartRow != null) {
           return _InCartBar(
             quantity: cartRow.quantity ?? 0,
             onIncrement: () => _guarded(context, () {
-              context.read<CartBloc>().add(IncrementItemQuantity(configKey!));
+              context.read<CartBloc>().add(IncrementItemQuantity(rowKey!));
             }),
             onDecrement: () => _guarded(context, () {
               final quantity = cartRow!.quantity ?? 0;
               context.read<CartBloc>().add(
-                    quantity > 1 ? DecrementItemQuantity(configKey!) : RemoveItemFromCart(configKey!),
+                    quantity > 1 ? DecrementItemQuantity(rowKey!) : RemoveItemFromCart(rowKey!),
                   );
             }),
           );
         }
 
-        final unitPrice = (widget.food.price ?? 0) + (garnish?.price ?? 0);
         return _AddToCartBar(
           quantity: _draftQuantity,
-          totalPrice: unitPrice * _draftQuantity,
+          totalPrice: (widget.food.price ?? 0) * _draftQuantity,
           onIncrement: () => setState(() => _draftQuantity++),
           onDecrement: _draftQuantity > 1 ? () => setState(() => _draftQuantity--) : null,
           onAdd: () => _guarded(context, () {
             context.read<CartBloc>().add(AddItemToCart(CartItemEntity(
                   food: widget.food,
-                  garnish: garnish,
                   quantity: _draftQuantity,
                 )));
             setState(() => _draftQuantity = 1);
@@ -132,31 +117,7 @@ class _ProductDetailCartBarState extends State<ProductDetailCartBar> {
   }
 }
 
-/// Состояние 1: гарнир не выбран — степпер выключен, CTA ведёт к блоку выбора.
-class _SelectGarnishBar extends StatelessWidget {
-  const _SelectGarnishBar({required this.onTap});
-
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        const _QuantityStepper(quantity: 0),
-        const SizedBox(width: 12),
-        Expanded(
-          child: _CtaButton(
-            label: context.l10n.chooseGarnish,
-            emphasized: false,
-            onPressed: onTap,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-/// Состояние 2: конфигурация собрана — количество + «Добавить · цена».
+/// Блюдо ещё не в корзине — количество + «Добавить · цена».
 class _AddToCartBar extends StatelessWidget {
   const _AddToCartBar({
     required this.quantity,
@@ -347,16 +308,20 @@ class _CtaButton extends StatelessWidget {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
         ),
         onPressed: onPressed,
-        child: Text(
-          label,
-          style: context.textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.w700,
-            color: emphasized
-                ? context.colorScheme.onPrimary
-                : context.colorScheme.onSurface.withValues(alpha: 0.6),
+        // FittedBox вместо ellipsis: цена на кнопке не должна обрезаться
+        // («Добавить · 6…») — при нехватке места текст слегка ужимается.
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            label,
+            style: context.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.w700,
+              color: emphasized
+                  ? context.colorScheme.onPrimary
+                  : context.colorScheme.onSurface.withValues(alpha: 0.6),
+            ),
+            maxLines: 1,
           ),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
         ),
       ),
     );
