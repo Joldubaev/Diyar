@@ -40,9 +40,9 @@ class CartRepositoryImpl implements CartRepository {
   }
 
   @override
-  Future<void> decrementCart(String foodId) async {
+  Future<void> decrementCart(String rowKey) async {
     // Логика уменьшения количества теперь в datasource
-    await _localDataSource.decrementCartItem(foodId);
+    await _localDataSource.decrementCartItem(rowKey);
   }
 
   @override
@@ -54,14 +54,14 @@ class CartRepositoryImpl implements CartRepository {
   }
 
   @override
-  Future<void> incrementCart(String foodId) async {
+  Future<void> incrementCart(String rowKey) async {
     // Логика увеличения количества теперь в datasource
-    await _localDataSource.incrementCartItem(foodId);
+    await _localDataSource.incrementCartItem(rowKey);
   }
 
   @override
-  Future<void> removeFromCart(String foodId) async {
-    await _localDataSource.removeCartItem(foodId);
+  Future<void> removeFromCart(String rowKey) async {
+    await _localDataSource.removeCartItem(rowKey);
   }
 
   // Реализация синхронного получения текущих элементов
@@ -80,22 +80,22 @@ class CartRepositoryImpl implements CartRepository {
 
   @override
   Future<void> setCartItemCount(CartItemEntity cart) async {
-    if (cart.food?.id == null || cart.quantity == null) {
+    final rowKey = cart.rowKey;
+    if (rowKey == null || cart.quantity == null) {
       log("Error setting cart item count: Food ID or quantity is null.");
       return;
     }
 
-    final foodId = cart.food!.id!;
     final quantity = cart.quantity!;
 
     if (quantity <= 0) {
-      await _localDataSource.removeCartItem(foodId);
+      await _localDataSource.removeCartItem(rowKey);
     } else {
       // Используем метод datasource для проверки существования
-      final existingItem = _localDataSource.getCartItemByFoodId(foodId);
+      final existingItem = _localDataSource.getCartItem(rowKey);
 
       if (existingItem != null) {
-        await _localDataSource.updateCartItemQuantity(foodId, quantity);
+        await _localDataSource.updateCartItemQuantity(rowKey, quantity);
       } else {
         // Если элемент не существует, добавляем новый
         final cartModel = CartItemModel.fromEntity(cart);

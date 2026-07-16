@@ -132,6 +132,13 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     }
   }
 
+  /// Позиции корзины с данным блюдом (у блюда с гарнирами их может быть
+  /// несколько — по одной на каждый выбранный гарнир).
+  List<CartItemEntity> _rowsForFood(String foodId) {
+    final items = _cartRepository?.getCurrentCartItems() ?? [];
+    return items.where((e) => e.food?.id == foodId).toList();
+  }
+
   Future<void> _onProductCardIncrementRequested(
     ProductCardIncrementRequested event,
     Emitter<CartState> emit,
@@ -139,12 +146,15 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     final foodId = event.food.id;
     if (foodId == null) return;
     try {
-      if (event.displayedQuantity <= 0) {
+      final rows = _rowsForFood(foodId);
+      if (rows.isEmpty) {
         await _cartRepository?.addToCart(
           CartItemEntity(food: event.food, quantity: 1),
         );
       } else {
-        await _cartRepository?.incrementCart(foodId);
+        // Блюдо уже в корзине: увеличиваем первую позицию — для блюда
+        // с гарниром это добавит и блюдо, и его гарнир (позиция связана).
+        await _cartRepository?.incrementCart(rows.first.rowKey!);
       }
     } catch (e) {
       emit(CartError('Ошибка добавления: ${e.toString()}'));
@@ -158,10 +168,13 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     final foodId = event.food.id;
     if (foodId == null) return;
     try {
-      if (event.displayedQuantity > 1) {
-        await _cartRepository?.decrementCart(foodId);
-      } else if (event.displayedQuantity == 1) {
-        await _cartRepository?.removeFromCart(foodId);
+      final rows = _rowsForFood(foodId);
+      if (rows.isEmpty) return;
+      final target = rows.first;
+      if ((target.quantity ?? 0) > 1) {
+        await _cartRepository?.decrementCart(target.rowKey!);
+      } else {
+        await _cartRepository?.removeFromCart(target.rowKey!);
       }
     } catch (e) {
       emit(CartError('Ошибка изменения количества: ${e.toString()}'));
@@ -176,9 +189,24 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     final foodId = event.food.id;
     if (foodId == null) return;
     try {
-      await _cartRepository?.setCartItemCount(
-        CartItemEntity(food: event.food, quantity: event.newQuantity),
-      );
+      final rows = _rowsForFood(foodId);
+      if (rows.isEmpty) {
+        await _cartRepository?.setCartItemCount(
+          CartItemEntity(food: event.food, quantity: event.newQuantity),
+        );
+        return;
+      }
+      // Меняем первую позицию так, чтобы суммарное количество блюда
+      // стало newQuantity; остальные позиции (другие гарниры) не трогаем.
+      final othersSum = rows.skip(1).fold<int>(0, (sum, e) => sum + (e.quantity ?? 0));
+      final firstQuantity = event.newQuantity - othersSum;
+      if (firstQuantity <= 0) {
+        await _cartRepository?.removeFromCart(rows.first.rowKey!);
+      } else {
+        await _cartRepository?.setCartItemCount(
+          rows.first.copyWith(quantity: firstQuantity),
+        );
+      }
     } catch (e) {
       emit(CartError('Ошибка установки количества: ${e.toString()}'));
     }

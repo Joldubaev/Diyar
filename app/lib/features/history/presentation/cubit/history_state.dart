@@ -19,10 +19,13 @@ final class GetHistoryOrdersLoading extends HistoryState {
 final class GetHistoryOrdersLoaded extends HistoryState {
   final List<OrderActiveItemEntity> orders;
 
-  const GetHistoryOrdersLoaded(this.orders);
+  /// Активный фильтр по дате (null — показаны все заказы).
+  final DateTimeRange? dateRange;
+
+  const GetHistoryOrdersLoaded(this.orders, {this.dateRange});
 
   @override
-  List<Object?> get props => [orders];
+  List<Object?> get props => [orders, dateRange];
 }
 
 final class GetHistoryOrdersError extends HistoryState {
@@ -40,10 +43,13 @@ final class GetPickupHistoryLoading extends HistoryState {
 final class GetPickupHistoryLoaded extends HistoryState {
   final PickupHistoryResponseEntity response;
 
-  const GetPickupHistoryLoaded(this.response);
+  /// Активный фильтр по дате (null — показаны все заказы).
+  final DateTimeRange? dateRange;
+
+  const GetPickupHistoryLoaded(this.response, {this.dateRange});
 
   @override
-  List<Object?> get props => [response];
+  List<Object?> get props => [response, dateRange];
 }
 
 final class GetPickupHistoryError extends HistoryState {

@@ -47,7 +47,7 @@ class _FrequentlyOrderedView extends StatelessWidget {
             if (cartState is CartLoaded) {
               for (final item in cartState.items) {
                 final id = item.food?.id;
-                if (id != null) quantityMap[id] = item.quantity ?? 0;
+                if (id != null) quantityMap[id] = (quantityMap[id] ?? 0) + (item.quantity ?? 0);
               }
             }
 

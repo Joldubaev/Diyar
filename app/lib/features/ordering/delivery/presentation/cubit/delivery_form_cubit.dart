@@ -234,11 +234,14 @@ class DeliveryFormCubit extends Cubit<DeliveryFormState> {
       userPhone: currentState.userPhone.trim(),
     );
 
-    // Вычисляем dishesCount из cart
-    final dishesCount = cart.fold<int>(0, (sum, item) => sum + (item.quantity ?? 0));
+    // Гарниры разворачиваются в отдельные позиции — формат для бэкенда не меняется.
+    final flatCart = cart.expandGarnishes();
+
+    // Вычисляем dishesCount из развёрнутого списка (гарниры считаются отдельно)
+    final dishesCount = flatCart.fold<int>(0, (sum, item) => sum + (item.quantity ?? 0));
 
     // Преобразуем cart в список FoodItemOrderEntity
-    final foods = cart
+    final foods = flatCart
         .map((e) => FoodItemOrderEntity(
               dishId: '${e.food?.id}',
               name: e.food?.name ?? '',

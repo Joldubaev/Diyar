@@ -8,6 +8,7 @@ export 'storage/storage_exception.dart';
 export 'response/general_response.dart';
 // Error helpers
 export 'api_error_utils.dart';
+export 'date_time_parser.dart';
 // Helpers (map, user, base — остаётся в core)
 export 'helper/helper.dart';
 // Re-export из common (UI helpers, validators, timer_mixin)

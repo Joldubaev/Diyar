@@ -7,7 +7,7 @@ import 'package:injectable/injectable.dart';
 part 'garnish_state.dart';
 
 /// Загружает гарниры из категории «Гарниры» для обязательного выбора
-/// при добавлении блюда с requiresGarnish.
+/// при добавлении блюда с requiresGarnish (в GarnishPickerSheet).
 @injectable
 class GarnishCubit extends Cubit<GarnishState> {
   final MenuRepository _menuRepository;
@@ -31,7 +31,4 @@ class GarnishCubit extends Cubit<GarnishState> {
 
   /// Выбор пункта: `0` — «Без гарнира», `index + 1` — гарнир из списка.
   void select(int index) => emit(state.copyWith(selectedIndex: index));
-
-  /// Просит UI обратить внимание на блок гарниров (скролл + подсветка).
-  void requestHighlight() => emit(state.copyWith(highlightNonce: state.highlightNonce + 1));
 }

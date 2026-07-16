@@ -17,6 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$CartItemModel {
   FoodModel? get food => throw _privateConstructorUsedError;
+  FoodModel? get garnish => throw _privateConstructorUsedError;
   int? get quantity => throw _privateConstructorUsedError;
   double? get totalPrice => throw _privateConstructorUsedError;
 
@@ -33,9 +34,11 @@ abstract class $CartItemModelCopyWith<$Res> {
           CartItemModel value, $Res Function(CartItemModel) then) =
       _$CartItemModelCopyWithImpl<$Res, CartItemModel>;
   @useResult
-  $Res call({FoodModel? food, int? quantity, double? totalPrice});
+  $Res call(
+      {FoodModel? food, FoodModel? garnish, int? quantity, double? totalPrice});
 
   $FoodModelCopyWith<$Res>? get food;
+  $FoodModelCopyWith<$Res>? get garnish;
 }
 
 /// @nodoc
@@ -54,6 +57,7 @@ class _$CartItemModelCopyWithImpl<$Res, $Val extends CartItemModel>
   @override
   $Res call({
     Object? food = freezed,
+    Object? garnish = freezed,
     Object? quantity = freezed,
     Object? totalPrice = freezed,
   }) {
@@ -61,6 +65,10 @@ class _$CartItemModelCopyWithImpl<$Res, $Val extends CartItemModel>
       food: freezed == food
           ? _value.food
           : food // ignore: cast_nullable_to_non_nullable
+              as FoodModel?,
+      garnish: freezed == garnish
+          ? _value.garnish
+          : garnish // ignore: cast_nullable_to_non_nullable
               as FoodModel?,
       quantity: freezed == quantity
           ? _value.quantity
@@ -86,6 +94,20 @@ class _$CartItemModelCopyWithImpl<$Res, $Val extends CartItemModel>
       return _then(_value.copyWith(food: value) as $Val);
     });
   }
+
+  /// Create a copy of CartItemModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $FoodModelCopyWith<$Res>? get garnish {
+    if (_value.garnish == null) {
+      return null;
+    }
+
+    return $FoodModelCopyWith<$Res>(_value.garnish!, (value) {
+      return _then(_value.copyWith(garnish: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -96,10 +118,13 @@ abstract class _$$CartItemModelImplCopyWith<$Res>
       __$$CartItemModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({FoodModel? food, int? quantity, double? totalPrice});
+  $Res call(
+      {FoodModel? food, FoodModel? garnish, int? quantity, double? totalPrice});
 
   @override
   $FoodModelCopyWith<$Res>? get food;
+  @override
+  $FoodModelCopyWith<$Res>? get garnish;
 }
 
 /// @nodoc
@@ -116,6 +141,7 @@ class __$$CartItemModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? food = freezed,
+    Object? garnish = freezed,
     Object? quantity = freezed,
     Object? totalPrice = freezed,
   }) {
@@ -123,6 +149,10 @@ class __$$CartItemModelImplCopyWithImpl<$Res>
       food: freezed == food
           ? _value.food
           : food // ignore: cast_nullable_to_non_nullable
+              as FoodModel?,
+      garnish: freezed == garnish
+          ? _value.garnish
+          : garnish // ignore: cast_nullable_to_non_nullable
               as FoodModel?,
       quantity: freezed == quantity
           ? _value.quantity
@@ -139,10 +169,13 @@ class __$$CartItemModelImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$CartItemModelImpl implements _CartItemModel {
-  const _$CartItemModelImpl({this.food, this.quantity, this.totalPrice});
+  const _$CartItemModelImpl(
+      {this.food, this.garnish, this.quantity, this.totalPrice});
 
   @override
   final FoodModel? food;
+  @override
+  final FoodModel? garnish;
   @override
   final int? quantity;
   @override
@@ -150,7 +183,7 @@ class _$CartItemModelImpl implements _CartItemModel {
 
   @override
   String toString() {
-    return 'CartItemModel(food: $food, quantity: $quantity, totalPrice: $totalPrice)';
+    return 'CartItemModel(food: $food, garnish: $garnish, quantity: $quantity, totalPrice: $totalPrice)';
   }
 
   @override
@@ -159,6 +192,7 @@ class _$CartItemModelImpl implements _CartItemModel {
         (other.runtimeType == runtimeType &&
             other is _$CartItemModelImpl &&
             (identical(other.food, food) || other.food == food) &&
+            (identical(other.garnish, garnish) || other.garnish == garnish) &&
             (identical(other.quantity, quantity) ||
                 other.quantity == quantity) &&
             (identical(other.totalPrice, totalPrice) ||
@@ -166,7 +200,8 @@ class _$CartItemModelImpl implements _CartItemModel {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, food, quantity, totalPrice);
+  int get hashCode =>
+      Object.hash(runtimeType, food, garnish, quantity, totalPrice);
 
   /// Create a copy of CartItemModel
   /// with the given fields replaced by the non-null parameter values.
@@ -180,11 +215,14 @@ class _$CartItemModelImpl implements _CartItemModel {
 abstract class _CartItemModel implements CartItemModel {
   const factory _CartItemModel(
       {final FoodModel? food,
+      final FoodModel? garnish,
       final int? quantity,
       final double? totalPrice}) = _$CartItemModelImpl;
 
   @override
   FoodModel? get food;
+  @override
+  FoodModel? get garnish;
   @override
   int? get quantity;
   @override

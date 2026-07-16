@@ -17,7 +17,9 @@ class CreatePickupOrderFromCartUseCase {
     required int dishCount,
     double? bonusAmount,
   }) {
+    // Гарниры разворачиваются в отдельные позиции — формат для бэкенда не меняется.
     final foods = cartItems
+        .expandGarnishes()
         .map((cartItem) => FoodItemOrderEntity(
               dishId: '${cartItem.food?.id}',
               name: cartItem.food?.name ?? '',

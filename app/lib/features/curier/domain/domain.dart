@@ -6,4 +6,3 @@ export 'repository/curier_repository.dart';
 export 'repository/curier_payment_repository.dart';
 export 'usecases/confirm_cash_payment_and_finish_usecase.dart';
 export 'utils/curier_constants.dart';
-export 'utils/date_time_parser.dart';

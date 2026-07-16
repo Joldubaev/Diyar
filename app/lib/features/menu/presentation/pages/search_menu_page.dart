@@ -92,7 +92,7 @@ class SearchMenuPage extends StatelessWidget {
                               for (final item in cartState.items) {
                                 final id = item.food?.id;
                                 if (id != null) {
-                                  quantityMap[id] = item.quantity ?? 0;
+                                  quantityMap[id] = (quantityMap[id] ?? 0) + (item.quantity ?? 0);
                                 }
                               }
                             }

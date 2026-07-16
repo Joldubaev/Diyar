@@ -1,13 +1,9 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:diyar/common/components/components.dart';
 import 'package:diyar/core/core.dart';
 import 'package:diyar/core/di/injectable_config.dart' as di;
-import 'package:diyar/features/curier/curier.dart';
 import 'package:diyar/features/history/domain/domain.dart';
 import 'package:diyar/features/history/history.dart';
-import 'package:diyar/features/history/presentation/cubit/history_cubit.dart';
 import 'package:diyar/features/history/presentation/widgets/error_widget.dart';
-import 'package:diyar/features/history/presentation/widgets/pickup_order_status_badge.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,15 +17,16 @@ class UserPickupHistoryPage extends StatefulWidget {
 
 class _UserPickupHistoryPageState extends State<UserPickupHistoryPage> {
   late final HistoryCubit _historyCubit;
-  PickupHistoryResponseEntity? response;
-  int currentPage = 1;
-  final int pageSize = 10;
+  HistoryDateFilterValue _filter = const HistoryDateFilterValue.all();
+  PickupHistoryResponseEntity? _response;
+  int _currentPage = 1;
+  static const int _pageSize = 10;
 
   @override
   void initState() {
     super.initState();
     _historyCubit = di.sl<HistoryCubit>();
-    _historyCubit.getPickupHistory(pageNumber: currentPage, pageSize: pageSize);
+    _historyCubit.getPickupHistory(pageNumber: _currentPage, pageSize: _pageSize);
   }
 
   @override
@@ -39,134 +36,128 @@ class _UserPickupHistoryPageState extends State<UserPickupHistoryPage> {
   }
 
   void _loadPage(int page) {
+    setState(() => _currentPage = page);
+    _historyCubit.getPickupHistory(pageNumber: page, pageSize: _pageSize);
+  }
+
+  void _onFilterChanged(HistoryDateFilterValue filter) {
     setState(() {
-      currentPage = page;
+      _filter = filter;
+      _currentPage = 1;
+      _response = null;
     });
-    _historyCubit.getPickupHistory(pageNumber: page, pageSize: pageSize);
+    _historyCubit.setPickupDateFilter(filter.range);
+  }
+
+  Future<void> _refresh() {
+    if (_filter.range != null) {
+      return _historyCubit.setPickupDateFilter(_filter.range);
+    }
+    return _historyCubit.getPickupHistory(pageNumber: _currentPage, pageSize: _pageSize);
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return BlocProvider.value(
       value: _historyCubit,
-      child: Builder(
-        builder: (context) => _buildContent(context),
-      ),
-    );
-  }
+      child: Scaffold(
+        appBar: AppBar(title: Text(context.l10n.pickup)),
+        body: Column(
+          children: [
+            HistoryDateFilterBar(value: _filter, onChanged: _onFilterChanged),
+            Expanded(
+              child: BlocBuilder<HistoryCubit, HistoryState>(
+                builder: (context, state) {
+                  if (state is GetPickupHistoryError) {
+                    return ErrorWithRetry(
+                      message: context.l10n.errorLoadingOrderHistory,
+                      onRetry: _refresh,
+                    );
+                  }
+                  if (state is GetPickupHistoryLoaded) {
+                    _response = state.response;
+                  } else if (_response == null) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
 
-  Widget _buildContent(BuildContext context) {
-    final theme = Theme.of(context);
-    return Scaffold(
-      appBar: AppBar(title: Text(context.l10n.pickup)),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: BlocBuilder<HistoryCubit, HistoryState>(
-          builder: (context, state) {
-            if (state is GetPickupHistoryError) {
-              return ErrorWithRetry(
-                message: context.l10n.errorLoadingOrderHistory,
-                onRetry: () => _loadPage(currentPage),
-              );
-            } else if (state is GetPickupHistoryLoading) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (state is GetPickupHistoryLoaded) {
-              response = state.response;
-            }
+                  final orders = _response?.orders ?? [];
+                  final totalPages = _response?.totalPages ?? 0;
 
-            final orders = response?.orders ?? [];
-            final totalPages = response?.totalPages ?? 0;
+                  if (orders.isEmpty) {
+                    return HistoryEmptyWidget(
+                      text: _filter.range != null
+                          ? 'За выбранный период заказов нет'
+                          : context.l10n.noOrderHistory,
+                    );
+                  }
 
-            return Column(
-              children: [
-                Expanded(
-                  child: orders.isEmpty
-                      ? EmptyActiveOrders(text: context.l10n.noOrderHistory)
-                      : ListView.builder(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          itemCount: orders.length,
-                          itemBuilder: (context, index) {
-                            return Card(
-                              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15))),
-                              elevation: 3,
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text('${context.l10n.orderNumber} ${orders[index].orderNumber}',
-                                            style: theme.textTheme.titleSmall!
-                                                .copyWith(color: theme.colorScheme.onSurface)),
-                                        PickupOrderStatusBadge(status: orders[index].status),
-                                      ],
+                  return Column(
+                    children: [
+                      Expanded(
+                        child: RefreshIndicator(
+                          onRefresh: _refresh,
+                          child: ListView.builder(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+                            itemCount: orders.length,
+                            itemBuilder: (context, index) {
+                              final order = orders[index];
+                              return HistoryOrderCard(
+                                orderNumber: order.orderNumber,
+                                status: order.status,
+                                timeRequest: order.timeRequest,
+                                detailsLabel: context.l10n.orderDetailsText,
+                                rows: [
+                                  HistoryCardRow(
+                                    label: 'Стоимость заказа:',
+                                    value: '${order.price ?? 0} сом',
+                                  ),
+                                  if ((order.amountToReduce ?? 0) > 0)
+                                    HistoryCardRow(
+                                      label: 'Бонусы:',
+                                      value: '-${_formatPrice(order.amountToReduce!)}',
                                     ),
-                                    Divider(color: theme.colorScheme.onSurface.withValues(alpha: 0.5), thickness: 1),
-                                    CustomTile(title: 'Стоимость заказа:', trailing: '${orders[index].price} сом'),
-                                    if (orders[index].amountToReduce != null && orders[index].amountToReduce! > 0) ...[
-                                      const SizedBox(height: 4),
-                                      CustomTile(
-                                        title: 'Бонусы:',
-                                        trailing: _formatPrice(orders[index].amountToReduce!),
-                                      ),
-                                    ],
-                                    const SizedBox(height: 4),
-                                    CustomTile(
-                                      title: 'Итого:',
-                                      trailing: _formatPrice(_calculateFinalTotal(orders[index])),
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: SizedBox(
-                                        height: 40,
-                                        width: MediaQuery.of(context).size.width * 0.5,
-                                        child: SubmitButtonWidget(
-                                          title: context.l10n.orderDetailsText,
-                                          bgColor: theme.colorScheme.primary,
-                                          textStyle:
-                                              theme.textTheme.bodyLarge!.copyWith(color: theme.colorScheme.onPrimary),
-                                          onTap: () {
-                                            context.pushRoute(
-                                              UserPickupDetailRoute(order: orders[index]),
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                  HistoryCardRow(
+                                    label: 'Итого:',
+                                    value: _formatPrice(_finalTotal(order)),
+                                  ),
+                                ],
+                                onDetails: () => context.pushRoute(
+                                  UserPickupDetailRoute(order: order),
                                 ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                      if (_filter.range == null && totalPages > 1)
+                        Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              IconButton(
+                                onPressed:
+                                    _currentPage > 1 ? () => _loadPage(_currentPage - 1) : null,
+                                icon: const Icon(Icons.chevron_left),
                               ),
-                            );
-                          },
+                              Text('$_currentPage / $totalPages', style: theme.textTheme.bodyMedium),
+                              IconButton(
+                                onPressed: _currentPage < totalPages
+                                    ? () => _loadPage(_currentPage + 1)
+                                    : null,
+                                icon: const Icon(Icons.chevron_right),
+                              ),
+                            ],
+                          ),
                         ),
-                ),
-                if (totalPages > 1)
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        IconButton(
-                          onPressed: currentPage > 1 ? () => _loadPage(currentPage - 1) : null,
-                          icon: const Icon(Icons.chevron_left),
-                        ),
-                        Text(
-                          '$currentPage / $totalPages',
-                          style: theme.textTheme.bodyMedium,
-                        ),
-                        IconButton(
-                          onPressed: currentPage < totalPages ? () => _loadPage(currentPage + 1) : null,
-                          icon: const Icon(Icons.chevron_right),
-                        ),
-                      ],
-                    ),
-                  ),
-              ],
-            );
-          },
+                    ],
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -176,9 +167,7 @@ class _UserPickupHistoryPageState extends State<UserPickupHistoryPage> {
     return price % 1 == 0 ? '${price.toInt()} сом' : '${price.toStringAsFixed(2)} сом';
   }
 
-  double _calculateFinalTotal(UserPickupHistoryEntity order) {
-    final price = order.price ?? 0;
-    final bonus = order.amountToReduce ?? 0.0;
-    return price - bonus;
+  double _finalTotal(UserPickupHistoryEntity order) {
+    return (order.price ?? 0) - (order.amountToReduce ?? 0.0);
   }
 }
