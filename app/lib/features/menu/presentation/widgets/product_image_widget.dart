@@ -1,9 +1,10 @@
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:diyar/features/features.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
+/// Фото блюда на странице деталки: целиком ([BoxFit.contain]),
+/// на всю доступную ширину, без обрезки и без заливки полей.
 class ProductImage extends StatelessWidget {
   final FoodEntity food;
 
@@ -15,20 +16,17 @@ class ProductImage extends StatelessWidget {
 
     return ClipRRect(
       borderRadius: const BorderRadius.all(Radius.circular(16.0)),
-      child: AspectRatio(
-        aspectRatio: 758 / 1024,
-        child: ColoredBox(
-          color: surface,
-          child: CachedNetworkImage(
-            imageUrl: food.imageUrlForDetail ?? 'https://i.ibb.co/GkL25DB/ALE-1357-7.png',
-            filterQuality: FilterQuality.high,
-            fit: BoxFit.contain,
-            alignment: Alignment.center,
-            width: double.infinity,
-            height: double.infinity,
-            errorWidget: (context, url, error) => _buildErrorWidget(context),
-            placeholder: (context, url) => _buildLoadingWidget(surface),
-          ),
+      child: ColoredBox(
+        color: surface,
+        child: CachedNetworkImage(
+          imageUrl: food.imageUrlForDetail ?? 'https://i.ibb.co/GkL25DB/ALE-1357-7.png',
+          filterQuality: FilterQuality.high,
+          fit: BoxFit.contain,
+          alignment: Alignment.center,
+          width: double.infinity,
+          height: double.infinity,
+          errorWidget: (context, url, error) => _buildErrorWidget(context),
+          placeholder: (context, url) => _buildLoadingWidget(surface),
         ),
       ),
     );

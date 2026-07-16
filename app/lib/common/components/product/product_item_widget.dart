@@ -39,29 +39,29 @@ class ProductItemWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-              child: AspectRatio(
-                aspectRatio: 1.0,
-                child: Stack(
-                  children: [
-                    Positioned.fill(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(12.0),
-                        child: ProductImage(
-                          food: food,
-                          quantity: quantity,
-                          fit: BoxFit.cover,
-                        ),
+            // Фото впритык к краям карточки (без внутреннего отступа),
+            // скругление совпадает с верхними углами карточки.
+            AspectRatio(
+              aspectRatio: 1.0,
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.vertical(top: Radius.circular(16.0)),
+                      // Фото целиком, без обрезки и без заливки полей.
+                      child: ProductImage(
+                        food: food,
+                        quantity: quantity,
+                        fit: BoxFit.contain,
                       ),
                     ),
-                    Positioned(
-                      right: 8,
-                      bottom: 8,
-                      child: _OverlayCounter(food: food, quantity: quantity),
-                    ),
-                  ],
-                ),
+                  ),
+                  Positioned(
+                    right: 8,
+                    bottom: 8,
+                    child: _OverlayCounter(food: food, quantity: quantity),
+                  ),
+                ],
               ),
             ),
             Padding(
