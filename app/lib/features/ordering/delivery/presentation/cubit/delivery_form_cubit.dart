@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:diyar/core/constants/constant.dart';
 import 'package:diyar/features/cart/domain/services/order_calculation_service.dart';
 import 'package:diyar/common/components/components.dart';
 import 'package:diyar/core/shared/shared.dart';
@@ -259,7 +260,13 @@ class DeliveryFormCubit extends Cubit<DeliveryFormState> {
     // Создаем CreateOrderEntity
     // Отправляем полную сумму без вычета бонусов, бонусы передаем отдельно в amountToReduce
     // Бэкенд ожидает: 'cash' | 'card_online' | 'card_courier'
-    final paymentMethodApi = currentState.paymentType == PaymentTypeDelivery.cash ? 'cash' : 'card_online';
+    // Бонусы покрыли весь заказ (к оплате 0) — онлайн-оплата не нужна,
+    // иначе заказ зависнет в «ожидает оплаты».
+    final isFullyPaidByBonus =
+        (currentState.bonusAmount ?? 0) > 0 && currentState.totalOrderCost <= 0;
+    final paymentMethodApi = currentState.paymentType == PaymentTypeDelivery.cash
+        ? PaymentMethodApi.cash
+        : (isFullyPaidByBonus ? PaymentMethodApi.fullyByBonus : PaymentMethodApi.cardOnline);
     final orderEntity = CreateOrderEntity(
       addressData: addressData,
       contactInfo: contactInfo,
