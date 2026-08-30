@@ -389,6 +389,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i913.OrderDetailRepository>(() =>
         _i778.OrderDetailRepositoryImpl(
             gh<_i831.OrderDetailRemoteDataSource>()));
+    gh.lazySingleton<_i520.AuthRemoteDataSource>(
+        () => _i415.AuthRemoteDataSourceImpl(
+              gh<_i1030.RestClient>(instanceName: 'unauthRestClient'),
+              gh<_i835.AuthLocalDataSource>(),
+              gh<_i431.SecureStorage>(),
+            ));
     gh.factory<_i661.UserMapCubit>(() => _i661.UserMapCubit(
           gh<_i883.PriceRepository>(),
           gh<_i835.AppLocation>(),
@@ -432,12 +438,6 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i204.IOpenBankingRepository>(),
           gh<_i204.IPaymentStatusSignalRService>(),
         ));
-    gh.lazySingleton<_i520.AuthRemoteDataSource>(
-        () => _i415.AuthRemoteDataSourceImpl(
-              gh<_i1030.RestClient>(instanceName: 'unauthRestClient'),
-              gh<_i835.AuthLocalDataSource>(),
-              gh<_i351.LocalStorage>(),
-            ));
     gh.factory<_i31.GetNewsUseCase>(
         () => _i31.GetNewsUseCase(gh<_i477.HomeContentRepository>()));
     gh.factory<_i608.GetSalesUseCase>(

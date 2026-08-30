@@ -3,9 +3,9 @@ import 'package:diyar/core/core.dart';
 import 'package:diyar/core/utils/storage/address_storage_service.dart';
 import 'package:diyar/core/di/injectable_config.dart';
 import 'package:diyar/features/app_init/domain/usecases/check_authentication_status_usecase.dart';
-import 'package:diyar/features/auth/auth.dart';
 import 'package:diyar/features/auth/domain/usecases/refresh_token_if_needed_usecase.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:storage/storage.dart';
 
 @AutoRouterConfig()
 class AppRouter extends RootStackRouter {
@@ -112,11 +112,11 @@ class InitialGuard extends AutoRouteGuard {
 /// Резервная проверка при навигации на Profile; основной сценарий — проверка в UI (main_home_page) для UX.
 class AuthGuard extends AutoRouteGuard {
   final prefs = sl<LocalStorage>();
-  final authDataSource = sl<AuthRemoteDataSource>();
+  final secureStorage = sl<SecureStorage>();
 
   @override
   void onNavigation(NavigationResolver resolver, StackRouter router) async {
-    final token = prefs.getString(AppConst.accessToken);
+    final token = await secureStorage.read(AppConst.accessToken);
     final role = prefs.getString(AppConst.userRole);
 
     if (token == null || JwtDecoder.isExpired(token)) {

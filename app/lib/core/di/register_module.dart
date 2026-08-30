@@ -29,6 +29,12 @@ Completer<void>? _tokenRefreshCompleter;
 // /refresh-token, чтобы не создавать дедлок с основным Dio.
 Dio? _refreshDio;
 
+bool _isRefreshRejectedByServer(Object e) {
+  if (e is! DioException) return false;
+  final code = e.response?.statusCode;
+  return code == 400 || code == 401 || code == 403;
+}
+
 @module
 abstract class RegisterModule {
   @lazySingleton
@@ -48,6 +54,9 @@ abstract class RegisterModule {
       },
       validateStatus: (s) => s != null && s < 300,
       responseType: ResponseType.json,
+      connectTimeout: const Duration(seconds: 15),
+      receiveTimeout: const Duration(seconds: 15),
+      sendTimeout: const Duration(seconds: 15),
     ));
 
     final dio = Dio(BaseOptions(
@@ -127,8 +136,13 @@ abstract class RegisterModule {
               } catch (e) {
                 _tokenRefreshCompleter!.completeError(e);
                 _tokenRefreshCompleter = null;
-                await sl<AuthRepository>().logout().catchError((_) {});
-                sl<AppRouter>().replaceAll([const SignInRoute()]);
+                // Логаут только если сервер явно отверг refresh-token.
+                // Таймаут, обрыв сети, 5xx или временно недоступный Keychain —
+                // не повод стирать токены и выкидывать пользователя.
+                if (_isRefreshRejectedByServer(e)) {
+                  await sl<AuthRepository>().logout().catchError((_) {});
+                  sl<AppRouter>().replaceAll([const SignInRoute()]);
+                }
                 return handler.reject(error);
               }
               _tokenRefreshCompleter = null;

@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:diyar/core/constants/constant.dart';
 import 'package:diyar/features/cart/cart.dart';
 import 'package:diyar/features/ordering/delivery/presentation/enum/delivery_enum.dart';
 import 'package:diyar/features/ordering/pickup/domain/domain.dart';
@@ -122,6 +123,13 @@ class PickUpCubit extends Cubit<PickUpState> {
     final calculatedDishesCount =
         cart.fold<int>(0, (sum, item) => sum + (item.quantity ?? 0));
 
+    // Бонусы покрыли весь заказ (к оплате 0) — онлайн-оплата не нужна,
+    // иначе заказ зависнет в «ожидает оплаты».
+    final isFullyPaidByBonus =
+        (currentState.bonusAmount ?? 0) > 0 && currentState.totalOrderCost <= 0;
+    final effectivePaymentMethod =
+        isFullyPaidByBonus ? PaymentMethodApi.fullyByBonus : paymentMethod;
+
     // Создаем заказ через use case
     final order = _createPickupOrderFromCartUseCase(
       cartItems: cart,
@@ -129,7 +137,7 @@ class PickUpCubit extends Cubit<PickUpState> {
       userPhone: phone,
       prepareFor: time,
       comment: comment.isEmpty ? null : comment,
-      paymentMethod: paymentMethod,
+      paymentMethod: effectivePaymentMethod,
       totalPrice: currentState.totalPrice,
       dishCount: calculatedDishesCount,
       bonusAmount: currentState.bonusAmount,
@@ -143,7 +151,7 @@ class PickUpCubit extends Cubit<PickUpState> {
       ),
     );
 
-    await _submitOrder(order, paymentMethod);
+    await _submitOrder(order, effectivePaymentMethod);
   }
 
   /// Валидация и применение бонусов к текущему состоянию формы.

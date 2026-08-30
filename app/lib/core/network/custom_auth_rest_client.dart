@@ -1,24 +1,12 @@
-import 'package:dio/dio.dart';
-import 'package:diyar/core/constants/app_const/app_const.dart';
-// ignore: implementation_imports
-import 'package:rest_client/src/network.dart';
+import 'package:rest_client/rest_client.dart';
 import 'package:storage/storage.dart';
 
-/// Кастомный AuthRestClient, который использует правильные ключи из AppConst
-/// для чтения/записи токенов из PreferencesStorage
+/// Авторизованный REST-клиент. Подстановка Bearer-токена и рефреш по 401
+/// выполняются QueuedInterceptorsWrapper на общем Dio (см. RegisterModule.dio),
+/// поэтому отдельный AuthInterceptor здесь не нужен — второй интерцептор
+/// на том же Dio читал токен из SharedPreferences и слал refresh на
+/// захардкоженный URL.
 class CustomAuthRestClient extends RestClient {
-  CustomAuthRestClient(Dio client, PreferencesStorage preferencesStorage)
-      : super(client, errorHandler: NetworkErrorHandlerImpl()) {
-    client.interceptors.add(
-      AuthInterceptor(
-        tokenGetter: () async => await preferencesStorage.read(AppConst.accessToken),
-        refreshTokenGetter: () async => await preferencesStorage.read(AppConst.refreshToken),
-        tokenSaver: (accessToken, refreshToken) async {
-          await preferencesStorage.save(AppConst.accessToken, accessToken);
-          await preferencesStorage.save(AppConst.refreshToken, refreshToken);
-        },
-        dio: client,
-      ),
-    );
-  }
+  CustomAuthRestClient(super.client, PreferencesStorage preferencesStorage)
+      : super(errorHandler: NetworkErrorHandlerImpl());
 }

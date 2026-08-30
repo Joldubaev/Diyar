@@ -6,6 +6,7 @@ import 'package:diyar/features/auth/data/models/reset_password_model.dart';
 import 'package:diyar/features/auth/data/datasources/local/auth_local_data_source.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rest_client/rest_client.dart' as rest_client;
+import 'package:storage/storage.dart';
 
 import 'auth_remote_data_source.dart';
 
@@ -20,12 +21,12 @@ class _Tokens {
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final rest_client.RestClient _restClient; // UnAuthRestClient для неавторизованных запросов
   final AuthLocalDataSource _localDataSource;
-  final LocalStorage _localStorage;
+  final SecureStorage _secureStorage;
 
   AuthRemoteDataSourceImpl(
     @Named('unauthRestClient') this._restClient,
     this._localDataSource,
-    this._localStorage,
+    this._secureStorage,
   );
 
   Future<Either<Failure, Map<String, dynamic>>> _executePost({
@@ -242,7 +243,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<Either<Failure, void>> refreshToken() async {
-    final refreshToken = _localStorage.getString(AppConst.refreshToken);
+    final refreshToken = await _secureStorage.read(AppConst.refreshToken);
     if (refreshToken == null) {
       return const Left(CacheFailure('Refresh token не найден'));
     }

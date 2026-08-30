@@ -56,7 +56,9 @@ class ConfirmOrderBottomSheet extends StatelessWidget {
     final l10n = context.l10n;
 
     if (state is CreatePickUpOrderLoaded) {
-      if (paymentType == PaymentTypeDelivery.online) {
+      // Онлайн-оплата нужна, только если после списания бонусов
+      // осталось что платить (totalOrderCost уже за вычетом бонусов).
+      if (paymentType == PaymentTypeDelivery.online && state.totalOrderCost > 0) {
         _navigateToOnlinePayment(context, state);
       } else {
         _showSuccessDialog(context, theme, l10n);

@@ -25,7 +25,10 @@ class CustomBottomSheet extends StatelessWidget {
     return BlocListener<DeliveryFormCubit, DeliveryFormState>(
       listener: (context, currentState) {
         if (currentState is DeliveryFormLoaded && currentState.successMessage != null) {
-          if (currentState.paymentType == PaymentTypeDelivery.online) {
+          // Онлайн-оплата нужна, только если после списания бонусов
+          // осталось что платить (totalOrderCost уже за вычетом бонусов).
+          if (currentState.paymentType == PaymentTypeDelivery.online &&
+              currentState.totalOrderCost > 0) {
             context.router.push(
               OpenBankingPaymentRoute(
                 orderNumber: currentState.successMessage!,
