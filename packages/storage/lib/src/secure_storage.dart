@@ -1,10 +1,18 @@
 import 'dart:convert';
+import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:storage/src/interface/secure_storage_interface.dart';
 
 class SecureStorageImpl implements SecureStorage {
+  // iOS: first_unlock_this_device — значения доступны после первой разблокировки
+  // (в т.ч. при работе в фоне с заблокированным экраном) и не переносятся
+  // через backup на другое устройство. Без этого Keychain по умолчанию
+  // использует whenUnlocked и read() возвращает null при заблокированном экране.
   final FlutterSecureStorage _storage = const FlutterSecureStorage(
     aOptions: AndroidOptions(encryptedSharedPreferences: true),
+    iOptions: IOSOptions(
+      accessibility: KeychainAccessibility.first_unlock_this_device,
+    ),
   );
 
   @override
@@ -14,7 +22,14 @@ class SecureStorageImpl implements SecureStorage {
 
   @override
   Future<String?> read(String key) async {
-    return _storage.read(key: key);
+    try {
+      return await _storage.read(key: key);
+    } on PlatformException {
+      // Keychain временно недоступен (например, errSecInteractionNotAllowed).
+      // Возвращаем null, а не бросаем — вызывающий код не должен трактовать
+      // это как «токена нет».
+      return null;
+    }
   }
 
   @override
